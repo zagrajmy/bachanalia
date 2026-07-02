@@ -14,6 +14,16 @@ type Props = {
   params: Promise<{ slug?: string[] }>;
 };
 
+function HomeFallback() {
+  return (
+    <main className="mx-auto max-w-2xl px-4 py-24 text-center">
+      <h1 className="text-4xl font-bold">Bachanalia Fantastyczne XL</h1>
+      <p className="mt-4 text-lg">25–27 września 2026 · Zielona Góra</p>
+      <p className="mt-2 text-sm opacity-70">Nowa strona w budowie.</p>
+    </main>
+  );
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const slug = nextSlugToWpSlug((await params).slug);
   const isPreview = slug.includes("preview");
@@ -23,12 +33,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     idType: isPreview ? "DATABASE_ID" : "URI",
   });
 
-  if (!contentNode) {
+  if (!contentNode && slug !== "/") {
     return notFound();
   }
 
   return {
-    title: contentNode.title,
+    title: contentNode?.title ?? "Bachanalia Fantastyczne XL",
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_BASE_URL}${slug}`,
     },
@@ -50,7 +60,10 @@ export default async function Page({ params }: Props) {
     },
   );
 
-  if (!contentNode) return notFound();
+  if (!contentNode) {
+    if (slug === "/") return <HomeFallback />;
+    return notFound();
+  }
 
   switch (contentNode.contentTypeName) {
     case "page":

@@ -51,7 +51,7 @@ public routes in `src/ludamus/adapters/web/django/urls.py`, web gates in
   another origin.
 - `/mcp/` JSON-RPC endpoint exists but is **superuser-only** (tokens minted
   at `/mcp/token/` by logged-in superusers, 30-day max) — not a public API.
-- `links/ticket_api.py` is an *outbound* client to an external membership
+- `links/ticket_api.py` is an _outbound_ client to an external membership
   API, not a served endpoint.
 - User auth = Auth0 + Django session cookies scoped per sphere domain, so
   user-context calls from an external origin aren't possible anyway.

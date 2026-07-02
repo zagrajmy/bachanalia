@@ -14,9 +14,9 @@ The site is Polish-only, which conveniently lets us skip headless i18n
 (Polylang/WPML) entirely.
 
 Research details with sources:
-[current-site.md](notes/bachanalia-website/research/current-site.md),
-[ludamus.md](notes/bachanalia-website/research/ludamus.md),
-[wordpress-headless.md](notes/bachanalia-website/research/wordpress-headless.md).
+[current-site.md](research/current-site.md),
+[ludamus.md](research/ludamus.md),
+[wordpress-headless.md](research/wordpress-headless.md).
 
 ## Architecture
 
@@ -164,10 +164,9 @@ Phases 3 and 4 are independent and can run in parallel.
 
 ## Open questions
 
-- [ ] Is `wp-json` reachable on the current site? (Couldn't verify from this
-      sandbox — egress to the domain was blocked. Run
-      `curl -s https://bachanaliafantastyczne.pl/wp-json/ | head -c 300`
-      locally; also check `/graphql` and response headers for hosting hints.)
+- [x] ~~Is `wp-json` reachable on the current site?~~ Yes — 200 (verified
+      2026-07-02). `/graphql` 404s until WPGraphQL is installed (Phase 2).
+      Site is behind Cloudflare.
 - [ ] Who controls DNS and the WP hosting? Can we add the `wp.` subdomain and
       install plugins?
 - [x] ~~Does Ad Astra agree to run programme/enrollment through ludamus?~~

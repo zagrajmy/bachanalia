@@ -16,19 +16,19 @@ The items in "To verify" below need a quick local check.
 
 ## Information architecture (from indexed URLs)
 
-| Menu label          | Path                          | Purpose                       |
-| ------------------- | ----------------------------- | ----------------------------- |
-| CO TO SĄ BACHANALIA | `/index.php/co-to-sa-bachanalia/` | About                     |
-| CZAS I MIEJSCE      | `/index.php/czas-i-miejsce/`  | Date & venue                  |
-| ORGANIZATOR         | `/index.php/organizator/`     | Organizer                     |
-| TABELA PROGRAMOWA   | `/index.php/program/`         | Programme table               |
-| Program             | `/program/program/`           | Programme (no index.php!)     |
-| ZGŁOSZENIA PROGRAMU | `/index.php/zgloszenia-programu/` | Programme submissions     |
-| ZGŁOSZENIA OBSŁUGI  | `/index.php/zgloszenia-obslugi/`  | Staff/volunteer signup    |
-| AKREDYTACJA         | `/index.php/akredytacja/`     | Tickets (30/40/80 PLN tiers)  |
-| REGULAMIN           | `/index.php/regulamin/`       | Rules                         |
-| WSPIERAJĄ NAS       | `/index.php/wspieraja-nas/`   | Sponsors/partners             |
-| POZNAJ WYSTAWCÓW    | `/index.php/poznaj-wystawcow/`| Exhibitors                    |
+| Menu label          | Path                              | Purpose                      |
+| ------------------- | --------------------------------- | ---------------------------- |
+| CO TO SĄ BACHANALIA | `/index.php/co-to-sa-bachanalia/` | About                        |
+| CZAS I MIEJSCE      | `/index.php/czas-i-miejsce/`      | Date & venue                 |
+| ORGANIZATOR         | `/index.php/organizator/`         | Organizer                    |
+| TABELA PROGRAMOWA   | `/index.php/program/`             | Programme table              |
+| Program             | `/program/program/`               | Programme (no index.php!)    |
+| ZGŁOSZENIA PROGRAMU | `/index.php/zgloszenia-programu/` | Programme submissions        |
+| ZGŁOSZENIA OBSŁUGI  | `/index.php/zgloszenia-obslugi/`  | Staff/volunteer signup       |
+| AKREDYTACJA         | `/index.php/akredytacja/`         | Tickets (30/40/80 PLN tiers) |
+| REGULAMIN           | `/index.php/regulamin/`           | Rules                        |
+| WSPIERAJĄ NAS       | `/index.php/wspieraja-nas/`       | Sponsors/partners            |
+| POZNAJ WYSTAWCÓW    | `/index.php/poznaj-wystawcow/`    | Exhibitors                   |
 
 No blog/news index, FAQ, or contact page surfaced in search results (may
 exist unindexed).

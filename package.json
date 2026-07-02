@@ -1,0 +1,33 @@
+{
+  "name": "bachanalia",
+  "private": true,
+  "scripts": {
+    "dev": "bun run codegen && next dev",
+    "build": "bun run codegen && next build",
+    "start": "next start",
+    "lint": "oxlint",
+    "fmt": "oxfmt",
+    "codegen": "graphql-codegen --config codegen.ts && node ./add-ts-nocheck.js"
+  },
+  "dependencies": {
+    "graphql": "^16.9.0",
+    "graphql-tag": "^2.12.6",
+    "next": "^16.2.9",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "5.0.0",
+    "@graphql-codegen/client-preset": "4.3.3",
+    "@graphql-codegen/schema-ast": "^4.1.0",
+    "@hasparus/oxlint-config": "^0.1.1",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "oxfmt": "0.56.0",
+    "oxlint": "1.71.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

@@ -50,7 +50,7 @@ async function getPostsUrls({
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemap = [];
 
-  const details = await getTotalCounts();
+  const details = await getTotalCounts().catch(() => []);
 
   const postsUrls = await Promise.all(
     details.map(async (detail) => {

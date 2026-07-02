@@ -1,35 +1,18 @@
 import type { Metadata } from "next";
-import { print } from "graphql/language/printer";
+import Link from "next/link";
 
-import { setSeoData } from "@/utils/seoData";
+export const metadata: Metadata = {
+  title: "Nie znaleziono strony",
+  robots: { index: false, follow: false },
+};
 
-import { fetchGraphQL } from "@/utils/fetchGraphQL";
-import { ContentNode, Page } from "@/gql/graphql";
-import { PageQuery } from "@/components/Templates/Page/PageQuery";
-import { SeoQuery } from "@/queries/general/SeoQuery";
-
-const notFoundPageWordPressId = 501;
-
-export async function generateMetadata(): Promise<Metadata> {
-  const { contentNode } = await fetchGraphQL<{ contentNode: ContentNode }>(print(SeoQuery), {
-    slug: notFoundPageWordPressId,
-    idType: "DATABASE_ID",
-  });
-
-  const metadata = setSeoData({ seo: contentNode.seo });
-
-  return {
-    ...metadata,
-    alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/404-not-found/`,
-    },
-  } as Metadata;
-}
-
-export default async function NotFound() {
-  const { page } = await fetchGraphQL<{ page: Page }>(print(PageQuery), {
-    id: notFoundPageWordPressId,
-  });
-
-  return <div dangerouslySetInnerHTML={{ __html: page.content || " " }} />;
+export default function NotFound() {
+  return (
+    <main className="mx-auto max-w-xl px-4 py-24 text-center">
+      <h1 className="text-2xl font-bold">Nie znaleziono strony</h1>
+      <p className="mt-4">
+        <Link href="/">Wróć na stronę główną</Link>
+      </p>
+    </main>
+  );
 }

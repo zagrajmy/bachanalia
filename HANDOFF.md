@@ -38,6 +38,15 @@ Read those first; this file only covers state + the active incident.
 
 ## 🔴 Active incident: WP malware (blocks everything WP-side)
 
+**Still compromised as of 2026-07-09** — handed to third-party maintainers who
+did NOT clean it. Re-verified by curling raw HTML (not markdown, which hides
+it): the identical hidden div `left:-13537px` with `krakenat.cc` spam still
+serves on `https://bachanaliafantastyczne.pl/index.php/czas-i-miejsce/` (200).
+One thing changed: pretty permalinks (`/czas-i-miejsce/` etc.) now 404 while
+the legacy `/index.php/...` format still serves both real content and the spam
+— someone touched permalink settings but not the malware. Check both URL forms
+when re-verifying.
+
 The live WordPress serves darknet-market SEO spam. Evidence gathered
 2026-07-02 (also summarized in `research/current-content.md`):
 
@@ -55,17 +64,45 @@ The live WordPress serves darknet-market SEO spam. Evidence gathered
   custom-facebook-feed-pro, embedpress, pay-by-paynow-pl, presto-player,
   woocommerce. **royal-elementor-addons** had mass-exploited CVE-2023-5360
   (arbitrary upload → rogue admins) — plausible original entry vector.
-- REST-visible users: `admin` (id 1), **`yodi`** (id 3) — verify `yodi` is a
-  real person; rogue-admin names like this match the RoyalElementor campaigns.
+- REST-visible users: `admin` (id 1), `yodi` (id 3). **`yodi` verified safe
+  (2026-07-09)** and no unknown admins → no active attacker logging in; the
+  compromise is purely **file-level** (an injected backdoor in the PHP render
+  path), which changes the cleanup priority to finding that file.
 - Site is behind Cloudflare; hosting provider unknown. Payments (Paynow) run
   on the compromised install — treat checkout as at-risk until cleaned.
 
-### Cleanup plan (needs hosting/SFTP access — user has WP admin access)
+### Cleanup plan — wp-admin only (no hosting/SFTP; user has WP admin)
 
-1. Snapshot first: full file + DB backup (evidence, rollback).
-2. Rogue admins: wp-admin → Users; verify `yodi`, remove unknown admins;
-   force-reset all passwords; rotate wp-config salts.
-3. Find the backdoor (SSH/SFTP or host file manager; WP-CLI if available):
+The user has wp-admin but NOT hosting/SFTP/SSH. That's enough: wp-admin can
+reach everything inside the WP install (themes, plugins, mu-plugins,
+wp-config, uploads) — the likely hiding spots. Preferred tools, best first:
+
+- **Wordfence Security** (primary) — its malware scan compares core/theme/
+  plugin files against the official wordpress.org copies, flags modified or
+  unknown `.php` files, detects backdoor signatures (`eval`, `base64_decode`,
+  shells), and scans `uploads/` + `mu-plugins/`. Lets you view and delete/
+  repair the offending file straight from wp-admin. This is the fastest path
+  to the backdoor injecting the `krakenat.cc` div.
+- **Advanced File Manager** / **WP File Manager** — full filesystem browse/
+  view/edit/download/delete inside wp-admin, for anything Wordfence can't
+  auto-repair (mu-plugins, wp-config salts, downloading the site to inspect
+  locally).
+- **UpdraftPlus** — snapshot (backup) before deleting anything.
+- Built-in Theme/Plugin File Editors work too but are themes/plugins only and
+  often disabled via `DISALLOW_FILE_EDIT`.
+
+Limit: wp-admin can't reach server-level persistence (malicious cron, dropper
+outside the webroot, compromised includes). If the spam returns after a clean
+delete, that's the signal it's re-infecting from outside WP → hosting access
+becomes mandatory (fall back to nuke-and-pave, step 8).
+
+Steps:
+
+1. Snapshot first: full file + DB backup via UpdraftPlus (evidence, rollback).
+2. Users: `yodi` verified safe and no unknown admins, so no lockout urgency —
+   still rotate all admin passwords + wp-config salts as hygiene.
+3. Find the backdoor — **Wordfence full scan** (or, with hosting access:
+   SSH/SFTP, WP-CLI):
    - `wp core verify-checksums`; reinstall core over itself.
    - `find . -name '*.php' -newermt '2025-01-01'` outside expected paths;
      any `.php` in `wp-content/uploads/`; `wp-content/mu-plugins/`.

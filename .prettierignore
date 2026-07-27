@@ -1,0 +1,5 @@
+src/gql
+bun.lock
+.next
+playwright-report
+test-results

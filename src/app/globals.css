@@ -75,7 +75,20 @@ body {
   text-wrap: balance;
 }
 
-.wp-content :is(.elementor, .e-con, .e-con-inner, .elementor-section, .elementor-container, .elementor-row, .elementor-column, .elementor-column-wrap, .elementor-widget-wrap, .elementor-widget, .elementor-widget-container) {
+.wp-content
+  :is(
+    .elementor,
+    .e-con,
+    .e-con-inner,
+    .elementor-section,
+    .elementor-container,
+    .elementor-row,
+    .elementor-column,
+    .elementor-column-wrap,
+    .elementor-widget-wrap,
+    .elementor-widget,
+    .elementor-widget-container
+  ) {
   display: contents;
 }
 

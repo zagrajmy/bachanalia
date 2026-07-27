@@ -16,5 +16,10 @@ export const hasVisibleContent = (html?: string | null) => {
   if (!html) return false;
   if (MEDIA.test(html)) return true;
 
-  return html.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim().length > 0;
+  return (
+    html
+      .replace(/<[^>]+>/g, "")
+      .replace(/&nbsp;/g, " ")
+      .trim().length > 0
+  );
 };

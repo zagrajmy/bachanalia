@@ -96,6 +96,8 @@ test.describe("WordPress content rendering", () => {
 
     const body = await page.locator("body").innerText();
     expect(body).not.toMatch(/kraken|tryggbitrow/i);
-    expect(body, "cyrillic has no business on a Polish convention site").not.toMatch(/[а-яА-Я]{4,}/);
+    expect(body, "cyrillic has no business on a Polish convention site").not.toMatch(
+      /[а-яА-Я]{4,}/,
+    );
   });
 });

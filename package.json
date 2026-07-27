@@ -7,7 +7,8 @@
     "start": "next start",
     "lint": "oxlint",
     "fmt": "oxfmt",
-    "codegen": "graphql-codegen --config codegen.ts && node ./add-ts-nocheck.js"
+    "codegen": "graphql-codegen --config codegen.ts && node ./add-ts-nocheck.js",
+    "codegen:refresh": "WP_SCHEMA_REFRESH=1 bun run codegen"
   },
   "dependencies": {
     "graphql": "^16.9.0",

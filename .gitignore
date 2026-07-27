@@ -43,4 +43,5 @@ next-env.d.ts
 certificates
 
 #generated
-gql
+src/gql/*
+!src/gql/schema.gql

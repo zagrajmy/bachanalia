@@ -21,14 +21,15 @@ this file covers state, the work log, and the traps that cost time.
   ("GraphQL for eCommerce" 1.0.3) are live: 34 pages, 25 posts, 22 products.
 - `bun run dev`/`build` need `.env.local` — run `vercel env pull .env.local`.
 
-### Nothing is committed
+### Testing and CI
 
-Last commit is `a2e5f52`. The entire session below is uncommitted working
-tree: design system, shell components, codegen rework, slug mapper, tests,
-plan.md rewrite. `src/gql/schema.gql` is newly tracked (1.1 MB); the
-generated `.ts` files stay ignored. Review before committing — the user's
-rule is no prod deploy without code review, and the next `vercel deploy`
-will serve real WordPress content for the first time.
+- `bun run test` — unit tests (scoped to `src` + `next.config.test.ts`;
+  unscoped `bun test` picks up the Playwright specs and dies).
+- `bun run e2e` — Playwright against an existing build. `bun run e2e:build`
+  builds first. 92 specs, desktop + Pixel 7.
+- GitHub Actions runs both on push and PR, green as of `e322fb6`.
+- `src/gql/schema.gql` is tracked; the generated `.ts` is not, so **codegen
+  must run before `tsc`** on a clean checkout.
 
 ## Work log 2026-07-27
 
@@ -67,6 +68,20 @@ section for the palette and the contrast traps. Fonts: **Sora** (display) +
 **IBM Plex Sans** (body), both verified for `latin-ext` before committing —
 Polish diacritics are non-negotiable and were checked in the browser.
 
+## Wordfence blocks GraphQL POSTs
+
+The single most expensive thing to rediscover. Wordfence's firewall
+inspects POST bodies and rejects GraphQL **connection** queries with *"a
+potentially unsafe operation has been detected"* (403 HTML, not JSON).
+Single-node lookups (`page(id:…)`) pass, which is why page rendering
+worked while `posts(first:…){nodes{…}}` silently failed — it broke the
+guests archive and `generateStaticParams` while everything else looked fine.
+
+`fetchGraphQL` therefore sends queries over **GET**, which the firewall
+allows, is standard GraphQL-over-HTTP, and is cacheable where POST never
+was. Do not "modernise" it back to POST. If a query starts 403ing, check
+Wordfence before suspecting the query.
+
 ## Traps that cost time
 
 - **Turbopack caches CSS across dev runs.** The entire `.wp-content` block
@@ -88,6 +103,18 @@ Polish diacritics are non-negotiable and were checked in the browser.
   This silently replaced matches with integers in the first cut of
   `prepareWpContent`.
 - **Do not "fix" WP permalinks before cutover.** See the open items below.
+- **`generateStaticParams` must return `{ slug: [...] }` objects**, not bare
+  segment arrays. Bare arrays are silently ignored: the build succeeds,
+  reports SSG, and prerenders nothing.
+- **Two WordPress pages have a null `uri` in WPGraphQL** — the posts page
+  (`goscie`) and the WooCommerce shop page (`sklep`). URI lookups 404 them
+  even though they serve fine on WordPress. They need explicit routes.
+- **oxfmt reads `.gitignore`**, and `schema.gql` is deliberately un-ignored
+  there, so it reformatted 35k lines of generated output that codegen then
+  rewrites. `.prettierignore` keeps it out.
+- **`eslint-plugin-sonarjs` needs `globals`** without declaring it. Without
+  it the plugin fails to load entirely, so its rules silently never run and
+  lint passes locally while failing on a clean install.
 
 ## Key implementation notes
 
@@ -115,38 +142,33 @@ Polish diacritics are non-negotiable and were checked in the browser.
 
 ## Open work
 
-The task list lives in the session harness, so it is reproduced here.
-Completed: env flip + codegen (1), codegen unblock (14), design system (4),
-navigation (5).
+Completed this session: env flip + codegen (1), codegen unblock (14),
+design system (4), navigation (5), legacy redirects (3), content parity
+(6), guest posts (7), e2e suite (16), CI (17).
 
-1. **#2 Permalinks — DO NOT DO BEFORE CUTOVER.** Pretty permalinks 404 live,
-   meaning the server rewrite is broken. Switching to "Post name" now would
-   rewrite every live URL while WP is still the public frontend and could
-   404 the shop mid-accreditation-sales.
-2. **#3** Add `/index.php/*` → `/*` 301 in middleware. All inbound link
-   equity is on the legacy form.
-3. **#6** Verify the 20 WP static pages against the parity checklist in
-   `research/current-content.md`. Several are empty in WP today — keep the
-   route, render the honest empty state that `PageTemplate` already has.
-4. **#7** 25 dated 2025 guest posts. **Assumed decision: migrate as-is** at
-   their existing paths. Confirm before cutover. They are last year's
-   announcements and will read as current unless the listing separates
-   editions; `PostTemplate` already surfaces the date.
-5. **#8** `/wspieraja-nas` partner grid, 4 tiers. Pull original logos from
+1. **#2 Permalinks — DO NOT DO BEFORE CUTOVER.** Pretty permalinks 404
+   live, meaning the server rewrite is broken. Switching to "Post name" now
+   would rewrite every live URL while WordPress is still the public
+   frontend and could 404 the shop mid-accreditation-sales.
+2. **#8** `/wspieraja-nas` partner grid, 4 tiers. Pull original logos from
    `wp-content/uploads`, not the Elementor thumbs.
-6. **#9** `/sklep` + `/produkt/[slug]` on WooGraphQL. Browse is ours;
-   **cart, checkout and Paynow stay on WooCommerce.**
-7. **#10** Home page. The key art (`baner_strona_1300x500.jpg`) is still
-   unused in the new design and belongs here as the hero. News source today
-   is a Facebook embed, not WP posts — undecided.
-8. **#11** Wire the revalidation webhook. `src/app/api/revalidate/route.ts`
-   exists but nothing calls it.
-9. **#12** Ludamus programme feed + `/program`. Independent of content work.
+3. **#9** `/sklep` + `/produkt/[slug]` on WooGraphQL. Browse is ours;
+   **cart, checkout and Paynow stay on WooCommerce.** The footer currently
+   links out to the live shop as a stopgap, since the WordPress shop page
+   has a null uri and cannot be resolved by URI.
+4. **#10** Home page. The key art (`baner_strona_1300x500.jpg`) is still
+   unused and belongs here as the hero. `/` currently renders a hardcoded
+   placeholder. News source today is a Facebook embed, not WP posts — the
+   user has asked for the embed.
+5. **#11** Wire the revalidation webhook. `src/app/api/revalidate/route.ts`
+   exists but nothing calls it. Content is cached for an hour, so without
+   it edits take up to an hour to appear.
+6. **#12** Ludamus programme feed + `/program`. Independent of content work.
    Also owed to Ad Astra: an organizer onboarding video.
-10. **#13** Cutover: DNS, `wp.` subdomain, redirects, shop exemptions.
-11. **#15** Low priority: several pages use bare paragraphs as section labels
-    (`POCIĄGIEM`, `AUTOBUSEM`) instead of headings, invisible to screen-reader
-    heading navigation. Editorial fix in WordPress, not CSS.
+7. **#13** Cutover: DNS, `wp.` subdomain, redirects, shop exemptions.
+8. **#15** Low priority: several pages use bare paragraphs as section labels
+   (`POCIĄGIEM`, `AUTOBUSEM`) instead of headings, invisible to
+   screen-reader heading navigation. Editorial fix in WordPress, not CSS.
 
 Also unresolved: Vercel GitHub app access to the `zagrajmy` org (blocks
 auto-deploy), and `bun run lint` (bare `oxlint`) hangs — scope it to

@@ -115,6 +115,12 @@ export const partners: { tier: string; logos: PartnerLogo[] }[] = [
   },
 ];
 
+/** The pre-polish variants list partners as text; keep them on real data. */
+export const partnerNames = partners.map(({ tier, logos }) => ({
+  tier,
+  names: logos.map((logo) => logo.name),
+}));
+
 export const cityFunding = {
   name: "Zrealizowano przy pomocy finansowej Miasta Zielona Góra",
   src: `${UPLOADS}/elementor/thumbs/309075582_781048753011414_6542283171950865978_n-qt8eo7tyhl2rlu41n3my2zkzhrgdggy5kqkya542rk.png`,
@@ -163,3 +169,12 @@ export const VARIANTS = [
 ] as const;
 
 export type VariantSlug = (typeof VARIANTS)[number]["slug"];
+
+export const ALL_VARIANTS = [
+  ...VARIANTS.map(({ slug, name }) => ({ slug, name, generation: "Po szlifie" })),
+  ...VARIANTS.map(({ slug, name }) => ({
+    slug: `${slug}-previous`,
+    name,
+    generation: "Przed szlifem",
+  })),
+];

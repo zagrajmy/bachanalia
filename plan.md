@@ -125,23 +125,95 @@ spaces/time slots/tracks → call for proposals → accepting and scheduling
 sessions into the agenda → enrollment windows and waitlist offer/claim →
 the panel and print view during the con).
 
-## Site map (v1)
+## Site map
 
-Carried over from the current site, trimmed:
+**Paths are preserved.** Scraped from the live sitemap 2026-07-27 (81 URLs),
+not invented. Every slug below exists today under the legacy
+`/index.php/<slug>/` PATHINFO prefix; the new site serves the clean path and
+301s the legacy one (see URL strategy).
 
-- `/` — hero (date/venue/edition), latest news, sponsors strip
-- `/aktualnosci` (+ `/aktualnosci/[slug]`) — news from WP posts
-- `/o-konwencie`, `/czas-i-miejsce`, `/organizator`, `/regulamin` — WP pages
-- `/akredytacja` — pricing, from a WP page or ACF options
-- `/program` — grid from ludamus feed
-- `/zglaszanie-programu`, `/wolontariat` — landing pages → ludamus / form
-- `/goscie` — guests CPT
-- `/wystawcy` — exhibitors CPT
-- `/wspieraja-nas` — sponsors CPT
+| Path | Source | Notes |
+| --- | --- | --- |
+| `/` | hardcoded + WP posts | hero, news, sponsors strip |
+| `/co-to-sa-bachanalia` | WP page | about + historical guest list |
+| `/organizator` | WP page | Ad Astra, legal ids (NIP/REGON/KRS) |
+| `/sztab-bachanaliowy` | WP page | empty today |
+| `/czas-i-miejsce` | WP page | dates, venue, travel, parking |
+| `/regulamin` | WP page | ~14k chars |
+| `/polityka-prywatnosci` | WP page | ~11k chars |
+| `/noclegi` | WP page | UZ dorms |
+| `/akredytacja` | WP page | pricing → links to shop |
+| `/program` | ludamus feed | grid; Phase 4 |
+| `/blok-prelekcyjny` | WP page | stub |
+| `/blok-konkursowy` | WP page | "Bachele" con currency |
+| `/blok-naukowy` | WP page | empty today |
+| `/blok-komiksowy` | WP page | empty today |
+| `/rpg` | WP page | Skrzywienie Fabularne |
+| `/gamesroom` | WP page | + Trzymaj Pion |
+| `/retro-gaming` | WP page | lan-party |
+| `/cosplay` | WP page | full contest rules (2025, needs 2026 update) |
+| `/goscie` | WP page | 2026 guests |
+| `/zgloszenia-programu` | landing | → ludamus proposal flow |
+| `/zgloszenia-obslugi` | landing | → form/email |
+| `/poznaj-wystawcow` | WP page | empty for 2026 so far |
+| `/regulamin-wystawcow` | WP page | also a `-2` duplicate — collapse |
+| `/zgloszenia-wystawcow` | landing | wystawcy@bachanaliafantastyczne.pl |
+| `/wspieraja-nas` | WP page | 4 partner tiers + logos |
+| `/2025/…/<slug>` | WP posts | 25 dated guest announcements |
+| `/sklep`, `/produkt/<slug>` | Woo Store API | **our UI** |
+| `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty` | WooCommerce | **stays WP** |
+
+Dropped: `/info` and `/blog` (nav shells), `/feed-test` (test artifact).
 
 Forms that stay outside ludamus (e.g. staff/volunteer signup, contact): a
 Next.js server action posting to email or a spreadsheet is simpler than
 keeping CF7 alive — decide per form.
+
+## URL strategy
+
+Pretty permalinks 404 on WP today, so **every indexed URL is the
+`/index.php/…` form** — that's where all inbound link equity sits.
+
+- Canonical: clean path (`/czas-i-miejsce/`).
+- `/index.php/<anything>` → **301** to `/<anything>`. One middleware rule.
+- Sitemap and canonicals emit clean paths only.
+- **Do not "fix" WP permalinks before cutover.** Pretty permalinks 404 on
+  the live site, i.e. the server rewrite is broken — switching to Post name
+  now would rewrite every live URL while WP is still the public frontend,
+  and could take the shop down mid-sales. Until cutover,
+  `src/utils/nextSlugToWpSlug.ts` maps clean paths to the `/index.php/…`
+  URIs WPGraphQL actually resolves; delete it once permalinks are fixed.
+
+## Shop
+
+WooCommerce is load-bearing — it sells 2026 accreditation through Paynow,
+and the con is Sept 25–27. Split by risk:
+
+- **Browse is ours.** WooGraphQL ("GraphQL for eCommerce" v1.0.3) is
+  installed, so products come through the same `/graphql` endpoint as pages
+  and posts, with generated types — no second client. `/sklep` and
+  `/produkt/<slug>` render as server components, so the shop finally matches
+  the site design. (The Store API at `/wp-json/wc/store/v1/products` also
+  works, as a fallback.)
+- **Cart, checkout and payment stay on WooCommerce.** `pay-by-paynow-pl` is
+  a classic (pre-blocks) gateway; Store API's `/checkout` only surfaces a
+  redirect URL for gateways with a blocks integration, and that's unverified.
+  "Add to cart" links out to WP. No sessions, nonces or Paynow callbacks
+  cross the boundary.
+
+## Design
+
+Palette sampled from the XL Polcon key art
+(`wp-content/uploads/2026/02/baner_strona_1300x500.jpg`) — cosmic rooster on
+deep navy in a coral frame. **The illustration stays**; the site is built
+around it. Tokens live in `src/app/globals.css`.
+
+Deep navy `#191f5c` is the surface (it's ~70% of the artwork). Coral
+`#ee7489` is the accent, and takes navy text — white on coral is 2.8:1 and
+fails. The artwork's headline blue `#3f6bbc` is 2.9:1 on navy: decorative
+only, never text — `#6d8fce` is the readable version at 4.65:1.
+
+Logo and the existing con identity carry over.
 
 ## Phases
 
@@ -173,8 +245,10 @@ Phases 3 and 4 are independent and can run in parallel.
       Yes — agreed. Remaining: set up the sphere (`bachanalia.zagrajmy.net`)
       and record the organizer onboarding video.
 - [ ] What happens to historical content (past editions' pages/posts) —
-      migrate, archive, or drop?
-- [ ] Design direction — anything to reuse from the current branding, or
-      fresh start for the 40th edition?
+      migrate, archive, or drop? **Assumed: migrate the 25 dated 2025 guest
+      posts as-is at their existing paths** (real content, indexed, free once
+      the post template exists). Confirm before cutover.
+- [x] ~~Design direction~~ — fresh layout, palette from the XL key art, logo
+      and illustration retained. See Design above.
 - [ ] Staff signups ("zgłoszenia obsługi") — ludamus questionnaire, WP form,
       or plain server action?

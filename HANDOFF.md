@@ -1,141 +1,201 @@
-# Handoff — Bachanalia website (2026-07-02)
+# Handoff — Bachanalia website (updated 2026-07-27)
 
 Continuation notes for the next session. Project context lives in
-[plan.md](plan.md) (architecture, phases) and [research/](research/)
-(current-site inventory in `current-content.md` supersedes `current-site.md`).
-Read those first; this file only covers state + the active incident.
+[plan.md](plan.md) (architecture, site map, URL strategy, shop split, design
+direction, phases) and [research/](research/) (`current-content.md` is the
+live-scraped inventory and supersedes `current-site.md`). Read those first —
+this file covers state, the work log, and the traps that cost time.
 
 ## State
 
 - Repo: https://github.com/zagrajmy/bachanalia (public), `main`.
-- Deployed: https://bachanalia.vercel.app (Vercel project `hasparus-projects/bachanalia`,
-  linked via `.vercel/`, CLI deploys — GitHub auto-deploy blocked until the
-  Vercel GitHub app gets access to the `zagrajmy` org).
+- Deployed: https://bachanalia.vercel.app (Vercel project
+  `hasparus-projects/bachanalia`, linked via `.vercel/`, CLI deploys — GitHub
+  auto-deploy still blocked until the Vercel GitHub app gets access to the
+  `zagrajmy` org).
 - Stack: Next.js 16 App Router + bun + oxlint (`@hasparus/oxlint-config`) +
-  oxfmt + Tailwind v4. Scaffold from Vercel `cms-wordpress` example, trimmed
-  to vanilla WPGraphQL (no Yoast/ACF/preview — see commit messages).
-- **Placeholder content**: `NEXT_PUBLIC_WORDPRESS_API_URL` on Vercel points at
-  `demo.wpgraphql.com` because the real WP has no WPGraphQL yet. `/` renders a
-  hardcoded hero. Env vars set on Vercel (all envs): WP URL/hostname,
-  `NEXT_PUBLIC_BASE_URL`, `HEADLESS_SECRET` (random, only in Vercel).
+  oxfmt + Tailwind v4. oxlint/oxfmt pinned (1.71.0/0.56.0) due to bun
+  `minimum-release-age`.
+- **Now serving real content.** Vercel env (all three environments) points at
+  `https://bachanaliafantastyczne.pl`. WPGraphQL 2.18.0 and WooGraphQL
+  ("GraphQL for eCommerce" 1.0.3) are live: 34 pages, 25 posts, 22 products.
 - `bun run dev`/`build` need `.env.local` — run `vercel env pull .env.local`.
-- oxlint/oxfmt pinned (1.71.0/0.56.0) due to bun `minimum-release-age`.
 
-## Decisions made in conversation (not yet in plan.md)
+### Nothing is committed
 
-- ACF demoted: model guests/sponsors with native WP constructs (featured
-  image, categories, menu order); add ACF only when a concrete field doesn't fit.
-- Nav is hardcoded in `src/components/Globals/Navigation/Navigation.tsx`
-  (theme menu-location enums are fragile), from plan.md's v1 site map.
-- News source today is a Facebook embed, not WP posts — decide keep-embed vs
-  WP posts during Phase 3.
-- WooCommerce shop sells 2026 accreditation and uses Paynow
-  (`pay-by-paynow-pl`) — it must survive cutover. Frontend redirect must
-  exempt `/sklep`, `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty`.
-  plan.md's cutover section still says "redirect everything" — needs updating.
-- Programme + enrollment go through ludamus/Zagrajmy (sphere
-  `bachanalia.zagrajmy.net` planned, not yet set up).
+Last commit is `a2e5f52`. The entire session below is uncommitted working
+tree: design system, shell components, codegen rework, slug mapper, tests,
+plan.md rewrite. `src/gql/schema.gql` is newly tracked (1.1 MB); the
+generated `.ts` files stay ignored. Review before committing — the user's
+rule is no prod deploy without code review, and the next `vercel deploy`
+will serve real WordPress content for the first time.
 
-## 🔴 Active incident: WP malware (blocks everything WP-side)
+## Work log 2026-07-27
 
-**Still compromised as of 2026-07-09** — handed to third-party maintainers who
-did NOT clean it. Re-verified by curling raw HTML (not markdown, which hides
-it): the identical hidden div `left:-13537px` with `krakenat.cc` spam still
-serves on `https://bachanaliafantastyczne.pl/index.php/czas-i-miejsce/` (200).
-One thing changed: pretty permalinks (`/czas-i-miejsce/` etc.) now 404 while
-the legacy `/index.php/...` format still serves both real content and the spam
-— someone touched permalink settings but not the malware. Check both URL forms
-when re-verifying.
+**Security.** Re-verified the malware cleanup 17 days on: all 81 sitemap
+URLs fetched as Googlebot, zero spam markers, all 17 webshell paths 404,
+zero offscreen nodes in the rendered DOM. Still clean. Details in the
+incident section below.
 
-The live WordPress serves darknet-market SEO spam. Evidence gathered
-2026-07-02 (also summarized in `research/current-content.md`):
+**Data layer unblocked.** WPGraphQL was already live and public. Flipped the
+Vercel env off `demo.wpgraphql.com` onto the real site, then hit the real
+blocker: **WPGraphQL refuses introspection for public requests, and
+application passwords are disabled by Wordfence.** Re-enabling an auth vector
+that Wordfence deliberately shut off on a site compromised until three weeks
+ago was the wrong trade, so instead:
 
-- Hidden div `<div style="position:absolute;left:-13537px;width:1000px;">`
-  with Russian "Kraken" spam + link to `krakenat.cc`, injected after
-  `<div class="main-container">`, before post content, on at least
-  `czas-i-miejsce`, `organizator`, `sztab-bachanaliowy` (different text each —
-  doorway-style generation). Served to all user agents (no cloaking).
-- NOT in the database page content: REST `content.rendered` for the same
-  pages is clean → injection happens in the PHP render path (theme file,
-  plugin, mu-plugin, or wp_options hook), i.e. there's a backdoor file.
-- Software is current (WP 7.0, WooCommerce 10.9.1, Elementor 4.1.4) →
-  updates didn't remove persistence.
-- Plugins visible in HTML: elementor, royal-elementor-addons,
-  custom-facebook-feed-pro, embedpress, pay-by-paynow-pl, presto-player,
-  woocommerce. **royal-elementor-addons** had mass-exploited CVE-2023-5360
-  (arbitrary upload → rogue admins) — plausible original entry vector.
-- REST-visible users: `admin` (id 1), `yodi` (id 3). **`yodi` verified safe
-  (2026-07-09)** and no unknown admins → no active attacker logging in; the
-  compromise is purely **file-level** (an injected backdoor in the PHP render
-  path), which changes the cleanup priority to finding that file.
-- Site is behind Cloudflare; hosting provider unknown. Payments (Paynow) run
-  on the compromised install — treat checkout as at-risk until cleaned.
+1. Enabled Public Introspection in WPGraphQL settings.
+2. Ran codegen, committed `src/gql/schema.gql`.
+3. Pointed `codegen.ts` at the local schema file.
+4. Turned introspection back off (verified off).
 
-### Cleanup plan — wp-admin only (no hosting/SFTP; user has WP admin)
+**Builds are now hermetic** — `bun run codegen` succeeds with WordPress
+unreachable (tested against an invalid host). To refresh the schema after WP
+content-model changes: temporarily re-enable Public Introspection, run
+`bun run codegen:refresh`, turn it back off.
 
-The user has wp-admin but NOT hosting/SFTP/SSH. That's enough: wp-admin can
-reach everything inside the WP install (themes, plugins, mu-plugins,
-wp-config, uploads) — the likely hiding spots. Preferred tools, best first:
+**WooGraphQL installed** via wp-admin (browser-driven). Free, GPL-3.0, but
+**not on wordpress.org** — it installs from a GitHub zip and gets no
+auto-updates in wp-admin. That is exactly the failure mode that caused this
+site's 2.5-year compromise, so it needs a manual update habit. It also
+declares "WC tested up to 10.4.3" while the site runs WooCommerce 10.9.4 —
+fine for product reads, do not use its checkout mutations. Live shop verified
+intact after install (all shop routes 200, no PHP errors).
 
-- **Wordfence Security** (primary) — its malware scan compares core/theme/
-  plugin files against the official wordpress.org copies, flags modified or
-  unknown `.php` files, detects backdoor signatures (`eval`, `base64_decode`,
-  shells), and scans `uploads/` + `mu-plugins/`. Lets you view and delete/
-  repair the offending file straight from wp-admin. This is the fastest path
-  to the backdoor injecting the `krakenat.cc` div.
-- **Advanced File Manager** / **WP File Manager** — full filesystem browse/
-  view/edit/download/delete inside wp-admin, for anything Wordfence can't
-  auto-repair (mu-plugins, wp-config salts, downloading the site to inspect
-  locally).
-- **UpdraftPlus** — snapshot (backup) before deleting anything.
-- Built-in Theme/Plugin File Editors work too but are themes/plugins only and
-  often disabled via `DISALLOW_FILE_EDIT`.
+**Design system** built from the key art palette. See plan.md's Design
+section for the palette and the contrast traps. Fonts: **Sora** (display) +
+**IBM Plex Sans** (body), both verified for `latin-ext` before committing —
+Polish diacritics are non-negotiable and were checked in the browser.
 
-Limit: wp-admin can't reach server-level persistence (malicious cron, dropper
-outside the webroot, compromised includes). If the spam returns after a clean
-delete, that's the signal it's re-infecting from outside WP → hosting access
-becomes mandatory (fall back to nuke-and-pave, step 8).
+## Traps that cost time
 
-Steps:
+- **Turbopack caches CSS across dev runs.** The entire `.wp-content` block
+  appeared absent from the compiled stylesheet while standalone Tailwind
+  compiled it fine. It was a stale `.next` from this session's first dev run.
+  Symptom: computed styles show `max-width: none` for rules that exist in
+  source. Fix: stop dev, move `.next` aside, restart.
+- **`display: contents` breaks sibling combinators.** It flattens *layout*,
+  not DOM structure. Every Elementor paragraph sits alone inside its own
+  wrapper, so `.wp-content > * + *` matched nothing and all prose margins
+  were `0px` — the apparent spacing was line-height alone. Prose rhythm now
+  uses per-element `margin-block-end`. Do not reintroduce `+` or `~`
+  selectors in `.wp-content`.
+- **Full-page screenshots do not wait for many remote images.** A 54-image
+  gallery reads as a blank band in the capture while `painted: 54/54` and
+  `broken: 0` in the DOM. Verify layout numerically, not from the screenshot.
+- **`String.replace` passes the match offset** as the second callback arg
+  when the pattern has no capture group, so a `= ""` default never applies.
+  This silently replaced matches with integers in the first cut of
+  `prepareWpContent`.
+- **Do not "fix" WP permalinks before cutover.** See the open items below.
 
-1. Snapshot first: full file + DB backup via UpdraftPlus (evidence, rollback).
-2. Users: `yodi` verified safe and no unknown admins, so no lockout urgency —
-   still rotate all admin passwords + wp-config salts as hygiene.
-3. Find the backdoor — **Wordfence full scan** (or, with hosting access:
-   SSH/SFTP, WP-CLI):
-   - `wp core verify-checksums`; reinstall core over itself.
-   - `find . -name '*.php' -newermt '2025-01-01'` outside expected paths;
-     any `.php` in `wp-content/uploads/`; `wp-content/mu-plugins/`.
-   - grep for `eval(`, `base64_decode`, `gzinflate`, `str_rot13`,
-     `create_function` in themes/plugins; diff Ashe theme + each plugin
-     against fresh wordpress.org copies (custom-facebook-feed-pro is paid —
-     diff against vendor zip).
-   - wp_options: `wp option list --search='*<script*'`; check widgets,
-     Elementor custom code snippets.
-4. Delete + reinstall all plugins/themes from clean sources; remove unused ones.
-5. Rotate: hosting panel, FTP/SSH, DB password, WP app passwords. Check
-   crontab/wp-cron for persistence.
-6. Verify: curl the affected pages for the hidden div; Google Search Console
-   → Security issues; request reindex of cleaned pages.
-7. Only after clean: install WPGraphQL, create app password, continue Phase 2.
-8. If hosting access is unavailable or infra is too crusty: nuke-and-pave —
-   fresh WP on new hosting, export/import content (REST content is clean),
-   reinstall shop. Possibly less work than forensics.
+## Key implementation notes
 
-## Next steps (in order)
+- `src/utils/nextSlugToWpSlug.ts` maps clean paths to the `/index.php/…`
+  URIs WPGraphQL actually resolves. Without it every page 404s: a lookup for
+  `czas-i-miejsce` returns `null`, `/index.php/czas-i-miejsce/` returns the
+  page. Delete this and its test once permalinks are fixed at cutover.
+- `src/utils/prepareWpContent.ts` strips carousel ARIA
+  (`aria-roledescription="carousel"`, slide roles, `1 z 11` labels) because
+  the design renders those slides as a static grid, so the carousel
+  semantics would be a lie to screen readers.
+- Editors author in Elementor. Its wrappers are neutralised with
+  `display: contents` in `globals.css` and the semantic children inherit the
+  design system. Widget vocabulary is small: `text-editor`, `image`,
+  `heading`, `image-carousel`, one Google map, one button.
+- Galleries past 12 slides get a contact-sheet grid via
+  `:has(.swiper-slide:nth-child(13))`. This took one gallery from 4206px to
+  809px.
+- `src/components/Globals/siteNav.ts` holds the real scraped IA. Header is 6
+  links + Akredytacja CTA on one line (72px); the full grouped site map lives
+  in the footer, which avoids a mega-dropdown and the JS it needs. Mobile is
+  a native `<details>` disclosure, verified at 390px.
+- Deleted as dead scaffold: `Navigation.tsx` + its CSS module,
+  `PostTemplate.module.css`.
 
-1. Malware cleanup (above) — user action, agent can guide/verify remotely.
-2. User grants Vercel GitHub app access to `zagrajmy` → auto-deploys.
-3. Install WPGraphQL on cleaned WP → flip Vercel env vars
-   (`NEXT_PUBLIC_WORDPRESS_API_URL`, `_HOSTNAME`) → `bun run codegen` →
-   redeploy → real content.
-4. Phase 3 (content pages, design) and ludamus feed (plan.md Phase 4) can
-   proceed in parallel; update plan.md cutover for the shop exemption.
+## Open work
+
+The task list lives in the session harness, so it is reproduced here.
+Completed: env flip + codegen (1), codegen unblock (14), design system (4),
+navigation (5).
+
+1. **#2 Permalinks — DO NOT DO BEFORE CUTOVER.** Pretty permalinks 404 live,
+   meaning the server rewrite is broken. Switching to "Post name" now would
+   rewrite every live URL while WP is still the public frontend and could
+   404 the shop mid-accreditation-sales.
+2. **#3** Add `/index.php/*` → `/*` 301 in middleware. All inbound link
+   equity is on the legacy form.
+3. **#6** Verify the 20 WP static pages against the parity checklist in
+   `research/current-content.md`. Several are empty in WP today — keep the
+   route, render the honest empty state that `PageTemplate` already has.
+4. **#7** 25 dated 2025 guest posts. **Assumed decision: migrate as-is** at
+   their existing paths. Confirm before cutover. They are last year's
+   announcements and will read as current unless the listing separates
+   editions; `PostTemplate` already surfaces the date.
+5. **#8** `/wspieraja-nas` partner grid, 4 tiers. Pull original logos from
+   `wp-content/uploads`, not the Elementor thumbs.
+6. **#9** `/sklep` + `/produkt/[slug]` on WooGraphQL. Browse is ours;
+   **cart, checkout and Paynow stay on WooCommerce.**
+7. **#10** Home page. The key art (`baner_strona_1300x500.jpg`) is still
+   unused in the new design and belongs here as the hero. News source today
+   is a Facebook embed, not WP posts — undecided.
+8. **#11** Wire the revalidation webhook. `src/app/api/revalidate/route.ts`
+   exists but nothing calls it.
+9. **#12** Ludamus programme feed + `/program`. Independent of content work.
+   Also owed to Ad Astra: an organizer onboarding video.
+10. **#13** Cutover: DNS, `wp.` subdomain, redirects, shop exemptions.
+11. **#15** Low priority: several pages use bare paragraphs as section labels
+    (`POCIĄGIEM`, `AUTOBUSEM`) instead of headings, invisible to screen-reader
+    heading navigation. Editorial fix in WordPress, not CSS.
+
+Also unresolved: Vercel GitHub app access to the `zagrajmy` org (blocks
+auto-deploy), and `bun run lint` (bare `oxlint`) hangs — scope it to
+directories as a workaround.
+
+## 🟢 Malware incident — cleaned 2026-07-10, verified clean 2026-07-27
+
+Compromised ~2.5 years (oldest artifacts Feb 2023), serving hidden
+darknet-market SEO spam injected in the PHP render path, not the database.
+Entry vector confirmed as **CVE-2023-5360** in Royal Elementor Addons
+(malware found in its `wpr-addons` upload dir).
+
+Cleaned via Wordfence 2026-07-10 after a full UpdraftPlus backup. 17 malware
+files: `wp-includes/functions.php` (modified core, the injector — repaired),
+`uploads/wpr-addons/forms/{wp.php8,hyrywi.php}`, and webshells at webroot
+`j0edlm.php` / `ripjad.php` / `l3x2gq.php`, `wp-admin/{njjinw,yzliyz}.php`,
+`wp-includes/js/jquery/{nmrknj,zdnmnj}.php`, `wp-includes/l10n/index.php`,
+`uploads/2023/{02,03,04,05}/*.php`, plus fake plugin dirs
+`plugins/{ntfiow,mge0nd}/`. Compromise was file-level only — no rogue admins,
+`yodi` verified safe.
+
+Hardening still open:
+
+1. Rotate admin passwords + wp-config salts; rotate hosting/DB creds
+   (hosting is **dhosting.pl**, account `yodi`).
+2. Plugin/theme updates flagged: EmbedPress, Ashe theme, Smart Slider 3,
+   Event Tickets, Google for WooCommerce. Add WooGraphQL to the manual-update
+   watch list (no auto-updates, see above).
+3. Google Search Console: security check + request reindex.
+4. Keep spot-checking for re-infection. Spam returning means persistence
+   outside the webroot and needs dhosting panel access.
+5. A Wordfence in-panel re-scan is still worth one look (the 2026-07-27
+   verification was external only).
+
+Wordfence free, license on the `kobold.zagrajmy` shared mailbox. Site is
+behind Cloudflare — note that Cloudflare 403s non-browser user agents, so
+scripted checks need a browser UA.
 
 ## Suggested skills
 
-- `frontend-design` / `impeccable` — Phase 3 layout/design work.
-- `agent-browser` — re-verify the live site after cleanup (hidden-div check),
-  scrape assets (partner logos) when building pages.
-- `verify` — before committing nontrivial scaffold changes.
-- `security-review` — if writing any auth-adjacent code (revalidate webhook).
+- `impeccable` and `emil-design-eng` — used for the design system; reuse for
+  the home page hero and the shop. The craft floor and the animation
+  framework are the valuable parts.
+- `agent-browser` — verifying rendered output and scraping assets. Note its
+  `viewport` subcommand is not available in the installed version; use
+  `playwriter` when you need to control viewport size.
+- `playwriter` — driving wp-admin (the user stays signed in) and viewport
+  testing. Its `page.click()` on WordPress settings forms crashes the relay
+  mid-navigation; use `form.requestSubmit()` inside `page.evaluate()` and
+  verify the result out-of-band.
+- `code-review` / `security-review` — before the first real-content deploy,
+  and for the revalidate webhook.

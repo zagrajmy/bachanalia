@@ -6,6 +6,16 @@ export const PostQuery = gql`
       content
       date
       title
+      featuredImage {
+        node {
+          sourceUrl
+          altText
+          mediaDetails {
+            width
+            height
+          }
+        }
+      }
       author {
         node {
           name

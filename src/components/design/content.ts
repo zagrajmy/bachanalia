@@ -15,6 +15,8 @@ export const con = {
     { day: "Sobota", from: "9:30" },
     { day: "Niedziela", from: "9:30" },
   ],
+  /** From czas-i-miejsce: the UZ building has to be vacated at 20:00. */
+  buildingCloses: "20:00",
 };
 
 export const blocks = [
@@ -44,12 +46,81 @@ export const accreditation = [
   { label: "Golden Ticket", price: "250 zł" },
 ];
 
-export const partners = [
-  { tier: "Współorganizator", names: ["Uniwersytet Zielonogórski"] },
-  { tier: "Partner", names: ["Zielonogórski Ośrodek Kultury"] },
-  { tier: "Sponsorzy", names: ["Powergraph", "Rebis"] },
-  { tier: "Patroni", names: ["Radio Eska", "Informator Konwentowy", "Konwenty Południowe"] },
+const UPLOADS = "https://bachanaliafantastyczne.pl/wp-content/uploads";
+
+export type PartnerLogo = {
+  name: string;
+  src: string;
+  width: number;
+  height: number;
+  /**
+   * Dark artwork on a transparent or white ground: it disappears on dark
+   * surfaces and needs a light plate. False means the mark carries its own
+   * background (Planetarium Wenus is a solid red tile), so plating it just
+   * frames the tile.
+   */
+  needsPlate: boolean;
+};
+
+export const partners: { tier: string; logos: PartnerLogo[] }[] = [
+  {
+    tier: "Współorganizatorzy",
+    logos: [
+      {
+        name: "Uniwersytet Zielonogórski",
+        src: `${UPLOADS}/2025/09/znak_uproszczony_UZ_z_duzym_napisem_pl_RGB-1024x319.jpg`,
+        width: 1024,
+        height: 319,
+        needsPlate: true,
+      },
+    ],
+  },
+  {
+    tier: "Partnerzy",
+    logos: [
+      {
+        name: "Planetarium Wenus",
+        src: `${UPLOADS}/2026/07/kepler.png`,
+        width: 320,
+        height: 320,
+        needsPlate: false,
+      },
+      {
+        name: "Zielonogórski Ośrodek Kultury",
+        src: `${UPLOADS}/2024/08/LogoZok-300x138-1.jpg`,
+        width: 300,
+        height: 138,
+        needsPlate: true,
+      },
+    ],
+  },
+  {
+    tier: "Patroni medialni",
+    logos: [
+      {
+        name: "Fahrenheit",
+        src: `${UPLOADS}/2026/07/fahrenheit_przezroczyste-1024x200.png`,
+        width: 1024,
+        height: 200,
+        needsPlate: true,
+      },
+      {
+        name: "Konwenty Południowe",
+        src: `${UPLOADS}/2025/09/konwenty_poludniowe-300x114.png`,
+        width: 300,
+        height: 114,
+        needsPlate: true,
+      },
+    ],
+  },
 ];
+
+export const cityFunding = {
+  name: "Zrealizowano przy pomocy finansowej Miasta Zielona Góra",
+  src: `${UPLOADS}/elementor/thumbs/309075582_781048753011414_6542283171950865978_n-qt8eo7tyhl2rlu41n3my2zkzhrgdggy5kqkya542rk.png`,
+  width: 512,
+  height: 512,
+};
 
 export type NewsItem = { title: string; href: string; date: string };
 

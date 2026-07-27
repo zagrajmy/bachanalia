@@ -82,6 +82,13 @@ allows, is standard GraphQL-over-HTTP, and is cacheable where POST never
 was. Do not "modernise" it back to POST. If a query starts 403ing, check
 Wordfence before suspecting the query.
 
+Wordfence **also rate-limits bursts**, independently of query shape. A
+prerender walks 68 pages at once, and a single refusal used to fail the
+whole build (observed once on `/regulamin-wystawcow-2`, and again when
+several agents hit the site concurrently — every route 500'd for minutes,
+then recovered on its own). `fetchGraphQL` retries 403/429/5xx with backoff
+for that reason. If builds start failing in bursts, this is why.
+
 ## Traps that cost time
 
 - **Turbopack caches CSS across dev runs.** The entire `.wp-content` block
@@ -115,6 +122,17 @@ Wordfence before suspecting the query.
 - **`eslint-plugin-sonarjs` needs `globals`** without declaring it. Without
   it the plugin fails to load entirely, so its rules silently never run and
   lint passes locally while failing on a clean install.
+- **Guest photos live only in `featuredImage`.** The 25 guest posts have
+  zero images inside `content`, so any template rendering only `content`
+  silently drops every photo. `PostQuery` must select `featuredImage`.
+- **`research/current-content.md` is a 2026-07-02 snapshot and has drifted.**
+  Its partner list (Powergraph, Rebis, Radio Eska, Informator Konwentowy) no
+  longer matches the live page. Re-scrape before treating it as truth.
+- **Asset filenames lie.** The partner logo at `2026/07/kepler.png` is the
+  **Planetarium Wenus** mark. Open the image before naming an organisation.
+- **Most partner logos are dark on transparent** and disappear on the navy
+  surface. They need a light plate. Only Planetarium Wenus (white on red)
+  survives directly on dark.
 
 ## Key implementation notes
 

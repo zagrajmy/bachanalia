@@ -20,13 +20,41 @@ function endpoint(query: string, variables: Variables) {
   return url.toString();
 }
 
+const RETRY_DELAYS_MS = [400, 1200, 3000];
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Wordfence rate-limits bursts, and a prerender walks every page at once, so a
+ * single refusal would otherwise fail the whole build.
+ */
+const isTransient = (status: number) => status === 403 || status === 429 || status >= 500;
+
+async function fetchWithRetry(url: string, init: RequestInit): Promise<Response> {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
+    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1]);
+
+    try {
+      const response = await fetch(url, init);
+      if (!isTransient(response.status)) return response;
+      lastError = new Error(`WordPress responded ${response.status}`);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError;
+}
+
 async function request<T>(
   query: string,
   variables: Variables,
   headers: { [key: string]: string },
   init: CacheInit,
 ): Promise<T> {
-  const response = await fetch(endpoint(query, variables), { headers, ...init });
+  const response = await fetchWithRetry(endpoint(query, variables), { headers, ...init });
 
   if (!response.ok) {
     throw new Error(`WordPress responded ${response.status} ${response.statusText}`);

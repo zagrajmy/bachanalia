@@ -10,6 +10,9 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    cpus: 2,
+  },
   async redirects() {
     return [
       {

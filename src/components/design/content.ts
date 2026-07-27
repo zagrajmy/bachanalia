@@ -177,4 +177,4 @@ export const ALL_VARIANTS = [
     name,
     generation: "Przed szlifem",
   })),
-];
+].map((variant, index) => ({ ...variant, number: index + 1 }));

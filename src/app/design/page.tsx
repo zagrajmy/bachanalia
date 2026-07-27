@@ -27,13 +27,16 @@ export default function DesignGallery() {
             <li className="px-3 pb-2 text-[0.6875rem] tracking-[0.2em] text-ink-muted uppercase">
               {generation}
             </li>
-            {items.map(({ slug, name }) => (
+            {items.map(({ slug, name, number }) => (
               <li key={slug}>
                 <a
                   href={`/design/${slug}/`}
                   target="preview"
-                  className="block rounded-md px-3 py-2 text-sm text-ink-muted no-underline transition-colors duration-150 hover:bg-navy-800 hover:text-ink focus-visible:bg-navy-800 focus-visible:text-ink"
+                  className="flex items-baseline gap-2.5 rounded-md px-3 py-2 text-sm text-ink-muted no-underline transition-colors duration-150 hover:bg-navy-800 hover:text-ink focus-visible:bg-navy-800 focus-visible:text-ink"
                 >
+                  <span className="w-4 shrink-0 text-right text-xs text-accent tabular-nums">
+                    {number}
+                  </span>
                   {name}
                 </a>
               </li>

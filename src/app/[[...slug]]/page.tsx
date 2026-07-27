@@ -24,8 +24,18 @@ function HomeFallback() {
   );
 }
 
+const toPath = (segments?: string[]) => (segments?.length ? `/${segments.join("/")}/` : "/");
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const slug = nextSlugToWpSlug((await params).slug);
+  const segments = (await params).slug;
+  const path = toPath(segments);
+  const canonical = `${process.env.NEXT_PUBLIC_BASE_URL}${path}`;
+
+  if (path === "/") {
+    return { alternates: { canonical } };
+  }
+
+  const slug = nextSlugToWpSlug(segments);
   const isPreview = slug.includes("preview");
 
   const { contentNode } = await fetchGraphQL<{ contentNode: NodeWithTitle }>(print(SeoQuery), {
@@ -33,15 +43,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     idType: isPreview ? "DATABASE_ID" : "URI",
   });
 
-  if (!contentNode && slug !== "/") {
+  if (!contentNode) {
     return notFound();
   }
 
   return {
-    title: contentNode?.title ?? "Bachanalia Fantastyczne XL",
-    alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_BASE_URL}${slug}`,
-    },
+    title: contentNode.title,
+    alternates: { canonical },
   };
 }
 
@@ -50,7 +58,13 @@ export function generateStaticParams() {
 }
 
 export default async function Page({ params }: Props) {
-  const slug = nextSlugToWpSlug((await params).slug);
+  const segments = (await params).slug;
+
+  if (toPath(segments) === "/") {
+    return <HomeFallback />;
+  }
+
+  const slug = nextSlugToWpSlug(segments);
   const isPreview = slug.includes("preview");
   const { contentNode } = await fetchGraphQL<{ contentNode: ContentNode }>(
     print(ContentInfoQuery),
@@ -61,7 +75,6 @@ export default async function Page({ params }: Props) {
   );
 
   if (!contentNode) {
-    if (slug === "/") return <HomeFallback />;
     return notFound();
   }
 

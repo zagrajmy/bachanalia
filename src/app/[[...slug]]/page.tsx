@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { print } from "graphql/language/printer";
 
-import { fetchGraphQL } from "@/utils/fetchGraphQL";
+import { fetchGraphQL, fetchGraphQLAtBuild } from "@/utils/fetchGraphQL";
 import { ContentInfoQuery } from "@/queries/general/ContentInfoQuery";
 import { ContentNode, NodeWithTitle } from "@/gql/graphql";
 import PageTemplate from "@/components/Templates/Page/PageTemplate";
 import { nextSlugToWpSlug } from "@/utils/nextSlugToWpSlug";
+import { wpUriToPath } from "@/utils/wpUriToPath";
 import PostTemplate from "@/components/Templates/Post/PostTemplate";
+import { AllContentQuery } from "@/queries/general/AllContentQuery";
 import { SeoQuery } from "@/queries/general/SeoQuery";
 
 type Props = {
@@ -53,8 +55,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export function generateStaticParams() {
-  return [];
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const { pages, posts } = await fetchGraphQLAtBuild<{
+    pages: { nodes: { uri?: string | null }[] };
+    posts: { nodes: { uri?: string | null }[] };
+  }>(print(AllContentQuery));
+
+  return [...(pages?.nodes ?? []), ...(posts?.nodes ?? [])]
+    .map((node) => wpUriToPath(node.uri).split("/").filter(Boolean))
+    .filter((segments) => segments.length > 0)
+    .map((slug) => ({ slug }));
 }
 
 export default async function Page({ params }: Props) {

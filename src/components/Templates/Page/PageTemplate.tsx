@@ -2,7 +2,7 @@ import { print } from "graphql/language/printer";
 
 import { ContentNode, Page } from "@/gql/graphql";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
-import { prepareWpContent } from "@/utils/prepareWpContent";
+import { hasVisibleContent, prepareWpContent } from "@/utils/prepareWpContent";
 
 import { PageQuery } from "./PageQuery";
 
@@ -21,7 +21,7 @@ export default async function PageTemplate({ node }: TemplateProps) {
     <article className="mx-auto max-w-[1400px] px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
       <h1 className="display text-[clamp(2.25rem,1.5rem+3vw,3.75rem)] text-ink">{page?.title}</h1>
 
-      {content ? (
+      {hasVisibleContent(content) ? (
         <div className="wp-content mt-12" dangerouslySetInnerHTML={{ __html: content }} />
       ) : (
         <p className="mt-8 max-w-[55ch] text-lg text-ink-muted">

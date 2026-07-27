@@ -13,13 +13,16 @@ export function SiteFooter() {
                 {title}
               </h2>
               <ul className="mt-4 flex flex-col gap-2.5">
-                {links.map(({ href, label }) => (
-                  <li key={href}>
+                {links.map((link) => (
+                  <li key={link.href}>
                     <Link
-                      href={href}
+                      href={link.href}
+                      {...("external" in link && link.external
+                        ? { target: "_blank", rel: "noreferrer" }
+                        : {})}
                       className="text-[0.9375rem] text-ink-muted no-underline transition-colors duration-200 hover:text-ink"
                     >
-                      {label}
+                      {link.label}
                     </Link>
                   </li>
                 ))}

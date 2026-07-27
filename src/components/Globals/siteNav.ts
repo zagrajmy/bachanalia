@@ -1,3 +1,5 @@
+export const SHOP_URL = "https://bachanaliafantastyczne.pl/index.php/sklep/";
+
 export const primaryNav = [
   { href: "/co-to-sa-bachanalia/", label: "O konwencie" },
   { href: "/czas-i-miejsce/", label: "Czas i miejsce" },
@@ -48,7 +50,7 @@ export const footerNav = [
       { href: "/regulamin-wystawcow/", label: "Regulamin wystawców" },
       { href: "/wspieraja-nas/", label: "Wspierają nas" },
       { href: "/noclegi/", label: "Noclegi" },
-      { href: "/sklep/", label: "Sklep" },
+      { href: SHOP_URL, label: "Sklep", external: true },
     ],
   },
 ];

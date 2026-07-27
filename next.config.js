@@ -10,6 +10,15 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/index.php/:path*",
+        destination: "/:path*/",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

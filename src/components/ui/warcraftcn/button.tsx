@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import "@/components/ui/warcraftcn/styles/warcraft.css";
 
 const buttonVariants = cva(
-  "fantasy inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 border-solid whitespace-nowrap text-white uppercase no-underline outline-none transition-all duration-100 [border-image-repeat:stretch] hover:brightness-110 disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-3.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-95 active:brightness-75 active:shadow-inner",
+  "fantasy inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 border-solid whitespace-nowrap text-white no-underline outline-none transition-all duration-100 [border-image-repeat:stretch] hue-rotate-[var(--wc-hue,13deg)] hover:brightness-110 disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-3.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-95 active:brightness-75 active:shadow-inner",
   {
     variants: {
       variant: {

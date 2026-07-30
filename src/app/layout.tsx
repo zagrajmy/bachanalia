@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Cinzel, Familjen_Grotesk } from "next/font/google";
+import { Bricolage_Grotesque, Cinzel, Familjen_Grotesk, Instrument_Sans } from "next/font/google";
 
 import "@/app/globals.css";
 
@@ -22,10 +22,58 @@ const familjen = Familjen_Grotesk({
 
 const cinzel = Cinzel({
   subsets: ["latin", "latin-ext"],
-  weight: ["600", "700"],
+  weight: ["500", "700"],
   variable: "--font-cinzel",
   display: "swap",
 });
+
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-bricolage",
+  display: "swap",
+});
+
+const instrument = Instrument_Sans({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-instrument",
+  display: "swap",
+});
+
+const murmure = localFont({
+  src: "../fonts/LeMurmure-Regular.woff2",
+  weight: "400",
+  variable: "--font-murmure",
+  display: "swap",
+});
+
+const basteleur = localFont({
+  src: [
+    { path: "../fonts/Basteleur-Moonlight.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Basteleur-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-basteleur",
+  display: "swap",
+});
+
+const gulax = localFont({
+  src: "../fonts/Gulax-Regular.woff2",
+  weight: "400",
+  variable: "--font-gulax",
+  display: "swap",
+});
+
+const switzer = localFont({
+  src: [
+    { path: "../fonts/Switzer-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Switzer-Semibold.woff2", weight: "600", style: "normal" },
+  ],
+  variable: "--font-switzer",
+  display: "swap",
+});
+
+const fontVars = [karrik, familjen, cinzel, bricolage, instrument, murmure, basteleur, gulax, switzer]
+  .map((font) => font.variable)
+  .join(" ");
 
 const TITLE = "Bachanalia Fantastyczne XL";
 const DESCRIPTION =
@@ -52,7 +100,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pl" className={`${karrik.variable} ${familjen.variable} ${cinzel.variable}`}>
+    <html lang="pl" className={fontVars}>
       <body>{children}</body>
     </html>
   );

@@ -7,7 +7,7 @@
   --color-paper-shade: #eceef3;
   --color-navy: #191f5c;
   --color-navy-deep: #12163f;
-  --color-petrol: #1f3c50;
+  --color-petrol: #1a205d;
   --color-coral: #ee7489;
   --color-pink: #ff9cb3;
   --color-rose: #c0455f;
@@ -21,8 +21,8 @@
   --color-on-accent: var(--color-navy);
   --color-hairline: color-mix(in oklab, var(--color-navy) 25%, transparent);
 
-  --font-display: var(--font-karrik), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-familjen), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
 
   --radius-card: 3px;
 
@@ -108,9 +108,9 @@ body {
 }
 
 @utility eyebrow {
-  font-family: var(--font-display);
+  font-family: var(--font-button, var(--font-cinzel)), serif;
   font-size: 0.8125rem;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.04em;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -125,7 +125,7 @@ body {
 
 @utility display {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: var(--display-weight, 600);
   letter-spacing: -0.015em;
   line-height: 0.95;
   text-wrap: balance;

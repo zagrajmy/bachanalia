@@ -1,3 +1,4 @@
+import { DevFontSwitcher } from "@/components/Globals/DevFontSwitcher";
 import { SiteFooter } from "@/components/Globals/SiteFooter";
 import { SiteHeader } from "@/components/Globals/SiteHeader";
 
@@ -13,6 +14,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <SiteHeader />
       <main id="tresc">{children}</main>
       <SiteFooter />
+      {process.env.NODE_ENV === "development" && <DevFontSwitcher />}
     </>
   );
 }

@@ -1,6 +1,6 @@
 .fantasy {
-  font-family: var(--font-cinzel), serif;
-  font-weight: 700;
+  font-family: var(--font-button, var(--font-cinzel)), serif;
+  font-weight: var(--font-button-weight, 500);
   line-height: 1.5;
   letter-spacing: 0.5px;
 }

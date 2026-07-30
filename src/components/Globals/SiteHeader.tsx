@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { MenuIcon } from "lucide-react";
 
 import {
   NavigationMenu,
@@ -12,6 +13,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { Button } from "@/components/ui/warcraftcn/button";
 import { con } from "@/content/con";
 
 import { NavLink, primaryCta, primaryNav } from "./siteNav";
@@ -29,7 +31,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-hairline bg-paper">
-      <div className="gutter mx-auto flex h-16 max-w-6xl items-center gap-6 sm:h-18">
+      <div className="gutter mx-auto flex h-16 max-w-6xl items-center gap-4 sm:h-18 xl:gap-6 min-[72rem]:px-0">
         <Link
           href="/"
           aria-label={`${con.name} ${con.edition}, strona główna`}
@@ -40,6 +42,12 @@ export function SiteHeader() {
           </span>
         </Link>
 
+        {/**
+         * Each panel lives inside its own item, which is the positioned
+         * ancestor. Radix's shared viewport renders in a wrapper pinned to the
+         * nav's left edge and exposes no offset of the open trigger, so it
+         * cannot follow the group it belongs to.
+         */}
         <NavigationMenu
           aria-label="Główna nawigacja"
           value={openGroup}
@@ -47,9 +55,10 @@ export function SiteHeader() {
           onBlur={(event) => {
             if (!event.currentTarget.contains(event.relatedTarget)) setOpenGroup("");
           }}
+          viewport={false}
           className="ml-auto hidden lg:block"
         >
-          <NavigationMenuList className="gap-5">
+          <NavigationMenuList className="gap-0">
             {primaryNav.map((group) => (
               <NavigationMenuItem key={group.label} value={group.label}>
                 {group.children ? (
@@ -86,18 +95,18 @@ export function SiteHeader() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <Link
-          href={primaryCta.href}
-          target="_blank"
-          rel="noreferrer"
-          className="ml-auto hidden shrink-0 rounded-full bg-accent px-5 py-2 text-xs font-semibold tracking-[0.12em] whitespace-nowrap text-on-accent uppercase no-underline transition-[transform,background-color] duration-150 ease-[var(--ease-out)] hover:bg-pink active:scale-[0.97] lg:ml-0 lg:block"
-        >
-          {primaryCta.label}
-        </Link>
+        <Button asChild variant="frame" className="ml-auto hidden lg:ml-0 lg:inline-flex">
+          <Link href={primaryCta.href} target="_blank" rel="noreferrer">
+            {primaryCta.label}
+          </Link>
+        </Button>
 
         <details className="relative ml-auto lg:hidden">
-          <summary className="flex cursor-pointer list-none items-center rounded-full border border-hairline px-4 py-1.5 text-xs font-semibold tracking-[0.12em] uppercase transition-transform duration-150 ease-[var(--ease-out)] active:scale-[0.97]">
-            Menu
+          <summary
+            aria-label="Menu"
+            className="flex size-10 cursor-pointer list-none items-center justify-center rounded-full border border-hairline text-ink transition-transform duration-150 ease-[var(--ease-out)] active:scale-[0.97]"
+          >
+            <MenuIcon className="size-5" aria-hidden="true" />
           </summary>
           <div className="absolute end-0 top-[calc(100%+0.75rem)] max-h-[70vh] w-72 overflow-y-auto rounded-card border border-hairline bg-paper p-2 shadow-[0_18px_50px_-18px] shadow-navy/40">
             <ul>

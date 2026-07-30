@@ -1,26 +1,17 @@
-import { print } from "graphql/language/printer";
-
-import { ContentNode, Page } from "@/gql/graphql";
-import { fetchGraphQL } from "@/utils/fetchGraphQL";
+import { ContentNodeResult } from "@/queries/general/ContentQuery";
 import { hasVisibleContent, prepareWpContent } from "@/utils/prepareWpContent";
 
-import { PageQuery } from "./PageQuery";
-
 interface TemplateProps {
-  node: ContentNode;
+  node: ContentNodeResult;
 }
 
-export default async function PageTemplate({ node }: TemplateProps) {
-  const { page } = await fetchGraphQL<{ page: Page }>(print(PageQuery), {
-    id: node.databaseId,
-  });
-
-  const content = prepareWpContent(page?.content);
+export default function PageTemplate({ node }: TemplateProps) {
+  const content = prepareWpContent(node.content);
 
   return (
     <article className="gutter mx-auto max-w-6xl pt-12 pb-4 sm:pt-16">
       <h1 className="display -ml-[0.04em] border-b-2 border-navy pb-3 text-[clamp(2.1rem,6.4vw,4rem)]">
-        {page?.title}
+        {node.title}
       </h1>
 
       {hasVisibleContent(content) ? (

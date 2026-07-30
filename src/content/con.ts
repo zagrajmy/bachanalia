@@ -75,7 +75,7 @@ export const accreditation = [
   {
     slug: "golden-ticket",
     label: "Golden Ticket",
-    note: "Akredytacja 3 dniowa, wraz z egzemplarzem Fantazji Zielonogórskich, unikalnym pinsem, koszulką, notesem, oraz zestawem gadżetów (szczegóły wkrótce)",
+    note: "Akredytacja 3 dniowa, wraz z egzemplarzem Fantazji Zielonogórskich, unikalnym pinsem, koszulką, notesem, oraz zestawem gadżetów",
   },
   { slug: "akredytacja-3-dniowa", label: "Trzydniowa", note: "Piątek, sobota i niedziela" },
   { slug: "akredytacja-sobota", label: "Sobota", note: "Jeden dzień" },

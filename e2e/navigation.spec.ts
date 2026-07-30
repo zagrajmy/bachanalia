@@ -72,7 +72,7 @@ test.describe("site navigation", () => {
     test.skip(!isMobile, "the disclosure menu only exists below the lg breakpoint");
 
     await page.goto("/");
-    await page.getByRole("group").getByText("Menu").click();
+    await page.getByRole("group").getByLabel("Menu").click();
 
     const target = primaryNav[0];
     await page.getByRole("banner").getByRole("link", { name: target.label }).click();

@@ -91,41 +91,27 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
 
           {}
           <ol className="mt-1">
-            {tickets.map(({ label, note, price, href, soldOut }, i) => {
+            {tickets.map(({ label, note, price, href, soldOut }) => {
               const golden = label === "Golden Ticket";
               return (
-                <li
-                  key={href}
-                  className={
-                    golden
-                      ? "mb-4 rounded-card border-2 border-navy px-4 sm:px-6"
-                      : "border-b border-dashed border-navy/30"
-                  }
-                >
+                <li key={href} className="border-b border-dashed border-navy/30">
                   <a
                     href={href}
                     target="_blank"
                     rel="noreferrer"
-                    className="group grid grid-cols-[auto_minmax(0,1fr)_auto] items-baseline gap-x-4 py-3 no-underline sm:gap-x-8 sm:py-3.5"
+                    className="group grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 py-3 no-underline sm:gap-x-8 sm:py-3.5"
                   >
-                    <span
-                      className={`eyebrow tabular-nums ${golden ? "text-rose" : "text-ink-muted"}`}
-                    >
-                      {idx(i)}
-                    </span>
                     <span className="min-w-0">
                       <span className="display block text-[clamp(1.2rem,3.4vw,2rem)] text-ink underline-offset-[0.18em] group-hover:underline">
                         {label}
                       </span>
-                      <span
-                        className={`mt-0.5 block text-sm text-ink-muted ${golden ? "max-w-[52ch]" : ""}`}
-                      >
+                      <span className="mt-0.5 block text-sm text-ink-muted">
                         {soldOut ? "Wyprzedane" : note}
                       </span>
                     </span>
                     <span
                       className={`display text-[clamp(1.5rem,4.6vw,2.6rem)] whitespace-nowrap tabular-nums ${
-                        golden ? "text-rose" : ""
+                        golden ? "gold" : ""
                       } ${soldOut ? "line-through opacity-60" : ""}`}
                     >
                       {price}

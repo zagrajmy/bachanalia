@@ -1,16 +1,15 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { print } from "graphql/language/printer";
 
 import { fetchGraphQL, fetchGraphQLAtBuild } from "@/utils/fetchGraphQL";
-import { ContentInfoQuery } from "@/queries/general/ContentInfoQuery";
-import { ContentNode, NodeWithTitle } from "@/gql/graphql";
+import { ContentNodeResult, ContentQuery } from "@/queries/general/ContentQuery";
 import PageTemplate from "@/components/Templates/Page/PageTemplate";
 import { nextSlugToWpSlug } from "@/utils/nextSlugToWpSlug";
 import { wpUriToPath } from "@/utils/wpUriToPath";
 import PostTemplate from "@/components/Templates/Post/PostTemplate";
 import { AllContentQuery } from "@/queries/general/AllContentQuery";
-import { SeoQuery } from "@/queries/general/SeoQuery";
 import { Home } from "@/components/Home";
 import { fetchNews } from "@/components/News/news";
 import { fetchAccreditation } from "@/content/shop";
@@ -27,6 +26,23 @@ async function HomePage() {
 
 const toPath = (segments?: string[]) => (segments?.length ? `/${segments.join("/")}/` : "/");
 
+/**
+ * Memoised so metadata and the body share a single WordPress round trip.
+ */
+const getContentNode = cache(async (slug: string) => {
+  const isPreview = slug.includes("preview");
+
+  const { contentNode } = await fetchGraphQL<{ contentNode: ContentNodeResult | null }>(
+    print(ContentQuery),
+    {
+      slug: isPreview ? slug.split("preview/")[1] : slug,
+      idType: isPreview ? "DATABASE_ID" : "URI",
+    },
+  );
+
+  return contentNode;
+});
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const segments = (await params).slug;
   const path = toPath(segments);
@@ -36,13 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { alternates: { canonical } };
   }
 
-  const slug = nextSlugToWpSlug(segments);
-  const isPreview = slug.includes("preview");
-
-  const { contentNode } = await fetchGraphQL<{ contentNode: NodeWithTitle }>(print(SeoQuery), {
-    slug: isPreview ? slug.split("preview/")[1] : slug,
-    idType: isPreview ? "DATABASE_ID" : "URI",
-  });
+  const contentNode = await getContentNode(nextSlugToWpSlug(segments));
 
   if (!contentNode) {
     return notFound();
@@ -75,15 +85,7 @@ export default async function Page({ params }: Props) {
     return <HomePage />;
   }
 
-  const slug = nextSlugToWpSlug(segments);
-  const isPreview = slug.includes("preview");
-  const { contentNode } = await fetchGraphQL<{ contentNode: ContentNode }>(
-    print(ContentInfoQuery),
-    {
-      slug: isPreview ? slug.split("preview/")[1] : slug,
-      idType: isPreview ? "DATABASE_ID" : "URI",
-    },
-  );
+  const contentNode = await getContentNode(nextSlugToWpSlug(segments));
 
   if (!contentNode) {
     return notFound();

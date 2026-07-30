@@ -85,6 +85,26 @@ body {
   }
 }
 
+/**
+ * Gold leaf. Metal reads through range, not one flat yellow: red bronze in
+ * the shadows, a narrow sheen across the middle, back down. The highlight is
+ * deliberately a thin band — widen it and the middle of every digit drops
+ * below readable contrast on white, since the whole effect depends on going
+ * lighter than the paper can support.
+ */
+@utility gold {
+  background-image: linear-gradient(
+    100deg,
+    #8a5f16 0%,
+    #c79a2c 32%,
+    #e9d089 48%,
+    #c79a2c 64%,
+    #8a5f16 100%
+  );
+  background-clip: text;
+  color: transparent;
+}
+
 @utility eyebrow {
   font-family: var(--font-display);
   font-size: 0.8125rem;

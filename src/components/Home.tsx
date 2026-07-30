@@ -6,6 +6,7 @@ import { Ticket } from "@/content/shop";
 import { primaryCta } from "@/components/Globals/siteNav";
 import { NewsEntry } from "@/components/News/news";
 import { NewsSection } from "@/components/News/NewsSection";
+import { Button } from "@/components/ui/warcraftcn/button";
 
 const [nameHead, ...nameTail] = con.name.split(" ");
 
@@ -95,14 +96,12 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
               const golden = label === "Golden Ticket";
               return (
                 <li key={href} className="border-b border-dashed border-navy/30">
-                  <a
+                  <Link
                     href={href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 py-3 no-underline sm:gap-x-8 sm:py-3.5"
+                    className="group -mx-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 rounded-card px-3 py-3 no-underline transition-colors duration-150 hover:bg-paper-shade sm:gap-x-8 sm:py-3.5"
                   >
                     <span className="min-w-0">
-                      <span className="display block text-[clamp(1.2rem,3.4vw,2rem)] text-ink underline-offset-[0.18em] group-hover:underline">
+                      <span className="display block text-[clamp(1.2rem,3.4vw,2rem)] text-ink">
                         {label}
                       </span>
                       <span className="mt-0.5 block text-sm text-ink-muted">
@@ -116,20 +115,15 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
                     >
                       {price}
                     </span>
-                  </a>
+                  </Link>
                 </li>
               );
             })}
           </ol>
 
-          <Link
-            href={primaryCta.href}
-            target="_blank"
-            rel="noreferrer"
-            className="display mt-9 inline-block rounded-full bg-accent px-9 py-4 text-[clamp(1.2rem,3.6vw,1.65rem)] text-on-accent no-underline transition-[transform,background-color] duration-150 ease-[var(--ease-out)] hover:bg-pink active:scale-[0.98]"
-          >
-            Kup akredytację
-          </Link>
+          <Button asChild className="mt-9 px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]">
+            <Link href={primaryCta.href}>Kup akredytację</Link>
+          </Button>
         </div>
       </section>
 
@@ -188,14 +182,12 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
             </p>
           </div>
 
-          <Link
-            href={primaryCta.href}
-            target="_blank"
-            rel="noreferrer"
-            className="display shrink-0 self-start rounded-full bg-accent px-9 py-4 text-[clamp(1.2rem,3.6vw,1.65rem)] text-on-accent no-underline transition-[transform,background-color] duration-150 ease-[var(--ease-out)] hover:bg-pink active:scale-[0.98] sm:self-auto"
+          <Button
+            asChild
+            className="self-start px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)] sm:self-auto"
           >
-            Kup akredytację
-          </Link>
+            <Link href={primaryCta.href}>Kup akredytację</Link>
+          </Button>
         </div>
       </section>
     </>

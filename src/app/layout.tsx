@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Familjen_Grotesk } from "next/font/google";
+import { Cinzel, Familjen_Grotesk } from "next/font/google";
 
 import "@/app/globals.css";
 
@@ -17,6 +17,13 @@ const familjen = Familjen_Grotesk({
   subsets: ["latin", "latin-ext"],
   weight: ["400", "600"],
   variable: "--font-familjen",
+  display: "swap",
+});
+
+const cinzel = Cinzel({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "700"],
+  variable: "--font-cinzel",
   display: "swap",
 });
 
@@ -45,7 +52,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pl" className={`${karrik.variable} ${familjen.variable}`}>
+    <html lang="pl" className={`${karrik.variable} ${familjen.variable} ${cinzel.variable}`}>
       <body>{children}</body>
     </html>
   );

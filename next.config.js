@@ -28,15 +28,32 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      /**
+       * WooCommerce's product permalink, in both its clean and PATHINFO
+       * forms. The explicit legacy rule comes first so an indexed
+       * `/index.php/produkt/…` costs one hop rather than being handed to the
+       * generic rule below and redirected twice.
+       */
+      {
+        source: "/index.php/produkt/:slug",
+        destination: "/sklep/:slug/",
+        permanent: true,
+      },
+      {
+        source: "/produkt/:slug",
+        destination: "/sklep/:slug/",
+        permanent: true,
+      },
       {
         source: "/index.php/:path*",
         destination: "/:path*/",
         permanent: true,
       },
+      /** Biletomat sold these once; the shop does now. */
       {
         source: "/akredytacja",
-        destination: "https://bachanaliafantastyczne.pl/index.php/sklep/",
-        permanent: false,
+        destination: "/sklep/",
+        permanent: true,
       },
       {
         source: "/blog",

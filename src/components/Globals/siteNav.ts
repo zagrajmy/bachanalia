@@ -1,4 +1,13 @@
-export const SHOP_URL = "https://bachanaliafantastyczne.pl/index.php/sklep/";
+export const SHOP_PATH = "/sklep/";
+
+export const productPath = (slug: string) => `${SHOP_PATH}${slug}/`;
+
+/**
+ * Browsing is ours; cart, checkout and Paynow stay on WooCommerce, because
+ * `pay-by-paynow-pl` is a classic gateway and nothing about driving it from
+ * here is verified.
+ */
+export const WP_CART_URL = "https://bachanaliafantastyczne.pl/index.php/koszyk/";
 
 export type NavLink = { href: string; label: string; external?: boolean };
 
@@ -56,14 +65,14 @@ export const primaryNav: NavGroup[] = [
   },
   { href: "/wspieraja-nas/", label: "Wspierają nas" },
   { href: "/noclegi/", label: "Noclegi" },
-  { href: SHOP_URL, label: "Sklep", external: true },
+  { href: SHOP_PATH, label: "Sklep" },
 ];
 
 /**
  * Straight to the shop. The WordPress /akredytacja/ page only ever explained
  * that the shop sells them, and the Taryfikator now carries the prices.
  */
-export const primaryCta = { href: SHOP_URL, label: "Akredytacja", external: true };
+export const primaryCta = { href: SHOP_PATH, label: "Akredytacja" };
 
 export const footerNav = [
   {
@@ -105,7 +114,7 @@ export const footerNav = [
       { href: "/regulamin-wystawcow/", label: "Regulamin wystawców" },
       { href: "/wspieraja-nas/", label: "Wspierają nas" },
       { href: "/noclegi/", label: "Noclegi" },
-      { href: SHOP_URL, label: "Sklep", external: true },
+      { href: SHOP_PATH, label: "Sklep" },
     ],
   },
 ];

@@ -94,15 +94,17 @@ body {
  */
 @utility gold {
   background-image: linear-gradient(
-    100deg,
-    #8a5f16 0%,
-    #c79a2c 32%,
-    #e9d089 48%,
-    #c79a2c 64%,
-    #8a5f16 100%
+    to bottom,
+    #c9a13a 0%,
+    #e6c86e 24%,
+    #f8eab3 46%,
+    #f1dc95 58%,
+    #d9b04a 80%,
+    #c39a33 100%
   );
   background-clip: text;
   color: transparent;
+  filter: drop-shadow(0 1px 0 rgb(150 110 30 / 0.3));
 }
 
 @utility eyebrow {

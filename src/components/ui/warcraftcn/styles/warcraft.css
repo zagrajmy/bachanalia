@@ -1,0 +1,21 @@
+.fantasy {
+  font-family: var(--font-cinzel), serif;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+}
+
+.wc-btn-border {
+  border-image-source: url("../assets/button-bg.webp");
+}
+
+.wc-btn-border-sm {
+  border-image-source: url("../assets/button-bg-sm.webp");
+}
+
+.wc-btn-border-frame {
+  border-image-source: url("../assets/button-bg-with-frame.webp");
+}
+
+.wc-btn-border-frame-sm {
+  border-image-source: url("../assets/button-bg-with-frame-sm.webp");
+}

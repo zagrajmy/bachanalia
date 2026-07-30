@@ -1,6 +1,7 @@
 import { print } from "graphql/language/printer";
 
 import { AccreditationQuery } from "@/queries/general/AccreditationQuery";
+import { productPath } from "@/components/Globals/siteNav";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
 
 import { accreditation } from "./con";
@@ -47,14 +48,14 @@ export async function fetchAccreditation(): Promise<Ticket[]> {
 
   return accreditation.flatMap(({ slug, label, note }) => {
     const product = bySlug.get(slug);
-    if (!product?.link || !product.price) return [];
+    if (!product?.price) return [];
 
     return [
       {
         label,
         note,
         price: formatPrice(product.price),
-        href: product.link,
+        href: productPath(slug),
         soldOut: product.stockStatus === "OUT_OF_STOCK",
       },
     ];

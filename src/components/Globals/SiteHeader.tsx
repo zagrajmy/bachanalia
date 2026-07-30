@@ -95,7 +95,7 @@ export function SiteHeader() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <Button asChild variant="frame" className="ml-auto hidden lg:ml-0 lg:inline-flex">
+        <Button asChild className="ml-auto hidden lg:ml-0 lg:inline-flex">
           <Link href={primaryCta.href} target="_blank" rel="noreferrer">
             {primaryCta.label}
           </Link>

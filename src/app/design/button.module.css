@@ -1,0 +1,207 @@
+.btn {
+  --corner: 0.75em;
+  --inset: 3px;
+  --plate-top: color-mix(in oklab, var(--color-navy) 88%, white);
+  --plate-bottom: var(--color-navy-deep);
+  --frame: color-mix(in oklab, var(--color-coral) 55%, transparent);
+  --frame-lit: var(--color-pink);
+  --glow: var(--color-coral);
+  --label: var(--color-paper);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+
+  padding: 0.85em 1.9em;
+  border: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--label);
+  text-decoration: none;
+  cursor: pointer;
+
+  background: linear-gradient(180deg, var(--plate-top), var(--plate-bottom));
+  border-radius: var(--corner);
+  corner-shape: bevel;
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, white 20%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, black 35%, transparent);
+
+  transition:
+    transform 120ms var(--ease-out),
+    filter 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
+}
+
+.btn::before,
+.btn::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border-radius: inherit;
+  corner-shape: inherit;
+}
+
+.btn::before {
+  inset: var(--inset);
+  border: 1px solid var(--frame);
+  border-radius: calc(var(--corner) - var(--inset));
+  transition: border-color 160ms var(--ease-out);
+}
+
+.btn::after {
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(
+    115% 130% at 50% 118%,
+    color-mix(in oklab, var(--glow) 85%, transparent),
+    transparent 68%
+  );
+  transition: opacity 220ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover::before {
+    border-color: var(--frame-lit);
+  }
+
+  .btn:hover::after {
+    opacity: 1;
+  }
+}
+
+.btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 4px color-mix(in oklab, black 45%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, white 10%, transparent);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  cursor: not-allowed;
+  filter: grayscale(0.85);
+  opacity: 0.45;
+}
+
+.btn:disabled::after,
+.btn[aria-disabled="true"]::after {
+  display: none;
+}
+
+.accent {
+  --plate-top: var(--color-pink);
+  --plate-bottom: var(--color-rose);
+  --frame: color-mix(in oklab, var(--color-navy) 45%, transparent);
+  --frame-lit: var(--color-navy);
+  --glow: color-mix(in oklab, var(--color-paper) 60%, var(--color-pink));
+  --label: var(--color-navy);
+}
+
+.ghost {
+  --plate-top: transparent;
+  --plate-bottom: transparent;
+  --frame: color-mix(in oklab, currentColor 35%, transparent);
+  --frame-lit: var(--color-accent);
+  --glow: color-mix(in oklab, var(--color-accent) 35%, transparent);
+  --label: var(--color-ink);
+
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, currentColor 18%, transparent);
+}
+
+.notched {
+  --corner: 0.45em;
+  corner-shape: notch;
+}
+
+.scooped {
+  --corner: 0.8em;
+  corner-shape: scoop;
+}
+
+.plate {
+  --cap: 0.85em;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline: var(--cap);
+
+  padding: 0.5em 1.4em;
+  border: 2px solid #67748c;
+  border-radius: 4px;
+  corner-shape: bevel;
+  cursor: pointer;
+
+  font-family: var(--font-cinzel), serif;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #e4ebfa;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.85);
+
+  background: linear-gradient(180deg, #2b4b88 0%, #17294f 48%, #0f1b36 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.3),
+    inset 0 -3px 8px rgb(0 0 0 / 0.55),
+    0 1px 3px rgb(0 0 0 / 0.4);
+
+  transition:
+    filter 160ms var(--ease-out),
+    transform 120ms var(--ease-out);
+}
+
+.plate::before,
+.plate::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  width: var(--cap);
+  height: 1.7em;
+  border: 1px solid #232a38;
+  border-radius: 4px;
+  corner-shape: bevel;
+  background:
+    radial-gradient(circle at 50% 50%, #d19a4a 0 0.16em, #7a5220 0.16em 0.2em, transparent 0.2em),
+    linear-gradient(180deg, #99a5b8, #414b5c);
+}
+
+.plate::before {
+  left: calc(var(--cap) * -1 + 2px);
+}
+
+.plate::after {
+  right: calc(var(--cap) * -1 + 2px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .plate:hover {
+    filter: brightness(1.18);
+  }
+}
+
+.plate:active {
+  transform: translateY(1px);
+  filter: brightness(0.9);
+}
+
+.sm {
+  --inset: 2px;
+  font-size: 0.8125rem;
+  padding: 0.7em 1.4em;
+}
+
+.lg {
+  --inset: 4px;
+  --corner: 0.7em;
+  font-size: clamp(1.05rem, 3vw, 1.25rem);
+  padding: 0.8em 2.2em;
+}

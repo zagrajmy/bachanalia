@@ -8,10 +8,46 @@ const redirects = async () => {
   return nextConfig.redirects();
 };
 
-test("legacy PATHINFO urls redirect permanently to clean paths", async () => {
-  const [rule] = await redirects();
+const find = async (source: string) => {
+  const rule = (await redirects()).find((r) => r.source === source);
+  assert.ok(rule, `no redirect declared for ${source}`);
+  return rule;
+};
 
-  assert.equal(rule.source, "/index.php/:path*");
+/** Next takes the first rule that matches, so order is behaviour. */
+const indexOf = async (source: string) => (await redirects()).findIndex((r) => r.source === source);
+
+test("legacy PATHINFO urls redirect permanently to clean paths", async () => {
+  const rule = await find("/index.php/:path*");
+
+  assert.equal(rule.destination, "/:path*/");
+  assert.equal(rule.permanent, true);
+});
+
+test("destination keeps the trailing slash so the hop is not doubled", async () => {
+  const rule = await find("/index.php/:path*");
+
+  assert.equal(
+    rule.destination,
+    "/:path*/",
+    "trailingSlash is on, so a destination without the slash costs a second redirect on every indexed URL",
+  );
+});
+
+test("an indexed product url reaches the shop in one hop, not two", async () => {
+  assert.ok(
+    (await indexOf("/index.php/produkt/:slug")) < (await indexOf("/index.php/:path*")),
+    "the generic PATHINFO rule would otherwise claim it first and bounce it through /produkt/",
+  );
+
+  assert.equal((await find("/index.php/produkt/:slug")).destination, "/sklep/:slug/");
+  assert.equal((await find("/produkt/:slug")).destination, "/sklep/:slug/");
+});
+
+test("accreditation lands on our own shop, not back on WordPress", async () => {
+  const rule = await find("/akredytacja");
+
+  assert.equal(rule.destination, "/sklep/");
   assert.equal(rule.permanent, true);
 });
 
@@ -24,16 +60,14 @@ test("redirects within the site are permanent, so link equity is not parked on a
   }
 });
 
-test("redirects off the site are temporary, because the shop is about to move", async () => {
+test("nothing redirects off the site any more", async () => {
   const outbound = (await redirects()).filter((rule) => !rule.destination.startsWith("/"));
 
-  for (const rule of outbound) {
-    assert.equal(
-      rule.permanent,
-      false,
-      `${rule.source} must 302 — a browser caches a 301 indefinitely, and WordPress moves to a subdomain at cutover`,
-    );
-  }
+  assert.deepEqual(
+    outbound.map((rule) => rule.source),
+    [],
+    "an outbound hop must be temporary — WordPress moves to a subdomain at cutover and a browser caches a 301 indefinitely",
+  );
 });
 
 test("the dropped WordPress news shells land on the news archive", async () => {
@@ -41,14 +75,4 @@ test("the dropped WordPress news shells land on the news archive", async () => {
 
   assert.equal(destinations.get("/blog"), "/aktualnosci/");
   assert.equal(destinations.get("/category/:slug*"), "/aktualnosci/");
-});
-
-test("destination keeps the trailing slash so the hop is not doubled", async () => {
-  const [rule] = await redirects();
-
-  assert.equal(
-    rule.destination,
-    "/:path*/",
-    "trailingSlash is on, so a destination without the slash costs a second redirect on every indexed URL",
-  );
 });

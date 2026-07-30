@@ -34,6 +34,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/akredytacja",
+        destination: "https://bachanaliafantastyczne.pl/index.php/sklep/",
+        permanent: false,
+      },
+      {
         source: "/blog",
         destination: "/aktualnosci/",
         permanent: true,

@@ -86,40 +86,38 @@ export function Home({ news }: { news: NewsEntry[] }) {
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-b-2 border-navy pb-3">
             <h2 className="display -ml-[0.04em] text-[clamp(2.1rem,6.4vw,4rem)]">Taryfikator</h2>
-            <p className="max-w-[34ch] text-sm text-ink-muted">
-              Ceny wejściówek na {con.dates}. Golden Ticket obejmuje cały konwent.
-            </p>
+            <p className="max-w-[34ch] text-sm text-ink-muted">Ceny wejściówek na {con.dates}.</p>
           </div>
 
+          {}
           <ol className="mt-1">
-            {accreditation.map(({ label, price }, i) => {
+            {accreditation.map(({ label, note, price }, i) => {
               const golden = label === "Golden Ticket";
               return (
                 <li
                   key={label}
                   className={
                     golden
-                      ? "ink-inverted mt-4 rounded-card bg-petrol px-4 sm:px-6"
+                      ? "ink-inverted mt-5 rounded-card bg-petrol px-4 sm:px-6"
                       : "border-b border-dashed border-navy/30"
                   }
                 >
-                  <div className="flex items-baseline gap-3 py-2 sm:gap-5 sm:py-2.5">
+                  <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-baseline gap-x-4 py-3 sm:gap-x-8 sm:py-3.5">
                     <span
-                      className={`w-6 shrink-0 text-[0.62rem] tracking-[0.18em] tabular-nums ${
-                        golden ? "text-accent" : "text-ink-muted"
-                      }`}
+                      className={`eyebrow tabular-nums ${golden ? "text-accent" : "text-ink-muted"}`}
                     >
                       {idx(i)}
                     </span>
-                    <span className="display text-[clamp(1.2rem,3.8vw,2.1rem)] whitespace-nowrap">
-                      {label}
+                    <span className="min-w-0">
+                      <span className="display block text-[clamp(1.2rem,3.4vw,2rem)]">{label}</span>
+                      <span
+                        className={`mt-0.5 block text-sm ${golden ? "text-lilac" : "text-ink-muted"}`}
+                      >
+                        {note}
+                      </span>
                     </span>
                     <span
-                      aria-hidden="true"
-                      className="mb-[0.4em] hidden flex-1 self-end border-b border-dotted border-hairline sm:block"
-                    />
-                    <span
-                      className={`display ml-auto text-[clamp(1.6rem,5.2vw,2.8rem)] whitespace-nowrap tabular-nums sm:ml-0 ${
+                      className={`display text-[clamp(1.5rem,4.6vw,2.6rem)] whitespace-nowrap tabular-nums ${
                         golden ? "text-coral" : ""
                       }`}
                     >
@@ -133,6 +131,8 @@ export function Home({ news }: { news: NewsEntry[] }) {
 
           <Link
             href={primaryCta.href}
+            target="_blank"
+            rel="noreferrer"
             className="display mt-9 inline-block rounded-full bg-accent px-9 py-4 text-[clamp(1.2rem,3.6vw,1.65rem)] text-on-accent no-underline transition-[transform,background-color] duration-150 ease-[var(--ease-out)] hover:bg-pink active:scale-[0.98]"
           >
             Kup akredytację
@@ -140,10 +140,10 @@ export function Home({ news }: { news: NewsEntry[] }) {
         </div>
       </section>
 
-      <section className="ink-inverted gutter mt-16 bg-petrol py-20 sm:mt-24 sm:py-28">
+      <section className="ink-inverted gutter mt-16 bg-petrol py-14 sm:mt-24 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <p className="eyebrow text-accent">Bramy otwieramy</p>
-          <ul className="mt-12 grid gap-12 sm:grid-cols-3 sm:gap-8">
+          <ul className="mt-8 grid gap-10 sm:grid-cols-3 sm:gap-8">
             {con.hours.map(({ day, from }) => (
               <li key={day}>
                 <p className="eyebrow text-ink-muted">{day}</p>
@@ -186,6 +186,27 @@ export function Home({ news }: { news: NewsEntry[] }) {
       </section>
 
       <NewsSection items={news} />
+
+      {}
+      <section className="gutter pt-16 sm:pt-24">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 border-t-2 border-navy pt-8 sm:flex-row sm:items-end sm:justify-between sm:gap-12">
+          <div>
+            <p className="display text-[clamp(2.1rem,6.4vw,4rem)] leading-[0.9]">{con.dates}</p>
+            <p className="mt-3 max-w-[38ch] text-ink-muted">
+              {con.venue}, {con.address}
+            </p>
+          </div>
+
+          <Link
+            href={primaryCta.href}
+            target="_blank"
+            rel="noreferrer"
+            className="display shrink-0 self-start rounded-full bg-accent px-9 py-4 text-[clamp(1.2rem,3.6vw,1.65rem)] text-on-accent no-underline transition-[transform,background-color] duration-150 ease-[var(--ease-out)] hover:bg-pink active:scale-[0.98] sm:self-auto"
+          >
+            Kup akredytację
+          </Link>
+        </div>
+      </section>
     </>
   );
 }

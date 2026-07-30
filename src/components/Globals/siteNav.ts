@@ -59,7 +59,11 @@ export const primaryNav: NavGroup[] = [
   { href: SHOP_URL, label: "Sklep", external: true },
 ];
 
-export const primaryCta = { href: "/akredytacja/", label: "Akredytacja" };
+/**
+ * Straight to the shop. The WordPress /akredytacja/ page only ever explained
+ * that the shop sells them, and the Taryfikator now carries the prices.
+ */
+export const primaryCta = { href: SHOP_URL, label: "Akredytacja", external: true };
 
 export const footerNav = [
   {

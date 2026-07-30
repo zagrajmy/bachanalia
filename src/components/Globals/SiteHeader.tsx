@@ -42,7 +42,6 @@ export function SiteHeader() {
 
         <NavigationMenu
           aria-label="Główna nawigacja"
-          viewport={false}
           value={openGroup}
           onValueChange={setOpenGroup}
           onBlur={(event) => {
@@ -62,7 +61,7 @@ export function SiteHeader() {
                     </NavigationMenuTrigger>
 
                     <NavigationMenuContent>
-                      <ul className="min-w-56 rounded-card border border-hairline bg-paper py-2 shadow-[0_18px_50px_-24px] shadow-navy/50">
+                      <ul className="grid w-[15rem] gap-1">
                         {group.children.map((link) => (
                           <li key={link.href}>
                             <NavigationMenuLink asChild>
@@ -89,6 +88,8 @@ export function SiteHeader() {
 
         <Link
           href={primaryCta.href}
+          target="_blank"
+          rel="noreferrer"
           className="ml-auto hidden shrink-0 rounded-full bg-accent px-5 py-2 text-xs font-semibold tracking-[0.12em] whitespace-nowrap text-on-accent uppercase no-underline transition-[transform,background-color] duration-150 ease-[var(--ease-out)] hover:bg-pink active:scale-[0.97] lg:ml-0 lg:block"
         >
           {primaryCta.label}
@@ -130,6 +131,8 @@ export function SiteHeader() {
             </ul>
             <Link
               href={primaryCta.href}
+              target="_blank"
+              rel="noreferrer"
               className="mt-2 block rounded-full bg-accent px-4 py-2.5 text-center text-xs font-semibold tracking-[0.12em] text-on-accent uppercase no-underline transition-transform duration-150 ease-[var(--ease-out)] active:scale-[0.97]"
             >
               {primaryCta.label}

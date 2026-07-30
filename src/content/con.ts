@@ -66,12 +66,14 @@ export const blocks = [
   { href: "/cosplay/", label: "Cosplay", note: "Konkurs z regulaminem i jury" },
 ];
 
+/** Notes stay to what is actually known; what a Golden Ticket adds beyond
+ *  entry is the organisers' to say, not ours to invent. */
 export const accreditation = [
-  { label: "Trzydniowa", price: "100 zł" },
-  { label: "Piątek", price: "50 zł" },
-  { label: "Sobota", price: "60 zł" },
-  { label: "Niedziela", price: "50 zł" },
-  { label: "Golden Ticket", price: "250 zł" },
+  { label: "Trzydniowa", note: "Piątek, sobota i niedziela", price: "100 zł" },
+  { label: "Piątek", note: "Jeden dzień", price: "50 zł" },
+  { label: "Sobota", note: "Jeden dzień", price: "60 zł" },
+  { label: "Niedziela", note: "Jeden dzień", price: "50 zł" },
+  { label: "Golden Ticket", note: "Cały konwent", price: "250 zł" },
 ];
 
 export type PartnerLogo = {

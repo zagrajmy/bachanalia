@@ -7,6 +7,12 @@ import { NavigationMenu as NavigationMenuPrimitive, Slot as SlotPrimitive } from
 
 import { cn } from "@/lib/utils";
 
+/**
+ * shadcn's navigation-menu, structure and motion classes kept as generated.
+ * Only the colour utilities are swapped: this project has no shadcn token
+ * layer, and its `--color-accent` is the coral rather than a hover background.
+ */
+
 function NavigationMenu({
   className,
   children,
@@ -38,7 +44,7 @@ function NavigationMenuList({
   return (
     <NavigationMenuPrimitive.List
       data-slot="navigation-menu-list"
-      className={cn("group flex flex-1 list-none items-center justify-center", className)}
+      className={cn("group flex flex-1 list-none items-center justify-center gap-1", className)}
       {...props}
     />
   );
@@ -58,13 +64,14 @@ function NavigationMenuItem({
 }
 
 const navigationMenuTriggerStyle = cva(
-  "group/navigation-menu-trigger inline-flex w-max items-center px-0 py-2 text-sm whitespace-nowrap text-ink no-underline underline-offset-[0.35em] outline-none hover:bg-transparent hover:underline focus-visible:underline data-[state=open]:underline",
+  "group inline-flex h-9 w-max items-center justify-center rounded-card bg-transparent px-3 py-2 text-sm whitespace-nowrap text-ink no-underline underline-offset-[0.35em] transition-[color,box-shadow] outline-none hover:underline focus:underline data-[state=open]:underline",
 );
 
 /**
- * Rendered with `asChild` so a group parent stays a real link. `Slottable`
- * lets the chevron ride along inside that link instead of forcing the
- * trigger back into a button.
+ * `asChild` on the trigger keeps a group parent a real link — the WordPress
+ * menu hung its top level on dead `#` anchors and that was worth fixing.
+ * `Slottable` lets the chevron ride inside the anchor instead of forcing
+ * Radix's default button.
  */
 function NavigationMenuTrigger({
   className,
@@ -74,13 +81,13 @@ function NavigationMenuTrigger({
   return (
     <NavigationMenuPrimitive.Trigger
       data-slot="navigation-menu-trigger"
-      className={cn(navigationMenuTriggerStyle(), className)}
+      className={cn(navigationMenuTriggerStyle(), "group", className)}
       {...props}
     >
-      <SlotPrimitive.Slottable>{children}</SlotPrimitive.Slottable>
+      <SlotPrimitive.Slottable>{children}</SlotPrimitive.Slottable>{" "}
       <ChevronDownIcon
+        className="relative top-[1px] ml-1 size-3 text-ink-muted transition duration-300 group-data-[state=open]:rotate-180"
         aria-hidden="true"
-        className="relative top-px ms-1 size-3 text-ink-muted transition-transform duration-200 ease-[var(--ease-out)] group-data-[state=open]/navigation-menu-trigger:rotate-180"
       />
     </NavigationMenuPrimitive.Trigger>
   );
@@ -94,8 +101,8 @@ function NavigationMenuContent({
     <NavigationMenuPrimitive.Content
       data-slot="navigation-menu-content"
       className={cn(
-        "absolute start-0 top-full w-max pt-2",
-        "group-data-[viewport=true]/navigation-menu:static group-data-[viewport=true]/navigation-menu:w-full group-data-[viewport=true]/navigation-menu:pt-0",
+        "top-0 left-0 w-full p-2 pr-2.5 data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out md:absolute md:w-auto",
+        "group-data-[viewport=false]/navigation-menu:top-full group-data-[viewport=false]/navigation-menu:mt-1.5 group-data-[viewport=false]/navigation-menu:overflow-hidden group-data-[viewport=false]/navigation-menu:rounded-card group-data-[viewport=false]/navigation-menu:border group-data-[viewport=false]/navigation-menu:border-hairline group-data-[viewport=false]/navigation-menu:bg-paper group-data-[viewport=false]/navigation-menu:text-ink group-data-[viewport=false]/navigation-menu:shadow group-data-[viewport=false]/navigation-menu:duration-200 **:data-[slot=navigation-menu-link]:focus:ring-0 **:data-[slot=navigation-menu-link]:focus:outline-none group-data-[viewport=false]/navigation-menu:data-[state=closed]:animate-out group-data-[viewport=false]/navigation-menu:data-[state=closed]:fade-out-0 group-data-[viewport=false]/navigation-menu:data-[state=closed]:zoom-out-95 group-data-[viewport=false]/navigation-menu:data-[state=open]:animate-in group-data-[viewport=false]/navigation-menu:data-[state=open]:fade-in-0 group-data-[viewport=false]/navigation-menu:data-[state=open]:zoom-in-95",
         className,
       )}
       {...props}
@@ -108,11 +115,11 @@ function NavigationMenuViewport({
   ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Viewport>) {
   return (
-    <div className="absolute start-0 top-full isolate z-50 flex justify-center pt-2">
+    <div className={cn("absolute top-full left-0 isolate z-50 flex justify-center")}>
       <NavigationMenuPrimitive.Viewport
         data-slot="navigation-menu-viewport"
         className={cn(
-          "relative h-(--radix-navigation-menu-viewport-height) w-full origin-top overflow-hidden rounded-card border border-hairline bg-paper shadow-[0_18px_50px_-24px] shadow-navy/50 md:w-(--radix-navigation-menu-viewport-width)",
+          "origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-card border border-hairline bg-paper text-ink shadow-[0_18px_50px_-24px] shadow-navy/50 data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:zoom-in-90 md:w-[var(--radix-navigation-menu-viewport-width)]",
           className,
         )}
         {...props}
@@ -129,7 +136,7 @@ function NavigationMenuLink({
     <NavigationMenuPrimitive.Link
       data-slot="navigation-menu-link"
       className={cn(
-        "flex items-center gap-2 px-4 py-2 text-sm whitespace-nowrap text-ink no-underline outline-none transition-colors duration-150 hover:bg-paper-shade focus-visible:bg-paper-shade data-[active]:bg-paper-shade [&_svg:not([class*='size-'])]:size-4",
+        "flex flex-col gap-1 rounded-sm p-2 text-sm whitespace-nowrap text-ink no-underline transition-all outline-none hover:bg-paper-shade focus:bg-paper-shade data-[active=true]:bg-paper-shade [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-ink-muted",
         className,
       )}
       {...props}
@@ -144,10 +151,13 @@ function NavigationMenuIndicator({
   return (
     <NavigationMenuPrimitive.Indicator
       data-slot="navigation-menu-indicator"
-      className={cn("top-full z-1 flex h-2 items-end justify-center overflow-hidden", className)}
+      className={cn(
+        "top-full z-[1] flex h-1.5 items-end justify-center overflow-hidden data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:animate-in data-[state=visible]:fade-in",
+        className,
+      )}
       {...props}
     >
-      <div className="relative top-[60%] size-2 rotate-45 border-t border-l border-hairline bg-paper" />
+      <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm border border-hairline bg-paper shadow-md" />
     </NavigationMenuPrimitive.Indicator>
   );
 }

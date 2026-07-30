@@ -22,7 +22,7 @@ const familjen = Familjen_Grotesk({
 
 const cinzel = Cinzel({
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "700"],
+  weight: ["600", "700"],
   variable: "--font-cinzel",
   display: "swap",
 });

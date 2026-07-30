@@ -34,14 +34,13 @@ test("destination keeps the trailing slash so the hop is not doubled", async () 
   );
 });
 
-test("an indexed product url reaches the shop in one hop, not two", async () => {
-  assert.ok(
-    (await indexOf("/index.php/produkt/:slug")) < (await indexOf("/index.php/:path*")),
-    "the generic PATHINFO rule would otherwise claim it first and bounce it through /produkt/",
-  );
+test("product urls need no redirect at all", async () => {
+  const sources = (await redirects()).map((rule) => rule.source);
 
-  assert.equal((await find("/index.php/produkt/:slug")).destination, "/sklep/:slug/");
-  assert.equal((await find("/produkt/:slug")).destination, "/sklep/:slug/");
+  assert.ok(
+    !sources.some((source) => source.includes("produkt")),
+    "the route lives at /produkt/<slug>/, which is where WooCommerce already sends people — a redirect would only add a hop, and /index.php/produkt/… is covered by the PATHINFO rule",
+  );
 });
 
 test("accreditation lands on our own shop, not back on WordPress", async () => {

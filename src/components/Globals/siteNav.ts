@@ -1,6 +1,11 @@
 export const SHOP_PATH = "/sklep/";
 
-export const productPath = (slug: string) => `${SHOP_PATH}${slug}/`;
+/**
+ * WooCommerce's own permalink, kept so every indexed product URL keeps
+ * working without a redirect. The generic /index.php rule covers the legacy
+ * PATHINFO form.
+ */
+export const productPath = (slug: string) => `/produkt/${slug}/`;
 
 /**
  * Browsing is ours; cart, checkout and Paynow stay on WooCommerce, because

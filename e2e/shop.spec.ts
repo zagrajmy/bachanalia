@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const PRODUCT = "/sklep/akredytacja-3-dniowa/";
+const PRODUCT = "/produkt/akredytacja-3-dniowa/";
 
 test.describe("shop", () => {
   test("lists products grouped by category", async ({ page }) => {
@@ -27,7 +27,7 @@ test.describe("shop", () => {
     const name = (heading ?? "").trim();
 
     await first.click();
-    await page.waitForURL(/\/sklep\/[^/]+\//, { timeout: 30_000 });
+    await page.waitForURL(/\/produkt\/[^/]+\//, { timeout: 30_000 });
 
     await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
   });
@@ -37,7 +37,7 @@ test.describe("shop", () => {
 
     const buy = page.getByRole("link", { name: "Kup w sklepie" });
 
-    await expect(buy).toHaveAttribute("href", /\/produkt\/akredytacja-3-dniowa\//);
+    await expect(buy).toHaveAttribute("href", /index\.php\/produkt\/akredytacja-3-dniowa\//);
     await expect(buy).toHaveAttribute("target", "_blank");
   });
 
@@ -56,15 +56,16 @@ test.describe("shop", () => {
     await expect(page.locator('a[href*="index.php/sklep"]')).toHaveCount(0);
   });
 
-  test("the legacy product url redirects to the new page", async ({ request }) => {
-    const response = await request.get("/produkt/golden-ticket/", { maxRedirects: 0 });
+  test("the product url WooCommerce already publishes is the page, not a redirect", async ({
+    request,
+  }) => {
+    const response = await request.get(PRODUCT, { maxRedirects: 0 });
 
-    expect(response.status()).toBe(308);
-    expect(response.headers()["location"]).toBe("/sklep/golden-ticket/");
+    expect(response.status(), "every indexed /produkt/ URL should render, not hop").toBe(200);
   });
 
   test("an unknown product 404s rather than rendering an empty page", async ({ page }) => {
-    const response = await page.goto("/sklep/nie-ma-takiego-produktu/");
+    const response = await page.goto("/produkt/nie-ma-takiego-produktu/");
 
     expect(response?.status()).toBe(404);
   });

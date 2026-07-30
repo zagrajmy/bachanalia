@@ -1,24 +1,55 @@
 import { expect, test } from "@playwright/test";
 
+/**
+ * WordPress holds no announcements yet — every post is a guest profile filed
+ * under an edition category, and those are deliberately filtered out. So the
+ * archive's honest state today is empty, and these adapt rather than assert a
+ * count that only passed because guest profiles were leaking in.
+ */
+const entriesOf = (page: import("@playwright/test").Page) =>
+  page.getByRole("main").getByRole("listitem");
+
 test.describe("news archive", () => {
-  test("lists announcements newest first, with date and teaser", async ({ page }) => {
+  test("says so plainly when there is nothing to announce yet", async ({ page }) => {
     await page.goto("/aktualnosci/");
 
     await expect(page.getByRole("heading", { level: 1, name: "Aktualności" })).toBeVisible();
 
-    const entries = page.getByRole("main").getByRole("listitem");
-    expect(await entries.count()).toBeGreaterThan(3);
+    if ((await entriesOf(page).count()) > 0) {
+      test.skip(true, "there are announcements now; the listing test covers this");
+    }
+
+    await expect(page.getByText(/pierwsze ogłoszenia/i)).toBeVisible();
+  });
+
+  test("lists announcements newest first, with date and teaser", async ({ page }) => {
+    await page.goto("/aktualnosci/");
+
+    const entries = entriesOf(page);
+    test.skip((await entries.count()) === 0, "no announcements published yet");
 
     const first = entries.first();
     await expect(first.locator("time")).toBeVisible();
     await expect(first.getByRole("heading", { level: 2 })).toBeVisible();
 
-    const dates = await page.getByRole("main").locator("time").evaluateAll((nodes) =>
-      nodes.map((node) => node.getAttribute("datetime") ?? ""),
-    );
+    const dates = await page
+      .getByRole("main")
+      .locator("time")
+      .evaluateAll((nodes) => nodes.map((node) => node.getAttribute("datetime") ?? ""));
 
-    expect(dates.length).toBeGreaterThan(3);
     expect([...dates].sort().reverse(), "newest announcement belongs on top").toEqual(dates);
+  });
+
+  test("guest profiles never masquerade as news", async ({ page }) => {
+    await page.goto("/aktualnosci/");
+
+    const guestTitles = ["Filmopolis", "FIGURKOWCY", "Akademia Magii Ramesville"];
+    for (const title of guestTitles) {
+      await expect(
+        page.getByRole("main").getByRole("heading", { name: title }),
+        `${title} is a 2025 guest, not an announcement`,
+      ).toHaveCount(0);
+    }
   });
 
   test("teasers are plain text, not raw WordPress markup", async ({ page }) => {
@@ -34,7 +65,9 @@ test.describe("news archive", () => {
   test("a reader can open an announcement", async ({ page }) => {
     await page.goto("/aktualnosci/");
 
-    const first = page.getByRole("main").getByRole("listitem").first().getByRole("link");
+    test.skip((await entriesOf(page).count()) === 0, "no announcements published yet");
+
+    const first = entriesOf(page).first().getByRole("link");
     const title = (await first.getByRole("heading").innerText()).trim();
 
     await first.click();

@@ -1,5 +1,17 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 import { con } from "@/content/con";
 
 import { NavLink, primaryCta, primaryNav } from "./siteNav";
@@ -8,57 +20,72 @@ const externalProps = ({ external }: NavLink) =>
   external ? { target: "_blank" as const, rel: "noreferrer" } : {};
 
 export function SiteHeader() {
+  /**
+   * Radix opens a trigger on pointer move, never on focus. The parents here
+   * are real links, so a keyboard user lands on one without any intent to
+   * press it — focus has to open the panel or the children are mouse-only.
+   */
+  const [openGroup, setOpenGroup] = useState("");
+
   return (
     <header className="sticky top-0 z-40 border-b border-hairline bg-paper">
       <div className="gutter mx-auto flex h-16 max-w-6xl items-center gap-6 sm:h-18">
         <Link
           href="/"
           aria-label={`${con.name} ${con.edition}, strona główna`}
-          className="group flex shrink-0 items-baseline gap-2.5 no-underline"
+          className="shrink-0 no-underline"
         >
-          <span className="display text-3xl text-accent transition-colors duration-200 group-hover:text-navy">
-            {con.edition}
-          </span>
-          <span className="display text-[0.8125rem] leading-none tracking-[0.02em] text-ink uppercase sm:text-[0.9375rem]">
-            Bachanalia
-            <br />
-            Fantastyczne
+          <span className="display text-[0.9375rem] leading-none tracking-[0.02em] whitespace-nowrap text-ink uppercase sm:text-[1.0625rem]">
+            Bachanalia Fantastyczne
           </span>
         </Link>
 
-        <nav aria-label="Główna nawigacja" className="ml-auto hidden lg:block">
-          <ul className="flex items-center gap-5">
+        <NavigationMenu
+          aria-label="Główna nawigacja"
+          viewport={false}
+          value={openGroup}
+          onValueChange={setOpenGroup}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) setOpenGroup("");
+          }}
+          className="ml-auto hidden lg:block"
+        >
+          <NavigationMenuList className="gap-5">
             {primaryNav.map((group) => (
-              <li key={group.label} className="group relative">
-                <Link
-                  href={group.href}
-                  {...externalProps(group)}
-                  className="block py-2 text-sm whitespace-nowrap text-ink-muted no-underline transition-colors duration-200 group-hover:text-ink group-focus-within:text-ink"
-                >
-                  {group.label}
-                </Link>
+              <NavigationMenuItem key={group.label} value={group.label}>
+                {group.children ? (
+                  <>
+                    <NavigationMenuTrigger asChild onFocus={() => setOpenGroup(group.label)}>
+                      <Link href={group.href} {...externalProps(group)}>
+                        {group.label}
+                      </Link>
+                    </NavigationMenuTrigger>
 
-                {group.children && (
-                  <div className="invisible absolute start-0 top-full pt-2 opacity-0 transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                    <ul className="min-w-56 rounded-card border border-hairline bg-paper py-2 shadow-[0_18px_50px_-24px] shadow-navy/50">
-                      {group.children.map((link) => (
-                        <li key={link.href}>
-                          <Link
-                            href={link.href}
-                            {...externalProps(link)}
-                            className="block px-4 py-2 text-sm whitespace-nowrap text-ink-muted no-underline transition-colors duration-150 hover:bg-paper-shade hover:text-ink"
-                          >
-                            {link.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                    <NavigationMenuContent>
+                      <ul className="min-w-56 rounded-card border border-hairline bg-paper py-2 shadow-[0_18px_50px_-24px] shadow-navy/50">
+                        {group.children.map((link) => (
+                          <li key={link.href}>
+                            <NavigationMenuLink asChild>
+                              <Link href={link.href} {...externalProps(link)}>
+                                {link.label}
+                              </Link>
+                            </NavigationMenuLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </NavigationMenuContent>
+                  </>
+                ) : (
+                  <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                    <Link href={group.href} {...externalProps(group)}>
+                      {group.label}
+                    </Link>
+                  </NavigationMenuLink>
                 )}
-              </li>
+              </NavigationMenuItem>
             ))}
-          </ul>
-        </nav>
+          </NavigationMenuList>
+        </NavigationMenu>
 
         <Link
           href={primaryCta.href}
@@ -90,7 +117,7 @@ export function SiteHeader() {
                           <Link
                             href={link.href}
                             {...externalProps(link)}
-                            className="block rounded-sm px-2 py-1.5 text-sm text-ink-muted no-underline transition-colors duration-200 hover:bg-paper-shade hover:text-ink"
+                            className="block rounded-sm px-2 py-1.5 text-sm text-ink no-underline transition-colors duration-200 hover:bg-paper-shade"
                           >
                             {link.label}
                           </Link>

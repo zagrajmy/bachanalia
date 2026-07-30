@@ -109,10 +109,23 @@ function toNewsEntry(post: Post): NewsEntry {
  */
 const NEWS_PAGE = 12;
 
+/** `g23`, `gosc24`, `gosc25`, `gosc26` — one per edition, and more will follow. */
+const GUEST_CATEGORY = /^g(osc)?\d{2}$/;
+
+/**
+ * Every post in WordPress is a guest profile filed under an edition's
+ * category; there is not one actual announcement among them. Listing them as
+ * "Aktualności" would put last year's guest list under this year's news, and
+ * duplicate /goscie/ while doing it.
+ */
+export function isNews(post: Post) {
+  return !(post.categories?.nodes ?? []).some((c) => c?.slug && GUEST_CATEGORY.test(c.slug));
+}
+
 export async function fetchNews(limit = NEWS_PAGE): Promise<NewsEntry[]> {
   const { posts } = await fetchGraphQL<{ posts: { nodes: Post[] } }>(print(NewsQuery), {
     first: NEWS_PAGE,
   });
 
-  return (posts?.nodes ?? []).slice(0, limit).map(toNewsEntry);
+  return (posts?.nodes ?? []).filter(isNews).slice(0, limit).map(toNewsEntry);
 }

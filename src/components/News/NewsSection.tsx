@@ -15,7 +15,7 @@ export function NewsSection({ items }: { items: NewsEntry[] }) {
           </h2>
           <Link
             href={NEWS_PATH}
-            className="eyebrow text-ink-muted no-underline transition-colors duration-200 hover:text-rose"
+            className="eyebrow text-ink no-underline underline-offset-[0.4em] hover:underline"
           >
             Wszystkie aktualności
           </Link>

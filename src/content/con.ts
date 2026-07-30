@@ -38,7 +38,6 @@ export const con = {
   venue: "Kampus B Uniwersytetu Zielonogórskiego",
   address: "Wojska Polskiego 69, Zielona Góra",
   organiser: "Zielonogórski Klub Fantastyki Ad Astra",
-  attendance: "500-850 uczestników",
   hours: [
     { day: "Piątek", from: "14:00" },
     { day: "Sobota", from: "9:30" },

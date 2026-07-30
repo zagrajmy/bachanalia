@@ -36,7 +36,7 @@ export function NewsList({ items, titleAs = "h3" }: Props) {
                   width={item.image.width}
                   height={item.image.height}
                   sizes="(min-width: 640px) 10rem, 4.5rem"
-                  className="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-[var(--ease-out)] group-hover:scale-[1.04]"
+                  className="aspect-[4/3] w-full object-contain"
                 />
               ) : (
                 <span className="block aspect-[4/3] w-full" />

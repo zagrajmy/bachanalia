@@ -9,9 +9,10 @@ export const NewsQuery = gql`
         uri
         date
         excerpt
-        categories(first: 1) {
+        categories(first: 3) {
           nodes {
             name
+            slug
           }
         }
         featuredImage {

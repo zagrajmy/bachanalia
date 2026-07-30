@@ -67,16 +67,20 @@ export const blocks = [
 ];
 
 /**
- * Order, wording and slug are ours; the price comes from WooCommerce. Notes
- * stay to what is actually known — what a Golden Ticket adds beyond entry is
- * the organisers' to say, not ours to invent.
+ * Order, wording and slug are ours; the price comes from WooCommerce. Golden
+ * Ticket leads so the column reads downward in price, and because what it
+ * adds over the three-day pass is the reason anyone would choose it.
  */
 export const accreditation = [
+  {
+    slug: "golden-ticket",
+    label: "Golden Ticket",
+    note: "Akredytacja 3 dniowa, wraz z egzemplarzem Fantazji Zielonogórskich, unikalnym pinsem, koszulką, notesem, oraz zestawem gadżetów (szczegóły wkrótce)",
+  },
   { slug: "akredytacja-3-dniowa", label: "Trzydniowa", note: "Piątek, sobota i niedziela" },
-  { slug: "akredytacja-piatek", label: "Piątek", note: "Jeden dzień" },
   { slug: "akredytacja-sobota", label: "Sobota", note: "Jeden dzień" },
+  { slug: "akredytacja-piatek", label: "Piątek", note: "Jeden dzień" },
   { slug: "akredytacja-niedziela", label: "Niedziela", note: "Jeden dzień" },
-  { slug: "golden-ticket", label: "Golden Ticket", note: "Cały konwent" },
 ];
 
 export type PartnerLogo = {

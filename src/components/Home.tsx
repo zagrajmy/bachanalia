@@ -98,7 +98,7 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
                   key={href}
                   className={
                     golden
-                      ? "ink-inverted mt-5 rounded-card bg-petrol px-4 sm:px-6"
+                      ? "mb-4 rounded-card border-2 border-navy px-4 sm:px-6"
                       : "border-b border-dashed border-navy/30"
                   }
                 >
@@ -109,27 +109,23 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
                     className="group grid grid-cols-[auto_minmax(0,1fr)_auto] items-baseline gap-x-4 py-3 no-underline sm:gap-x-8 sm:py-3.5"
                   >
                     <span
-                      className={`eyebrow tabular-nums ${golden ? "text-accent" : "text-ink-muted"}`}
+                      className={`eyebrow tabular-nums ${golden ? "text-rose" : "text-ink-muted"}`}
                     >
                       {idx(i)}
                     </span>
                     <span className="min-w-0">
-                      <span
-                        className={`display block text-[clamp(1.2rem,3.4vw,2rem)] underline-offset-[0.18em] group-hover:underline ${
-                          golden ? "" : "text-ink"
-                        }`}
-                      >
+                      <span className="display block text-[clamp(1.2rem,3.4vw,2rem)] text-ink underline-offset-[0.18em] group-hover:underline">
                         {label}
                       </span>
                       <span
-                        className={`mt-0.5 block text-sm ${golden ? "text-lilac" : "text-ink-muted"}`}
+                        className={`mt-0.5 block text-sm text-ink-muted ${golden ? "max-w-[52ch]" : ""}`}
                       >
                         {soldOut ? "Wyprzedane" : note}
                       </span>
                     </span>
                     <span
                       className={`display text-[clamp(1.5rem,4.6vw,2.6rem)] whitespace-nowrap tabular-nums ${
-                        golden ? "text-coral" : ""
+                        golden ? "text-rose" : ""
                       } ${soldOut ? "line-through opacity-60" : ""}`}
                     >
                       {price}

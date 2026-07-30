@@ -3,33 +3,20 @@
 Working notes, newest concern first. Longer-lived context lives in
 [HANDOFF.md](HANDOFF.md) and [plan.md](plan.md).
 
-## The accreditation CTA points at an unverified URL
+## Wordfence blocks this machine, and /akredytacja was stale
 
-`primaryCta` now links straight to the WooCommerce shop
-(`https://bachanaliafantastyczne.pl/index.php/sklep/`) and `/akredytacja`
-302s there, because the WordPress accreditation page only ever said "the shop
-sells them" and the Taryfikator now carries the prices.
+Confirmed 2026-07-30: the shop loads fine from a phone on mobile data, while
+every HTML request from this workstation answered 403 and GraphQL from the
+same machine answered 200 in ~1.2s. That is Wordfence rate-limiting the IP
+(`188.121.1.238`) on frontend HTML after a day of production builds, not a
+broken shop.
 
-**That URL answered 403 every time I tried it**, with and without a browser
-user agent — but so did `/index.php/akredytacja/` and so did the site's own
-homepage, which I had fetched successfully a few hours earlier. GraphQL from
-the same machine is fine (200 in ~1.2s), and `wp-content/uploads` is fine
-because Cloudflare serves it.
-
-So one of two things is true and I could not tell which from here:
-
-- Wordfence is rate-limiting this IP (`188.121.1.238`) on frontend HTML only,
-  after a day of repeated production builds. Most likely.
-- The shop and accreditation pages really are 403 for everyone.
-
-**Check `https://bachanaliafantastyczne.pl/index.php/sklep/` from a phone on
-mobile data before shipping.** If it is genuinely 403, the CTA in the header,
-the Taryfikator and the closing section all lead nowhere, and `SHOP_URL` in
-`src/components/Globals/siteNav.ts` needs a working destination.
-
-The redirect is deliberately a 302, not a 301: WordPress moves to a subdomain
-at cutover, and a browser caches a 301 indefinitely. `next.config.test.ts`
-enforces that distinction — same-site redirects permanent, outbound ones not.
+The old `/akredytacja` page pointed at Biletomat, who no longer sell the
+tickets — the shop does. `primaryCta` now goes straight to the shop and
+`/akredytacja` 302s there. The 302 is deliberate: WordPress moves to a
+subdomain at cutover and a browser caches a 301 indefinitely.
+`next.config.test.ts` enforces permanent for same-site hops, temporary for
+outbound ones.
 
 ## Facebook is the only place news exists
 

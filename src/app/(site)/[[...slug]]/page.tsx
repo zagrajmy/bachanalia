@@ -13,13 +13,16 @@ import { AllContentQuery } from "@/queries/general/AllContentQuery";
 import { SeoQuery } from "@/queries/general/SeoQuery";
 import { Home } from "@/components/Home";
 import { fetchNews } from "@/components/News/news";
+import { fetchAccreditation } from "@/content/shop";
 
 type Props = {
   params: Promise<{ slug?: string[] }>;
 };
 
 async function HomePage() {
-  return <Home news={await fetchNews(6)} />;
+  const [news, tickets] = await Promise.all([fetchNews(6), fetchAccreditation()]);
+
+  return <Home news={news} tickets={tickets} />;
 }
 
 const toPath = (segments?: string[]) => (segments?.length ? `/${segments.join("/")}/` : "/");

@@ -66,14 +66,17 @@ export const blocks = [
   { href: "/cosplay/", label: "Cosplay", note: "Konkurs z regulaminem i jury" },
 ];
 
-/** Notes stay to what is actually known; what a Golden Ticket adds beyond
- *  entry is the organisers' to say, not ours to invent. */
+/**
+ * Order, wording and slug are ours; the price comes from WooCommerce. Notes
+ * stay to what is actually known — what a Golden Ticket adds beyond entry is
+ * the organisers' to say, not ours to invent.
+ */
 export const accreditation = [
-  { label: "Trzydniowa", note: "Piątek, sobota i niedziela", price: "100 zł" },
-  { label: "Piątek", note: "Jeden dzień", price: "50 zł" },
-  { label: "Sobota", note: "Jeden dzień", price: "60 zł" },
-  { label: "Niedziela", note: "Jeden dzień", price: "50 zł" },
-  { label: "Golden Ticket", note: "Cały konwent", price: "250 zł" },
+  { slug: "akredytacja-3-dniowa", label: "Trzydniowa", note: "Piątek, sobota i niedziela" },
+  { slug: "akredytacja-piatek", label: "Piątek", note: "Jeden dzień" },
+  { slug: "akredytacja-sobota", label: "Sobota", note: "Jeden dzień" },
+  { slug: "akredytacja-niedziela", label: "Niedziela", note: "Jeden dzień" },
+  { slug: "golden-ticket", label: "Golden Ticket", note: "Cały konwent" },
 ];
 
 export type PartnerLogo = {

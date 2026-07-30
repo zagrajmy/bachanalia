@@ -132,36 +132,36 @@ not invented. Every slug below exists today under the legacy
 `/index.php/<slug>/` PATHINFO prefix; the new site serves the clean path and
 301s the legacy one (see URL strategy).
 
-| Path | Source | Notes |
-| --- | --- | --- |
-| `/` | hardcoded + WP posts | hero, news, sponsors strip |
-| `/co-to-sa-bachanalia` | WP page | about + historical guest list |
-| `/organizator` | WP page | Ad Astra, legal ids (NIP/REGON/KRS) |
-| `/sztab-bachanaliowy` | WP page | empty today |
-| `/czas-i-miejsce` | WP page | dates, venue, travel, parking |
-| `/regulamin` | WP page | ~14k chars |
-| `/polityka-prywatnosci` | WP page | ~11k chars |
-| `/noclegi` | WP page | UZ dorms |
-| `/akredytacja` | WP page | pricing → links to shop |
-| `/program` | ludamus feed | grid; Phase 4 |
-| `/blok-prelekcyjny` | WP page | stub |
-| `/blok-konkursowy` | WP page | "Bachele" con currency |
-| `/blok-naukowy` | WP page | empty today |
-| `/blok-komiksowy` | WP page | empty today |
-| `/rpg` | WP page | Skrzywienie Fabularne |
-| `/gamesroom` | WP page | + Trzymaj Pion |
-| `/retro-gaming` | WP page | lan-party |
-| `/cosplay` | WP page | full contest rules (2025, needs 2026 update) |
-| `/goscie` | WP page | 2026 guests |
-| `/zgloszenia-programu` | landing | → ludamus proposal flow |
-| `/zgloszenia-obslugi` | landing | → form/email |
-| `/poznaj-wystawcow` | WP page | empty for 2026 so far |
-| `/regulamin-wystawcow` | WP page | also a `-2` duplicate — collapse |
-| `/zgloszenia-wystawcow` | landing | wystawcy@bachanaliafantastyczne.pl |
-| `/wspieraja-nas` | WP page | 4 partner tiers + logos |
-| `/2025/…/<slug>` | WP posts | 25 dated guest announcements |
-| `/sklep`, `/produkt/<slug>` | Woo Store API | **our UI** |
-| `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty` | WooCommerce | **stays WP** |
+| Path                                               | Source               | Notes                                        |
+| -------------------------------------------------- | -------------------- | -------------------------------------------- |
+| `/`                                                | hardcoded + WP posts | hero, news, sponsors strip                   |
+| `/co-to-sa-bachanalia`                             | WP page              | about + historical guest list                |
+| `/organizator`                                     | WP page              | Ad Astra, legal ids (NIP/REGON/KRS)          |
+| `/sztab-bachanaliowy`                              | WP page              | empty today                                  |
+| `/czas-i-miejsce`                                  | WP page              | dates, venue, travel, parking                |
+| `/regulamin`                                       | WP page              | ~14k chars                                   |
+| `/polityka-prywatnosci`                            | WP page              | ~11k chars                                   |
+| `/noclegi`                                         | WP page              | UZ dorms                                     |
+| `/akredytacja`                                     | WP page              | pricing → links to shop                      |
+| `/program`                                         | ludamus feed         | grid; Phase 4                                |
+| `/blok-prelekcyjny`                                | WP page              | stub                                         |
+| `/blok-konkursowy`                                 | WP page              | "Bachele" con currency                       |
+| `/blok-naukowy`                                    | WP page              | empty today                                  |
+| `/blok-komiksowy`                                  | WP page              | empty today                                  |
+| `/rpg`                                             | WP page              | Skrzywienie Fabularne                        |
+| `/gamesroom`                                       | WP page              | + Trzymaj Pion                               |
+| `/retro-gaming`                                    | WP page              | lan-party                                    |
+| `/cosplay`                                         | WP page              | full contest rules (2025, needs 2026 update) |
+| `/goscie`                                          | WP page              | 2026 guests                                  |
+| `/zgloszenia-programu`                             | landing              | → ludamus proposal flow                      |
+| `/zgloszenia-obslugi`                              | landing              | → form/email                                 |
+| `/poznaj-wystawcow`                                | WP page              | empty for 2026 so far                        |
+| `/regulamin-wystawcow`                             | WP page              | also a `-2` duplicate — collapse             |
+| `/zgloszenia-wystawcow`                            | landing              | wystawcy@bachanaliafantastyczne.pl           |
+| `/wspieraja-nas`                                   | WP page              | 4 partner tiers + logos                      |
+| `/2025/…/<slug>`                                   | WP posts             | 25 dated guest announcements                 |
+| `/sklep`, `/produkt/<slug>`                        | Woo Store API        | **our UI**                                   |
+| `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty` | WooCommerce          | **stays WP**                                 |
 
 Dropped: `/info` and `/blog` (nav shells), `/feed-test` (test artifact).
 
@@ -203,17 +203,29 @@ and the con is Sept 25–27. Split by risk:
 
 ## Design
 
-Palette sampled from the XL Polcon key art
-(`wp-content/uploads/2026/02/baner_strona_1300x500.jpg`) — cosmic rooster on
-deep navy in a coral frame. **The illustration stays**; the site is built
-around it. Tokens live in `src/app/globals.css`.
+**Akredytacja** — the site is a printed ticket. Perforation, control stub,
+dashed rules, a taryfikator instead of a pricing table. Ten candidate
+directions live at `/design` (noindex); this is number 5, polished.
 
-Deep navy `#191f5c` is the surface (it's ~70% of the artwork). Coral
-`#ee7489` is the accent, and takes navy text — white on coral is 2.8:1 and
-fails. The artwork's headline blue `#3f6bbc` is 2.9:1 on navy: decorative
-only, never text — `#6d8fce` is the readable version at 4.65:1.
+Paper `#f2efe9` is the surface, navy `#191f5c` the ink. Two darks carry the
+inverted bands: navy for the hero ticket and the footer, petrol `#1f3c50`
+(the rooster's tail) for the opening hours and the Golden Ticket row. Coral
+`#ee7489` is the accent and takes navy text — white on coral is 2.8:1 and
+fails. `#4e5079` is the muted ink on paper at 6.4:1; on the darks it is
+lilac `#cbbbcf`. The `ink-inverted` utility flips the whole set for a
+subtree, so a dark band's children keep using `text-ink` / `text-ink-muted`.
 
-Logo and the existing con identity carry over.
+Display type is **Karrik** (Velvetyne, OFL, self-hosted from `src/fonts/`) —
+one weight plus italic, so emphasis comes from scale and case, never from
+bold. Body is **Familjen Grotesk** (400/600), which keeps a real semibold for
+prose and UI. Both cover `latin-ext`; Karrik's Polish diacritics were checked
+glyph by glyph in the sources before committing.
+
+Key art, the Ad Astra and Polcon marks, and every partner logo are static
+imports under `src/content/` — the con's own identity does not round-trip
+through WordPress at runtime. Only editorial images (guest posts) stay
+remote. Both marks were lifted from the key art and carry its lilac, so they
+only work on a dark ground.
 
 ## Phases
 

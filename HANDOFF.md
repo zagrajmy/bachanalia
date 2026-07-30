@@ -64,15 +64,14 @@ fine for product reads, do not use its checkout mutations. Live shop verified
 intact after install (all shop routes 200, no PHP errors).
 
 **Design system** built from the key art palette. See plan.md's Design
-section for the palette and the contrast traps. Fonts: **Sora** (display) +
-**IBM Plex Sans** (body), both verified for `latin-ext` before committing —
-Polish diacritics are non-negotiable and were checked in the browser.
+section for the palette, the type, and the contrast traps. Polish diacritics
+are non-negotiable and were checked before committing either family.
 
 ## Wordfence blocks GraphQL POSTs
 
 The single most expensive thing to rediscover. Wordfence's firewall
-inspects POST bodies and rejects GraphQL **connection** queries with *"a
-potentially unsafe operation has been detected"* (403 HTML, not JSON).
+inspects POST bodies and rejects GraphQL **connection** queries with _"a
+potentially unsafe operation has been detected"_ (403 HTML, not JSON).
 Single-node lookups (`page(id:…)`) pass, which is why page rendering
 worked while `posts(first:…){nodes{…}}` silently failed — it broke the
 guests archive and `generateStaticParams` while everything else looked fine.
@@ -96,7 +95,7 @@ for that reason. If builds start failing in bursts, this is why.
   compiled it fine. It was a stale `.next` from this session's first dev run.
   Symptom: computed styles show `max-width: none` for rules that exist in
   source. Fix: stop dev, move `.next` aside, restart.
-- **`display: contents` breaks sibling combinators.** It flattens *layout*,
+- **`display: contents` breaks sibling combinators.** It flattens _layout_,
   not DOM structure. Every Elementor paragraph sits alone inside its own
   wrapper, so `.wp-content > * + *` matched nothing and all prose margins
   were `0px` — the apparent spacing was line-height alone. Prose rhythm now

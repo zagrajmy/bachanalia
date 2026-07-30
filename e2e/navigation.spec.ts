@@ -2,7 +2,11 @@ import { expect, test } from "@playwright/test";
 
 import { footerNav, primaryCta, primaryNav } from "../src/components/Globals/siteNav";
 
-const everyDestination = [...primaryNav, primaryCta, ...footerNav.flatMap((group) => group.links)]
+const everyDestination = [
+  ...primaryNav.flatMap((group) => [group, ...(group.children ?? [])]),
+  primaryCta,
+  ...footerNav.flatMap((group) => group.links),
+]
   .filter((link) => !("external" in link && link.external))
   .filter((link, index, all) => all.findIndex((other) => other.href === link.href) === index);
 
@@ -32,16 +36,36 @@ test.describe("site navigation", () => {
     }
   });
 
-  test("the accreditation call to action is the only buy-intent link in the header", async ({
-    page,
-    isMobile,
-  }) => {
+  test("the header offers exactly one route to an accreditation", async ({ page, isMobile }) => {
     test.skip(isMobile, "the header CTA collapses into the disclosure menu below lg");
     await page.goto("/");
 
     const header = page.getByRole("banner");
     await expect(header.getByRole("link", { name: primaryCta.label })).toHaveCount(1);
-    await expect(header.getByRole("link", { name: /sklep/i })).toHaveCount(0);
+    await expect(header.getByRole("link", { name: primaryCta.label })).toHaveAttribute(
+      "href",
+      primaryCta.href,
+    );
+  });
+
+  test("a nested destination is reachable by keyboard, not hover alone", async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(isMobile, "below lg every link is already flat inside the disclosure menu");
+    await page.goto("/");
+
+    const group = primaryNav.find((item) => item.children?.length);
+    const child = group!.children![group!.children!.length - 1];
+    const header = page.getByRole("banner");
+
+    await header.getByRole("link", { name: group!.label, exact: true }).focus();
+
+    const link = header.getByRole("link", { name: child.label, exact: true });
+    await expect(link, "focus-within must open the panel, or the menu is mouse-only").toBeVisible();
+
+    await link.click();
+    await expect(page).toHaveURL(new RegExp(`${child.href}$`));
   });
 
   test("a phone user can open the menu and reach a destination", async ({ page, isMobile }) => {

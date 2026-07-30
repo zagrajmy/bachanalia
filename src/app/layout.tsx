@@ -6,8 +6,8 @@ import "@/app/globals.css";
 
 const karrik = localFont({
   src: [
-    { path: "../../public/fonts/Karrik-Regular.woff2", weight: "400", style: "normal" },
-    { path: "../../public/fonts/Karrik-Italic.woff2", weight: "400", style: "italic" },
+    { path: "../fonts/Karrik-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Karrik-Italic.woff2", weight: "400", style: "italic" },
   ],
   variable: "--font-karrik",
   display: "swap",

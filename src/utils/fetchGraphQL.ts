@@ -30,6 +30,14 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  */
 const isTransient = (status: number) => status === 403 || status === 429 || status >= 500;
 
+/**
+ * A hung socket must not eat the whole prerender budget, but this server
+ * genuinely needs ten-plus seconds for a posts query when Wordfence is
+ * throttling. Paired with staticPageGenerationTimeout in next.config.js,
+ * which gives all four attempts room to run.
+ */
+const ATTEMPT_TIMEOUT_MS = 25_000;
+
 async function fetchWithRetry(url: string, init: RequestInit): Promise<Response> {
   let lastError: unknown;
 
@@ -37,7 +45,10 @@ async function fetchWithRetry(url: string, init: RequestInit): Promise<Response>
     if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1]);
 
     try {
-      const response = await fetch(url, init);
+      const response = await fetch(url, {
+        ...init,
+        signal: AbortSignal.timeout(ATTEMPT_TIMEOUT_MS),
+      });
       if (!isTransient(response.status)) return response;
       lastError = new Error(`WordPress responded ${response.status}`);
     } catch (error) {

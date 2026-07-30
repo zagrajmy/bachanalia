@@ -66,7 +66,7 @@ export default async function GosciePage() {
                     )}
                   </div>
 
-                  <h2 className="display mt-4 text-xl text-ink transition-colors duration-200 group-hover:text-coral">
+                  <h2 className="display mt-4 text-xl text-ink transition-colors duration-200 group-hover:text-rose">
                     {post.title}
                   </h2>
 

@@ -79,12 +79,10 @@ export type PartnerLogo = {
   name: string;
   src: StaticImageData;
   /**
-   * Dark artwork on a transparent or white ground: it disappears on dark
-   * surfaces and needs a light plate. False means the mark carries its own
-   * background (Planetarium Wenus is a solid red tile), so plating it just
-   * frames the tile.
+   * The artwork ships baked onto an opaque white rectangle, so it needs
+   * multiplying into the page instead of sitting in a visible box.
    */
-  needsPlate: boolean;
+  whiteBox?: boolean;
 };
 
 export const partners: { tier: string; logos: PartnerLogo[] }[] = [
@@ -94,7 +92,7 @@ export const partners: { tier: string; logos: PartnerLogo[] }[] = [
       {
         name: "Uniwersytet Zielonogórski",
         src: uniwersytetZielonogorski,
-        needsPlate: true,
+        whiteBox: true,
       },
     ],
   },
@@ -104,12 +102,11 @@ export const partners: { tier: string; logos: PartnerLogo[] }[] = [
       {
         name: "Planetarium Wenus",
         src: planetariumWenus,
-        needsPlate: false,
       },
       {
         name: "Zielonogórski Ośrodek Kultury",
         src: zok,
-        needsPlate: true,
+        whiteBox: true,
       },
     ],
   },
@@ -119,22 +116,14 @@ export const partners: { tier: string; logos: PartnerLogo[] }[] = [
       {
         name: "Fahrenheit",
         src: fahrenheit,
-        needsPlate: true,
       },
       {
         name: "Konwenty Południowe",
         src: konwentyPoludniowe,
-        needsPlate: true,
       },
     ],
   },
 ];
-
-/** The pre-polish variants list partners as text; keep them on real data. */
-export const partnerNames = partners.map(({ tier, logos }) => ({
-  tier,
-  names: logos.map((logo) => logo.name),
-}));
 
 export const cityFunding = {
   name: "Zrealizowano przy pomocy finansowej Miasta Zielona Góra",

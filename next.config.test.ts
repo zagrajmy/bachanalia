@@ -9,11 +9,23 @@ const redirects = async () => {
 };
 
 test("legacy PATHINFO urls redirect permanently to clean paths", async () => {
-  const [rule, ...rest] = await redirects();
+  const [rule] = await redirects();
 
-  assert.equal(rest.length, 0);
   assert.equal(rule.source, "/index.php/:path*");
   assert.equal(rule.permanent, true);
+});
+
+test("every redirect is permanent, so link equity is not parked on a 302", async () => {
+  for (const rule of await redirects()) {
+    assert.equal(rule.permanent, true, `${rule.source} must 301`);
+  }
+});
+
+test("the dropped WordPress news shells land on the news archive", async () => {
+  const destinations = new Map((await redirects()).map((rule) => [rule.source, rule.destination]));
+
+  assert.equal(destinations.get("/blog"), "/aktualnosci/");
+  assert.equal(destinations.get("/category/:slug*"), "/aktualnosci/");
 });
 
 test("destination keeps the trailing slash so the hop is not doubled", async () => {

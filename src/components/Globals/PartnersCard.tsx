@@ -32,7 +32,7 @@ export function PartnersCard() {
                   key={logo.name}
                   src={logo.src}
                   alt={logo.name}
-                  className={`w-auto ${logo.src.src.endsWith(".jpg") ? "mix-blend-multiply" : ""}`}
+                  className={`w-auto ${logo.whiteBox ? "mix-blend-multiply" : ""}`}
                   style={{ height: logoHeight(logo.src) }}
                 />
               ))}

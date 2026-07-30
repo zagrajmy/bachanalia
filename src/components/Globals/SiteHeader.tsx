@@ -2,11 +2,14 @@ import Link from "next/link";
 
 import { con } from "@/content/con";
 
-import { primaryCta, primaryNav } from "./siteNav";
+import { NavLink, primaryCta, primaryNav } from "./siteNav";
+
+const externalProps = ({ external }: NavLink) =>
+  external ? { target: "_blank" as const, rel: "noreferrer" } : {};
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-hairline bg-paper/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-hairline bg-paper">
       <div className="gutter mx-auto flex h-16 max-w-6xl items-center gap-6 sm:h-18">
         <Link
           href="/"
@@ -24,15 +27,34 @@ export function SiteHeader() {
         </Link>
 
         <nav aria-label="Główna nawigacja" className="ml-auto hidden lg:block">
-          <ul className="flex items-center gap-6">
-            {primaryNav.map(({ href, label }) => (
-              <li key={href}>
+          <ul className="flex items-center gap-5">
+            {primaryNav.map((group) => (
+              <li key={group.label} className="group relative">
                 <Link
-                  href={href}
-                  className="text-sm text-ink-muted no-underline transition-colors duration-200 hover:text-ink"
+                  href={group.href}
+                  {...externalProps(group)}
+                  className="block py-2 text-sm whitespace-nowrap text-ink-muted no-underline transition-colors duration-200 group-hover:text-ink group-focus-within:text-ink"
                 >
-                  {label}
+                  {group.label}
                 </Link>
+
+                {group.children && (
+                  <div className="invisible absolute start-0 top-full pt-2 opacity-0 transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                    <ul className="min-w-56 rounded-card border border-hairline bg-paper py-2 shadow-[0_18px_50px_-24px] shadow-navy/50">
+                      {group.children.map((link) => (
+                        <li key={link.href}>
+                          <Link
+                            href={link.href}
+                            {...externalProps(link)}
+                            className="block px-4 py-2 text-sm whitespace-nowrap text-ink-muted no-underline transition-colors duration-150 hover:bg-paper-shade hover:text-ink"
+                          >
+                            {link.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </li>
             ))}
           </ul>
@@ -49,16 +71,33 @@ export function SiteHeader() {
           <summary className="flex cursor-pointer list-none items-center rounded-full border border-hairline px-4 py-1.5 text-xs font-semibold tracking-[0.12em] uppercase transition-transform duration-150 ease-[var(--ease-out)] active:scale-[0.97]">
             Menu
           </summary>
-          <div className="absolute end-0 top-[calc(100%+0.75rem)] w-64 rounded-card border border-hairline bg-paper p-2 shadow-[0_18px_50px_-18px] shadow-navy/40">
+          <div className="absolute end-0 top-[calc(100%+0.75rem)] max-h-[70vh] w-72 overflow-y-auto rounded-card border border-hairline bg-paper p-2 shadow-[0_18px_50px_-18px] shadow-navy/40">
             <ul>
-              {primaryNav.map(({ href, label }) => (
-                <li key={href}>
+              {primaryNav.map((group) => (
+                <li key={group.label} className="not-first:mt-1">
                   <Link
-                    href={href}
-                    className="block rounded-sm px-3 py-2.5 text-[0.9375rem] text-ink-muted no-underline transition-colors duration-200 hover:bg-paper-shade hover:text-ink"
+                    href={group.href}
+                    {...externalProps(group)}
+                    className="block rounded-sm px-3 py-2 text-[0.9375rem] text-ink no-underline transition-colors duration-200 hover:bg-paper-shade"
                   >
-                    {label}
+                    {group.label}
                   </Link>
+
+                  {group.children && (
+                    <ul className="mb-2 ms-3 border-l border-dashed border-hairline ps-3">
+                      {group.children.map((link) => (
+                        <li key={link.href}>
+                          <Link
+                            href={link.href}
+                            {...externalProps(link)}
+                            className="block rounded-sm px-2 py-1.5 text-sm text-ink-muted no-underline transition-colors duration-200 hover:bg-paper-shade hover:text-ink"
+                          >
+                            {link.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               ))}
             </ul>

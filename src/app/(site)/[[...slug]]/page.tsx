@@ -12,28 +12,14 @@ import PostTemplate from "@/components/Templates/Post/PostTemplate";
 import { AllContentQuery } from "@/queries/general/AllContentQuery";
 import { SeoQuery } from "@/queries/general/SeoQuery";
 import { Home } from "@/components/Home";
-import { KEY_ART, NewsItem } from "@/content/con";
-import { PostsQuery } from "@/components/Templates/Posts/PostsQuery";
-import { Post } from "@/gql/graphql";
+import { fetchNews } from "@/components/News/news";
 
 type Props = {
   params: Promise<{ slug?: string[] }>;
 };
 
-const newsDateFormat = new Intl.DateTimeFormat("pl-PL", { day: "numeric", month: "long" });
-
 async function HomePage() {
-  const { posts } = await fetchGraphQL<{ posts: { nodes: Post[] } }>(print(PostsQuery), {
-    first: 6,
-  });
-
-  const news: NewsItem[] = (posts?.nodes ?? []).map((post) => ({
-    title: post.title ?? "",
-    href: wpUriToPath(post.uri),
-    date: post.date ? newsDateFormat.format(new Date(post.date)) : "",
-  }));
-
-  return <Home news={news} artSrc={KEY_ART} />;
+  return <Home news={await fetchNews(6)} />;
 }
 
 const toPath = (segments?: string[]) => (segments?.length ? `/${segments.join("/")}/` : "/");

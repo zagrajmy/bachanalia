@@ -1,15 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { accreditation, blocks, con, KEY_ART, marks, NewsItem } from "@/content/con";
+import { accreditation, blocks, con, KEY_ART, marks } from "@/content/con";
 import { primaryCta } from "@/components/Globals/siteNav";
+import { NewsEntry } from "@/components/News/news";
+import { NewsSection } from "@/components/News/NewsSection";
 
 const [nameHead, ...nameTail] = con.name.split(" ");
 const seria = `${con.edition} / ${con.datesShort}`;
 
 const idx = (i: number) => String(i + 1).padStart(2, "0");
 
-export function Home({ news }: { news: NewsItem[] }) {
+export function Home({ news }: { news: NewsEntry[] }) {
   return (
     <>
       <section className="gutter pt-5 sm:pt-8">
@@ -38,7 +40,31 @@ export function Home({ news }: { news: NewsItem[] }) {
                 </div>
               </div>
 
-              <div className="relative order-2 px-5 pt-8 pb-10 sm:px-8 sm:pt-10 sm:pb-14 lg:order-1">
+              <div className="relative order-2 px-5 pt-7 pb-10 sm:px-8 sm:pt-9 sm:pb-14 lg:order-1">
+                <ul className="mb-7 flex items-center sm:mb-9">
+                  {marks.map(({ name, src, href }) => (
+                    <li
+                      key={name}
+                      className="px-5 first:pl-0 not-first:border-l not-first:border-dashed not-first:border-hairline last:pr-0"
+                    >
+                      <Link
+                        href={href}
+                        {...(href.startsWith("http")
+                          ? { target: "_blank", rel: "noreferrer" }
+                          : {})}
+                        className="block no-underline opacity-90 transition-opacity duration-200 hover:opacity-100"
+                      >
+                        <Image
+                          src={src}
+                          alt={name}
+                          priority
+                          className="h-[clamp(52px,7.6vw,66px)] w-auto"
+                        />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+
                 <h1 className="display relative -ml-[0.045em] text-[clamp(2.1rem,7.2vw,3.9rem)] leading-[0.86]">
                   <span className="block">{nameHead}</span>
                   <span className="block">{nameTail.join(" ")}</span>
@@ -177,7 +203,7 @@ export function Home({ news }: { news: NewsItem[] }) {
                     {idx(i)}
                   </span>
                   <span className="min-w-0">
-                    <span className="display block text-[clamp(1.1rem,3vw,1.5rem)] text-ink transition-colors duration-200 group-hover:text-coral">
+                    <span className="display block text-[clamp(1.1rem,3vw,1.5rem)] text-ink transition-colors duration-200 group-hover:text-rose">
                       {label}
                     </span>
                     <span className="mt-1 block text-sm text-ink-muted">{note}</span>
@@ -189,30 +215,7 @@ export function Home({ news }: { news: NewsItem[] }) {
         </div>
       </section>
 
-      {news.length > 0 && (
-        <section className="gutter pt-14 sm:pt-20">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="eyebrow text-ink-muted">Aktualności</h2>
-            <ul className="mt-4 border-t-2 border-navy">
-              {news.slice(0, 3).map((item) => (
-                <li key={item.href} className="border-b border-dashed border-navy/25">
-                  <Link
-                    href={item.href}
-                    className="group flex flex-wrap items-baseline gap-x-5 gap-y-1 py-3 no-underline"
-                  >
-                    <span className="w-[7.5rem] shrink-0 text-xs text-ink-muted tabular-nums">
-                      {item.date}
-                    </span>
-                    <span className="display text-[clamp(1.1rem,3vw,1.5rem)] text-ink transition-colors duration-200 group-hover:text-coral">
-                      {item.title}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
+      <NewsSection items={news} />
     </>
   );
 }

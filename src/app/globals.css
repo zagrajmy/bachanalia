@@ -2,13 +2,14 @@
 @source "../**/*.{ts,tsx}";
 
 @theme {
-  --color-paper: #f2efe9;
-  --color-paper-shade: #e7e2d8;
+  --color-paper: #ffffff;
+  --color-paper-shade: #eceef3;
   --color-navy: #191f5c;
   --color-navy-deep: #12163f;
   --color-petrol: #1f3c50;
   --color-coral: #ee7489;
   --color-pink: #ff9cb3;
+  --color-rose: #c0455f;
   --color-lilac: #cbbbcf;
   --color-slate: #4e5079;
 

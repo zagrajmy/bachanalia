@@ -170,10 +170,8 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
       <section className="gutter pt-14 sm:pt-20">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2 border-b-2 border-navy pb-3">
-            <h2 className="display -ml-[0.04em] text-[clamp(1.7rem,4.6vw,2.7rem)]">
-              Co dostajesz w cenie
-            </h2>
-            <p className="eyebrow text-ink-muted">{blocks.length} bloków programu</p>
+            <h2 className="display -ml-[0.04em] text-[clamp(1.7rem,4.6vw,2.7rem)]">Program</h2>
+            <p className="eyebrow text-ink-muted">{blocks.length} bloków tematycznych</p>
           </div>
 
           <ul className="grid sm:grid-cols-2 sm:gap-x-12">

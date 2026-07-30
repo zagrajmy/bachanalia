@@ -1,4 +1,4 @@
-"""Build the favicon and the Open Graph card from the key art.
+"""Build the Open Graph card from the key art.
 
 The con distributes almost entirely through Facebook, so the share card is the
 first thing most people ever see of this site. Rendered here rather than at
@@ -18,7 +18,6 @@ CORAL = (238, 116, 137)
 
 OG_SIZE = (1200, 630)
 OG_OUT = "../../src/app/opengraph-image.png"
-ICON_OUT = "../../src/app/icon.png"
 
 TITLE = ["Bachanalia", "Fantastyczne"]
 EDITION = "XL"
@@ -54,26 +53,6 @@ def og_card(ttf):
     print(f"wrote {OG_OUT} {card.size}")
 
 
-def icon(ttf):
-    """XL on navy. The rooster is gorgeous and unreadable at 16px."""
-    size = 512
-    im = Image.new("RGB", (size, size), NAVY)
-    draw = ImageDraw.Draw(im)
-    font = ImageFont.truetype(ttf, 300)
-
-    box = draw.textbbox((0, 0), EDITION, font=font)
-    draw.text(
-        ((size - (box[2] - box[0])) / 2 - box[0], (size - (box[3] - box[1])) / 2 - box[1]),
-        EDITION,
-        font=font,
-        fill=CORAL,
-    )
-
-    im.save(ICON_OUT)
-    print(f"wrote {ICON_OUT} {im.size}")
-
-
 if __name__ == "__main__":
     ttf = sys.argv[1]
     og_card(ttf)
-    icon(ttf)

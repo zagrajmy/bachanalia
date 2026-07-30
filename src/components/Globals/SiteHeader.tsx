@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { MenuIcon } from "lucide-react";
 
@@ -22,13 +21,6 @@ const externalProps = ({ external }: NavLink) =>
   external ? { target: "_blank" as const, rel: "noreferrer" } : {};
 
 export function SiteHeader() {
-  /**
-   * Radix opens a trigger on pointer move, never on focus. The parents here
-   * are real links, so a keyboard user lands on one without any intent to
-   * press it — focus has to open the panel or the children are mouse-only.
-   */
-  const [openGroup, setOpenGroup] = useState("");
-
   return (
     <header className="sticky top-0 z-40 border-b border-hairline bg-paper">
       <div className="gutter mx-auto flex h-16 max-w-6xl items-center gap-4 sm:h-18 xl:gap-6 min-[72rem]:px-0">
@@ -42,41 +34,27 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        {/**
-         * Each panel lives inside its own item, which is the positioned
-         * ancestor. Radix's shared viewport renders in a wrapper pinned to the
-         * nav's left edge and exposes no offset of the open trigger, so it
-         * cannot follow the group it belongs to.
-         */}
-        <NavigationMenu
-          aria-label="Główna nawigacja"
-          value={openGroup}
-          onValueChange={setOpenGroup}
-          onBlur={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget)) setOpenGroup("");
-          }}
-          viewport={false}
-          className="ml-auto hidden lg:block"
-        >
-          <NavigationMenuList className="gap-0">
+        <NavigationMenu aria-label="Główna nawigacja" className="ml-auto hidden lg:block">
+          <NavigationMenuList>
             {primaryNav.map((group) => (
               <NavigationMenuItem key={group.label} value={group.label}>
                 {group.children ? (
                   <>
-                    <NavigationMenuTrigger asChild onFocus={() => setOpenGroup(group.label)}>
-                      <Link href={group.href} {...externalProps(group)}>
-                        {group.label}
-                      </Link>
+                    <NavigationMenuTrigger
+                      nativeButton={false}
+                      render={<Link href={group.href} {...externalProps(group)} />}
+                    >
+                      {group.label}
                     </NavigationMenuTrigger>
 
                     <NavigationMenuContent>
                       <ul className="grid w-[15rem] gap-1">
                         {group.children.map((link) => (
                           <li key={link.href}>
-                            <NavigationMenuLink asChild>
-                              <Link href={link.href} {...externalProps(link)}>
-                                {link.label}
-                              </Link>
+                            <NavigationMenuLink
+                              render={<Link href={link.href} {...externalProps(link)} />}
+                            >
+                              {link.label}
                             </NavigationMenuLink>
                           </li>
                         ))}
@@ -84,10 +62,11 @@ export function SiteHeader() {
                     </NavigationMenuContent>
                   </>
                 ) : (
-                  <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                    <Link href={group.href} {...externalProps(group)}>
-                      {group.label}
-                    </Link>
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    render={<Link href={group.href} {...externalProps(group)} />}
+                  >
+                    {group.label}
                   </NavigationMenuLink>
                 )}
               </NavigationMenuItem>

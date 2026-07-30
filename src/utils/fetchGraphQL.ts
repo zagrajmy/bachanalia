@@ -20,7 +20,13 @@ function endpoint(query: string, variables: Variables) {
   return url.toString();
 }
 
-const RETRY_DELAYS_MS = [400, 1200, 3000];
+/**
+ * Wordfence does not throttle a request, it throttles the client: once a
+ * prerender's burst trips it, everything hangs for tens of seconds and then
+ * recovers on its own. Backing off well past that is the difference between
+ * a slow build and a failed one, so the tail is deliberately long.
+ */
+const RETRY_DELAYS_MS = [500, 2_000, 6_000, 15_000, 30_000];
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -31,13 +37,13 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const isTransient = (status: number) => status === 403 || status === 429 || status >= 500;
 
 /**
- * A hung socket must not eat the whole prerender budget, but this server
- * genuinely needs ten-plus seconds for a posts query when Wordfence is
- * throttling. Paired with staticPageGenerationTimeout in next.config.js,
- * which gives all four attempts room to run.
+ * Deliberately no per-attempt timeout. Under a prerender's concurrency this
+ * server answers in ~10s rather than its usual ~1s, so a timeout aborts
+ * requests that were about to succeed and each retry adds to the pile it is
+ * already struggling with. A genuinely hung socket is caught instead by
+ * staticPageGenerationTimeout, and Next retries that page three times —
+ * whereas a thrown error ends the build on the spot.
  */
-const ATTEMPT_TIMEOUT_MS = 25_000;
-
 async function fetchWithRetry(url: string, init: RequestInit): Promise<Response> {
   let lastError: unknown;
 
@@ -45,10 +51,7 @@ async function fetchWithRetry(url: string, init: RequestInit): Promise<Response>
     if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1]);
 
     try {
-      const response = await fetch(url, {
-        ...init,
-        signal: AbortSignal.timeout(ATTEMPT_TIMEOUT_MS),
-      });
+      const response = await fetch(url, init);
       if (!isTransient(response.status)) return response;
       lastError = new Error(`WordPress responded ${response.status}`);
     } catch (error) {

@@ -2,7 +2,7 @@ import type { StaticImageData } from "next/image";
 
 import adAstra from "./logo/ad-astra.png";
 import polcon from "./logo/polcon.png";
-import keyArt from "./key-art.jpg";
+import keyArt from "./key-art.png";
 import fahrenheit from "./partners/fahrenheit.png";
 import konwentyPoludniowe from "./partners/konwenty-poludniowe.png";
 import miastoZielonaGora from "./partners/miasto-zielona-gora.png";

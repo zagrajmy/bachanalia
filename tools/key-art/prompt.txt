@@ -1,0 +1,15 @@
+Use your image_gen.imagegen tool to EDIT the attached image `key-art-original.jpg` (1300x500 px, a Polish SF convention banner).
+
+REMOVE, reconstructing plausible background behind them:
+- the big headline text "XL", "POLCON", "BACHANALIA", "FANTASTYCZNE" in the lower left
+- the line "25-27 WRZESNIA 2026 * KAMPUS B * ZIELONA GORA" under it
+- the two logos at the top left (a lilac planet with an orbit ring reading "AD ASTRA", and a diamond mark reading "polcon")
+- the pink/coral border frame around all four edges
+
+KEEP EXACTLY AS-IS, pixel for pixel if you can:
+- the rooster (white/pink/blue bird) occupying roughly the right half of the image, x>=430
+- the deep navy starfield, the white four-pointed sparkles, and the darker blue swirl/swoosh patterns
+
+The result must be a clean full-bleed illustration usable as a website background: same 1300x500 dimensions, same navy palette, the emptied left area filled with more of the same starfield and swirl texture that already surrounds it. No text anywhere. No frame.
+
+Save the result as `key-art-clean.png` in the current directory. Then print the absolute path of the file you wrote and nothing else.

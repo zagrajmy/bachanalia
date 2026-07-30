@@ -4,7 +4,10 @@ import { test } from "node:test";
 import { newsExcerpt } from "./news";
 
 test("strips the markup WordPress wraps every excerpt in", () => {
-  assert.equal(newsExcerpt("<p>Gościem będzie Paweł Awdejuk.</p>\n"), "Gościem będzie Paweł Awdejuk.");
+  assert.equal(
+    newsExcerpt("<p>Gościem będzie Paweł Awdejuk.</p>\n"),
+    "Gościem będzie Paweł Awdejuk.",
+  );
 });
 
 test("decodes the entities WordPress emits for dashes and quotes", () => {

@@ -31,11 +31,11 @@ export function Home({ news }: { news: NewsEntry[] }) {
                 <div className="relative aspect-[5/4] overflow-hidden sm:aspect-[4/3] lg:h-full lg:aspect-auto">
                   <Image
                     src={KEY_ART}
-                    alt="Kosmiczny kogut wśród gwiazd na granatowym niebie, plakat XL Bachanaliów Fantastycznych"
+                    alt="Kosmiczny kogut o niebieskim ogonie wśród gwiazd na granatowym niebie"
                     fill
                     sizes="(min-width: 1024px) 48vw, 100vw"
                     priority
-                    className="scale-[1.3] object-cover object-[100%_30%] lg:scale-[1.06] lg:object-[88%_28%]"
+                    className="scale-[1.15] object-cover object-[97%_40%] lg:scale-100 lg:object-[92%_50%]"
                   />
                 </div>
               </div>

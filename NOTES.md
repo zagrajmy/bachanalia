@@ -18,6 +18,40 @@ subdomain at cutover and a browser caches a 301 indefinitely.
 `next.config.test.ts` enforces permanent for same-site hops, temporary for
 outbound ones.
 
+## WordPress could plausibly become a pure backend
+
+Checked 2026-07-30 against the live site, and it contradicts what HANDOFF and
+plan.md assume:
+
+- **POST /graphql is no longer blocked.** Both a plain query and a connection
+  query (`products(first:2){nodes{slug}}`) return 200 over POST — the exact
+  shape HANDOFF says Wordfence rejects. Mutations must be POST, so this was
+  the blocker for a cart and it is gone. Reads should stay on GET anyway,
+  because GET is cacheable and that is what ISR wants.
+- **The cart surface is all there**: `addToCart`, `updateItemQuantities`,
+  `removeItemsFromCart`, `emptyCart`, `applyCoupon`, `checkout`.
+- **`CheckoutPayload` returns `order`, `redirect` and `result`.** plan.md
+  concluded a redirect is only available for gateways with a blocks
+  integration — that is true of the **Store API**, but WooGraphQL's checkout
+  runs the classic `process_payment()` path, which is exactly where
+  `pay-by-paynow-pl` lives. The objection does not transfer.
+- **Live gateways are `pay_by_paynow_pl_blik` and `bacs`.** Bank transfer
+  needs no redirect at all, so it is headless today with no payment work.
+
+Still unverified, and each needs a real order to settle:
+
+1. Whether Paynow populates `redirect` through the WooGraphQL mutation.
+2. WooGraphQL 1.0.3 declares "WC tested up to 10.4.3" while the site runs
+   10.9.4. HANDOFF says do not use its checkout mutations; that caution is
+   untested, not disproven.
+3. Session handling — the cart is a `woocommerce-session` token that
+   `fetchGraphQL` does not carry, and cart routes have to be dynamic.
+4. At cutover the session cookie's domain changes when WordPress moves to a
+   subdomain. A cart built on the apex would empty.
+
+Cheapest way to settle 1 and 2: one `bacs` order end to end on a real
+product, then cancel it.
+
 ## Facebook is the only place news exists
 
 Decision still open. Every WordPress post is a guest profile filed under an

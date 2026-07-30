@@ -1,19 +1,22 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, Sora } from "next/font/google";
+import localFont from "next/font/local";
+import { Familjen_Grotesk } from "next/font/google";
 
 import "@/app/globals.css";
 
-const sora = Sora({
-  subsets: ["latin", "latin-ext"],
-  weight: ["600", "700"],
-  variable: "--font-sora",
+const karrik = localFont({
+  src: [
+    { path: "../../public/fonts/Karrik-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../../public/fonts/Karrik-Italic.woff2", weight: "400", style: "italic" },
+  ],
+  variable: "--font-karrik",
   display: "swap",
 });
 
-const plex = IBM_Plex_Sans({
+const familjen = Familjen_Grotesk({
   subsets: ["latin", "latin-ext"],
   weight: ["400", "600"],
-  variable: "--font-plex",
+  variable: "--font-familjen",
   display: "swap",
 });
 
@@ -27,7 +30,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pl" className={`${sora.variable} ${plex.variable}`}>
+    <html lang="pl" className={`${karrik.variable} ${familjen.variable}`}>
       <body>{children}</body>
     </html>
   );

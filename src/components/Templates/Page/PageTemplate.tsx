@@ -18,11 +18,13 @@ export default async function PageTemplate({ node }: TemplateProps) {
   const content = prepareWpContent(page?.content);
 
   return (
-    <article className="mx-auto max-w-[1400px] px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-      <h1 className="display text-[clamp(2.25rem,1.5rem+3vw,3.75rem)] text-ink">{page?.title}</h1>
+    <article className="gutter mx-auto max-w-6xl pt-12 pb-4 sm:pt-16">
+      <h1 className="display -ml-[0.04em] border-b-2 border-navy pb-3 text-[clamp(2.1rem,6.4vw,4rem)]">
+        {page?.title}
+      </h1>
 
       {hasVisibleContent(content) ? (
-        <div className="wp-content mt-12" dangerouslySetInnerHTML={{ __html: content }} />
+        <div className="wp-content mt-10" dangerouslySetInnerHTML={{ __html: content }} />
       ) : (
         <p className="mt-8 max-w-[55ch] text-lg text-ink-muted">
           Szykujemy tę stronę na XL edycję. Zajrzyj tu ponownie za jakiś czas.

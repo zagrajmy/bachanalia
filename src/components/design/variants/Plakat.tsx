@@ -1,8 +1,8 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { Anton, Familjen_Grotesk } from "next/font/google";
 
-import { accreditation, blocks, cityFunding, con, NewsItem, partners } from "../content";
+import { accreditation, blocks, cityFunding, con, NewsItem, partners } from "@/content/con";
 
 const anton = Anton({ subsets: ["latin", "latin-ext"], weight: "400", variable: "--v-display" });
 const familjen = Familjen_Grotesk({
@@ -13,7 +13,7 @@ const familjen = Familjen_Grotesk({
 
 const display = { fontFamily: "var(--v-display)" } as const;
 
-export function Plakat({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
+export function Plakat({ news, artSrc }: { news: NewsItem[]; artSrc: StaticImageData }) {
   return (
     <div
       className={`${anton.variable} ${familjen.variable} min-h-screen bg-[#12143f] text-[#f3eee6]`}
@@ -40,8 +40,6 @@ export function Plakat({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
         <Image
           src={artSrc}
           alt={`Plakat ${con.edition} Bachanaliów Fantastycznych: kosmiczny kogut z rozłożonym niebieskim ogonem na granatowym, rozgwieżdżonym niebie. ${con.dates}, ${con.venue}.`}
-          width={1300}
-          height={500}
           priority
           sizes="100vw"
           className="block w-full"
@@ -209,8 +207,6 @@ export function Plakat({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
                     <Image
                       src={logo.src}
                       alt={logo.name}
-                      width={logo.width}
-                      height={logo.height}
                       className="h-7 w-auto object-contain"
                     />
                   </li>
@@ -228,8 +224,6 @@ export function Plakat({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
             <Image
               src={cityFunding.src}
               alt=""
-              width={cityFunding.width}
-              height={cityFunding.height}
               className="h-9 w-auto bg-[#f3eee6] object-contain p-0.5"
             />
             {cityFunding.name}

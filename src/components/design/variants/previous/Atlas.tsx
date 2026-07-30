@@ -1,8 +1,8 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { Fira_Code, Unbounded } from "next/font/google";
 
-import { accreditation, blocks, con, NewsItem, partnerNames as partners } from "../../content";
+import { accreditation, blocks, con, NewsItem, partnerNames as partners } from "@/content/con";
 
 const unbounded = Unbounded({
   subsets: ["latin", "latin-ext"],
@@ -28,7 +28,7 @@ function Row({ k, v }: { k: string; v: string }) {
   );
 }
 
-export function Atlas({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
+export function Atlas({ news, artSrc }: { news: NewsItem[]; artSrc: StaticImageData }) {
   return (
     <div
       className={`${unbounded.variable} ${fira.variable} min-h-screen bg-[#080b28] text-[#f4f2f7]`}
@@ -74,8 +74,6 @@ export function Atlas({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
           <Image
             src={artSrc}
             alt="Kosmiczny kogut na granatowym niebie, plakat XL Bachanaliów"
-            width={1300}
-            height={500}
             priority
             className="relative w-full object-cover"
           />

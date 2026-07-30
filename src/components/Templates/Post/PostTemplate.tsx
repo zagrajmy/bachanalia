@@ -26,7 +26,7 @@ export default async function PostTemplate({ node }: TemplateProps) {
   const image = post.featuredImage?.node;
 
   return (
-    <article className="mx-auto grid max-w-[1400px] gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-14 lg:px-8 lg:py-24">
+    <article className="gutter mx-auto grid max-w-6xl gap-10 pt-12 pb-4 sm:pt-16 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:gap-14">
       {image?.sourceUrl && (
         <Image
           src={image.sourceUrl}
@@ -35,18 +35,18 @@ export default async function PostTemplate({ node }: TemplateProps) {
           height={image.mediaDetails?.height ?? 1000}
           sizes="(min-width: 1024px) 20rem, 100vw"
           priority
-          className="w-full rounded-card bg-navy-800 object-cover lg:sticky lg:top-28"
+          className="w-full rounded-card bg-paper-shade object-cover lg:sticky lg:top-28"
         />
       )}
 
       <div className="min-w-0">
         {published && (
-          <time dateTime={published.toISOString()} className="text-sm text-ink-muted">
+          <time dateTime={published.toISOString()} className="eyebrow text-ink-muted">
             {dateFormat.format(published)}
           </time>
         )}
 
-        <h1 className="display mt-3 text-[clamp(2rem,1.4rem+2.6vw,3.25rem)] text-ink">
+        <h1 className="display mt-3 -ml-[0.04em] border-b-2 border-navy pb-3 text-[clamp(1.9rem,5.2vw,3rem)]">
           {post.title}
         </h1>
 

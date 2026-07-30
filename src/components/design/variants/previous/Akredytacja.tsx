@@ -1,8 +1,8 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { Bebas_Neue, Familjen_Grotesk } from "next/font/google";
 
-import { accreditation, blocks, con, NewsItem, partnerNames as partners } from "../../content";
+import { accreditation, blocks, con, NewsItem, partnerNames as partners } from "@/content/con";
 
 const bebas = Bebas_Neue({
   subsets: ["latin", "latin-ext"],
@@ -31,7 +31,7 @@ function Stub({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function Akredytacja({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
+export function Akredytacja({ news, artSrc }: { news: NewsItem[]; artSrc: StaticImageData }) {
   return (
     <div
       className={`${bebas.variable} ${familjen.variable} min-h-screen bg-[#191f5c] text-[#f4f2f7]`}
@@ -58,8 +58,6 @@ export function Akredytacja({ news, artSrc }: { news: NewsItem[]; artSrc: string
             <Image
               src={artSrc}
               alt="Kosmiczny kogut na granatowym niebie, plakat XL Bachanaliów"
-              width={1300}
-              height={500}
               priority
               className="w-full object-cover"
             />

@@ -1,8 +1,8 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { Fira_Code, Unbounded } from "next/font/google";
 
-import { accreditation, blocks, cityFunding, con, NewsItem, partners } from "../content";
+import { accreditation, blocks, cityFunding, con, NewsItem, partners } from "@/content/con";
 
 const unbounded = Unbounded({
   subsets: ["latin", "latin-ext"],
@@ -45,7 +45,7 @@ function Tick({ className }: { className: string }) {
   );
 }
 
-export function Atlas({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
+export function Atlas({ news, artSrc }: { news: NewsItem[]; artSrc: StaticImageData }) {
   return (
     <div
       className={`${unbounded.variable} ${fira.variable} min-h-screen bg-[#080b28] text-[#f4f2f7]`}
@@ -84,8 +84,6 @@ export function Atlas({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
         <Image
           src={artSrc}
           alt="Plakat XL Bachanaliów Fantastycznych: kogut o pióropuszu z gwiazd na granatowym nocnym niebie, obok logo Polconu i data konwentu"
-          width={1300}
-          height={500}
           priority
           sizes="100vw"
           className="block h-auto w-full"
@@ -277,7 +275,7 @@ export function Atlas({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
             <li key={tier} className="border-t border-[#cbbbcf]/25 pt-4">
               <p className="text-[0.625rem] tracking-[0.24em] text-[#8fa9dd] uppercase">{tier}</p>
               <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-5">
-                {logos.map(({ name, src, width, height, needsPlate }) => (
+                {logos.map(({ name, src, needsPlate }) => (
                   <li key={name} className="max-w-full">
                     <div
                       className={`flex h-16 min-w-[9rem] items-center justify-center border border-[#cbbbcf]/25 px-4 ${needsPlate ? "bg-[#f4f2f7]" : "bg-[#0d1234]"}`}
@@ -285,8 +283,6 @@ export function Atlas({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
                       <Image
                         src={src}
                         alt={name}
-                        width={width}
-                        height={height}
                         className="h-9 w-auto max-w-[11rem] object-contain"
                       />
                     </div>

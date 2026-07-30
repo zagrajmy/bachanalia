@@ -1,8 +1,8 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { Silkscreen, VT323 } from "next/font/google";
 
-import { accreditation, blocks, con, NewsItem, partnerNames as partners } from "../../content";
+import { accreditation, blocks, con, NewsItem, partnerNames as partners } from "@/content/con";
 
 const silkscreen = Silkscreen({
   subsets: ["latin", "latin-ext"],
@@ -16,7 +16,7 @@ const SCANLINES =
 
 const BARS = ["#ee7489", "#ff9cb3", "#cbbbcf", "#6d8fce", "#3f6bbc", "#263b87"];
 
-export function Demoscena({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
+export function Demoscena({ news, artSrc }: { news: NewsItem[]; artSrc: StaticImageData }) {
   return (
     <div
       className={`${silkscreen.variable} ${vt.variable} relative min-h-screen bg-[#0b0d33] text-[#cbe3ff]`}
@@ -69,8 +69,6 @@ export function Demoscena({ news, artSrc }: { news: NewsItem[]; artSrc: string }
           <Image
             src={artSrc}
             alt="Kosmiczny kogut na granatowym niebie, plakat XL Bachanaliów"
-            width={1300}
-            height={500}
             priority
             className="w-full border-2 border-[#3f6bbc] object-cover"
           />

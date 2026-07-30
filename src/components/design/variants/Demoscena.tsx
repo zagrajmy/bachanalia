@@ -1,8 +1,8 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { Silkscreen, VT323 } from "next/font/google";
 
-import { accreditation, blocks, cityFunding, con, NewsItem, partners } from "../content";
+import { accreditation, blocks, cityFunding, con, NewsItem, partners } from "@/content/con";
 
 const silkscreen = Silkscreen({
   subsets: ["latin", "latin-ext"],
@@ -72,7 +72,7 @@ function ColourBars({ className = "" }: { className?: string }) {
   );
 }
 
-export function Demoscena({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
+export function Demoscena({ news, artSrc }: { news: NewsItem[]; artSrc: StaticImageData }) {
   const facts: [string, string][] = [
     ["MIEJSCE", con.venue],
     ["ADRES", con.address],
@@ -140,8 +140,6 @@ export function Demoscena({ news, artSrc }: { news: NewsItem[]; artSrc: string }
         <Image
           src={artSrc}
           alt="Kosmiczny kogut w rozgwieżdżonym niebie, plakat XL Bachanaliów Fantastycznych"
-          width={1300}
-          height={500}
           priority
           sizes="100vw"
           className="block h-[74vw] w-full object-cover object-right sm:h-auto"
@@ -276,13 +274,11 @@ export function Demoscena({ news, artSrc }: { news: NewsItem[]; artSrc: string }
                     {tier}
                   </p>
                   <ul className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-5">
-                    {logos.map(({ name, src, width, height }) => (
+                    {logos.map(({ name, src }) => (
                       <li key={name}>
                         <Image
                           src={src}
                           alt={name}
-                          width={width}
-                          height={height}
                           sizes="240px"
                           className="h-11 w-auto"
                         />
@@ -298,8 +294,6 @@ export function Demoscena({ news, artSrc }: { news: NewsItem[]; artSrc: string }
                 src={cityFunding.src}
                 alt=""
                 aria-hidden="true"
-                width={cityFunding.width}
-                height={cityFunding.height}
                 sizes="88px"
                 className="h-11 w-auto shrink-0"
               />

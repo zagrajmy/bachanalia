@@ -1,4 +1,33 @@
-export const KEY_ART = "/wp-content/uploads/2026/02/baner_strona_1300x500.jpg";
+import type { StaticImageData } from "next/image";
+
+import adAstra from "./logo/ad-astra.png";
+import polcon from "./logo/polcon.png";
+import keyArt from "./key-art.jpg";
+import fahrenheit from "./partners/fahrenheit.png";
+import konwentyPoludniowe from "./partners/konwenty-poludniowe.png";
+import miastoZielonaGora from "./partners/miasto-zielona-gora.png";
+import planetariumWenus from "./partners/planetarium-wenus.png";
+import uniwersytetZielonogorski from "./partners/uniwersytet-zielonogorski.jpg";
+import zok from "./partners/zok.jpg";
+
+export const KEY_ART = keyArt;
+
+/**
+ * Both marks were lifted from the key art, so they carry its lilac and only
+ * work on a dark ground.
+ */
+export const marks = [
+  {
+    name: "Zielonogórski Klub Fantastyki Ad Astra",
+    src: adAstra,
+    href: "/organizator/",
+  },
+  {
+    name: "Polcon, Ogólnopolski Konwent Miłośników Fantastyki",
+    src: polcon,
+    href: "https://polcon.pl/",
+  },
+];
 
 export const con = {
   edition: "XL",
@@ -46,13 +75,9 @@ export const accreditation = [
   { label: "Golden Ticket", price: "250 zł" },
 ];
 
-const UPLOADS = "https://bachanaliafantastyczne.pl/wp-content/uploads";
-
 export type PartnerLogo = {
   name: string;
-  src: string;
-  width: number;
-  height: number;
+  src: StaticImageData;
   /**
    * Dark artwork on a transparent or white ground: it disappears on dark
    * surfaces and needs a light plate. False means the mark carries its own
@@ -68,9 +93,7 @@ export const partners: { tier: string; logos: PartnerLogo[] }[] = [
     logos: [
       {
         name: "Uniwersytet Zielonogórski",
-        src: `${UPLOADS}/2025/09/znak_uproszczony_UZ_z_duzym_napisem_pl_RGB-1024x319.jpg`,
-        width: 1024,
-        height: 319,
+        src: uniwersytetZielonogorski,
         needsPlate: true,
       },
     ],
@@ -80,16 +103,12 @@ export const partners: { tier: string; logos: PartnerLogo[] }[] = [
     logos: [
       {
         name: "Planetarium Wenus",
-        src: `${UPLOADS}/2026/07/kepler.png`,
-        width: 320,
-        height: 320,
+        src: planetariumWenus,
         needsPlate: false,
       },
       {
         name: "Zielonogórski Ośrodek Kultury",
-        src: `${UPLOADS}/2024/08/LogoZok-300x138-1.jpg`,
-        width: 300,
-        height: 138,
+        src: zok,
         needsPlate: true,
       },
     ],
@@ -99,16 +118,12 @@ export const partners: { tier: string; logos: PartnerLogo[] }[] = [
     logos: [
       {
         name: "Fahrenheit",
-        src: `${UPLOADS}/2026/07/fahrenheit_przezroczyste-1024x200.png`,
-        width: 1024,
-        height: 200,
+        src: fahrenheit,
         needsPlate: true,
       },
       {
         name: "Konwenty Południowe",
-        src: `${UPLOADS}/2025/09/konwenty_poludniowe-300x114.png`,
-        width: 300,
-        height: 114,
+        src: konwentyPoludniowe,
         needsPlate: true,
       },
     ],
@@ -123,58 +138,7 @@ export const partnerNames = partners.map(({ tier, logos }) => ({
 
 export const cityFunding = {
   name: "Zrealizowano przy pomocy finansowej Miasta Zielona Góra",
-  src: `${UPLOADS}/elementor/thumbs/309075582_781048753011414_6542283171950865978_n-qt8eo7tyhl2rlu41n3my2zkzhrgdggy5kqkya542rk.png`,
-  width: 512,
-  height: 512,
+  src: miastoZielonaGora,
 };
 
 export type NewsItem = { title: string; href: string; date: string };
-
-export const VARIANTS = [
-  {
-    slug: "plakat",
-    name: "Plakat",
-    world: "Polska szkoła plakatu",
-    thesis:
-      "Ilustracja jest stroną, nie nagłówkiem. Kompozycja asymetryczna, typografia malowana skalą, nie ozdobnikiem.",
-  },
-  {
-    slug: "atlas",
-    name: "Atlas nieba",
-    world: "Mapa nieba i efemerydy",
-    thesis:
-      "Ad Astra wzięte dosłownie. Siatka współrzędnych, cienkie linie, program czytany jak tabela wschodów i zachodów.",
-  },
-  {
-    slug: "zin",
-    name: "Zin",
-    world: "Riso i fanzin",
-    thesis:
-      "Fantazje Zielonogórskie jako język całej strony. Dwie farby, rozjechany druk, blokowy skład i maszynopis.",
-  },
-  {
-    slug: "demoscena",
-    name: "Demoscena",
-    world: "Ekran ładowania z lat 80.",
-    thesis:
-      "Retro gaming nie jako blok programu, tylko jako gramatyka strony. Bitmapa, loader, tabela kolorów.",
-  },
-  {
-    slug: "akredytacja",
-    name: "Akredytacja",
-    world: "Bilet i identyfikator",
-    thesis:
-      "Strona zbudowana wokół tego, co konwent naprawdę sprzedaje. Perforacja, odcinek kontrolny, taryfikator.",
-  },
-] as const;
-
-export type VariantSlug = (typeof VARIANTS)[number]["slug"];
-
-export const ALL_VARIANTS = [
-  ...VARIANTS.map(({ slug, name }) => ({ slug, name, generation: "Po szlifie" })),
-  ...VARIANTS.map(({ slug, name }) => ({
-    slug: `${slug}-previous`,
-    name,
-    generation: "Przed szlifem",
-  })),
-].map((variant, index) => ({ ...variant, number: index + 1 }));

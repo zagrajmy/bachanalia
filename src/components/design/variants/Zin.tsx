@@ -1,8 +1,8 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { Archivo_Black, Courier_Prime } from "next/font/google";
 
-import { accreditation, blocks, cityFunding, con, NewsItem, partners } from "../content";
+import { accreditation, blocks, cityFunding, con, NewsItem, partners } from "@/content/con";
 
 const archivo = Archivo_Black({
   subsets: ["latin", "latin-ext"],
@@ -44,7 +44,7 @@ const TITLE = (
   </>
 );
 
-export function Zin({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
+export function Zin({ news, artSrc }: { news: NewsItem[]; artSrc: StaticImageData }) {
   return (
     <div
       className={`${archivo.variable} ${courier.variable} min-h-screen overflow-x-clip bg-[#efe9dc] text-[#141642]`}
@@ -99,8 +99,6 @@ export function Zin({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
           <Image
             src={artSrc}
             alt="Kosmiczny kogut z czerwonym grzebieniem na granatowym gwiaździstym niebie, plakat XL Bachanaliów Fantastycznych"
-            width={1300}
-            height={500}
             priority
             className="aspect-[4/3] w-full object-cover object-[74%_50%] contrast-125 saturate-150 sm:aspect-[13/5] sm:object-center"
           />
@@ -262,8 +260,6 @@ export function Zin({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
               src={cityFunding.src}
               alt=""
               aria-hidden="true"
-              width={cityFunding.width}
-              height={cityFunding.height}
               className="h-12 w-12 shrink-0 object-contain mix-blend-multiply"
             />
             <p className="max-w-[24ch] leading-snug">{cityFunding.name}</p>
@@ -283,8 +279,6 @@ export function Zin({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
                     <Image
                       src={logo.src}
                       alt={logo.name}
-                      width={logo.width}
-                      height={logo.height}
                       className="h-10 w-auto mix-blend-multiply"
                     />
                   </li>

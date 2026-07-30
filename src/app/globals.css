@@ -1,42 +1,35 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+@source "../**/*.{ts,tsx}";
 
 @theme {
-  --color-navy-900: #0d1240;
-  --color-navy-800: #151b50;
-  --color-navy-700: #191f5c;
-  --color-navy-600: #263b87;
+  --color-paper: #f2efe9;
+  --color-paper-shade: #e7e2d8;
+  --color-navy: #191f5c;
+  --color-navy-deep: #12163f;
+  --color-petrol: #1f3c50;
+  --color-coral: #ee7489;
+  --color-pink: #ff9cb3;
+  --color-lilac: #cbbbcf;
+  --color-slate: #4e5079;
 
-  --color-blue-decorative: #3f6bbc;
-  --color-blue-readable: #6d8fce;
+  --color-surface: var(--color-paper);
+  --color-ink: var(--color-navy);
+  --color-ink-muted: var(--color-slate);
+  --color-accent: var(--color-coral);
+  --color-on-accent: var(--color-navy);
+  --color-hairline: color-mix(in oklab, var(--color-navy) 25%, transparent);
 
-  --color-coral-400: #ee7489;
-  --color-pink-300: #ff9cb3;
-  --color-rose-400: #cc728d;
+  --font-display: var(--font-karrik), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-familjen), ui-sans-serif, system-ui, sans-serif;
 
-  --color-lilac-200: #cbbbcf;
-  --color-violet-500: #705582;
-
-  --color-surface: var(--color-navy-700);
-  --color-surface-raised: var(--color-navy-800);
-  --color-surface-sunken: var(--color-navy-900);
-  --color-ink: #f4f2f7;
-  --color-ink-muted: var(--color-lilac-200);
-  --color-link: var(--color-blue-readable);
-  --color-accent: var(--color-coral-400);
-  --color-on-accent: var(--color-navy-700);
-  --color-hairline: color-mix(in oklab, var(--color-lilac-200) 20%, transparent);
-
-  --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-plex), ui-sans-serif, system-ui, sans-serif;
-
-  --radius-card: 0.875rem;
+  --radius-card: 3px;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -57,6 +50,45 @@ body {
   color: var(--color-on-accent);
 }
 
+@utility ink-inverted {
+  color: var(--color-paper);
+  --color-ink: var(--color-paper);
+  --color-ink-muted: var(--color-lilac);
+  --color-accent: var(--color-pink);
+  --color-hairline: color-mix(in oklab, var(--color-paper) 25%, transparent);
+}
+
+@utility punched {
+  background: radial-gradient(circle at 50% 50%, var(--color-paper) 0 3.5px, transparent 3.5px) 0
+    0 / 16px 16px repeat-x;
+}
+
+@utility screened {
+  background-image: radial-gradient(
+    color-mix(in oklab, var(--color-paper) 6%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 4px 4px;
+}
+
+@utility gutter {
+  padding-inline: 1.25rem;
+
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+
+  @media (width >= 64rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -69,9 +101,9 @@ body {
 
 @utility display {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.02;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 0.95;
   text-wrap: balance;
 }
 
@@ -103,9 +135,9 @@ body {
 
 .wp-content :is(h1, h2, h3, h4, h5, h6) {
   font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.12;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
   margin-block: 2.2em 0.7em;
   text-wrap: balance;
 }
@@ -149,15 +181,20 @@ body {
 }
 
 .wp-content a {
-  color: var(--color-link);
+  color: inherit;
   text-decoration: underline;
-  text-decoration-thickness: 1px;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 2px;
   text-underline-offset: 0.2em;
   transition: color 160ms var(--ease-out);
 }
 
 .wp-content strong {
   font-weight: 600;
+}
+
+.wp-content :is(img, .swiper-slide) {
+  background-color: var(--color-paper-shade);
 }
 
 .wp-content blockquote {
@@ -235,6 +272,6 @@ body {
 
 @media (hover: hover) and (pointer: fine) {
   .wp-content a:hover {
-    color: var(--color-accent);
+    text-decoration-color: currentColor;
   }
 }

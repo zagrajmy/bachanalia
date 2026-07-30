@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { Bebas_Neue, Familjen_Grotesk } from "next/font/google";
 
@@ -10,7 +10,7 @@ import {
   NewsItem,
   PartnerLogo,
   partners,
-} from "../content";
+} from "@/content/con";
 
 const bebas = Bebas_Neue({
   subsets: ["latin", "latin-ext"],
@@ -39,14 +39,14 @@ const seria = `${con.edition} / ${con.datesShort}`;
 const idx = (i: number) => String(i + 1).padStart(2, "0");
 
 /** Wordmarks carry their weight in width; compact marks need more height to match. */
-function logoHeight({ width, height }: PartnerLogo) {
+function logoHeight({ width, height }: PartnerLogo["src"]) {
   const ratio = width / height;
   if (ratio >= 3.5) return "clamp(22px, 4.2vw, 32px)";
   if (ratio >= 1.5) return "clamp(28px, 5vw, 40px)";
   return "clamp(38px, 6.6vw, 54px)";
 }
 
-export function Akredytacja({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
+export function Akredytacja({ news, artSrc }: { news: NewsItem[]; artSrc: StaticImageData }) {
   return (
     <div
       className={`${bebas.variable} ${familjen.variable} min-h-screen bg-[#f2efe9] text-[#191f5c]`}
@@ -344,10 +344,8 @@ export function Akredytacja({ news, artSrc }: { news: NewsItem[]; artSrc: string
                         key={logo.name}
                         src={logo.src}
                         alt={logo.name}
-                        width={logo.width}
-                        height={logo.height}
-                        className={`w-auto ${logo.src.endsWith(".jpg") ? "mix-blend-multiply" : ""}`}
-                        style={{ height: logoHeight(logo) }}
+                        className={`w-auto ${logo.src.src.endsWith(".jpg") ? "mix-blend-multiply" : ""}`}
+                        style={{ height: logoHeight(logo.src) }}
                       />
                     ))}
                   </div>
@@ -359,8 +357,6 @@ export function Akredytacja({ news, artSrc }: { news: NewsItem[]; artSrc: string
               <Image
                 src={cityFunding.src}
                 alt={cityFunding.name}
-                width={cityFunding.width}
-                height={cityFunding.height}
                 className="w-auto shrink-0"
                 style={{ height: "clamp(36px, 6vw, 48px)" }}
               />

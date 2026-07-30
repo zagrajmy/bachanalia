@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { ALL_VARIANTS } from "@/components/design/content";
+import { ALL_VARIANTS } from "@/components/design/gallery";
 
 export const metadata: Metadata = {
   title: "Warianty projektu",
@@ -17,14 +17,14 @@ export default function DesignGallery() {
   ];
 
   return (
-    <div className="flex h-screen bg-navy-900 text-ink">
+    <div className="flex h-screen bg-navy text-paper">
       <nav
         aria-label="Warianty"
-        className="w-52 shrink-0 overflow-y-auto border-r border-hairline p-4"
+        className="w-52 shrink-0 overflow-y-auto border-r border-paper/20 p-4"
       >
         {groups.map(({ generation, items }, groupIndex) => (
           <ul key={generation} className={groupIndex > 0 ? "mt-6" : undefined}>
-            <li className="px-3 pb-2 text-[0.6875rem] tracking-[0.2em] text-ink-muted uppercase">
+            <li className="px-3 pb-2 text-[0.6875rem] tracking-[0.2em] text-lilac uppercase">
               {generation}
             </li>
             {items.map(({ slug, name, number }) => (
@@ -32,7 +32,7 @@ export default function DesignGallery() {
                 <a
                   href={`/design/${slug}/`}
                   target="preview"
-                  className="flex items-baseline gap-2.5 rounded-md px-3 py-2 text-sm text-ink-muted no-underline transition-colors duration-150 hover:bg-navy-800 hover:text-ink focus-visible:bg-navy-800 focus-visible:text-ink"
+                  className="flex items-baseline gap-2.5 rounded-md px-3 py-2 text-sm text-lilac no-underline transition-colors duration-150 hover:bg-navy-deep hover:text-paper focus-visible:bg-navy-deep focus-visible:text-paper"
                 >
                   <span className="w-4 shrink-0 text-right text-xs text-accent tabular-nums">
                     {number}
@@ -49,7 +49,7 @@ export default function DesignGallery() {
         name="preview"
         title="Podgląd wariantu"
         src={`/design/${ALL_VARIANTS[0].slug}/`}
-        className="h-full flex-1 border-0 bg-navy-800"
+        className="h-full flex-1 border-0 bg-paper"
       />
     </div>
   );

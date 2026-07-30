@@ -1,8 +1,8 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { Archivo_Black, Courier_Prime } from "next/font/google";
 
-import { accreditation, blocks, con, NewsItem, partnerNames as partners } from "../../content";
+import { accreditation, blocks, con, NewsItem, partnerNames as partners } from "@/content/con";
 
 const archivo = Archivo_Black({
   subsets: ["latin", "latin-ext"],
@@ -19,7 +19,7 @@ const PAPER =
   "radial-gradient(rgba(18,20,63,0.10) 1px, transparent 1px) 0 0 / 4px 4px," +
   "radial-gradient(rgba(238,116,137,0.14) 1px, transparent 1px) 2px 2px / 4px 4px";
 
-export function Zin({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
+export function Zin({ news, artSrc }: { news: NewsItem[]; artSrc: StaticImageData }) {
   return (
     <div
       className={`${archivo.variable} ${courier.variable} min-h-screen bg-[#efe9dc] text-[#141642]`}
@@ -64,8 +64,6 @@ export function Zin({ news, artSrc }: { news: NewsItem[]; artSrc: string }) {
           <Image
             src={artSrc}
             alt="Kosmiczny kogut na granatowym niebie, plakat XL Bachanaliów"
-            width={1300}
-            height={500}
             priority
             className="w-full object-cover contrast-125 saturate-150"
           />

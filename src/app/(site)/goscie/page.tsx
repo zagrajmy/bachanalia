@@ -28,29 +28,30 @@ export default async function GosciePage() {
     .sort((a, b) => b - a);
 
   return (
-    <div className="mx-auto max-w-[1400px] px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-      <h1 className="display text-[clamp(2.25rem,1.5rem+3vw,3.75rem)] text-ink">Goście</h1>
-
-      {editions.length > 0 && (
-        <p className="mt-6 max-w-[55ch] text-lg text-ink-muted">
-          Program XL edycji jest w przygotowaniu. Poniżej goście i atrakcje z edycji{" "}
-          {editions.join(", ")}.
-        </p>
-      )}
+    <div className="gutter mx-auto max-w-6xl pt-12 sm:pt-16">
+      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-b-2 border-navy pb-3">
+        <h1 className="display -ml-[0.04em] text-[clamp(2.1rem,6.4vw,4rem)]">Goście</h1>
+        {editions.length > 0 && (
+          <p className="max-w-[34ch] text-sm text-ink-muted">
+            Program XL edycji jest w przygotowaniu. Poniżej goście i atrakcje z edycji{" "}
+            {editions.join(", ")}.
+          </p>
+        )}
+      </div>
 
       {nodes.length === 0 ? (
         <p className="mt-8 max-w-[55ch] text-lg text-ink-muted">
           Lista gości XL edycji pojawi się tutaj, gdy tylko ją ogłosimy.
         </p>
       ) : (
-        <ul className="mt-14 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <ul className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
           {nodes.map((post) => {
             const image = post.featuredImage?.node;
 
             return (
               <li key={post.id}>
                 <Link href={wpUriToPath(post.uri)} className="group block no-underline">
-                  <div className="overflow-hidden rounded-card bg-navy-800">
+                  <div className="overflow-hidden rounded-card bg-paper-shade">
                     {image?.sourceUrl ? (
                       <Image
                         src={image.sourceUrl}
@@ -65,7 +66,7 @@ export default async function GosciePage() {
                     )}
                   </div>
 
-                  <h2 className="display mt-4 text-lg text-ink transition-colors duration-200 group-hover:text-accent">
+                  <h2 className="display mt-4 text-xl text-ink transition-colors duration-200 group-hover:text-coral">
                     {post.title}
                   </h2>
 

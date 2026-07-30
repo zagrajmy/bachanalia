@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import type { StaticImageData } from "next/image";
 import { notFound } from "next/navigation";
 import { print } from "graphql/language/printer";
 
-import { ALL_VARIANTS, KEY_ART, NewsItem } from "@/components/design/content";
+import { KEY_ART, NewsItem } from "@/content/con";
+import { ALL_VARIANTS } from "@/components/design/gallery";
 import { Akredytacja } from "@/components/design/variants/Akredytacja";
 import { Atlas } from "@/components/design/variants/Atlas";
 import { Demoscena } from "@/components/design/variants/Demoscena";
@@ -24,7 +26,7 @@ export function generateStaticParams() {
   return ALL_VARIANTS.map(({ slug }) => ({ variant: slug }));
 }
 
-const RENDERERS: Record<string, (props: { news: NewsItem[]; artSrc: string }) => React.ReactNode> =
+const RENDERERS: Record<string, (props: { news: NewsItem[]; artSrc: StaticImageData }) => React.ReactNode> =
   {
     plakat: Plakat,
     atlas: Atlas,
@@ -56,7 +58,5 @@ export default async function VariantPage({ params }: { params: Promise<{ varian
     date: post.date ? dateFormat.format(new Date(post.date)) : "",
   }));
 
-  const artSrc = `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}${KEY_ART}`;
-
-  return <Renderer news={news} artSrc={artSrc} />;
+  return <Renderer news={news} artSrc={KEY_ART} />;
 }

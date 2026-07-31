@@ -14,9 +14,7 @@ export function SiteFooter() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {footerNav.map(({ title, links }) => (
             <nav key={title} aria-label={title}>
-              <h2 className="eyebrow text-[0.6875rem] tracking-[0.12em] text-ink-muted">
-                {title}
-              </h2>
+              <h2 className="eyebrow text-[0.6875rem] tracking-[0.12em] text-ink-muted">{title}</h2>
               <ul className="mt-4 flex flex-col gap-2.5">
                 {links.map((link) => (
                   <li key={link.href}>

@@ -3,14 +3,7 @@
 import { useEffect, useState } from "react";
 
 const FONTS = [
-  ["Karrik", "var(--font-karrik)"],
-  ["Familjen Grotesk", "var(--font-familjen)"],
   ["Bricolage Grotesque", "var(--font-bricolage)"],
-  ["Le Murmure", "var(--font-murmure)"],
-  ["Basteleur", "var(--font-basteleur)"],
-  ["Gulax", "var(--font-gulax)"],
-  ["Switzer", "var(--font-switzer)"],
-  ["Instrument Sans", "var(--font-instrument)"],
   ["Cinzel", "var(--font-cinzel)"],
 ];
 

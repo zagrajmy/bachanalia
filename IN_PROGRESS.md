@@ -96,13 +96,12 @@ and `text-ink-muted`.
 Utilities in `globals.css`: `display`, `eyebrow`, `gutter`, `ink-inverted`,
 `punched`, `screened`, `gold`. Containers are `mx-auto max-w-6xl`.
 
-Type: **Bricolage Grotesque** display, **Familjen Grotesk** body, **Cinzel**
-on the warcraftcn buttons and footer headings. All cover `latin-ext` — Polish
-diacritics are non-negotiable.
-
-> **Loose end:** Karrik is still downloaded in `layout.tsx` and put on
-> `<html>`, but nothing consumes `--font-karrik` since display moved to
-> Bricolage. Drop it and `src/fonts/`, or put it back to work.
+Type: **Bricolage Grotesque** carries both `--font-display` and
+`--font-body`; **Cinzel** is the button face, behind a `--font-button`
+indirection so it can be swapped without touching components. Both come from
+`next/font/google`, there are no self-hosted faces, and `src/fonts/` no
+longer exists. Both cover `latin-ext` — Polish diacritics are
+non-negotiable.
 
 ### The key art
 
@@ -303,14 +302,13 @@ of a daily allowance in the thousands.
    old URLs 301, shop exemptions. Do not touch permalinks before this.
 5. **Sitemap** is generated from WordPress's own and still emits `/produkt/…`
    URLs; the new routes are not in it.
-6. **Karrik is loaded but unused.**
-7. **`wsparcie-klubu-1-zl` and `akredytacja-wspierajaca-polcon`** (25–45 zł)
+6. **`wsparcie-klubu-1-zl` and `akredytacja-wspierajaca-polcon`** (25–45 zł)
    exist in the shop but are not in the homepage tier list — nobody has said
    where they belong.
-8. Several pages use bare paragraphs as section labels (`POCIĄGIEM`,
+7. Several pages use bare paragraphs as section labels (`POCIĄGIEM`,
    `AUTOBUSEM`) instead of headings, invisible to screen-reader heading
    navigation. Editorial fix in WordPress, not CSS.
-9. Vercel GitHub app access to the `zagrajmy` org.
+8. Vercel GitHub app access to the `zagrajmy` org.
 
 ## Open questions
 

@@ -1,22 +1,11 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import { Bricolage_Grotesque, Cinzel, Familjen_Grotesk, Instrument_Sans } from "next/font/google";
+import { Bricolage_Grotesque, Cinzel } from "next/font/google";
 
 import "@/app/globals.css";
 
-const karrik = localFont({
-  src: [
-    { path: "../fonts/Karrik-Regular.woff2", weight: "400", style: "normal" },
-    { path: "../fonts/Karrik-Italic.woff2", weight: "400", style: "italic" },
-  ],
-  variable: "--font-karrik",
-  display: "swap",
-});
-
-const familjen = Familjen_Grotesk({
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "600"],
-  variable: "--font-familjen",
+  variable: "--font-bricolage",
   display: "swap",
 });
 
@@ -27,53 +16,7 @@ const cinzel = Cinzel({
   display: "swap",
 });
 
-const bricolage = Bricolage_Grotesque({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-bricolage",
-  display: "swap",
-});
-
-const instrument = Instrument_Sans({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-instrument",
-  display: "swap",
-});
-
-const murmure = localFont({
-  src: "../fonts/LeMurmure-Regular.woff2",
-  weight: "400",
-  variable: "--font-murmure",
-  display: "swap",
-});
-
-const basteleur = localFont({
-  src: [
-    { path: "../fonts/Basteleur-Moonlight.woff2", weight: "400", style: "normal" },
-    { path: "../fonts/Basteleur-Bold.woff2", weight: "700", style: "normal" },
-  ],
-  variable: "--font-basteleur",
-  display: "swap",
-});
-
-const gulax = localFont({
-  src: "../fonts/Gulax-Regular.woff2",
-  weight: "400",
-  variable: "--font-gulax",
-  display: "swap",
-});
-
-const switzer = localFont({
-  src: [
-    { path: "../fonts/Switzer-Regular.woff2", weight: "400", style: "normal" },
-    { path: "../fonts/Switzer-Semibold.woff2", weight: "600", style: "normal" },
-  ],
-  variable: "--font-switzer",
-  display: "swap",
-});
-
-const fontVars = [karrik, familjen, cinzel, bricolage, instrument, murmure, basteleur, gulax, switzer]
-  .map((font) => font.variable)
-  .join(" ");
+const fontVars = `${bricolage.variable} ${cinzel.variable}`;
 
 const TITLE = "Bachanalia Fantastyczne XL";
 const DESCRIPTION =

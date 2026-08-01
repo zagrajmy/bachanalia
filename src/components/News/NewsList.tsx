@@ -18,7 +18,7 @@ export function NewsList({ items, titleAs = "h3" }: Props) {
   const Title = titleAs;
 
   return (
-    <ul className="mt-8 gap-x-6 sm:columns-2 lg:columns-3 lg:gap-x-8">
+    <ul className="mt-8 gap-6 grid sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8">
       {items.map((item) => (
         <li className="mb-6 break-inside-avoid lg:mb-8" key={item.id}>
           <Link
@@ -43,9 +43,7 @@ export function NewsList({ items, titleAs = "h3" }: Props) {
             </Title>
 
             {item.excerpt && (
-              <p className="mt-2 line-clamp-5 text-sm text-ink-muted">
-                {item.excerpt}
-              </p>
+              <p className="mt-2 line-clamp-5 text-sm text-ink-muted">{item.excerpt}</p>
             )}
 
             {item.date && (

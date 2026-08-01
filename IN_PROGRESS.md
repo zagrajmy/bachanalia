@@ -213,17 +213,29 @@ The goal is WordPress as pure backend. What is known:
   — though bank transfer for a 50 zł ticket is friction most people abandon.
   The prize is BLIK.
 
-Unverified, each needing a real order to settle:
+**A `bacs` order has been run end to end** (order 3502, 1 zł, 1 August 2026),
+and it settles most of this:
 
-1. Whether Paynow populates `redirect` through the mutation.
-2. WooGraphQL 1.0.3 declares "WC tested up to 10.4.3" while the site runs
-   10.9.4, so its checkout mutations are unproven here.
-3. `fetchGraphQL` carries no `woocommerce-session` token, and cart routes have
-   to be dynamic.
-4. At cutover the session cookie's domain changes when WordPress moves to a
+- WooGraphQL 1.0.3's `checkout` works against WooCommerce 10.9.4 despite
+  declaring "tested up to 10.4.3". `result` came back `success`, the order was
+  created `ON_HOLD` with `paymentMethodTitle` "Przelew bankowy".
+- **`redirect` is populated** — `/zamowienie/order-received/3502/?key=…`. That
+  is the classic `process_payment()` return value coming through the mutation
+  intact, which is the same channel Paynow would hand back its gateway URL on.
+- The session is a JWT: mutations answer with a `woocommerce-session` response
+  header, and sending it back as `woocommerce-session: Session <token>` on the
+  next request carries the cart into checkout. Mutations go over POST and
+  Wordfence does not block them.
+
+Still unverified:
+
+1. Whether Paynow's BLIK gateway puts its own URL in `redirect`. The plumbing
+   is proven; the gateway is not. Only a real BLIK order settles it, and that
+   one costs money.
+2. At cutover the session cookie's domain changes when WordPress moves to a
    subdomain. A cart built on the apex would silently empty.
 
-Cheapest way to settle 1 and 2: one `bacs` order end to end, then cancel it.
+Cart routes have to be dynamic, since the session token cannot be cached.
 
 **Add-to-cart** via `?add-to-cart=<id>` is a plain GET WooCommerce supports,
 but only for SIMPLE products. Every accreditation except Sunday is VARIABLE
@@ -313,23 +325,25 @@ posts are free.
 
 ## Open work
 
-1. **Install the revalidate plugin.** Edits lag an hour until then.
-2. **`/program` + ludamus feed.** Needs the upstream JSON endpoint, the
+1. **Cancel order 3502.** The `bacs` probe above wrote a real 1 zł order to the
+   live shop; it sits `ON_HOLD` and nobody is going to pay it.
+2. **Install the revalidate plugin.** Edits lag an hour until then.
+3. **`/program` + ludamus feed.** Needs the upstream JSON endpoint, the
    Bachanalia sphere at `bachanalia.zagrajmy.net`, and the organizer
    onboarding video Ad Astra is owed.
-3. **Cutover:** DNS to Vercel, WordPress to `wp.`, frontend redirect, verify
+4. **Cutover:** DNS to Vercel, WordPress to `wp.`, frontend redirect, verify
    old URLs 301, shop exemptions. Do not touch permalinks before this.
-4. **`/koszyk/`, `/zamowienie/`, `/moje-konto/` and `/zwroty/` answer 200 from
+5. **`/koszyk/`, `/zamowienie/`, `/moje-konto/` and `/zwroty/` answer 200 from
    here.** The catch-all renders the WordPress page bodies, which are nothing
    but WooCommerce shortcodes, so they come out as empty shells. They are kept
    out of the sitemap; at cutover they need a redirect to `wp.` or a 404.
-5. **`wsparcie-klubu-1-zl` and `akredytacja-wspierajaca-polcon`** (25–45 zł)
+6. **`wsparcie-klubu-1-zl` and `akredytacja-wspierajaca-polcon`** (25–45 zł)
    exist in the shop but are not in the homepage tier list — nobody has said
    where they belong.
-6. Several pages use bare paragraphs as section labels (`POCIĄGIEM`,
+7. Several pages use bare paragraphs as section labels (`POCIĄGIEM`,
    `AUTOBUSEM`) instead of headings, invisible to screen-reader heading
    navigation. Editorial fix in WordPress, not CSS.
-7. Vercel GitHub app access to the `zagrajmy` org.
+8. Vercel GitHub app access to the `zagrajmy` org.
 
 ## Open questions
 

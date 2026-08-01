@@ -50,7 +50,10 @@ function split(text: string) {
   const end = text.slice(0, TITLE_CHARS + 20).search(SENTENCE_END);
 
   if (end > 0) {
-    return { title: text.slice(0, end + 1), excerpt: newsExcerpt(text.slice(end + 1), EXCERPT_CHARS) };
+    return {
+      title: text.slice(0, end + 1),
+      excerpt: newsExcerpt(text.slice(end + 1), EXCERPT_CHARS),
+    };
   }
 
   if (text.length <= TITLE_CHARS) return { title: text, excerpt: "" };

@@ -9,9 +9,6 @@ import { NewsQuery } from "./NewsQuery";
 
 export const NEWS_PATH = "/aktualnosci/";
 
-/** The con announces most things here first; the archive links back to it. */
-export const FACEBOOK_URL = "https://www.facebook.com/BachanaliaFantastyczne/";
-
 export type NewsEntry = {
   id: string;
   title: string;

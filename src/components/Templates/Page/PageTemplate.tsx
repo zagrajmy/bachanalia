@@ -1,6 +1,7 @@
 import { WpContent } from "@/components/Templates/WpContent";
 import { ContentNodeResult } from "@/queries/general/ContentQuery";
 import { splitWpContent } from "@/utils/prepareWpContent";
+import { unshoutTitle } from "@/utils/unshout";
 
 interface TemplateProps {
   node: ContentNodeResult;
@@ -12,7 +13,7 @@ export default function PageTemplate({ node }: TemplateProps) {
   return (
     <article className="gutter mx-auto max-w-6xl pt-12 pb-4 sm:pt-16">
       <h1 className="display -ml-[0.04em] border-b-2 border-navy pb-3 text-[clamp(2.1rem,6.4vw,4rem)]">
-        {node.title}
+        {unshoutTitle(node.title)}
       </h1>
 
       {segments.length > 0 ? (

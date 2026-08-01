@@ -2,6 +2,7 @@ import { print } from "graphql/language/printer";
 
 import { Post } from "@/gql/graphql";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
+import { unshoutName } from "@/utils/unshout";
 import { wpUriToPath } from "@/utils/wpUriToPath";
 
 import { fetchFacebookNews } from "./facebookNews";
@@ -90,7 +91,8 @@ function toNewsEntry(post: Post): NewsEntry {
 
   return {
     id: post.id,
-    title: post.title ?? "",
+    /** Same casing the post's own page gives it, so the card links to itself. */
+    title: unshoutName(post.title),
     href: wpUriToPath(post.uri),
     ...toNewsDate(post.date ? new Date(post.date) : undefined),
     excerpt: newsExcerpt(post.excerpt),

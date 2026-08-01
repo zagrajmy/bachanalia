@@ -7,6 +7,7 @@ import { fetchGraphQL, fetchGraphQLAtBuild } from "@/utils/fetchGraphQL";
 import { ContentNodeResult, ContentQuery } from "@/queries/general/ContentQuery";
 import PageTemplate from "@/components/Templates/Page/PageTemplate";
 import { nextSlugToWpSlug } from "@/utils/nextSlugToWpSlug";
+import { unshoutName, unshoutTitle } from "@/utils/unshout";
 import { wpUriToPath } from "@/utils/wpUriToPath";
 import PostTemplate from "@/components/Templates/Post/PostTemplate";
 import { AllContentQuery } from "@/queries/general/AllContentQuery";
@@ -61,8 +62,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return notFound();
   }
 
+  const unshout = contentNode.contentTypeName === "post" ? unshoutName : unshoutTitle;
+
   return {
-    title: contentNode.title,
+    title: unshout(contentNode.title),
     alternates: { canonical },
   };
 }

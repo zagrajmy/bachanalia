@@ -6,6 +6,7 @@ import { print } from "graphql/language/printer";
 import { PostsQuery } from "@/components/Templates/Posts/PostsQuery";
 import { Post } from "@/gql/graphql";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
+import { unshoutName } from "@/utils/unshout";
 import { wpUriToPath } from "@/utils/wpUriToPath";
 
 export const metadata: Metadata = {
@@ -66,7 +67,7 @@ export default async function GosciePage() {
                   </div>
 
                   <h2 className="display mt-4 text-xl text-ink transition-colors duration-200 group-hover:text-rose">
-                    {post.title}
+                    {unshoutName(post.title)}
                   </h2>
 
                   {post.date && (

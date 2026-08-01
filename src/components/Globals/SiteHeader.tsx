@@ -54,6 +54,13 @@ export function SiteHeader() {
                   <>
                     <NavigationMenuTrigger
                       nativeButton={false}
+                      /**
+                       * Base UI's useButton stamps role="button" on anything
+                       * that is not a native button, links included, which
+                       * hides the destination from assistive tech. The group
+                       * heading is a real page, so it stays a link.
+                       */
+                      role="link"
                       render={<Link href={group.href} {...externalProps(group)} />}
                     >
                       {group.label}

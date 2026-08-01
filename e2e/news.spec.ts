@@ -40,16 +40,23 @@ test.describe("news archive", () => {
     expect([...dates].sort().reverse(), "newest announcement belongs on top").toEqual(dates);
   });
 
-  test("guest profiles never masquerade as news", async ({ page }) => {
+  test("both archives share one timeline", async ({ page }) => {
     await page.goto("/aktualnosci/");
 
-    const guestTitles = ["Filmopolis", "FIGURKOWCY", "Akademia Magii Ramesville"];
-    for (const title of guestTitles) {
-      await expect(
-        page.getByRole("main").getByRole("heading", { name: title }),
-        `${title} is a 2025 guest, not an announcement`,
-      ).toHaveCount(0);
-    }
+    const links = page.getByRole("main").getByRole("listitem").getByRole("link");
+    const hrefs = await links.evaluateAll((nodes) =>
+      nodes.map((node) => node.getAttribute("href") ?? ""),
+    );
+
+    expect(
+      hrefs.filter((href) => href.startsWith("https://www.facebook.com/")).length,
+      "this year's announcements come from Facebook",
+    ).toBeGreaterThan(0);
+
+    expect(
+      hrefs.filter((href) => /^\/\d{4}\//.test(href)).length,
+      "last year's dated WordPress posts belong in the same list",
+    ).toBeGreaterThan(0);
   });
 
   test("teasers are plain text, not raw WordPress markup", async ({ page }) => {

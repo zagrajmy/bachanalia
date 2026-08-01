@@ -102,24 +102,22 @@ export function SiteHeader() {
         <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
           <SheetTrigger
             aria-label="Menu"
-            className="ml-auto flex size-10 shrink-0 items-center justify-center rounded-full border border-hairline text-ink transition-transform duration-150 ease-[var(--ease-out)] active:scale-[0.97] lg:hidden"
+            className="ml-auto flex size-10 shrink-0 items-center justify-center rounded-full active:border hover:border border-hairline text-ink transition-transform duration-150 ease-out active:scale-[0.97] lg:hidden"
           >
             <MenuIcon className="size-5" aria-hidden="true" />
           </SheetTrigger>
 
           <SheetContent side="right" className="data-[side=right]:w-[min(21rem,88vw)]">
             <SheetHeader className="h-16 flex-row items-center border-b border-dashed border-hairline py-0 sm:h-18">
-              <SheetTitle className="eyebrow font-normal tracking-[0.14em] text-ink-muted uppercase">
-                Menu
-              </SheetTitle>
+              <SheetTitle className="sr-only">Menu</SheetTitle>
             </SheetHeader>
 
             <nav
               aria-label="Główna nawigacja"
-              className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-3"
+              className="scrollview-fade scrollview-fade-y-6 min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-3"
             >
               <ul>
-                {primaryNav.map((group, index) => (
+                {primaryNav.map((group) => (
                   <li
                     key={group.label}
                     className="not-first:mt-2 not-first:border-t not-first:border-dashed not-first:border-hairline not-first:pt-2"
@@ -128,19 +126,13 @@ export function SiteHeader() {
                       href={group.href}
                       {...externalProps(group)}
                       onClick={closeMenu}
-                      className="flex items-baseline gap-3 rounded-card px-2 py-2 text-[0.9375rem] font-semibold text-ink no-underline transition-colors duration-150 hover:bg-paper-shade"
+                      className="block rounded-card px-2 py-2 text-[0.9375rem] font-semibold text-ink no-underline transition-colors duration-150 hover:bg-paper-shade"
                     >
-                      <span
-                        aria-hidden="true"
-                        className="eyebrow text-[0.6875rem] tabular-nums text-ink-muted"
-                      >
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
                       {group.label}
                     </Link>
 
                     {group.children && (
-                      <ul className="ms-[1.9rem] border-l border-dotted border-hairline ps-3">
+                      <ul className="ms-2 border-l border-dotted border-hairline ps-3">
                         {group.children.map((link) => (
                           <li key={link.href}>
                             <Link
@@ -160,16 +152,12 @@ export function SiteHeader() {
               </ul>
             </nav>
 
-            <SheetFooter className="border-t border-dashed border-hairline">
-              <Link
-                href={primaryCta.href}
-                target="_blank"
-                rel="noreferrer"
-                onClick={closeMenu}
-                className="block rounded-full bg-accent px-4 py-2.5 text-center text-xs font-semibold tracking-[0.12em] text-on-accent uppercase no-underline transition-transform duration-150 ease-[var(--ease-out)] active:scale-[0.97]"
-              >
-                {primaryCta.label}
-              </Link>
+            <SheetFooter>
+              <Button asChild className="w-full">
+                <Link href={primaryCta.href} target="_blank" rel="noreferrer" onClick={closeMenu}>
+                  {primaryCta.label}
+                </Link>
+              </Button>
             </SheetFooter>
           </SheetContent>
         </Sheet>

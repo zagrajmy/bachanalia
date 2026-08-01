@@ -109,29 +109,18 @@ function toNewsEntry(post: Post): NewsEntry {
  */
 const NEWS_PAGE = 12;
 
-/** `g23`, `gosc24`, `gosc25`, `gosc26` — one per edition, and more will follow. */
-const GUEST_CATEGORY = /^g(osc)?\d{2}$/;
-
 /**
- * Every post in WordPress is a guest profile filed under an edition's
- * category; there is not one actual announcement among them. Listing them as
- * "Aktualności" would put last year's guest list under this year's news, and
- * duplicate /goscie/ while doing it.
- */
-export function isNews(post: Post) {
-  return !(post.categories?.nodes ?? []).some((c) => c?.slug && GUEST_CATEGORY.test(c.slug));
-}
-
-/**
- * WordPress holds no news and Ad Astra will not post everything twice, so the
- * Facebook feed stands in. The day someone does publish here, it takes over.
+ * Two archives, one timeline: this year's announcements live on Facebook,
+ * last year's are the dated guest posts still in WordPress. Both carry a date,
+ * so they interleave rather than sit in separate piles.
  */
 export async function fetchNews(limit = NEWS_PAGE): Promise<NewsEntry[]> {
-  const { posts } = await fetchGraphQL<{ posts: { nodes: Post[] } }>(print(NewsQuery), {
-    first: NEWS_PAGE,
-  });
+  const [wordpress, facebook] = await Promise.all([
+    fetchGraphQL<{ posts: { nodes: Post[] } }>(print(NewsQuery), { first: NEWS_PAGE }),
+    fetchFacebookNews(NEWS_PAGE),
+  ]);
 
-  const news = (posts?.nodes ?? []).filter(isNews).slice(0, limit).map(toNewsEntry);
-
-  return news.length > 0 ? news : fetchFacebookNews(limit);
+  return [...(wordpress.posts?.nodes ?? []).map(toNewsEntry), ...facebook]
+    .sort((a, b) => b.dateTime.localeCompare(a.dateTime))
+    .slice(0, limit);
 }

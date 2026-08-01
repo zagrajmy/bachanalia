@@ -31,34 +31,32 @@ function SheetPortal({ ...props }: SheetPrimitive.Portal.Props) {
 function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
   return (
     <SheetPrimitive.Backdrop
-      data-slot="sheet-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-navy/30 transition-opacity duration-200 ease-[var(--ease-out)] data-[starting-style]:opacity-0 data-[ending-style]:opacity-0",
+        "fixed inset-0 z-50 bg-paper/30 backdrop-blur-sm transition-opacity duration-200 ease-out data-starting-style:opacity-0 data-ending-style:opacity-0",
         className,
       )}
+      data-slot="sheet-overlay"
       {...props}
     />
   );
 }
 
 function SheetContent({
-  className,
   children,
-  side = "right",
-  showCloseButton = true,
+  className,
   closeLabel = "Zamknij",
+  showCloseButton = true,
+  side = "right",
   ...props
 }: SheetPrimitive.Popup.Props & {
-  side?: "top" | "right" | "bottom" | "left";
-  showCloseButton?: boolean;
   closeLabel?: string;
+  showCloseButton?: boolean;
+  side?: "top" | "right" | "bottom" | "left";
 }) {
   return (
     <SheetPortal>
       <SheetOverlay />
       <SheetPrimitive.Popup
-        data-slot="sheet-content"
-        data-side={side}
         className={cn(
           "fixed z-50 flex flex-col bg-paper bg-clip-padding text-ink shadow-[0_18px_50px_-18px] shadow-navy/40",
           "transition-[opacity,translate] duration-250 ease-[var(--ease-out)] data-[starting-style]:opacity-0 data-[ending-style]:opacity-0 motion-reduce:translate-x-0! motion-reduce:translate-y-0!",
@@ -69,15 +67,17 @@ function SheetContent({
           "border-hairline",
           className,
         )}
+        data-side={side}
+        data-slot="sheet-content"
         {...props}
       >
         {children}
         {showCloseButton && (
           <SheetClose
             aria-label={closeLabel}
-            className="absolute end-4 top-3 flex size-10 items-center justify-center rounded-full border border-hairline text-ink transition-transform duration-150 ease-[var(--ease-out)] active:scale-[0.97]"
+            className="absolute inset-e-4 top-3 flex size-10 items-center justify-center rounded-full hover:border active:border border-hairline text-ink transition-transform duration-150 ease-out active:scale-[0.97]"
           >
-            <XIcon className="size-4" aria-hidden="true" />
+            <XIcon aria-hidden="true" className="size-4" />
           </SheetClose>
         )}
       </SheetPrimitive.Popup>
@@ -88,8 +88,8 @@ function SheetContent({
 function SheetHeader({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
-      data-slot="sheet-header"
       className={cn("flex flex-col gap-0.5 px-5 py-4", className)}
+      data-slot="sheet-header"
       {...props}
     />
   );
@@ -98,8 +98,8 @@ function SheetHeader({ className, ...props }: ComponentProps<"div">) {
 function SheetFooter({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
-      data-slot="sheet-footer"
       className={cn("mt-auto flex flex-col gap-2 px-5 py-4", className)}
+      data-slot="sheet-footer"
       {...props}
     />
   );
@@ -108,18 +108,21 @@ function SheetFooter({ className, ...props }: ComponentProps<"div">) {
 function SheetTitle({ className, ...props }: SheetPrimitive.Title.Props) {
   return (
     <SheetPrimitive.Title
-      data-slot="sheet-title"
       className={cn("display text-base text-ink", className)}
+      data-slot="sheet-title"
       {...props}
     />
   );
 }
 
-function SheetDescription({ className, ...props }: SheetPrimitive.Description.Props) {
+function SheetDescription({
+  className,
+  ...props
+}: SheetPrimitive.Description.Props) {
   return (
     <SheetPrimitive.Description
-      data-slot="sheet-description"
       className={cn("text-sm text-ink-muted", className)}
+      data-slot="sheet-description"
       {...props}
     />
   );
@@ -127,11 +130,11 @@ function SheetDescription({ className, ...props }: SheetPrimitive.Description.Pr
 
 export {
   Sheet,
-  SheetTrigger,
   SheetClose,
   SheetContent,
-  SheetHeader,
-  SheetFooter,
-  SheetTitle,
   SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 };

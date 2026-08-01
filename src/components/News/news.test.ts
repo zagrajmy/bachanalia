@@ -1,7 +1,7 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
 
-import { isNews, newsExcerpt } from "./news";
+import { newsExcerpt } from "./news";
 
 test("strips the markup WordPress wraps every excerpt in", () => {
   assert.equal(
@@ -42,14 +42,4 @@ test("an empty excerpt is not a reason to crash a listing", () => {
   assert.equal(newsExcerpt(undefined), "");
   assert.equal(newsExcerpt(null), "");
   assert.equal(newsExcerpt("<p></p>"), "");
-});
-
-test("keeps guest profiles out of the news, whatever the edition", () => {
-  const guest = (slug: string) => ({ categories: { nodes: [{ slug }] } }) as never;
-
-  assert.equal(isNews(guest("gosc25")), false);
-  assert.equal(isNews(guest("g23")), false);
-  assert.equal(isNews(guest("gosc26")), false, "next edition must not leak in either");
-  assert.equal(isNews({ categories: { nodes: [{ slug: "ogloszenia" }] } } as never), true);
-  assert.equal(isNews({} as never), true, "an uncategorised post is still news");
 });

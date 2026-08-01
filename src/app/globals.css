@@ -1,5 +1,6 @@
 @import "tailwindcss" source(none);
 @import "tw-animate-css";
+@plugin "@hasparus/tailwind/scrollview-fade";
 @source "../**/*.{ts,tsx}";
 
 @theme {
@@ -81,7 +82,7 @@ body {
   }
 
   @media (width >= 64rem) {
-    padding-inline: 2.5rem;
+    padding-inline: 0;
   }
 }
 

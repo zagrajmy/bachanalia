@@ -32,7 +32,7 @@ export function Home({
             <div className="relative">
               <Image
                 alt="Kosmiczny kogut o niebieskim ogonie wśród gwiazd na granatowym niebie"
-                className="object-cover object-right absolute inset-0 aspect-auto"
+                className="object-cover object-right xl:object-[78%_45%] absolute inset-0 aspect-auto"
                 fill
                 priority
                 sizes="100vw"
@@ -44,7 +44,7 @@ export function Home({
                 className="pointer-events-none absolute inset-0 bg-linear-to-r from-navy from-25% to-transparent to-70% lg:opacity-80"
               />
 
-              <div className="gutter relative mx-auto max-w-6xl px-5 pt-7 pb-10 sm:px-8 sm:pt-9 sm:pb-14 lg:flex lg:min-h-[calc(100vw/2.62)] lg:flex-col lg:justify-center lg:py-16">
+              <div className="gutter relative mx-auto max-w-6xl px-5 pt-7 pb-10 sm:px-8 sm:pt-9 sm:pb-14 lg:flex lg:min-h-[calc(100vw/2.62)] lg:flex-col lg:justify-center lg:py-16 lg:px-0">
                 <ul className="mb-7 flex items-center sm:mb-9">
                   {marks.map(({ href, name, src }) => (
                     <li

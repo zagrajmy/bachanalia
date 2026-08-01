@@ -63,7 +63,7 @@ export const blocks = [
   { href: "/rpg/", label: "RPG", note: "Sesje prowadzi Skrzywienie Fabularne" },
   { href: "/gamesroom/", label: "Gamesroom", note: "Blisko 500 gier planszowych" },
   { href: "/retro-gaming/", label: "Retro gaming", note: "Lan-party i wolne granie" },
-  { href: "/cosplay/", label: "Cosplay", note: "Konkurs z regulaminem i jury" },
+  { href: "/cosplay/", label: "Cosplay" },
 ];
 
 /**
@@ -75,12 +75,12 @@ export const accreditation = [
   {
     slug: "golden-ticket",
     label: "Golden Ticket",
-    note: "Akredytacja 3 dniowa, wraz z egzemplarzem Fantazji Zielonogórskich, unikalnym pinsem, koszulką, notesem, oraz zestawem gadżetów",
+    note: "Akredytacja 3-dniowa: Fantazje Zielonogórskie, pins, koszulka, notes i gadżety",
   },
   { slug: "akredytacja-3-dniowa", label: "Trzydniowa", note: "Piątek, sobota i niedziela" },
-  { slug: "akredytacja-sobota", label: "Sobota", note: "Jeden dzień" },
-  { slug: "akredytacja-piatek", label: "Piątek", note: "Jeden dzień" },
-  { slug: "akredytacja-niedziela", label: "Niedziela", note: "Jeden dzień" },
+  { slug: "akredytacja-sobota", label: "Sobota" },
+  { slug: "akredytacja-piatek", label: "Piątek" },
+  { slug: "akredytacja-niedziela", label: "Niedziela" },
 ];
 
 export type PartnerLogo = {

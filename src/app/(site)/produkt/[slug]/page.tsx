@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { SHOP_PATH } from "@/components/Globals/siteNav";
+import { Button } from "@/components/ui/warcraftcn/button";
 import { fetchProduct, fetchProductSlugs } from "@/components/Shop/products";
 import { hasVisibleContent, prepareWpContent } from "@/utils/prepareWpContent";
 
@@ -118,19 +119,11 @@ export default async function ProduktPage({ params }: Props) {
               Wyprzedane
             </p>
           ) : (
-            <>
-              <a
-                href={wpHref}
-                target="_blank"
-                rel="noreferrer"
-                className="display mt-9 inline-block rounded-full bg-accent px-9 py-4 text-[clamp(1.2rem,3.6vw,1.65rem)] text-on-accent no-underline transition-[transform,background-color] duration-150 ease-[var(--ease-out)] hover:bg-pink active:scale-[0.98]"
-              >
+            <Button asChild className="mt-9 px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]">
+              <a href={wpHref} target="_blank" rel="noreferrer">
                 Kup w sklepie
               </a>
-              <p className="mt-3 max-w-[42ch] text-sm text-ink-muted">
-                Koszyk i płatność obsługuje WooCommerce. Link otwiera się w nowej karcie.
-              </p>
-            </>
+            </Button>
           )}
 
           {hasVisibleContent(description) && (

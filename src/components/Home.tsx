@@ -98,7 +98,6 @@ export function Home({
             </h2>
           </div>
 
-          {}
           <ol className="mt-1">
             {tickets.map(({ href, label, note, price, soldOut }) => {
               const golden = label === "Golden Ticket";
@@ -194,7 +193,6 @@ export function Home({
 
       <NewsSection items={news} />
 
-      {}
       <section className="gutter pt-16 sm:pt-24">
         <div className="mx-auto flex max-w-6xl flex-col gap-8 border-t-2 border-navy pt-8 sm:flex-row sm:items-end sm:justify-between sm:gap-12">
           <div>

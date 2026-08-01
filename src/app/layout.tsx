@@ -20,7 +20,7 @@ const fontVars = `${bricolage.variable} ${cinzel.variable}`;
 
 const TITLE = "Bachanalia Fantastyczne XL";
 const DESCRIPTION =
-  "XL Ogólnopolski festiwal popkultury i Polcon 2026. 25-27 września, Kampus B Uniwersytetu Zielonogórskiego.";
+  "XL ogólnopolski festiwal popkultury i Polcon 2026. 25-27 września, Kampus B Uniwersytetu Zielonogórskiego.";
 
 /**
  * Nearly every visitor arrives from a link shared on Facebook, so the card is

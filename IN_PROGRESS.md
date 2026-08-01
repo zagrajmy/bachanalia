@@ -105,9 +105,8 @@ Utilities in `globals.css`: `display`, `eyebrow`, `gutter`, `ink-inverted`,
 Type: **Bricolage Grotesque** carries both `--font-display` and
 `--font-body`; **Cinzel** is the button face, behind a `--font-button`
 indirection so it can be swapped without touching components. Both come from
-`next/font/google`, there are no self-hosted faces, and `src/fonts/` no
-longer exists. Both cover `latin-ext` — Polish diacritics are
-non-negotiable.
+`next/font/google`; nothing is self-hosted. Both cover `latin-ext` — Polish
+diacritics are non-negotiable.
 
 ### The key art
 

@@ -5,8 +5,7 @@ import { NewsList } from "@/components/News/NewsList";
 
 export const metadata: Metadata = {
   alternates: { canonical: `${process.env.NEXT_PUBLIC_BASE_URL}${NEWS_PATH}` },
-  description: "Ogłoszenia, zapowiedzi gości i wieści z Bachanaliów Fantastycznych.",
-  alternates: { canonical: `${process.env.NEXT_PUBLIC_BASE_URL}${NEWS_PATH}` },
+  description: "Ogłoszenia i zapowiedzi gości Bachanaliów Fantastycznych.",
 };
 
 export const revalidate = 3600;

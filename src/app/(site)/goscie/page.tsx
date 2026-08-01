@@ -33,15 +33,14 @@ export default async function GosciePage() {
         <h1 className="display -ml-[0.04em] text-[clamp(2.1rem,6.4vw,4rem)]">Goście</h1>
         {editions.length > 0 && (
           <p className="max-w-[34ch] text-sm text-ink-muted">
-            Program XL edycji jest w przygotowaniu. Poniżej goście i atrakcje z edycji{" "}
-            {editions.join(", ")}.
+            Program XL edycji jest w przygotowaniu. Goście edycji {editions.join(", ")}.
           </p>
         )}
       </div>
 
       {nodes.length === 0 ? (
         <p className="mt-8 max-w-[55ch] text-lg text-ink-muted">
-          Lista gości XL edycji pojawi się tutaj, gdy tylko ją ogłosimy.
+          Lista gości XL edycji pojawi się tutaj.
         </p>
       ) : (
         <ul className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">

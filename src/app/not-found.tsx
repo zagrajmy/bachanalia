@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Button } from "@/components/ui/warcraftcn/button";
+
 export const metadata: Metadata = {
   title: "Nie znaleziono strony",
   robots: { index: false, follow: false },
@@ -14,12 +16,9 @@ export default function NotFound() {
         Nie znaleziono strony
       </h1>
       <p className="mt-6">
-        <Link
-          href="/"
-          className="display inline-block rounded-full bg-accent px-8 py-3.5 text-[clamp(1.1rem,3vw,1.4rem)] text-on-accent no-underline transition-[transform,background-color] duration-150 ease-[var(--ease-out)] hover:bg-pink active:scale-[0.98]"
-        >
-          Wróć na stronę główną
-        </Link>
+        <Button asChild className="px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]">
+          <Link href="/">Wróć na stronę główną</Link>
+        </Button>
       </p>
     </main>
   );

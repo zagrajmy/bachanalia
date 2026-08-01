@@ -6,14 +6,10 @@ import { fetchGraphQL } from "@/utils/fetchGraphQL";
 
 import { accreditation } from "./con";
 
-/**
- * WooCommerce owns the prices. Hardcoding them here is how a site ends up
- * advertising last year's, so the taryfikator reads the shop and only the
- * label, the note and the order stay editorial.
- */
+/** WooCommerce owns the prices; hardcoding them advertises last year's. */
 export type Ticket = {
   label: string;
-  note: string;
+  note?: string;
   price: string;
   href: string;
   soldOut: boolean;

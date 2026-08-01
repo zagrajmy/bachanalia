@@ -13,6 +13,7 @@ import { AllContentQuery } from "@/queries/general/AllContentQuery";
 import { Home } from "@/components/Home";
 import { fetchNews } from "@/components/News/news";
 import { fetchAccreditation } from "@/content/shop";
+import { RETIRED_PATHS } from "@/components/Globals/siteNav";
 
 type Props = {
   params: Promise<{ slug?: string[] }>;
@@ -52,7 +53,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { alternates: { canonical } };
   }
 
-  const contentNode = await getContentNode(nextSlugToWpSlug(segments));
+  const contentNode = RETIRED_PATHS.includes(path)
+    ? null
+    : await getContentNode(nextSlugToWpSlug(segments));
 
   if (!contentNode) {
     return notFound();
@@ -73,16 +76,21 @@ export async function generateStaticParams() {
   }>(print(AllContentQuery));
 
   return [...(pages?.nodes ?? []), ...(posts?.nodes ?? [])]
-    .map((node) => wpUriToPath(node.uri).split("/").filter(Boolean))
-    .filter((segments) => segments.length > 0)
-    .map((slug) => ({ slug }));
+    .map((node) => wpUriToPath(node.uri))
+    .filter((path) => path !== "/" && !RETIRED_PATHS.includes(path))
+    .map((path) => ({ slug: path.split("/").filter(Boolean) }));
 }
 
 export default async function Page({ params }: Props) {
   const segments = (await params).slug;
+  const path = toPath(segments);
 
-  if (toPath(segments) === "/") {
+  if (path === "/") {
     return <HomePage />;
+  }
+
+  if (RETIRED_PATHS.includes(path)) {
+    notFound();
   }
 
   const contentNode = await getContentNode(nextSlugToWpSlug(segments));

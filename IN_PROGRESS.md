@@ -49,7 +49,7 @@ run `bun run codegen:refresh`, turn it back off.
 | Path                                                                                                                                | Source                   | Status                              |
 | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ----------------------------------- |
 | `/`                                                                                                                                 | hand-built + WooCommerce | ours                                |
-| `/aktualnosci/`                                                                                                                     | WP posts                 | ours, and empty — see [News](#news) |
+| `/aktualnosci/`                                                                                                                     | Facebook — see [News](#news) | ours                            |
 | `/goscie/`                                                                                                                          | WP posts                 | ours                                |
 | `/sklep/`, `/produkt/<slug>/`                                                                                                       | WooGraphQL               | ours                                |
 | `/co-to-sa-bachanalia`, `/organizator`, `/sztab-bachanaliowy`, `/czas-i-miejsce`, `/regulamin`, `/polityka-prywatnosci`, `/noclegi` | WP pages                 | ours                                |
@@ -248,17 +248,31 @@ Feed Pro. It exposes nothing machine-readable — no REST route under
 everything usable (`data-cff-timestamp`, `data-object-id`, `.cff-post-text`,
 permalinks, images). Page ID is `347748351932621`.
 
-**Decision open:**
+**So the feed is the news.** WordPress's own front page carries the CFF Pro
+shortcode, and WPGraphQL hands its rendered markup over like any other
+content — `nodeByUri(uri: "/")` — so the feed arrives through the same cached,
+retrying request as the rest of the site, with no token, no Meta app and no
+HTML fetch for Cloudflare to challenge. `facebookNews.ts` parses it:
+`data-cff-timestamp` for the date, `cff_<page>_<post>` for the permalink,
+`.cff-text` for the body, and the 720px entry of `data-img-src-set` for the
+picture. `fetchNews` prefers WordPress and falls back to this, so the day
+someone does publish an announcement it takes over.
 
-| Route                                | Needs Page admin | Breaks when                                                    |
-| ------------------------------------ | ---------------- | -------------------------------------------------------------- |
-| Publish news in WordPress            | no               | never — but it means posting twice, which Ad Astra will not do |
-| Own Meta app + long-lived Page token | once, ~20 min    | never                                                          |
-| Reuse the token CFF Pro holds        | no               | Smash Balloon rotates it                                       |
-| Scrape the CFF markup                | no               | the plugin updates its HTML                                    |
+Two things about the pictures. They are signed fbcdn URLs that expire, so each
+one is checked with a HEAD before it renders and the card drops to text if it
+has gone — a row of broken frames is worse than none. And the feed reports no
+dimensions, so they are plain `<img>` at their natural shape rather than
+`next/image`; there is nothing to reserve.
 
-Graph API reads of a page's own posts are free; one call an hour would use 24
-of a daily allowance in the thousands.
+**Do not use the `ad-astra-social-bridge` plugin on `/feed-test/`.** It renders
+the same posts with no dates, truncated text and an fbcdn cache stale enough
+that most images 403. CFF refreshes; that one does not. Both `/feed-test/` and
+`/info/` are in `RETIRED_PATHS` and 404 here.
+
+What breaks it: a CFF Pro update that renames those classes. The durable
+alternative is still Ad Astra's own Meta app and a long-lived Page token,
+which needs Page admin for twenty minutes. Graph API reads of a page's own
+posts are free.
 
 ## Traps
 
@@ -300,23 +314,22 @@ of a daily allowance in the thousands.
 ## Open work
 
 1. **Install the revalidate plugin.** Edits lag an hour until then.
-2. **Decide the news source.** Nothing appears under Aktualności until then.
-3. **`/program` + ludamus feed.** Needs the upstream JSON endpoint, the
+2. **`/program` + ludamus feed.** Needs the upstream JSON endpoint, the
    Bachanalia sphere at `bachanalia.zagrajmy.net`, and the organizer
    onboarding video Ad Astra is owed.
-4. **Cutover:** DNS to Vercel, WordPress to `wp.`, frontend redirect, verify
+3. **Cutover:** DNS to Vercel, WordPress to `wp.`, frontend redirect, verify
    old URLs 301, shop exemptions. Do not touch permalinks before this.
-5. **`/koszyk/`, `/zamowienie/`, `/moje-konto/` and `/zwroty/` answer 200 from
+4. **`/koszyk/`, `/zamowienie/`, `/moje-konto/` and `/zwroty/` answer 200 from
    here.** The catch-all renders the WordPress page bodies, which are nothing
    but WooCommerce shortcodes, so they come out as empty shells. They are kept
    out of the sitemap; at cutover they need a redirect to `wp.` or a 404.
-6. **`wsparcie-klubu-1-zl` and `akredytacja-wspierajaca-polcon`** (25–45 zł)
+5. **`wsparcie-klubu-1-zl` and `akredytacja-wspierajaca-polcon`** (25–45 zł)
    exist in the shop but are not in the homepage tier list — nobody has said
    where they belong.
-7. Several pages use bare paragraphs as section labels (`POCIĄGIEM`,
+6. Several pages use bare paragraphs as section labels (`POCIĄGIEM`,
    `AUTOBUSEM`) instead of headings, invisible to screen-reader heading
    navigation. Editorial fix in WordPress, not CSS.
-8. Vercel GitHub app access to the `zagrajmy` org.
+7. Vercel GitHub app access to the `zagrajmy` org.
 
 ## Open questions
 

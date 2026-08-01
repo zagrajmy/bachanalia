@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
 
 /**
- * WordPress holds no announcements yet — every post is a guest profile filed
- * under an edition category, and those are deliberately filtered out. So the
- * archive's honest state today is empty, and these adapt rather than assert a
- * count that only passed because guest profiles were leaking in.
+ * WordPress holds no announcements — every post is a guest profile filed under
+ * an edition category, and those are deliberately filtered out — so the
+ * archive falls back to the Facebook feed. Those entries carry no date and
+ * lead off-site, and these adapt to whichever source is answering.
  */
 const entriesOf = (page: import("@playwright/test").Page) =>
   page.getByRole("main").getByRole("listitem");
@@ -67,7 +67,15 @@ test.describe("news archive", () => {
 
     test.skip((await entriesOf(page).count()) === 0, "no announcements published yet");
 
-    const first = entriesOf(page).first().getByRole("link");
+    const first = entriesOf(page).first().getByRole("link").first();
+    const href = await first.getAttribute("href");
+
+    if (href?.startsWith("https://www.facebook.com/")) {
+      await expect(first).toHaveAttribute("target", "_blank");
+      await expect(first).toHaveAttribute("rel", /noreferrer/);
+      return;
+    }
+
     const title = (await first.getByRole("heading").innerText()).trim();
 
     await first.click();

@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { print } from "graphql/language/printer";
 
 import { NEWS_PATH } from "@/components/News/news";
-import { productPath, SHOP_PATH } from "@/components/Globals/siteNav";
+import { productPath, RETIRED_PATHS, SHOP_PATH } from "@/components/Globals/siteNav";
 import { fetchProductSlugs } from "@/components/Shop/products";
 import { AllContentQuery } from "@/queries/general/AllContentQuery";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
@@ -18,19 +18,16 @@ export const revalidate = 3600;
 const ownRoutes = ["/", SHOP_PATH, NEWS_PATH, "/goscie/"];
 
 /**
- * WordPress still holds pages we do not want indexed under this domain: the
- * WooCommerce transactional four, which stay on WordPress; a redirect source;
- * a duplicate; and two abandoned drafts that never left the CMS.
+ * On top of the pages we do not serve at all: the WooCommerce transactional
+ * four, which stay on WordPress, two redirect sources, and the prototype.
  */
 const excluded = new Set([
+  ...RETIRED_PATHS,
   "/akredytacja/",
   "/blog/",
   "/design/",
-  "/feed-test/",
-  "/info/",
   "/koszyk/",
   "/moje-konto/",
-  "/regulamin-wystawcow-2/",
   "/zamowienie/",
   "/zwroty/",
 ]);

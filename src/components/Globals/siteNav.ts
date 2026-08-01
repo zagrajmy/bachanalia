@@ -14,6 +14,13 @@ export const productPath = (slug: string) => `/produkt/${slug}/`;
  */
 export const WP_CART_URL = "https://bachanaliafantastyczne.pl/index.php/koszyk/";
 
+/**
+ * Published in WordPress, not part of this site: a 2023 stub, a probe for the
+ * Facebook feed, and WordPress's own duplicate of the exhibitor rules. The
+ * catch-all would otherwise render all three.
+ */
+export const RETIRED_PATHS = ["/feed-test/", "/info/", "/regulamin-wystawcow-2/"];
+
 export type NavLink = { href: string; label: string; external?: boolean };
 
 /**

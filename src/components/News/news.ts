@@ -4,6 +4,7 @@ import { Post } from "@/gql/graphql";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
 import { wpUriToPath } from "@/utils/wpUriToPath";
 
+import { fetchFacebookNews } from "./facebookNews";
 import { NewsQuery } from "./NewsQuery";
 
 export const NEWS_PATH = "/aktualnosci/";
@@ -21,7 +22,9 @@ export type NewsEntry = {
   dateTime: string;
   excerpt: string;
   category?: string;
-  image?: { src: string; alt: string; width: number; height: number };
+  /** Facebook posts have no copy on this site; the card leaves for theirs. */
+  external?: boolean;
+  image?: { src: string; alt: string };
 };
 
 const dateFormat = new Intl.DateTimeFormat("pl-PL", {
@@ -45,7 +48,7 @@ const NAMED_ENTITIES: { [name: string]: string } = {
 };
 
 /** WordPress excerpts arrive as HTML with numeric entities for every dash and quote. */
-function decodeEntities(text: string) {
+export function decodeEntities(text: string) {
   return text.replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (entity, body: string) => {
     if (!body.startsWith("#")) return NAMED_ENTITIES[body.toLowerCase()] ?? entity;
 
@@ -78,25 +81,25 @@ export function newsExcerpt(html?: string | null, maxChars = EXCERPT_CHARS) {
   return `${clipped.replace(/[\s.,;:–—-]+$/, "")}…`;
 }
 
+/** Reader-facing label and machine-readable stamp, or neither. */
+export function toNewsDate(published?: Date) {
+  return published
+    ? { date: dateFormat.format(published), dateTime: published.toISOString() }
+    : { date: "", dateTime: "" };
+}
+
 function toNewsEntry(post: Post): NewsEntry {
   const image = post.featuredImage?.node;
-  const published = post.date ? new Date(post.date) : undefined;
 
   return {
     id: post.id,
     title: post.title ?? "",
     href: wpUriToPath(post.uri),
-    date: published ? dateFormat.format(published) : "",
-    dateTime: published ? published.toISOString() : "",
+    ...toNewsDate(post.date ? new Date(post.date) : undefined),
     excerpt: newsExcerpt(post.excerpt),
     category: post.categories?.nodes?.[0]?.name ?? undefined,
     ...(image?.sourceUrl && {
-      image: {
-        src: image.sourceUrl,
-        alt: image.altText || "",
-        width: image.mediaDetails?.width ?? 800,
-        height: image.mediaDetails?.height ?? 600,
-      },
+      image: { src: image.sourceUrl, alt: image.altText || "" },
     }),
   };
 }
@@ -122,10 +125,16 @@ export function isNews(post: Post) {
   return !(post.categories?.nodes ?? []).some((c) => c?.slug && GUEST_CATEGORY.test(c.slug));
 }
 
+/**
+ * WordPress holds no news and Ad Astra will not post everything twice, so the
+ * Facebook feed stands in. The day someone does publish here, it takes over.
+ */
 export async function fetchNews(limit = NEWS_PAGE): Promise<NewsEntry[]> {
   const { posts } = await fetchGraphQL<{ posts: { nodes: Post[] } }>(print(NewsQuery), {
     first: NEWS_PAGE,
   });
 
-  return (posts?.nodes ?? []).filter(isNews).slice(0, limit).map(toNewsEntry);
+  const news = (posts?.nodes ?? []).filter(isNews).slice(0, limit).map(toNewsEntry);
+
+  return news.length > 0 ? news : fetchFacebookNews(limit);
 }

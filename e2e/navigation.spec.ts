@@ -72,10 +72,12 @@ test.describe("site navigation", () => {
     test.skip(!isMobile, "the disclosure menu only exists below the lg breakpoint");
 
     await page.goto("/");
-    await page.getByRole("group").getByLabel("Menu").click();
+    await page.getByRole("banner").getByRole("button", { name: "Menu" }).click();
 
     const target = primaryNav[0];
-    await page.getByRole("banner").getByRole("link", { name: target.label }).click();
+    const menu = page.getByRole("dialog");
+    await expect(menu).toBeVisible();
+    await menu.getByRole("link", { name: target.label, exact: true }).click();
 
     await expect(page).toHaveURL(new RegExp(`${target.href}$`));
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

@@ -12,68 +12,77 @@ const [nameHead, ...nameTail] = con.name.split(" ");
 
 const idx = (i: number) => String(i + 1).padStart(2, "0");
 
-export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }) {
+export function Home({
+  news,
+  tickets,
+}: {
+  news: NewsEntry[];
+  tickets: Ticket[];
+}) {
   return (
     <>
       <section>
         <article className="ink-inverted relative overflow-hidden bg-navy">
-          <span aria-hidden="true" className="screened pointer-events-none absolute inset-0 z-10" />
+          <span
+            aria-hidden="true"
+            className="screened pointer-events-none absolute inset-0 z-10"
+          />
 
           <div className="relative min-w-0">
             <div className="relative">
               {}
-              <div className="relative aspect-[5/4] overflow-hidden border-b border-dashed border-hairline sm:aspect-[16/9] lg:absolute lg:inset-0 lg:aspect-auto lg:border-b-0">
+              <div className="relative aspect-5/4 overflow-hidden border-b border-dashed border-hairline sm:aspect-video lg:absolute lg:inset-0 lg:aspect-auto lg:border-b-0">
                 <Image
-                  src={KEY_ART}
                   alt="Kosmiczny kogut o niebieskim ogonie wśród gwiazd na granatowym niebie"
-                  fill
-                  sizes="100vw"
-                  priority
                   className="object-cover object-[78%_45%] lg:object-[right_center]"
+                  fill
+                  priority
+                  sizes="100vw"
+                  src={KEY_ART}
                 />
               </div>
 
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-navy from-25% to-transparent to-70% lg:block"
+                className="pointer-events-none absolute inset-0 hidden bg-linear-to-r from-navy from-25% to-transparent to-70% lg:block"
               />
 
               <div className="gutter relative mx-auto max-w-6xl px-5 pt-7 pb-10 sm:px-8 sm:pt-9 sm:pb-14 lg:flex lg:min-h-[calc(100vw/2.62)] lg:flex-col lg:justify-center lg:py-16">
                 <ul className="mb-7 flex items-center sm:mb-9">
-                  {marks.map(({ name, src, href }) => (
+                  {marks.map(({ href, name, src }) => (
                     <li
-                      key={name}
                       className="px-5 first:pl-0 not-first:border-l not-first:border-dashed not-first:border-hairline last:pr-0"
+                      key={name}
                     >
                       <Link
                         href={href}
                         {...(href.startsWith("http")
-                          ? { target: "_blank", rel: "noreferrer" }
+                          ? { rel: "noreferrer", target: "_blank" }
                           : {})}
                         className="block no-underline opacity-90 transition-opacity duration-200 hover:opacity-100"
                       >
                         <Image
-                          src={src}
                           alt={name}
-                          priority
                           className="h-[clamp(52px,7.6vw,66px)] w-auto"
+                          priority
+                          src={src}
                         />
                       </Link>
                     </li>
                   ))}
                 </ul>
 
-                <h1 className="display relative -ml-[0.045em] max-w-[16ch] text-[clamp(2.1rem,5.6vw,3.6rem)] leading-[0.88]">
+                <h1 className="display relative ml-[-0.045em] max-w-[16ch] text-[clamp(2.1rem,5.6vw,3.6rem)] leading-[0.88]">
                   <span className="block">
                     {nameHead} {nameTail.join(" ")}
                   </span>
                   <span className="text-coral">{con.edition}</span>
                 </h1>
 
-                <dl className="relative mt-7 grid max-w-[34rem] gap-x-7 gap-y-1 text-sm sm:grid-cols-[auto_1fr] sm:gap-y-3 sm:text-base">
-                  <dt className="eyebrow text-accent sm:pt-[0.4em]">Termin</dt>
+                <dl className="relative mt-7 grid max-w-136 gap-x-7 gap-y-1 text-sm sm:grid-cols-[auto_1fr] sm:gap-y-3 sm:text-base">
+                  <dt className="text-sm text-accent">Termin</dt>
                   <dd className="mb-3 sm:mb-0">{con.dates}</dd>
-                  <dt className="eyebrow text-accent sm:pt-[0.4em]">Miejsce</dt>
+                  <dt className="text-sm text-accent">Miejsce</dt>
                   <dd>
                     {con.venue}, {con.address}
                   </dd>
@@ -87,18 +96,23 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
       <section className="gutter pt-12 sm:pt-16">
         <div className="mx-auto max-w-6xl">
           <div className="border-b-2 border-navy pb-3">
-            <h2 className="display -ml-[0.04em] text-[clamp(2.1rem,6.4vw,4rem)]">Wejściówki</h2>
+            <h2 className="display ml-[-0.04em] text-[clamp(2.1rem,6.4vw,4rem)]">
+              Wejściówki
+            </h2>
           </div>
 
           {}
           <ol className="mt-1">
-            {tickets.map(({ label, note, price, href, soldOut }) => {
+            {tickets.map(({ href, label, note, price, soldOut }) => {
               const golden = label === "Golden Ticket";
               return (
-                <li key={href} className="border-b border-dashed border-navy/30">
+                <li
+                  className="border-b border-dashed border-navy/30"
+                  key={href}
+                >
                   <Link
+                    className="group -mx-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 rounded-card p-3 no-underline transition-colors hover:duration-0 duration-150 hover:before:bg-paper-shade sm:gap-x-8 sm:py-3.5 before:inset-0.5 before:absolute relative before:-z-10"
                     href={href}
-                    className="group -mx-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 rounded-card px-3 py-3 no-underline transition-colors duration-150 hover:bg-paper-shade sm:gap-x-8 sm:py-3.5"
                   >
                     <span className="min-w-0">
                       <span className="display block text-[clamp(1.2rem,3.4vw,2rem)] text-ink">
@@ -121,7 +135,10 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
             })}
           </ol>
 
-          <Button asChild className="mt-9 px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]">
+          <Button
+            asChild
+            className="mt-9 px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]"
+          >
             <Link href={primaryCta.href}>Kup akredytację</Link>
           </Button>
         </div>
@@ -146,14 +163,21 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
       <section className="gutter pt-14 sm:pt-20">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2 border-b-2 border-navy pb-3">
-            <h2 className="display -ml-[0.04em] text-[clamp(1.7rem,4.6vw,2.7rem)]">Program</h2>
-            <p className="eyebrow text-ink-muted">{blocks.length} bloków tematycznych</p>
+            <h2 className="display ml-[-0.04em] text-[clamp(1.7rem,4.6vw,2.7rem)]">
+              Program
+            </h2>
+            <p className="eyebrow text-ink-muted">
+              {blocks.length} bloków tematycznych
+            </p>
           </div>
 
           <ul className="grid sm:grid-cols-2 sm:gap-x-12">
             {blocks.map(({ href, label, note }, i) => (
-              <li key={href} className="border-b border-dashed border-navy/25">
-                <Link href={href} className="group flex items-baseline gap-4 py-4 no-underline">
+              <li className="border-b border-dashed border-navy/25" key={href}>
+                <Link
+                  className="group flex items-baseline gap-4 py-4 no-underline"
+                  href={href}
+                >
                   <span className="w-6 shrink-0 text-[0.62rem] tracking-[0.18em] text-ink-muted tabular-nums">
                     {idx(i)}
                   </span>
@@ -161,7 +185,9 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
                     <span className="display block text-[clamp(1.1rem,3vw,1.5rem)] text-ink transition-colors duration-200 group-hover:text-rose">
                       {label}
                     </span>
-                    <span className="mt-1 block text-sm text-ink-muted">{note}</span>
+                    <span className="mt-1 block text-sm text-ink-muted">
+                      {note}
+                    </span>
                   </span>
                 </Link>
               </li>
@@ -176,7 +202,9 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
       <section className="gutter pt-16 sm:pt-24">
         <div className="mx-auto flex max-w-6xl flex-col gap-8 border-t-2 border-navy pt-8 sm:flex-row sm:items-end sm:justify-between sm:gap-12">
           <div>
-            <p className="display text-[clamp(2.1rem,6.4vw,4rem)] leading-[0.9]">{con.dates}</p>
+            <p className="display text-[clamp(2.1rem,6.4vw,4rem)] leading-[0.9]">
+              {con.dates}
+            </p>
             <p className="mt-3 max-w-[38ch] text-ink-muted">
               {con.venue}, {con.address}
             </p>

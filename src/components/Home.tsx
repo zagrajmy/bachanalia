@@ -30,21 +30,18 @@ export function Home({
 
           <div className="relative min-w-0">
             <div className="relative">
-              {}
-              <div className="relative aspect-5/4 overflow-hidden border-b border-dashed border-hairline sm:aspect-video lg:absolute lg:inset-0 lg:aspect-auto lg:border-b-0">
-                <Image
-                  alt="Kosmiczny kogut o niebieskim ogonie wśród gwiazd na granatowym niebie"
-                  className="object-cover object-[78%_45%] lg:object-[right_center]"
-                  fill
-                  priority
-                  sizes="100vw"
-                  src={KEY_ART}
-                />
-              </div>
+              <Image
+                alt="Kosmiczny kogut o niebieskim ogonie wśród gwiazd na granatowym niebie"
+                className="object-cover object-right absolute inset-0 aspect-auto"
+                fill
+                priority
+                sizes="100vw"
+                src={KEY_ART}
+              />
 
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 hidden bg-linear-to-r from-navy from-25% to-transparent to-70% lg:block"
+                className="pointer-events-none absolute inset-0 bg-linear-to-r from-navy from-25% to-transparent to-70% lg:opacity-80"
               />
 
               <div className="gutter relative mx-auto max-w-6xl px-5 pt-7 pb-10 sm:px-8 sm:pt-9 sm:pb-14 lg:flex lg:min-h-[calc(100vw/2.62)] lg:flex-col lg:justify-center lg:py-16">
@@ -79,10 +76,10 @@ export function Home({
                   <span className="text-coral">{con.edition}</span>
                 </h1>
 
-                <dl className="relative mt-7 grid max-w-136 gap-x-7 gap-y-1 text-sm sm:grid-cols-[auto_1fr] sm:gap-y-3 sm:text-base">
-                  <dt className="text-sm text-accent">Termin</dt>
-                  <dd className="mb-3 sm:mb-0">{con.dates}</dd>
-                  <dt className="text-sm text-accent">Miejsce</dt>
+                <dl className="relative mt-7 grid max-w-136 gap-x-7 gap-y-1 text-sm sm:grid-cols-[auto_1fr] gap-y-3 sm:text-base">
+                  <dt className="text-sm text-accent pt-0.75">Termin</dt>
+                  <dd>{con.dates}</dd>
+                  <dt className="text-sm text-accent pt-0.75">Miejsce</dt>
                   <dd>
                     {con.venue}, {con.address}
                   </dd>
@@ -111,7 +108,7 @@ export function Home({
                   key={href}
                 >
                   <Link
-                    className="group -mx-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 rounded-card p-3 no-underline transition-colors hover:duration-0 duration-150 hover:before:bg-paper-shade sm:gap-x-8 sm:py-3.5 before:inset-0.5 before:absolute relative before:-z-10"
+                    className="group -mx-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 rounded-card p-3 no-underline transition-colors hover:duration-0 duration-150 hover:before:bg-ink/3 sm:gap-x-8 sm:py-3.5 before:inset-0.5 before:absolute relative before:-z-10"
                     href={href}
                   >
                     <span className="min-w-0">
@@ -146,11 +143,10 @@ export function Home({
 
       <section className="ink-inverted gutter mt-16 bg-petrol py-14 sm:mt-24 sm:py-20">
         <div className="mx-auto max-w-6xl">
-          <p className="eyebrow text-accent">Bramy otwieramy</p>
-          <ul className="mt-8 grid gap-10 sm:grid-cols-3 sm:gap-8">
+          <ul className="grid gap-10 sm:grid-cols-3 sm:gap-8">
             {con.hours.map(({ day, from }) => (
               <li key={day}>
-                <p className="eyebrow text-ink-muted">{day}</p>
+                <p className="eyebrow text-ink">{day}</p>
                 <p className="display mt-2 text-[clamp(2.6rem,7.6vw,4.6rem)] tabular-nums">
                   od {from}
                 </p>

@@ -20,11 +20,13 @@ const SWIPE_THRESHOLD = 44;
 const ZOOM = 2.5;
 
 const CONTROL =
-  "flex size-11 shrink-0 items-center justify-center rounded-card border border-dashed border-current/45 text-ink transition-[border-color,transform] duration-150 ease-[var(--ease-out)] hover:border-current active:scale-[0.96] disabled:pointer-events-none disabled:opacity-35";
+  "flex size-11 shrink-0 items-center justify-center rounded-card border border-dashed border-navy/30 text-ink transition-[border-color,transform] duration-150 ease-[var(--ease-out)] hover:border-navy/70 active:scale-[0.96] disabled:pointer-events-none disabled:opacity-35";
 
 /**
- * The photo full-bleed on navy, framed the way the rest of the ticket is:
- * dashed rules, a 3px trim radius and a zero-padded index.
+ * The photo on paper, framed the way the rest of the ticket is: dashed rules,
+ * a 3px trim radius and a zero-padded index. It flies out of its thumbnail
+ * rather than fading in over a dark field — the photo is the subject, so
+ * nothing else changes colour around it.
  *
  * Base UI's dialog carries the modal contract — focus trap, Escape, scroll
  * lock — and `finalFocus` hands focus back to the thumbnail of whichever photo
@@ -36,12 +38,14 @@ export function Lightbox({
   onIndexChange,
   onClose,
   finalFocus,
+  morphName,
 }: {
+  finalFocus: RefObject<HTMLElement | null>;
   images: WpGalleryImage[];
   index: number | null;
-  onIndexChange: (index: number) => void;
+  morphName: string;
   onClose: () => void;
-  finalFocus: RefObject<HTMLElement | null>;
+  onIndexChange: (index: number) => void;
 }) {
   const [zoomed, setZoomed] = useState(false);
   const stage = useRef<HTMLDivElement>(null);
@@ -56,7 +60,8 @@ export function Lightbox({
   const total = images.length;
   const shown = index ?? lastIndex.current;
   const current = images[shown];
-  const step = (delta: number) => onIndexChange((shown + delta + total) % total);
+  const step = (delta: number) =>
+    onIndexChange((shown + delta + total) % total);
 
   const onKeyDown = (event: KeyboardEvent) => {
     const moves: Record<string, () => void> = {
@@ -104,14 +109,16 @@ export function Lightbox({
       }}
     >
       <Dialog.Portal>
-        <Dialog.Backdrop className="fixed inset-0 z-50 bg-navy-deep transition-opacity duration-200 ease-[var(--ease-out)] data-[ending-style]:opacity-0 data-[starting-style]:opacity-0" />
+        <Dialog.Backdrop className="fixed inset-0 z-50 bg-paper/20 backdrop-blur-sm transition-opacity duration-200 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0" />
 
         <Dialog.Popup
           finalFocus={finalFocus}
           onKeyDown={onKeyDown}
           onTouchStart={(event) => {
             const touch = event.touches[0];
-            touchStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
+            touchStart.current = touch
+              ? { x: touch.clientX, y: touch.clientY }
+              : null;
           }}
           onTouchEnd={(event) => {
             const from = touchStart.current;
@@ -120,11 +127,14 @@ export function Lightbox({
             if (!from || !touch || zoomed) return;
 
             const dx = touch.clientX - from.x;
-            if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(touch.clientY - from.y)) {
+            if (
+              Math.abs(dx) > SWIPE_THRESHOLD &&
+              Math.abs(dx) > Math.abs(touch.clientY - from.y)
+            ) {
               step(dx < 0 ? 1 : -1);
             }
           }}
-          className="ink-inverted screened fixed inset-0 z-50 flex flex-col outline-none transition-opacity duration-200 ease-[var(--ease-out)] data-[ending-style]:opacity-0 data-[starting-style]:opacity-0"
+          className="fixed inset-0 z-50 flex flex-col outline-none"
         >
           <div className="flex items-center justify-between gap-4 px-4 py-3 sm:px-6">
             <Dialog.Title className="eyebrow tabular-nums text-ink-muted">
@@ -143,10 +153,17 @@ export function Lightbox({
             onClick={toggleZoom}
             className={cn(
               "relative min-h-0 flex-1",
-              zoomed ? "cursor-zoom-out overflow-auto" : "cursor-zoom-in overflow-hidden",
+              zoomed
+                ? "cursor-zoom-out overflow-auto"
+                : "cursor-zoom-in overflow-hidden",
             )}
           >
-            <div className={cn("relative", zoomed ? "h-[250%] w-[250%]" : "size-full")}>
+            <div
+              className={cn(
+                "relative",
+                zoomed ? "h-[250%] w-[250%]" : "size-full",
+              )}
+            >
               {current && (
                 <GalleryImage
                   key={current.src}
@@ -156,12 +173,13 @@ export function Lightbox({
                   priority
                   sizes={zoomed ? "250vw" : "100vw"}
                   className="size-full bg-transparent"
+                  style={zoomed ? undefined : { viewTransitionName: morphName }}
                 />
               )}
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-3 px-4 py-4 sm:gap-5">
+          <div className="flex items-center justify-center gap-3 p-4  sm:gap-5">
             <button
               type="button"
               aria-label="Poprzednie zdjęcie"
@@ -171,10 +189,6 @@ export function Lightbox({
             >
               <ChevronLeftIcon className="size-5" aria-hidden="true" />
             </button>
-
-            <p className="eyebrow truncate text-center text-ink-muted">
-              {zoomed ? "Kliknij, aby oddalić" : "Kliknij, aby przybliżyć"}
-            </p>
 
             <button
               type="button"

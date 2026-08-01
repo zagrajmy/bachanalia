@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
@@ -25,6 +25,7 @@ export function GalleryImage({
   fit = "cover",
   className,
   priority,
+  style,
 }: {
   src: string;
   alt: string;
@@ -32,11 +33,12 @@ export function GalleryImage({
   fit?: "cover" | "contain";
   className?: string;
   priority?: boolean;
+  style?: CSSProperties;
 }) {
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <div className={cn("relative overflow-hidden bg-paper-shade", className)}>
+    <div className={cn("relative overflow-hidden bg-paper-shade", className)} style={style}>
       <Image
         src={src}
         alt={alt}

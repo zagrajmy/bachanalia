@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 
 import type { WpGalleryImage } from "@/utils/prepareWpContent";
 
@@ -9,6 +10,21 @@ import { Lightbox } from "./Lightbox";
 
 /** Past a dozen photos the grid reads as a contact sheet, so the cells shrink. */
 const DENSE_FROM = 13;
+
+/**
+ * The thumbnail and the opened photo share this name, so the browser tweens
+ * one into the other instead of cross-fading a panel over the page. Only one
+ * element may carry it at a time, which is what `morph` below tracks.
+ */
+const MORPH = "gallery-photo";
+
+function withMorph(run: () => void) {
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (reduced || !document.startViewTransition) return run();
+
+  document.startViewTransition(() => flushSync(run));
+}
 
 /**
  * Elementor's image carousel, rendered as a contact sheet.
@@ -24,6 +40,8 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
   const [index, setIndex] = useState<number | null>(null);
   const thumbnails = useRef<(HTMLButtonElement | null)[]>([]);
   const finalFocus = useRef<HTMLButtonElement | null>(null);
+  /** Which thumbnail the photo flies out of, and back into. */
+  const morph = useRef(0);
 
   useEffect(() => {
     if (index !== null) finalFocus.current = thumbnails.current[index] ?? null;
@@ -52,7 +70,10 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
               ref={(node) => {
                 thumbnails.current[i] = node;
               }}
-              onClick={() => setIndex(i)}
+              onClick={() => {
+                morph.current = i;
+                withMorph(() => setIndex(i));
+              }}
               aria-label={`Powiększ zdjęcie ${i + 1} z ${images.length}`}
               className="block w-full cursor-zoom-in rounded-card border border-dashed border-navy/25 transition-colors duration-200 ease-[var(--ease-out)] hover:border-navy/70 [&_img]:transition-transform [&_img]:duration-200 [&_img]:ease-[var(--ease-out)] hover:[&_img]:scale-[1.04]"
             >
@@ -61,6 +82,9 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
                 alt=""
                 sizes={dense ? "(min-width: 40rem) 9rem, 45vw" : "(min-width: 40rem) 16rem, 45vw"}
                 className="aspect-4/3 rounded-card"
+                style={
+                  index === null && morph.current === i ? { viewTransitionName: MORPH } : undefined
+                }
               />
             </button>
           </li>
@@ -70,8 +94,12 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
       <Lightbox
         images={images}
         index={index}
-        onIndexChange={setIndex}
-        onClose={() => setIndex(null)}
+        onIndexChange={(next) => {
+          morph.current = next;
+          setIndex(next);
+        }}
+        onClose={() => withMorph(() => setIndex(null))}
+        morphName={MORPH}
         finalFocus={finalFocus}
       />
     </div>

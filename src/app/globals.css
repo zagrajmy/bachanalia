@@ -300,3 +300,9 @@ body {
     text-decoration-color: currentColor;
   }
 }
+
+/* The photo tweens out of its thumbnail; nothing else on the page moves. */
+::view-transition-group(gallery-photo) {
+  animation-duration: 260ms;
+  animation-timing-function: var(--ease-out);
+}

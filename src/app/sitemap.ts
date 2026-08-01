@@ -19,13 +19,12 @@ const ownRoutes = ["/", SHOP_PATH, NEWS_PATH, "/goscie/"];
 
 /**
  * On top of the pages we do not serve at all: the WooCommerce transactional
- * four, which stay on WordPress, two redirect sources, and the prototype.
+ * four, which stay on WordPress, and two redirect sources.
  */
 const excluded = new Set([
   ...RETIRED_PATHS,
   "/akredytacja/",
   "/blog/",
-  "/design/",
   "/koszyk/",
   "/moje-konto/",
   "/zamowienie/",

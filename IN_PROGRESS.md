@@ -37,7 +37,7 @@ partner list no longer matches the live page. Re-scrape before trusting it.
 - WPGraphQL 2.18.0 and WooGraphQL 1.0.3 are live: 34 pages, 25 posts,
   22 products.
 - `bun run dev` / `build` need `.env.local` — `vercel env pull .env.local`.
-- 40 unit tests, 134 e2e specs (desktop + Pixel 7).
+- 49 unit tests, 134 e2e specs (desktop + Pixel 7).
 
 `src/gql/schema.gql` is tracked, the generated `.ts` is not, so **codegen
 must run before `tsc`** on a clean checkout. Introspection is disabled on the
@@ -129,8 +129,6 @@ answers `prefers-color-scheme`; iOS ignores SVG favicons so `apple-icon.png`
 is the plated fallback. `opengraph-image.png` comes from
 `tools/key-art/social.py` and is worth caring about — almost every visitor
 arrives from a Facebook link.
-
-`/design` is a button-shape prototype, noindex.
 
 ## WordPress as CMS
 
@@ -249,9 +247,8 @@ attribute slugs. Getting it wrong sells the wrong shirt size.
 an edition category (`gosc25` × 25, nothing in `gosc26`). Querying posts with
 those excluded returns an empty array.
 
-`/aktualnosci/` shows its empty state, and `fetchNews` filters guest
-categories out so last year's guest list can never appear as this year's news.
-The specs assert that rather than a post count.
+`fetchNews` filters guest categories out so last year's guest list can never
+appear as this year's news. The specs assert that rather than a post count.
 
 Real news lives only on Facebook, surfaced on the old site by Custom Facebook
 Feed Pro. It exposes nothing machine-readable — no REST route under

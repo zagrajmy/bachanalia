@@ -24,8 +24,8 @@ const DESCRIPTION =
 
 /**
  * Nearly every visitor arrives from a link shared on Facebook, so the card is
- * the first thing most people see of this site. opengraph-image.png and
- * icon.png sit next to this file; Next picks them up by filename.
+ * the first thing most people see of this site. opengraph-image.png, icon.svg and
+ * apple-icon.png sit next to this file; Next picks them up by filename.
  */
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL ?? "https://bachanaliafantastyczne.pl"),

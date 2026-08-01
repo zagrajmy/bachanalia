@@ -23,6 +23,7 @@ export const ProductQuery = gql`
         description
         image {
           sourceUrl
+          thumbnail: sourceUrl(size: THUMBNAIL)
           altText
           mediaDetails {
             width

@@ -32,6 +32,13 @@ const externalProps = ({ external }: NavLink) =>
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
+  /**
+   * Base UI opens a navigation popup on hover or press, never on focus, which
+   * leaves a keyboard user with no way to see a group's children. Opening it
+   * here is the whole fix — closing is already handled, focusOut is one of the
+   * reasons the root reports.
+   */
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
 
   return (
     <header className="sticky top-0 z-40 border-b border-hairline bg-paper">
@@ -46,7 +53,12 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <NavigationMenu aria-label="Główna nawigacja" className="ml-auto hidden lg:block">
+        <NavigationMenu
+          aria-label="Główna nawigacja"
+          className="ml-auto hidden lg:block"
+          value={openGroup}
+          onValueChange={setOpenGroup}
+        >
           <NavigationMenuList>
             {primaryNav.map((group) => (
               <NavigationMenuItem key={group.label} value={group.label}>
@@ -61,6 +73,7 @@ export function SiteHeader() {
                        * heading is a real page, so it stays a link.
                        */
                       role="link"
+                      onFocus={() => setOpenGroup(group.label)}
                       render={<Link href={group.href} {...externalProps(group)} />}
                     >
                       {group.label}

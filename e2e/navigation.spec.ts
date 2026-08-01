@@ -61,7 +61,9 @@ test.describe("site navigation", () => {
 
     await header.getByRole("link", { name: group!.label, exact: true }).focus();
 
-    const link = header.getByRole("link", { name: child.label, exact: true });
+    /** The popup is portaled out of the header, so it is not inside the banner. */
+    const panel = page.locator('[data-slot="navigation-menu-content"]');
+    const link = panel.getByRole("link", { name: child.label, exact: true });
     await expect(link, "focus-within must open the panel, or the menu is mouse-only").toBeVisible();
 
     await link.click();

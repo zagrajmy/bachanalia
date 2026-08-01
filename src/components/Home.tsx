@@ -168,7 +168,7 @@ export function Home({
 
           <ul className="grid sm:grid-cols-2 sm:gap-x-12">
             {blocks.map(({ href, label, note }, i) => (
-              <li className="border-b border-dashed border-navy/25" key={href}>
+              <li className="border-b border-dashed border-hairline" key={href}>
                 <Link
                   className="group flex items-baseline gap-4 py-4 no-underline"
                   href={href}
@@ -206,7 +206,7 @@ export function Home({
 
           <Button
             asChild
-            className="self-start px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)] sm:self-auto"
+            className="self-start px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]"
           >
             <Link href={primaryCta.href}>Kup akredytację</Link>
           </Button>

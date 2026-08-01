@@ -9,22 +9,24 @@ import { ShopProduct } from "./products";
  * frame keeps the grid on one baseline without cropping anyone's artwork.
  */
 export function ProductCard({ product }: { product: ShopProduct }) {
-  const { href, name, price, soldOut, image } = product;
+  const { href, image, name, price, soldOut } = product;
 
   return (
-    <Link href={href} className="group block no-underline">
-      <div className="overflow-hidden rounded-card border border-dashed border-navy/25 bg-paper-shade">
+    <Link className="group block no-underline" href={href}>
+      <div className="overflow-hidden rounded-card border border-dashed border-hairline bg-paper-shade">
         {image ? (
           <Image
-            src={image.src}
             alt=""
-            width={image.width}
+            blurDataURL={image.blurDataURL}
+            className="aspect-auto"
             height={image.height}
+            placeholder={image.blurDataURL ? "blur" : "empty"}
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 30vw, 45vw"
-            className="aspect-[4/5] w-full object-contain"
+            src={image.src}
+            width={image.width}
           />
         ) : (
-          <div className="aspect-[4/5] w-full" />
+          <div className="aspect-4/5 w-full" />
         )}
       </div>
 
@@ -33,11 +35,13 @@ export function ProductCard({ product }: { product: ShopProduct }) {
       </h3>
 
       <p className="mt-1 flex flex-wrap items-baseline gap-x-3">
-        <span
-          className={`display text-lg tabular-nums ${soldOut ? "line-through opacity-60" : ""}`}
-        >
-          {price}
-        </span>
+        {price && (
+          <span
+            className={`display text-lg tabular-nums ${soldOut ? "line-through opacity-60" : ""}`}
+          >
+            {price}
+          </span>
+        )}
         {soldOut && <span className="text-sm text-rose">Wyprzedane</span>}
       </p>
     </Link>

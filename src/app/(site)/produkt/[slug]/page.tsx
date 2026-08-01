@@ -53,6 +53,8 @@ export default async function ProduktPage({ params }: Props) {
               alt={image.alt || name}
               width={image.width}
               height={image.height}
+              placeholder={image.blurDataURL ? "blur" : "empty"}
+              blurDataURL={image.blurDataURL}
               sizes="(min-width: 1024px) 40vw, 92vw"
               priority
               className="h-auto w-full"

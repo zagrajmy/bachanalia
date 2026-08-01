@@ -4,10 +4,18 @@ import { accreditation } from "@/content/con";
 import { formatPrice } from "@/content/shop";
 import { ProductQuery } from "@/queries/general/ProductQuery";
 import { ProductsQuery } from "@/queries/general/ProductsQuery";
+import { blurDataUrl, blurDataUrls } from "@/utils/blurDataUrl";
 import { fetchGraphQL, fetchGraphQLAtBuild } from "@/utils/fetchGraphQL";
 import { productPath } from "@/components/Globals/siteNav";
 
-export type ShopImage = { src: string; alt: string; width: number; height: number };
+export type ShopImage = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  /** A 12px WebP of the same upload, inlined so the card never opens empty. */
+  blurDataURL?: string;
+};
 
 export type ShopProduct = {
   slug: string;
@@ -33,6 +41,8 @@ export type ShopProductDetail = ShopProduct & {
 
 type ImageNode = {
   sourceUrl?: string | null;
+  /** WordPress's 150px copy — the placeholder source, never rendered as-is. */
+  thumbnail?: string | null;
   altText?: string | null;
   mediaDetails?: { width?: number | null; height?: number | null } | null;
 };
@@ -96,7 +106,7 @@ export function sortShopProducts(categorySlug: string, products: ShopProduct[]) 
   return [...products].sort((a, b) => volume(b.name) - volume(a.name));
 }
 
-function toImage(node?: ImageNode | null): ShopImage | undefined {
+function toImage(node: ImageNode | null | undefined, blurDataURL?: string) {
   if (!node?.sourceUrl) return undefined;
 
   return {
@@ -104,10 +114,11 @@ function toImage(node?: ImageNode | null): ShopImage | undefined {
     alt: node.altText || "",
     width: node.mediaDetails?.width ?? 800,
     height: node.mediaDetails?.height ?? 1000,
-  };
+    blurDataURL,
+  } satisfies ShopImage;
 }
 
-function toProduct(node: ProductNode): ShopProduct | undefined {
+function toProduct(node: ProductNode, blurDataURL?: string): ShopProduct | undefined {
   if (!node.slug || !node.name || !node.link) return undefined;
 
   return {
@@ -117,7 +128,7 @@ function toProduct(node: ProductNode): ShopProduct | undefined {
     href: productPath(node.slug),
     wpHref: node.link,
     soldOut: node.stockStatus === "OUT_OF_STOCK",
-    image: toImage(node.image),
+    image: toImage(node.image, blurDataURL),
   };
 }
 
@@ -131,10 +142,11 @@ async function fetchCatalogue() {
 
 export async function fetchShop(): Promise<ShopCategory[]> {
   const nodes = await fetchCatalogue();
+  const blurs = await blurDataUrls(nodes.map((node) => node.image?.thumbnail));
   const categories: ShopCategory[] = [];
 
   for (const node of nodes) {
-    const product = toProduct(node);
+    const product = toProduct(node, blurs.get(node.image?.thumbnail ?? ""));
     if (!product) continue;
 
     const term = node.productCategories?.nodes?.[0];
@@ -191,7 +203,7 @@ export async function fetchProduct(slug: string): Promise<ShopProductDetail | un
 
   if (!product) return undefined;
 
-  const base = toProduct(product);
+  const base = toProduct(product, await blurDataUrl(product.image?.thumbnail));
   if (!base) return undefined;
 
   const term = product.productCategories?.nodes?.[0];

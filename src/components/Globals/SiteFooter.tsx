@@ -15,7 +15,7 @@ export function SiteFooter() {
           {footerNav.map(({ title, links }) => (
             <nav key={title} aria-label={title}>
               <h2 className="eyebrow text-[0.6875rem] tracking-[0.12em] text-ink-muted">{title}</h2>
-              <ul className="mt-4 flex flex-col gap-2.5">
+              <ul className="mt-4 flex flex-col">
                 {links.map((link) => (
                   <li key={link.href}>
                     <Link
@@ -23,7 +23,7 @@ export function SiteFooter() {
                       {...("external" in link && link.external
                         ? { target: "_blank", rel: "noreferrer" }
                         : {})}
-                      className="text-[0.9375rem] text-ink no-underline underline-offset-[0.25em] hover:underline"
+                      className="text-[0.9375rem] text-ink no-underline underline-offset-[0.25em] hover:underline w-full py-1.25 block"
                     >
                       {link.label}
                     </Link>

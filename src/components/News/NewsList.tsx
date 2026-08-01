@@ -38,23 +38,23 @@ export function NewsList({ items, titleAs = "h3" }: Props) {
               </div>
             )}
 
-            {item.date && (
-              <time
-                className="block text-sm mt-4 text-ink-muted tabular-nums"
-                dateTime={item.dateTime}
-              >
-                {item.date}
-              </time>
-            )}
-
             <Title className="display mt-3 text-[clamp(1.05rem,2.6vw,1.3rem)] text-ink transition-colors hover:duration-0 duration-200 group-hover:text-rose">
               {item.title}
             </Title>
 
             {item.excerpt && (
-              <p className="mt-1.5 line-clamp-5 text-sm text-ink-muted">
+              <p className="mt-2 line-clamp-5 text-sm text-ink-muted">
                 {item.excerpt}
               </p>
+            )}
+
+            {item.date && (
+              <time
+                className="block text-sm mt-2 text-ink-muted tabular-nums"
+                dateTime={item.dateTime}
+              >
+                {item.date}
+              </time>
             )}
           </Link>
         </li>

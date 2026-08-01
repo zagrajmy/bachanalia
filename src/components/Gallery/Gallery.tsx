@@ -75,13 +75,13 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
                 withMorph(() => setIndex(i));
               }}
               aria-label={`Powiększ zdjęcie ${i + 1} z ${images.length}`}
-              className="block w-full cursor-zoom-in rounded-card border border-dashed border-navy/25 transition-colors duration-200 ease-[var(--ease-out)] hover:border-navy/70 [&_img]:transition-transform [&_img]:duration-200 [&_img]:ease-[var(--ease-out)] hover:[&_img]:scale-[1.04]"
+              className="block w-full cursor-zoom-in overflow-hidden [&_img]:transition-transform [&_img]:duration-200 [&_img]:ease-[var(--ease-out)] hover:[&_img]:scale-[1.04]"
             >
               <GalleryImage
                 src={image.src}
                 alt=""
                 sizes={dense ? "(min-width: 40rem) 9rem, 45vw" : "(min-width: 40rem) 16rem, 45vw"}
-                className="aspect-4/3 rounded-card"
+                className="aspect-4/3"
                 style={
                   index === null && morph.current === i ? { viewTransitionName: MORPH } : undefined
                 }

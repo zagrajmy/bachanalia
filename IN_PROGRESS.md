@@ -61,6 +61,12 @@ run `bun run codegen:refresh`, turn it back off.
 
 `/akredytacja` 301s to `/sklep/`. `/info`, `/blog` and `/feed-test` are gone.
 
+`sitemap.ts` builds from the same sources the routes do — `AllContentQuery`
+plus the product slugs, with the four WooCommerce paths, the redirect sources
+and two abandoned WordPress drafts excluded by name. `robots.ts` no longer
+proxies WordPress's `robots.txt`; that only ever surfaced its first `Allow`
+line and pointed crawlers at `wp-sitemap.xml`.
+
 **Products live at `/produkt/<slug>/`**, the URL WooCommerce already
 publishes, so every indexed link works with no redirect.
 
@@ -300,8 +306,10 @@ of a daily allowance in the thousands.
    onboarding video Ad Astra is owed.
 4. **Cutover:** DNS to Vercel, WordPress to `wp.`, frontend redirect, verify
    old URLs 301, shop exemptions. Do not touch permalinks before this.
-5. **Sitemap** is generated from WordPress's own and still emits `/produkt/…`
-   URLs; the new routes are not in it.
+5. **`/koszyk/`, `/zamowienie/`, `/moje-konto/` and `/zwroty/` answer 200 from
+   here.** The catch-all renders the WordPress page bodies, which are nothing
+   but WooCommerce shortcodes, so they come out as empty shells. They are kept
+   out of the sitemap; at cutover they need a redirect to `wp.` or a 404.
 6. **`wsparcie-klubu-1-zl` and `akredytacja-wspierajaca-polcon`** (25–45 zł)
    exist in the shop but are not in the homepage tier list — nobody has said
    where they belong.

@@ -1,7 +1,8 @@
 import Image from "next/image";
 
+import { WpContent } from "@/components/Templates/WpContent";
 import { ContentNodeResult } from "@/queries/general/ContentQuery";
-import { prepareWpContent } from "@/utils/prepareWpContent";
+import { splitWpContent } from "@/utils/prepareWpContent";
 
 interface TemplateProps {
   node: ContentNodeResult;
@@ -42,10 +43,7 @@ export default function PostTemplate({ node }: TemplateProps) {
           {node.title}
         </h1>
 
-        <div
-          className="wp-content mt-10"
-          dangerouslySetInnerHTML={{ __html: prepareWpContent(node.content) }}
-        />
+        <WpContent segments={splitWpContent(node.content)} className="mt-10" />
       </div>
     </article>
   );

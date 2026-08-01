@@ -1,7 +1,7 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
 
-import { hasVisibleContent, prepareWpContent } from "./prepareWpContent";
+import { hasVisibleContent, prepareWpContent, splitWpContent } from "./prepareWpContent";
 
 const CAROUSEL = `<div class="elementor-image-carousel-wrapper swiper" role="region" aria-roledescription="carousel" aria-label="Karuzela obrazków" dir="ltr"><div class="elementor-image-carousel swiper-wrapper" aria-live="off"><div class="swiper-slide" role="group" aria-roledescription="slide" aria-label="1 z 11"><figure class="swiper-slide-inner"><img src="a.jpg" alt="a" /></figure></div></div></div>`;
 
@@ -58,4 +58,91 @@ test("whitespace and nbsp do not", () => {
   assert.equal(hasVisibleContent("<p> &nbsp; </p>"), false);
   assert.equal(hasVisibleContent(""), false);
   assert.equal(hasVisibleContent(null), false);
+});
+
+/** The shape WordPress actually ships: the carousel is four wrappers deep. */
+const PAGE = `<div class="elementor elementor-3230">
+<section class="elementor-section"><div class="elementor-container"><div class="elementor-column"><div class="elementor-widget-wrap">
+<div class="elementor-widget elementor-widget-text-editor"><div class="elementor-widget-container"><p>Bachanalia to konwent.</p></div></div>
+</div></div></div></section>
+<section class="elementor-section"><div class="elementor-container"><div class="elementor-column"><div class="elementor-widget-wrap">
+<div class="elementor-widget elementor-widget-image-carousel" data-settings="{&quot;slides_to_show&quot;:&quot;1&quot;}"><div class="elementor-widget-container">
+<div class="elementor-image-carousel-wrapper swiper" dir="ltr"><div class="elementor-image-carousel swiper-wrapper">
+<div class="swiper-slide"><figure class="swiper-slide-inner"><img decoding="async" class="swiper-slide-image" src="https://wp.example/a.jpg" alt="IMG_1" /></figure></div><div class="swiper-slide"><figure class="swiper-slide-inner"><img decoding="async" class="swiper-slide-image" src="https://wp.example/b.jpg" alt="IMG_2" /></figure></div>
+</div></div></div></div>
+</div></div></div></section>
+<section class="elementor-section"><div class="elementor-container"><div class="elementor-column"><div class="elementor-widget-wrap">
+<div class="elementor-widget elementor-widget-text-editor"><div class="elementor-widget-container"><p>Do zobaczenia.</p></div></div>
+</div></div></div></section>
+</div>`;
+
+test("lifts a carousel out as its own segment, in document order", () => {
+  const segments = splitWpContent(PAGE);
+
+  assert.deepEqual(
+    segments.map((segment) => segment.type),
+    ["html", "gallery", "html"],
+  );
+  assert.ok(segments[0].type === "html" && segments[0].html.includes("Bachanalia to konwent."));
+  assert.ok(segments[2].type === "html" && segments[2].html.includes("Do zobaczenia."));
+});
+
+test("carries every slide's source and alt across", () => {
+  const [, gallery] = splitWpContent(PAGE);
+
+  assert.equal(gallery.type, "gallery");
+  assert.deepEqual(gallery.type === "gallery" ? gallery.images : [], [
+    { src: "https://wp.example/a.jpg", alt: "IMG_1" },
+    { src: "https://wp.example/b.jpg", alt: "IMG_2" },
+  ]);
+});
+
+test("no carousel markup survives into the HTML segments", () => {
+  for (const segment of splitWpContent(PAGE)) {
+    if (segment.type !== "html") continue;
+
+    assert.ok(!segment.html.includes("swiper-slide"), "slides belong to the gallery segment");
+    assert.ok(!segment.html.includes("<img"), "so do their images");
+  }
+});
+
+test("both halves stay balanced across the cut", () => {
+  const counts = (html: string) => ({
+    open: (html.match(/<(?!\/)[a-z]/g) ?? []).length - (html.match(/<img\b/g) ?? []).length,
+    close: (html.match(/<\//g) ?? []).length,
+  });
+
+  for (const segment of splitWpContent(PAGE)) {
+    if (segment.type !== "html") continue;
+
+    const { open, close } = counts(segment.html);
+    assert.equal(open, close, `unbalanced chunk: ${segment.html}`);
+  }
+});
+
+test("a page without a carousel comes back as one chunk, byte for byte", () => {
+  const plain = "<p>Regulamin</p>";
+
+  assert.deepEqual(splitWpContent(plain), [{ type: "html", html: plain }]);
+});
+
+test("splitting still drops the carousel semantics prepareWpContent removes", () => {
+  const [gallery] = splitWpContent(CAROUSEL);
+
+  assert.equal(gallery.type, "gallery");
+  assert.equal(gallery.type === "gallery" ? gallery.images.length : 0, 1);
+});
+
+test("wrappers around nothing but a carousel yield only the gallery", () => {
+  const segments = splitWpContent(PAGE.replace(/<p>[^<]*<\/p>/g, ""));
+
+  assert.deepEqual(
+    segments.map((segment) => segment.type),
+    ["gallery"],
+  );
+});
+
+test("an Elementor shell with no carousel and no copy yields nothing to render", () => {
+  assert.deepEqual(splitWpContent(ELEMENTOR_SHELL), []);
+  assert.deepEqual(splitWpContent(null), []);
 });

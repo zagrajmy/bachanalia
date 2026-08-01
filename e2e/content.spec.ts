@@ -50,7 +50,7 @@ test.describe("WordPress content rendering", () => {
   test("a gallery shows its photos as a grid, not one image per row", async ({ page }) => {
     await page.goto("/co-to-sa-bachanalia/");
 
-    const gallery = page.locator(".wp-content .elementor-image-carousel").first();
+    const gallery = page.locator("[data-gallery]").first();
     await expect(gallery).toBeVisible();
 
     const columns = await gallery.evaluate(
@@ -60,6 +60,38 @@ test.describe("WordPress content rendering", () => {
     expect(columns, "54 stacked photos is what the contact sheet exists to avoid").toBeGreaterThan(
       1,
     );
+  });
+
+  test("gallery photos go through the image optimiser", async ({ page }) => {
+    await page.goto("/co-to-sa-bachanalia/");
+
+    const sources = await page
+      .locator("[data-gallery] img")
+      .evaluateAll((nodes) => nodes.map((node) => node.getAttribute("src") ?? ""));
+
+    expect(sources.length).toBeGreaterThan(0);
+    expect(
+      sources.filter((src) => src.includes("/_next/image")),
+      "raw WordPress originals are multi-megabyte",
+    ).toHaveLength(sources.length);
+  });
+
+  test("a photo opens in the lightbox and hands focus back on Escape", async ({ page }) => {
+    await page.goto("/co-to-sa-bachanalia/");
+
+    const third = page.getByRole("button", { name: /Powiększ zdjęcie 3 z/ });
+    await third.click();
+
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toContainText("03");
+
+    await page.keyboard.press("ArrowRight");
+    await expect(dialog).toContainText("04");
+
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+    await expect(page.getByRole("button", { name: /Powiększ zdjęcie 4 z/ })).toBeFocused();
   });
 
   test("an empty page says so rather than rendering a bare heading", async ({ page }) => {

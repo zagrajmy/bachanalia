@@ -1,12 +1,13 @@
+import { WpContent } from "@/components/Templates/WpContent";
 import { ContentNodeResult } from "@/queries/general/ContentQuery";
-import { hasVisibleContent, prepareWpContent } from "@/utils/prepareWpContent";
+import { splitWpContent } from "@/utils/prepareWpContent";
 
 interface TemplateProps {
   node: ContentNodeResult;
 }
 
 export default function PageTemplate({ node }: TemplateProps) {
-  const content = prepareWpContent(node.content);
+  const segments = splitWpContent(node.content);
 
   return (
     <article className="gutter mx-auto max-w-6xl pt-12 pb-4 sm:pt-16">
@@ -14,8 +15,8 @@ export default function PageTemplate({ node }: TemplateProps) {
         {node.title}
       </h1>
 
-      {hasVisibleContent(content) ? (
-        <div className="wp-content mt-10" dangerouslySetInnerHTML={{ __html: content }} />
+      {segments.length > 0 ? (
+        <WpContent segments={segments} className="mt-10" />
       ) : (
         <p className="mt-8 max-w-[55ch] text-lg text-ink-muted">
           Szykujemy tę stronę na XL edycję. Zajrzyj tu ponownie za jakiś czas.

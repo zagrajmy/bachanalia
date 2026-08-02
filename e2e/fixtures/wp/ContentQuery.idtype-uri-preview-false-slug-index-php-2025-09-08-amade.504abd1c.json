@@ -1,0 +1,29 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2844,
+      "date": "2025-09-08T22:09:04",
+      "title": "Amadeusz Kocan",
+      "content": "\n<p class=\"wp-block-paragraph\">Reżyser filmowy, scenarzysta i operator. Absolwent Państwowej Szkoły Muzycznej Pierwszego Stopnia. Rozpoczynając swoją przygodę jako filmowiec, samodzielnie zdobywał wykształcenie, zaczynając od pracy w telewizji i podejmując się pierwszych projektów fabularnych oraz dokumentalnych. Wkrótce po zdobyciu doświadczenia założył niezależne studio filmowe Green Mountain Pictures. W ramach tego studia powstają filmy fabularne i dokumentalne, reklamy, etiudy oraz teledyski. Twórca serii filmów dokumentalnych &#8222;Ostatni Ludzie Czarnobyla&#8221; oraz &#8222;Czarnobyl: Ludzie ze stali&#8221;. Filmy te tworzył w latach 2017-2023, jednocześnie udzielając się humanitarnie pomimo trwającej na Ukrainie wojny. Jego najważniejszym filmem fabularnym jest dramat &#8222;Droga Donikąd&#8221;.</p>\n",
+      "featuredImage": {
+        "node": {
+          "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/amadeusz_kocan_bf25.jpg",
+          "altText": "",
+          "mediaDetails": {
+            "width": 1629,
+            "height": 2048
+          }
+        }
+      }
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

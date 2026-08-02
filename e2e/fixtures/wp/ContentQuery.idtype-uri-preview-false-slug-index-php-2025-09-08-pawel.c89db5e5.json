@@ -1,0 +1,29 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2850,
+      "date": "2025-09-08T22:12:27",
+      "title": "Paweł Kaszkowiak",
+      "content": "\n<p class=\"wp-block-paragraph\">Polski aktor i artysta sceniczny, związany z studiem filmowym Green Mountain Pictures oraz z Klubem Komedii. Wystąpił w filmach &#8222;Ostatni Samotnik&#8221; (2019) oraz &#8222;Droga Donikąd&#8221; (2025).</p>\n",
+      "featuredImage": {
+        "node": {
+          "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/pawel_kaszkowiak_bf25.jpg",
+          "altText": "",
+          "mediaDetails": {
+            "width": 1366,
+            "height": 2048
+          }
+        }
+      }
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

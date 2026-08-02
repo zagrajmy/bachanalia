@@ -1,0 +1,29 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2732,
+      "date": "2025-08-31T21:29:50",
+      "title": "Lidka Migalska",
+      "content": "\n<p class=\"wp-block-paragraph\">Lidka Migalska to współtwórczyni poznańskiego, małego studia gier fabularnych Marsz Fantastyczny. Od kilku lat, razem z Pawłem Marszałkiem, prowadzi zajęcia dla dzieci z gier fabularnych i redaguje podręczniki do RPG m.in. Cyberpunk RED, Brindlewood Bay, The Walking Dead RPG, Pendragon.</p>\n",
+      "featuredImage": {
+        "node": {
+          "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/lidka_migalska_fb25.jpg",
+          "altText": "",
+          "mediaDetails": {
+            "width": 861,
+            "height": 1145
+          }
+        }
+      }
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

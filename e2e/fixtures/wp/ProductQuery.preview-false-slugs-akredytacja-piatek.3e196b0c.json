@@ -1,0 +1,83 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 1990,
+          "slug": "akredytacja-piatek",
+          "name": "Akredytacja Piątek",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/akredytacja-piatek/",
+          "description": "<p>Akredytacja uprawniająca do udziału w BF26 w piątek. Upoważnia do głosowania na kandydatów do nagrody Janusza A. Zajdla.</p>\n<p>Na adres e-mail podany w zamówieniu będzie wysłany zostanie kod QR który jest biletem wstępu. Prosimy o okazanie go na akredytacji w formie cyfrowej lub na wydruku.</p>\n",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/piatek.png",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/piatek-150x150.png",
+            "altText": "",
+            "mediaDetails": {
+              "width": 1000,
+              "height": 1001
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "akredytacje",
+                "name": "akredytacje"
+              }
+            ]
+          },
+          "price": "50,00&nbsp;zł",
+          "stockStatus": "IN_STOCK",
+          "soldIndividually": false,
+          "attributes": {
+            "nodes": [
+              {
+                "name": "antologia",
+                "label": "Antologia"
+              }
+            ]
+          },
+          "variations": {
+            "nodes": [
+              {
+                "databaseId": 3216,
+                "name": "Akredytacja Piątek - Nie chcę antologii nagrody im. Janusza A. Zajdla",
+                "price": "50,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "antologia",
+                      "value": "Nie chcę antologii nagrody im. Janusza A. Zajdla"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 3215,
+                "name": "Akredytacja Piątek - Chcę odebrać antologie nagrody im. Janusza A. Zajdla",
+                "price": "50,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "antologia",
+                      "value": "Chcę odebrać antologie nagrody im. Janusza A. Zajdla"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

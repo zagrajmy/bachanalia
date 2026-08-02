@@ -1,0 +1,43 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 2441,
+          "slug": "fantazje-zielonogorskie-ix",
+          "name": "Fantazje Zielonogórskie IX",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-ix/",
+          "description": "<h3 class=\"wp-block-heading\">Tom IX</h3>\n<div class=\"wp-block-image\">\n<figure class=\"alignright size-large is-resized\"><img fetchpriority=\"high\" decoding=\"async\" class=\"wp-image-69\" src=\"https://fantazje.adastra.zgora.pl/wp-content/uploads/2020/04/91848723_3660892240619809_5668944238981677056_n-712x1024.jpg\" alt=\"\" width=\"712\" height=\"1024\"></figure>\n</div>\n<p>W roku 2019 odbyła się dziewiąta z kolei edycja konkursu, której efektem był kolejny tom antologii. Tym razem w jury zasiedli: Igor Myszkiewicz, Waldemar Gruszczyński, Maciej Dobrowolski, Jakub Kopieniak oraz Arkadiusz Sobański. Redakcji tomu dokonał Maciej Dobrowolski, korekty Arlena A. Łobodzińska, składu Mamert Janion, a ilustracje wykonał Igor Myszkiewicz.&nbsp;</p>\n<p>Zawartość tomu:&nbsp;</p>\n<ul>\n<li>Wiktor Orłowski „Śmierć w Mountain Green”</li>\n<li>Katarzyna Hajok „Na szczęście zrobiliśmy wielki krok naprzód”</li>\n<li>Roland Hensoldt „Tkacz losu”</li>\n<li>Dariusz Słowik „Trzynasty wydział”</li>\n<li>Kamila Szmigiel „Fidł”</li>\n<li>Dawid Czerwiński „Przeszłość przede mną”</li>\n<li>Łukasz Wilkan „Prawo pobłażliwości”</li>\n<li>Katarzyna Szymonik „Uwierzyć”</li>\n<li>Michał Kulus „Bajka w dresie” &nbsp;</li>\n<li>Michał Figoń „Krwawe Odbicie”&nbsp;</li>\n</ul>\n<p>Nagrodę Grand Prix zdobyło opowiadanie Wiktora Orłowskiego – „Śmierć w Mountain Green”. Natomiast opowiadanie „Na szczęście zrobiliśmy wielki krok naprzód” autorstwa Katarzyny Hajok, „Tkacz losu” nadesłane przez Rolanda Hensoldta oraz „Trzynasty wydział” spod pióra Dariusza Słowika uhonorowane zostały Nagrodami Kapituły.&nbsp;</p>\n<p>Książkę wydano przy współpracy Fabryki Reklamy SANDMEDIA i Galerii Twórców Galera.&nbsp;</p>\n<p>Zrealizowano przy pomocy finansowej Miasta Zielona Góra.</p>\n",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/9.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/9-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK",
+          "soldIndividually": false
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

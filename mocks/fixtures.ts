@@ -56,19 +56,15 @@ export function fixtureName(operation: string, variables: unknown) {
   return `${operation}.${readable(json)}.${digest}.json`;
 }
 
-const cache: { [name: string]: unknown } = {};
-
+/**
+ * Read every time rather than memoised: a re-record has to take effect without
+ * restarting the server, and caching a *miss* is how a fixture that was just
+ * written keeps looking absent.
+ */
 export function readFixture(operation: string, variables: unknown) {
-  const name = fixtureName(operation, variables);
+  const path = join(FIXTURE_DIR, fixtureName(operation, variables));
 
-  if (name in cache) return cache[name];
-
-  const path = join(FIXTURE_DIR, name);
-  const value = existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : undefined;
-
-  cache[name] = value;
-
-  return value;
+  return existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : undefined;
 }
 
 export function writeFixture(operation: string, variables: unknown, body: unknown) {
@@ -77,7 +73,6 @@ export function writeFixture(operation: string, variables: unknown, body: unknow
   const name = fixtureName(operation, variables);
 
   writeFileSync(join(FIXTURE_DIR, name), `${JSON.stringify(body, null, 2)}\n`);
-  delete cache[name];
 
   return name;
 }
@@ -87,12 +82,10 @@ export type CartSnapshots = {
   empty: unknown;
   /** `<productId>:<variationId>:<quantity>` lines, sorted and joined by `|`. */
   carts: { [signature: string]: unknown };
-  /** `customer.checkoutUrl`, which is null until two WordPress settings are on. */
-  checkoutUrl: unknown;
 };
 
 export function readSnapshots(): CartSnapshots {
-  if (!existsSync(SNAPSHOT_FILE)) return { empty: undefined, carts: {}, checkoutUrl: null };
+  if (!existsSync(SNAPSHOT_FILE)) return { empty: undefined, carts: {} };
 
   return JSON.parse(readFileSync(SNAPSHOT_FILE, "utf8"));
 }

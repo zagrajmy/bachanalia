@@ -1,0 +1,29 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2958,
+      "date": "2025-09-15T22:47:39",
+      "title": "Filmopolis",
+      "content": "\n<p class=\"wp-block-paragraph\">Michał Malinowski &#8211; zielonogórski filmowiec, aktor kabaretowy i trener technik improwizacyjnych. Absolwent Instytutu Badań Literackich Polskiej Akademii Nauk. Pomysłodawca i współtwórca filmu „Grun de Berg. Wyzwanie.” Współzałożyciel i aktor kabaretu &#8222;Bez Reszt&#8221;. Organizator wielu wydarzeń artystycznych m.in. &#8222;Po Kolacji, Na Żarty&#8221; czy &#8222;Stały Punkt Programu&#8221;. W latach 2011-2016 prezes Stowarzyszenia Inicjatywa Sceniczna Fruuu. Współprowadzący program filmowy &#8222;Filmopolis&#8221; Radia Index.</p>\n\n\n\n<p class=\"wp-block-paragraph\">Marcin Olechnowski &#8211; zielonogórski filmowiec (m.in. mockument „Grun de Berg. Wyzwanie”), założyciel grupy filmowej Firefly Film Studio. Nauczyciel wiedzy o filmie w Szkole Myślenia Twórczego w Zielonej Górze. Pedagog i wychowawca nazwany przez wychowanków Świetlikiem. Autor audycji w Akademickim Radiu Index, m.in. współprowadzący audycji „Filmopolis” z recenzjami filmów. Youtuber i autor podcastów (Świetlik Muzyczny). Współautor (razem z A. Mrówką Łobodzińską) książki „Historia Zielonogórskiego Zagłębia Kabaretowego”. Działa w Zielonogórskim Towarzystwie Edukacyjnym CIVILITAS. Od 2014 roku organizator w Zielonej Górze i Nowej Soli Objazdowego Festiwalu Filmowego WATCH DOCS – Prawa Człowieka w Filmie.</p>\n",
+      "featuredImage": {
+        "node": {
+          "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/filmopolis_bf25.jpg",
+          "altText": "",
+          "mediaDetails": {
+            "width": 572,
+            "height": 642
+          }
+        }
+      }
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

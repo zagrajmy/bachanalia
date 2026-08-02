@@ -1,0 +1,43 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 2447,
+          "slug": "fantazje-zielonogorskie-vi",
+          "name": "Fantazje Zielonogórskie VI",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-vi/",
+          "description": "<h3 class=\"wp-block-heading\">Tom VI</h3>\n<div class=\"wp-block-image\">\n<figure class=\"alignright size-full\"><img fetchpriority=\"high\" decoding=\"async\" class=\"wp-image-60\" src=\"https://fantazje.adastra.zgora.pl/wp-content/uploads/2020/04/antologia_6.jpg\" alt=\"\" width=\"200\" height=\"284\"></figure>\n</div>\n<p>W roku 2016 odbyła się szósta edycja konkursu, której efektem był kolejny tom antologii. W jury zasiedli: Igor Myszkiewicz, Waldemar Gruszczyński, Maciej Dobrowolski i Zbigniew Kulczycki. Redakcji tomu dokonał Maciej Dobrowolski, korekty Arlena A. Łobodzińska, składu Mamert Janion, a ilustracje wykonał Igor Myszkiewicz.</p>\n<p>Zawartość tomu:</p>\n<ul>\n<li>Wojciech Kowalski „Rok 1388”</li>\n<li>Alicja Tempłowicz „Dwadzieścia trzy sążnie predestynacji”</li>\n<li>Filip Kopij „Śmierć Michaiła Andriejewicza”</li>\n<li>Dominika Hejduk „Zielonogórski Notgeld”</li>\n<li>Joanna Pawłusiów „Highway to Hell”</li>\n<li>Filip Koziński „O Lisku, który znalazł kwiat paproci”</li>\n<li>Wojciech Wegner „Mleko”</li>\n<li>Michał Peroń „Archanioł”</li>\n<li>Krzysztof Filipowicz „Spisek księżycowy”</li>\n<li>Paulina Rezanowicz „Kwaśny smak mirabelek”</li>\n<li>Marek Starosta „Asenterunek”</li>\n<li>Rafał Charłampowicz „Nocny”</li>\n</ul>\n<p>Poza konkursem:</p>\n<ul>\n<li>Bartosz Gorczyca „Wirtualne uderzenie”</li>\n<li>Igor Myszkiewicz „Wińsko”</li>\n<li>Maciej Dobrowolski „Wolna”</li>\n</ul>\n<p>Nagrodę Grand Prix zdobyło opowiadanie Filipa Kopija „Śmierć Michaiła Andriejewicza”, opowiadania Wojciecha Kowalskiego „Rok 1388” i „Dwadzieścia trzy sążnie predestynacji” Alicji Tempłowicz uhonorowane zostały Nagrodami Kapituły.</p>\n<p>Książkę wydano przy współpracy Fabryki Reklamy SANDMEDIA i Galerii Twórców Galera.</p>\n<p>Zrealizowano przy pomocy finansowej Miasta Zielona Góra i Urzędu Marszałkowskiego Województwa Lubuskiego.</p>\n",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/6.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/6-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK",
+          "soldIndividually": false
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

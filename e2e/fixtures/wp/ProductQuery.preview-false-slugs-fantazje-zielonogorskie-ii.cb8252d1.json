@@ -1,0 +1,43 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 2455,
+          "slug": "fantazje-zielonogorskie-ii",
+          "name": "Fantazje Zielonogórskie II",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-ii/",
+          "description": "<h3 class=\"wp-block-heading\">Tom II</h3>\n<div class=\"wp-block-image\">\n<figure class=\"alignright size-full\"><img fetchpriority=\"high\" decoding=\"async\" class=\"wp-image-64\" src=\"https://fantazje.adastra.zgora.pl/wp-content/uploads/2020/04/fz2.gif\" alt=\"\" width=\"200\" height=\"284\"></figure>\n</div>\n<p>W roku 2012 Odbyła się druga edycja konkursu, której efektem był kolejny tom antologii. W jury zasiedli: dr Bogdan Trocha (UZ), Eugeniusz Kurzawa (Gazeta Lubuska) i Kazimierz Kielarski (Ad Astra). Redakcji tomu dokonał Maciej Dobrowolski, korekty Anna Cejmer-Kamińska, składu Mamert Janion, a ilustracje wykonał Igor Myszkiewicz.</p>\n<p>Zawartość tomu:</p>\n<ul>\n<li>Michał Organiściak „Czarna”</li>\n<li>Michał Peroń „O Tym, co w górze”</li>\n<li>Anna Bobrowicz „O młodzieńcu Bergiem zwanym i Zielonej Pani”</li>\n<li>Anna Hrycyszyn „Manifest”</li>\n<li>Marek Starosta „Grona życia”</li>\n<li>Anna Wołosiak-Tomaszewska „Mój Kapitanie”</li>\n<li>Łukasz Szteleblak „Niedzisiejsi”</li>\n<li>Adriana Siess „Winobranie”</li>\n<li>Maciej Kaźmierczak „Bezsilność”</li>\n<li>Robert Narkun „Śmierć elfa”</li>\n</ul>\n<p>Poza konkursem (teksty członków ZKF Ad Astra):</p>\n<ul>\n<li>Igor Myszkiewicz „Korowód”</li>\n<li>Joanna „Gompka” Błaszyk „Może to dziś?”</li>\n<li>Konrad Rataj „Ardens Chrome”</li>\n<li>Zbigniew Kulczycki „Pióra”</li>\n</ul>\n<p>Nagrodę Grand Prix zdobyło opowiadanie Michała Organiściaka&nbsp;<a href=\"http://fantazje.adastra.zgora.pl/wp-content/uploads/sites/2/2020/04/Michal-Organisciak-Czarna.pdf\">(przeczytaj opowiadanie)</a>.</p>\n<p>Książkę wydano przy współpracy Fabryki Reklamy IBI i Galerii Twórców Galera.</p>\n<p>Patronat medialny: Gazeta Wyborcza</p>\n",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/2.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/2-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK",
+          "soldIndividually": false
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

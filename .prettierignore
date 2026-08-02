@@ -3,3 +3,9 @@ bun.lock
 .next
 playwright-report
 test-results
+
+# `bun run lqip` writes these; JSON.stringify and the formatter disagree about
+# where the arrays wrap, so every run would otherwise leave a diff that parses
+# byte-identical.
+src/content/img-manifest.json
+src/content/lqip/**/*.json

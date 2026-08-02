@@ -1,0 +1,43 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 3199,
+          "slug": "wsparcie-klubu-1-zl",
+          "name": "Wsparcie Klubu 1 zł",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/wsparcie-klubu-1-zl/",
+          "description": "<p>Cegiełka wspierająca <strong>Zielonogórski Klub Fantastyki „Ad Astra” </strong>o wartości 1 zł.</p>\n",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/wsparcie-1-zl.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/wsparcie-1-zl-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 500,
+              "height": 500
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "wsparcie",
+                "name": "wsparcie"
+              }
+            ]
+          },
+          "price": "1,00&nbsp;zł",
+          "stockStatus": "IN_STOCK",
+          "soldIndividually": true
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

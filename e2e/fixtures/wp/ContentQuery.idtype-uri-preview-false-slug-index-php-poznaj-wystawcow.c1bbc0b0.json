@@ -1,0 +1,20 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "page",
+      "databaseId": 1359,
+      "date": "2023-06-25T20:24:31",
+      "title": "POZNAJ WYSTAWCÓW",
+      "content": null,
+      "featuredImage": null
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

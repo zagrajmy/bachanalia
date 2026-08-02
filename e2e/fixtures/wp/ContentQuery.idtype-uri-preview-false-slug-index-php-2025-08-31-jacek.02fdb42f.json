@@ -1,0 +1,29 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2724,
+      "date": "2025-08-31T21:10:41",
+      "title": "Jacek Komuda",
+      "content": "\n<p class=\"wp-block-paragraph\">Jacek Komuda to zawodowy pisarz historyczny i jednocześnie historyk z wykształcenia, zafascynowany najtragiczniejszymi zakrętami dziejów Polski i dawnej Rzeczypospolitej szlacheckiej. Autor czternastu powieści historycznych, z których najsławniejsze to cykl „Samozwaniec”, opowiadający o polskiej wyprawie na Moskwę na początku XVII wieku. A także powieści „Hubal” opowiadającej o losach legendarnego zagończyka i dowódcy kawalerii, majora Henryka Dobrzańskiego, który we wrześniu 1939 roku nie złożył broni po przegranej wojnie. Jest także twórcą gier komputerowych, z których wymienić należy przede wszystkim pierwszą część „Wiedźmina”, „Earth 2160”, „Bulletstorm” i „Hellish Quart”, do których napisał scenariusze, dialogi i elementy designu.</p>\n\n\n\n<p class=\"wp-block-paragraph\">Jacek Komuda przede wszystkim ślubował wierność prawdzie historycznej, dlatego nie stroni od brutalnych, mocnych kart naszych dziejów. Inaczej niż Sienkiewicz woli pisać ku przestrodze niż ku pokrzepieniu serc. Wskrzesza dawne obyczaje, postacie, zapomniane miejsca. Jego bohaterowie to zwykle niepoprawni politycznie ludzie, miotani namiętnościami, nie zaś papierowe ideały. Autor jako jeden z nielicznych ludzi pióra uczestniczy w prawdziwych rekonstrukcjach historycznych jako XVII-wieczny polski husarz, pancerny i Lisowczyk, poznając w ten sposób realia dawnego pola walki. Na Potędze, własnej ukochanej klaczy przejechał pół Polski, kawałek Ukrainy i jeszcze większy Bieszczadów, razem z Pogórzem Przemyskim.&nbsp;</p>\n\n\n\n<p class=\"wp-block-paragraph\">Nakładem Fabryki Słów ukazały się także takie powieści jak „<em>Banita”</em> &#8211; mroczna i zaskakująca historia o miłości szlachcica – rębajły Jacka Dydyńskiego i pięknej kurtyzany, a także „<em>Wilcze gniazdo”</em>. „<em>Bohun”</em> poświęcony największej klęsce Rzeczpospolitej w wojnach z Kozakami, „<em>Czarna szabla”</em> i „<em>Diabeł Łańcucki”</em> rozgrywające się na południowo-wschodnich kresach Rzeczypospolitej. Z kolei „<em>Galeony Wojny”</em> to przedstawicielka literatury marynistycznej ukazująca walki polskiej floty za czasów Zygmunta III Wazy. Starszymi pozycjami autora są: <em>Villon:</em> <em>Imię Bestii</em> (2005) i <em>Villon: Herezjarcha</em> (2008); zbiory opowiadań  o Franciszku Villonie, francuskim poecie wyklętym żyjącym w XV wieku.</p>\n",
+      "featuredImage": {
+        "node": {
+          "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/jacek_komuda_bf25.jpg",
+          "altText": "",
+          "mediaDetails": {
+            "width": 1024,
+            "height": 683
+          }
+        }
+      }
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

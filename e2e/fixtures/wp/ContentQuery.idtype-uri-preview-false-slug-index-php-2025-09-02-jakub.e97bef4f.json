@@ -1,0 +1,29 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2806,
+      "date": "2025-09-02T23:06:04",
+      "title": "dr Jakub Walicki",
+      "content": "\n<p class=\"wp-block-paragraph\">Doktor filozofii, absolwent Uniwersytetu Wrocławskiego, specjalizujący się w hermeneutyce i interpretacjonizmie. Autor książek &#8222;Ogród na szczycie wulkanu. Sceptyczne rozważania o szczęściu&#8221; (2022), &#8222;Zmięte kartki papieru&#8221; (2023) oraz – wspólnie z dr. Jackiem Sobotą z Uniwersytetu Warmińsko-Mazurskiego w Olsztynie – &#8222;Jerzego i Andrzeja Żuławskich ekspedycja w kierunku prawdy&#8221; (2025). Pasjonat kina, twórca podcastu &#8222;Przemyślane Kadry&#8221; (<a href=\"https://l.facebook.com/l.php?u=https%3A%2F%2Fprzemyslanekadry.pl%2F%3Ffbclid%3DIwZXh0bgNhZW0CMTAAAR6DpJAMyk1V8C4fIIkiaxTc0vB913j0DoMnmNBljE3SaKwdE8g3R4tEork5QA_aem_3Eyqjpr7a77MGSyGLAMu1g&amp;h=AT1mFyjvXDhwh0asKkO5f0iumCufaQRRERWt3-L82AUsfIHhwPaDqkRolwvd92pnys6fxTLiogunyx1C3MB89t38XLBWPR_-easbDsY2J-3f0f2tHqkq07YlmwFzHhj5vOYb5aR0b7seepiw&amp;__tn__=-UK-R&amp;c[0]=AT0XQ52S1m695s_6KJGTE0vRjevrMuRcETK1xezHbSgsDEZRXIGzJKzA7ROWpllj0NKkrorA5vJU6iH-7wUABzkzO01579ztU-pNfvxa5r3ukYn_yH3j5lphjDLIpYmRk6mLssCJoinQrGyMNChaOfnw29EoQtG_lv6AsxNVzzeJHkgBiy1NeuHZRRfj41RWFftgACEh0LyT7cwQdgvVhf9Nzw\" target=\"_blank\" rel=\"noreferrer noopener\">https://przemyslanekadry.pl/</a>), w którym wraz z gośćmi omawia filozoficzne zagadnienia na przykładach filmowych. Na co dzień wykładowca w Instytucie Zarządzania Uniwersytetu Pomorskiego w Słupsku, gdzie prowadzi zajęcia z kreatywnego pisania, interpretacji reklam i storytellingu</p>\n",
+      "featuredImage": {
+        "node": {
+          "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/jakub_walicki_bf25.jpg",
+          "altText": "",
+          "mediaDetails": {
+            "width": 929,
+            "height": 1024
+          }
+        }
+      }
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

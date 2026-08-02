@@ -1,0 +1,29 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2837,
+      "date": "2025-09-08T22:02:03",
+      "title": "Piotr W. Cholewa",
+      "content": "\n<p class=\"wp-block-paragraph\">Matematyk, tłumacz, działacz fandomu.</p>\n\n\n\n<p class=\"wp-block-paragraph\">Ukończył studia matematyczne i obronił doktorat na Uniwersytecie Śląskim. Pracował w Instytucie Matematyki UŚ do 2000 roku.</p>\n\n\n\n<p class=\"wp-block-paragraph\">Działa w Śląskim Klubie Fantastyki od początku jego istnienia (był skarbnikiem, wiceprezesem, członkiem Zarządu, wydawał fanzin). Był członkiem zarządu w Europejskim Stowarzyszeniu SF, gdzie pełnił (w różnej kolejności) funkcje prezesa, wiceprezesa i skarbnika. Także były prezes i wiceprezes Związku Stowarzyszeń „Fandom Polski”.</p>\n\n\n\n<p class=\"wp-block-paragraph\">Jako tłumacz debiutował w fanzinach. Pierwszym oficjalnym tłumaczeniem było opowiadanie &#8222;Meteor&#8221; Johna Wyndhama (1983 r.). Najbardziej znany jest z przekładu książek Terry’ego Pratchetta o świecie Dysku, cyklu Orsona Scotta Carda o Enderze, trylogii Ciągu Williama Gibsona czy cyklu Amber Rogera Zelazny’ego.</p>\n\n\n\n<p class=\"wp-block-paragraph\">Wielokrotnie nagradzany za działalność fanowską oraz tłumaczenia (w tym nagrodą Stowarzyszenia Tłumaczy Polskich).</p>\n",
+      "featuredImage": {
+        "node": {
+          "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/piotr_w_cholewa_bf25.jpg",
+          "altText": "",
+          "mediaDetails": {
+            "width": 642,
+            "height": 518
+          }
+        }
+      }
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

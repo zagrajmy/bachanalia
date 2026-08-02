@@ -1,0 +1,43 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 2434,
+          "slug": "fantazje-zielonogorskie-xi",
+          "name": "Fantazje Zielonogórskie XI",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-xi/",
+          "description": "<p>W roku 2021 odbyła się jedenasta z kolei edycja konkursu, której efektem był kolejny tom antologii. Tym razem w jury zasiedli: Igor Myszkiewicz, Waldemar Gruszczyński, Maciej Dobrowolski, Zbigniew Kulczycki oraz Arkadiusz Sobański. Redakcji tomu dokonał Maciej Dobrowolski, korekty Arlena A. Łobodzińska, składu Mamert Janion, a ilustracje wykonał Igor Myszkiewicz.&nbsp;</p>\n<p>Zawartość tomu:&nbsp;</p>\n<ul>\n<li>Michał Sobociński „Cudzy przede mną&nbsp;”</li>\n<li>Adam Raglan „Wampir Grünbergu”</li>\n<li>Kamila Szmigiel „Ene mene&nbsp;”</li>\n<li>Michał Wyzga „Grünberg 1945”</li>\n<li>Marcin Opolski „Tego nie ma”</li>\n<li>Michał Figoń&nbsp;„Koci Spleen”</li>\n<li>Tomasz Ciastoń „Lipowe Wzgórze”</li>\n<li>Andrzej Sienkiewicz „Hallo Houston, tu Zielona Góra”</li>\n<li>Mieczysław Bonisławski „Nędzne nadzieje”</li>\n<li>Katarzyna Kamińska „Mały kosmos”</li>\n</ul>\n<p>Michał Wyzga swoim opowiadaniem „Grünberg 1945” wygrał XI edycję konkursu i zdobył nagrodę Grand Prix! Oprócz wyłonienia zwycięzcy kapituła przyznała wyróżnienia dwóm innym pracom, które jej zdaniem zaprezentowały bardzo wysoki poziom: „Tego nie ma” autorstwa Marcina Opolskiego oraz „Koci Spleen” od Michała Figonia.</p>\n<p>Książkę wydano przy współpracy Fabryki Reklamy SANDMEDIA i Galerii Twórców Galera.&nbsp;</p>\n<p>Zrealizowano przy pomocy finansowej Miasta Zielona Góra.</p>\n",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/11.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/11-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 703,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK",
+          "soldIndividually": false
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 import { bypass, http, HttpResponse, passthrough } from "msw";
 
-import { addLine, cartOf, cartResponse, removeLines, setLineQuantity } from "./cart";
-import { readFixture, readSnapshots, writeFixture } from "./fixtures";
+import { addLine, cartResponse, removeLines, setLineQuantity } from "./cart";
+import { readFixture, writeFixture } from "./fixtures";
 
 export type Mode = "replay" | "record";
 
@@ -18,15 +18,28 @@ const PIXEL = Buffer.from(
   "base64",
 );
 
-function wordpressHost() {
+/**
+ * Both, because the uploads a fixture points at keep the real hostname even
+ * when the API URL is aimed at somewhere unroutable to prove the suite never
+ * opens a socket.
+ */
+function wordpressHosts() {
+  const hosts: string[] = [];
+
   try {
-    return new URL(String(process.env.NEXT_PUBLIC_WORDPRESS_API_URL)).host;
+    hosts.push(new URL(String(process.env.NEXT_PUBLIC_WORDPRESS_API_URL)).host);
   } catch {
-    return "";
+    /** Unset or malformed; the hostname below may still match. */
   }
+
+  if (process.env.NEXT_PUBLIC_WORDPRESS_API_HOSTNAME) {
+    hosts.push(process.env.NEXT_PUBLIC_WORDPRESS_API_HOSTNAME);
+  }
+
+  return hosts;
 }
 
-const isWordPress = (url: URL) => url.host === wordpressHost();
+const isWordPress = (url: URL) => wordpressHosts().indexOf(url.host) !== -1;
 
 /** Facebook's signed CDN URLs, which `fetchFacebookNews` HEADs before rendering. */
 const isFacebookCdn = (url: URL) => /(^|\.)fbcdn\.net$/.test(url.hostname);
@@ -104,12 +117,6 @@ function cartReply(request: Request, operation: Operation) {
   const input = (operation.variables.input ?? {}) as { [key: string]: any };
 
   switch (operation.name) {
-    case "CheckoutUrlQuery":
-      return {
-        headers: token,
-        body: { data: { customer: { checkoutUrl: readSnapshots().checkoutUrl ?? null } } },
-      };
-
     case "AddToCartMutation":
       addLine(
         token,
@@ -140,8 +147,6 @@ function cartReply(request: Request, operation: Operation) {
 
     default:
       /** `CartQuery`. An unknown token is a cart the server forgot: empty. */
-      void cartOf(token);
-
       return { headers: token, body: { data: { cart: cartResponse(token) } } };
   }
 }

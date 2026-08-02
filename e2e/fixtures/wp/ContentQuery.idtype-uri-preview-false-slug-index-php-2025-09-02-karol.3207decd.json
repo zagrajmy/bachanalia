@@ -1,0 +1,29 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2809,
+      "date": "2025-09-02T23:08:47",
+      "title": "dr Karolina Rożko",
+      "content": "\n<p class=\"wp-block-paragraph\">Pracuje w Instytucie Astronomii im. Prof. J. Gila na Uniwersytecie Zielonogórskim. Głównym polem jej naukowych zainteresowań jest astrofizyka pulsarów, ale również bardzo lubi angażować się w popularyzowanie nauki. Z zainteresowań pozanaukowych uwielbia fantastykę w każdej postaci: od fantasy przez realizm magiczny, aż po space opery. Poza tym lubi grać w planszówki oraz gry fabularne.</p>\n",
+      "featuredImage": {
+        "node": {
+          "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/karolina_rozko_bf25-scaled.jpg",
+          "altText": "",
+          "mediaDetails": {
+            "width": 1920,
+            "height": 2560
+          }
+        }
+      }
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

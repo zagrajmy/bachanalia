@@ -1,0 +1,29 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2940,
+      "date": "2025-09-14T20:51:40",
+      "title": "Akademia Magii Ramesville",
+      "content": "\n<p class=\"wp-block-paragraph\">Akademia Magii Ramesville powstała 2 kwietnia 2004 roku i została stworzona przez Jamesa Surville&#8217;a, który w Świecie Magii nauczał Zaklęć i Uroków oraz Smokologii. Niestety na ówczesnej stronie nie ma prawie wcale śladów historii szkoły z tych lat, bo sięgają one tylko końca 2009 roku.<br>Szkoła była na różnych serwerach (np.: yoyo.pl albo boo.pl) oraz forach (jedno z nich: http://ramesville.mojeforum.net).</p>\n\n\n\n<p class=\"wp-block-paragraph\">Jamesowi Surville&#8217;a w prowadzeniu szkoły pomagała Paulina Black, która pełniła rolę webmastera.<br>Jednak James w kwietniu 2009 roku musiał odejść ze ŚM. Wtedy szkołę przejęła Ayame Tsukino, która powołała Mary Picket na dyrektora. Niestety Ayame także musiała pozostawić Świat Czarów, wtedy Mary awansowała na głównego dyrektora i do pomocy wybrała sobie Larissę White.<br>Obydwie rozsławiły szkołę w Świecie Magii, zyskała ona szacunek pośród innych placówek.</p>\n\n\n\n<p class=\"wp-block-paragraph\">Wszystko tutaj opisane to tylko początki tworzenia i kształtowania Akademii. Szkoła przeszła bardzo wiele. Zarządzało nią wielu dyrektorów, nauczało w niej wielu świetnych profesorów oraz nauczyła ona jak korzystać z magii wielu młodych adeptów. Wszystkie informacje były trudne do zdobycia, wymagały kontaktów z wieloma czarodziejami, którzy odeszli już ze świata magii, w tworzeniu historii wiele pomogły stare newsy, forum Jamesa oraz niektórzy poprzedni dyrektorzy i nauczyciele.</p>\n",
+      "featuredImage": {
+        "node": {
+          "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/ramesville_bf25.jpg",
+          "altText": "",
+          "mediaDetails": {
+            "width": 920,
+            "height": 518
+          }
+        }
+      }
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

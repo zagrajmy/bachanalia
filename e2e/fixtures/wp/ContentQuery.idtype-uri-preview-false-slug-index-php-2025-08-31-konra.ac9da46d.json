@@ -1,0 +1,20 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2730,
+      "date": "2025-08-31T21:26:08",
+      "title": "Konrad „Biały” Klepacki",
+      "content": "\n<p class=\"wp-block-paragraph\">W czasach, gdy technologia depcze po piętach fantastyce naukowej, Konrad korzysta z jednego i drugiego, by &#8222;atakować&#8221; pojawiające się wyzwania. Jako innowator (i trochę nerd ) projektuje m.in. systemy sterowania satelitami dla Pentagonu czy bezzałogowe łodzie do badań polarnych. Będąc zaś zawodowo zaangażowany w obszar ochrony klimatu, z pasją organizuje zespoły realizujące wielkoskalowe projekty redukcji emisji setek tysięcy ton CO2.<br>Na Bachanaliach rozmawia m.in. rewolucji AI, jaka rozgrywa się na naszych oczach oraz o tajemniczym Molochu który przenika cywilizację.</p>\n",
+      "featuredImage": null
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

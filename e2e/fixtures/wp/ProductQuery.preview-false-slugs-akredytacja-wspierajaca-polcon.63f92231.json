@@ -1,0 +1,83 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 3163,
+          "slug": "akredytacja-wspierajaca-polcon",
+          "name": "Akredytacja wspierająca Polcon",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/akredytacja-wspierajaca-polcon/",
+          "description": "<p>Akredytacja wspierająca Polcon 2026</p>\n<p>Uprawnia do wzięcia udziału w zdalnym głosowaniu na <b>Nagrodę Fandomu Polskiego imienia Janusza A. Zajdla i otrzymania antologii<br />\n</b><br />\nNie uprawnia do wzięcia udziału w konwencie Bachanalia Fantastyczne/Polcon 2026</p>\n",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/polcon.png",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/polcon-150x150.png",
+            "altText": "",
+            "mediaDetails": {
+              "width": 1000,
+              "height": 1001
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "akredytacje",
+                "name": "akredytacje"
+              }
+            ]
+          },
+          "price": "25,00&nbsp;zł - 45,00&nbsp;zł",
+          "stockStatus": "IN_STOCK",
+          "soldIndividually": false,
+          "attributes": {
+            "nodes": [
+              {
+                "name": "chce-otrzymac-antologie",
+                "label": "Chcę otrzymać antologie"
+              }
+            ]
+          },
+          "variations": {
+            "nodes": [
+              {
+                "databaseId": 3165,
+                "name": "Akredytacja wspierająca Polcon - BEZ ANTOLOGII NAGRODY IM. JANUSZA A. ZAJDLA",
+                "price": "25,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "chce-otrzymac-antologie",
+                      "value": "BEZ ANTOLOGII NAGRODY IM. JANUSZA A. ZAJDLA"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 3164,
+                "name": "Akredytacja wspierająca Polcon - Z ANTOLOGIĄ NAGRODY IM. JANUSZA A. ZAJDLA",
+                "price": "45,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "chce-otrzymac-antologie",
+                      "value": "Z ANTOLOGIĄ NAGRODY IM. JANUSZA A. ZAJDLA"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

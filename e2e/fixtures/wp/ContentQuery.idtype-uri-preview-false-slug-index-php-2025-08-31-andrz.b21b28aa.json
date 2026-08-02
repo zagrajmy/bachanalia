@@ -1,0 +1,29 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2744,
+      "date": "2025-08-31T21:52:12",
+      "title": "dr Andrzej Świrkowski",
+      "content": "\n<p class=\"wp-block-paragraph\">Japonista, wykładowca w Zakładzie Japonistyki na Uniwersytecie imienia Adama Mickiewicza w Poznaniu, członek Stowarzyszenia Tłumaczy Literatury Jego zainteresowania badawcze i tłumaczeniowe skupiają się na przedwojennej literaturze japońskiej z pogranicza kryminału, grozy i fantastyki. Przełożył między innymi utwory Edogawy Ranpo, Yumeno Kyūsaku oraz Higashino Keigo.</p>\n\n\n\n<p class=\"wp-block-paragraph\"></p>\n",
+      "featuredImage": {
+        "node": {
+          "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/andrzej_swirkowski_bf25.png",
+          "altText": "",
+          "mediaDetails": {
+            "width": 561,
+            "height": 499
+          }
+        }
+      }
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

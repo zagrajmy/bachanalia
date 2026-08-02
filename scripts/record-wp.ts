@@ -23,7 +23,7 @@ import { CartQuery } from "../src/queries/cart/CartQuery";
 import { CheckoutUrlQuery } from "../src/queries/cart/CheckoutUrlQuery";
 import { RemoveItemsFromCartMutation } from "../src/queries/cart/RemoveItemsFromCartMutation";
 import { UpdateItemQuantitiesMutation } from "../src/queries/cart/UpdateItemQuantitiesMutation";
-import { readSnapshots, writeSnapshots, type CartSnapshots } from "../mocks/fixtures";
+import { writeFixture, writeSnapshots, type CartSnapshots } from "../mocks/fixtures";
 import { footerNav, primaryNav } from "../src/components/Globals/siteNav";
 
 /** Its own output directory, so a `bun run dev` in this repo keeps working. */
@@ -52,6 +52,8 @@ const EXTRA_ROUTES = [
   "/produkt/akredytacja-3-dniowa/",
   /** shop.spec asserts this 404s rather than rendering an empty page. */
   "/produkt/nie-ma-takiego-produktu/",
+  /** And the 404 page itself has chrome worth testing. */
+  "/nie-ma-takiej-strony/",
 ];
 
 /** navigation.spec walks every destination the header and footer declare. */
@@ -85,7 +87,7 @@ async function waitForServer() {
  * gets recorded rather than a hand-picked few.
  */
 async function linksFrom(path: string, pattern: RegExp) {
-  const html = await (await fetch(`${ORIGIN}${path}`)).text();
+  const html = await visit(path);
   const hrefs: string[] = [];
   const anchors = /href="(\/[^"]*)"/g;
   let match = anchors.exec(html);
@@ -98,31 +100,41 @@ async function linksFrom(path: string, pattern: RegExp) {
   return hrefs;
 }
 
+/**
+ * The body has to be drained, not just awaited. Next streams a route's HTML, so
+ * `fetch` resolves on the headers while the render — and every WordPress query
+ * behind it — is still in flight. Walking on at that point fires the whole crawl
+ * at a rate-limited server at once and then kills the server mid-render.
+ */
+async function visit(route: string) {
+  const response = await fetch(`${ORIGIN}${route}`, { redirect: "manual" });
+  const body = await response.text();
+
+  process.stdout.write(`  ${response.status} ${route}\n`);
+
+  return body;
+}
+
 async function recordReads() {
   const seeds = EXTRA_ROUTES.concat(navRoutes).filter(
     (route, index, all) => all.indexOf(route) === index,
   );
 
-  for (const route of seeds) {
-    process.stdout.write(`  ${route}\n`);
-    await fetch(`${ORIGIN}${route}`, { redirect: "manual" });
-  }
+  for (const route of seeds) await visit(route);
 
   const followed = (await linksFrom("/goscie/", /^\/\d{4}\/\d{2}\/\d{2}\//)).concat(
     await linksFrom("/sklep/", /^\/produkt\//),
   );
 
-  for (const route of followed) {
-    process.stdout.write(`  ${route}\n`);
-    await fetch(`${ORIGIN}${route}`, { redirect: "manual" });
-  }
+  for (const route of followed) await visit(route);
 }
 
 type WooReply = { data?: any; errors?: { message: string }[] };
 
 let session = "";
 
-async function woo(query: string, variables: { [key: string]: unknown }): Promise<WooReply> {
+/** The reply exactly as WooCommerce sent it, `errors` array and all. */
+async function wooRaw(query: string, variables: { [key: string]: unknown } = {}) {
   const response = await fetch(GRAPHQL, {
     method: "POST",
     headers: {
@@ -135,7 +147,11 @@ async function woo(query: string, variables: { [key: string]: unknown }): Promis
   const refreshed = response.headers.get("woocommerce-session");
   if (refreshed) session = refreshed;
 
-  const body = (await response.json()) as WooReply;
+  return (await response.json()) as WooReply;
+}
+
+async function woo(query: string, variables: { [key: string]: unknown }): Promise<WooReply> {
+  const body = await wooRaw(query, variables);
 
   if (body.errors?.length) throw new Error(body.errors.map((e) => e.message).join("; "));
 
@@ -172,7 +188,7 @@ async function variationToBuy() {
 
 async function recordCart() {
   const { productId, variationId } = await variationToBuy();
-  const snapshots: CartSnapshots = { ...readSnapshots(), carts: {} };
+  const snapshots: CartSnapshots = { empty: undefined, carts: {} };
   const key = (quantity: number) => `${productId}:${variationId}:${quantity}`;
 
   const added = await woo(print(AddToCartMutation), {
@@ -198,8 +214,12 @@ async function recordCart() {
     snapshots.carts[key(quantity)] = updated.data.updateItemQuantities.cart;
   }
 
-  const checkout = await woo(print(CheckoutUrlQuery), {});
-  snapshots.checkoutUrl = checkout.data?.customer?.checkoutUrl ?? null;
+  /**
+   * Asked with something in the cart, which is the only state it matters in,
+   * and saved over whatever the empty-cart crawl recorded.
+   */
+  const checkout = await wooRaw(print(CheckoutUrlQuery));
+  writeFixture("CheckoutUrlQuery", {}, checkout);
 
   const emptied = await woo(print(RemoveItemsFromCartMutation), { input: { keys: [itemKey] } });
   snapshots.empty = emptied.data.removeItemsFromCart.cart;
@@ -211,7 +231,9 @@ async function recordCart() {
   writeSnapshots(snapshots);
 
   console.log(`  cart snapshots for product ${productId}, variation ${variationId}`);
-  console.log(`  checkoutUrl: ${snapshots.checkoutUrl ?? "null (the till is closed)"}`);
+  console.log(
+    `  checkoutUrl: ${(checkout as WooReply).data?.customer?.checkoutUrl ?? "absent — the till is closed"}`,
+  );
 }
 
 async function main() {
@@ -219,14 +241,17 @@ async function main() {
     throw new Error("NEXT_PUBLIC_WORDPRESS_API_URL is unset — run `vercel env pull .env.local`");
   }
 
-  /** Next's dev fetch cache would answer the crawl instead of WordPress. */
-  rmSync(join(process.cwd(), DIST_DIR, "cache", "fetch-cache"), { recursive: true, force: true });
+  /**
+   * Next's dev cache lives under `<distDir>/dev` and would answer the whole
+   * crawl from a previous run, recording nothing at all.
+   */
+  rmSync(join(process.cwd(), DIST_DIR), { recursive: true, force: true });
 
   console.log(`recording from ${process.env.NEXT_PUBLIC_WORDPRESS_API_URL} — this is slow`);
 
   const server = spawn("bun", ["run", "next", "dev", "--port", String(PORT)], {
     env: { ...process.env, MOCK_WP: "record", NEXT_DIST_DIR: DIST_DIR },
-    stdio: ["ignore", "ignore", "inherit"],
+    stdio: ["ignore", "inherit", "inherit"],
   });
 
   try {
@@ -240,6 +265,13 @@ async function main() {
     console.log("opening one guest cart on the live shop — no order is created");
     await recordCart();
   }
+
+  /**
+   * The dev cache this run built is full of live WordPress answers. Leaving it
+   * behind would let the next `bun run e2e:server` serve them instead of the
+   * fixtures, and the suite would look mocked while it was not.
+   */
+  rmSync(join(process.cwd(), DIST_DIR), { recursive: true, force: true });
 
   console.log("done — review `git diff e2e/fixtures/wp` before committing");
 }

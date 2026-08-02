@@ -1,0 +1,29 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2727,
+      "date": "2025-08-31T21:17:59",
+      "title": "Justyna Hankus",
+      "content": "\n<p class=\"wp-block-paragraph\">Projektantka. Ilustratorka. Pisarka. Absolwentka ASP w Krakowie na Wydziale Grafiki.<br>Z pochodzenia żywiecka góralka, z wyboru warszawianka. Na co dzień pracuje w agencji marketingu medycznego – jest projektantką graficzną. Wielokrotnie wyróżniana (Festiwal Góry Literatury, Empik Go, Nowy Dokument Tekstowy [2022], Festiwal Stacja Literatura 2020, 2021, Małe Formy Literackie 2020, Bajka i Papier 2019, Studium Literackie Uniwersytetu Jagiellońskiego w konkursie Pamiętam, że… 2015)<br>i nominowana do nagród: Conrada 2023 za „Grisaille o zwykłym osiedlu”, do nagrody im. Macieja Parowskiego 2023, 2024, do nagrody Fandomu Polskiego im. J. A. Zajdla, do nagrody Literackiej im. J. Żuławskiego oraz Nowej Fantastyki – za „Dwie i pół duszy. Folk Noir”.<br>Za „Dwie i pół duszy. Folk Noir” otrzymała w 2024 r: Nagrodę PYRKON dla najmroczniejszej powieści roku oraz Nagrodę SLAVNI Złoty Płomień Kultury. Laureatka Prix Chrysalide, nagroda European Science Fiction Society, 2025.<br>Prywatnie żona i mama dwóch synów, zaklinaczka roślin i kompulsywna producentka nikomu niepotrzebnego rękodzieła. Miłośniczka mrocznych i gęstych, gadających lasów.</p>\n",
+      "featuredImage": {
+        "node": {
+          "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/justyna_hankus_bf25.jpg",
+          "altText": "",
+          "mediaDetails": {
+            "width": 1654,
+            "height": 2480
+          }
+        }
+      }
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

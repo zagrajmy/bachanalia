@@ -1,0 +1,43 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 2443,
+          "slug": "fantazje-zielonogorskie-viii",
+          "name": "Fantazje Zielonogórskie VIII",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-viii/",
+          "description": "<h3 class=\"wp-block-heading\">Tom VIII</h3>\n<div class=\"wp-block-image\">\n<figure class=\"alignright size-full\"><img fetchpriority=\"high\" decoding=\"async\" class=\"wp-image-62\" src=\"https://fantazje.adastra.zgora.pl/wp-content/uploads/2020/04/antologia_8.jpg\" alt=\"\" width=\"200\" height=\"287\"></figure>\n</div>\n<p>&nbsp;</p>\n<p>W roku 2018 odbyła się ósma edycja konkursu, której efektem był kolejny tom antologii. W jury zasiedli: Igor Myszkiewicz, Waldemar Gruszczyński, Maciej Dobrowolski i Zbigniew Kulczycki oraz Arkadiusz Sobański. Redakcji tomu dokonał Maciej Dobrowolski, korekty Arlena A. Łobodzińska, składu Mamert Janion, a ilustracje wykonał Igor Myszkiewicz.</p>\n<p>Zawartość tomu:</p>\n<ul>\n<li>Marta Magdalena Lasik „Kwestia czasu”</li>\n<li>Magdalena Anna Sakowska „Małodobra”</li>\n<li>Barbara Zambrzycka „Wszyscy do odstrzału”</li>\n<li>Krzysztof Gniady „Nieustraszeni pogromcy wilkołaków”</li>\n<li>Olaf Pajączkowski „Powrót”</li>\n<li>Michał Figoń „PRL Noire”</li>\n<li>Michał Peroń „Malarz”</li>\n<li>Paweł Wącławski „Nieśmiertelne miasto”</li>\n<li>Agnieszka Żak „Weźcie los w swoje ręce”</li>\n<li>Marek Palutkiewicz „Pokolenie”</li>\n<li>Wojciech Kowalski „Ben Hur 2384”</li>\n</ul>\n<p>Poza konkursem:</p>\n<ul>\n<li>Igor Myszkiewicz „Marten”</li>\n<li>Jakub Kopieniak „Dziewiąty kwietnia”</li>\n<li>Erwin Stabrowski „Senoff”</li>\n</ul>\n<p>Płock – Miasto pełne tajemnic:</p>\n<ul>\n<li>Bartłomiej Szumski „Grobowiec ostatniego z Asów”</li>\n</ul>\n<p>Nagrodę Grand Prix zdobyło opowiadanie Marty Magdaleny Lasik – „Kwestia czasu”. Natomiast opowiadania „Małodobra” która wyszła spod pióra Magdaleny Anny Sakowskiej oraz „Wszyscy do odstrzału” nadesłany przez Barbarę Zambrzycką uhonorowane zostały Nagrodami Kapituły.</p>\n<p>Książkę wydano przy współpracy Fabryki Reklamy SANDMEDIA i Galerii Twórców Galera.</p>\n<p>Zrealizowano przy pomocy finansowej Miasta Zielona Góra.</p>\n",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/8.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/8-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK",
+          "soldIndividually": false
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

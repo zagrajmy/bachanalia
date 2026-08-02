@@ -1,0 +1,43 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 2458,
+          "slug": "fantazje-zielonogorskie-i",
+          "name": "Fantazje Zielonogórskie I",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-i/",
+          "description": "<h3 class=\"wp-block-heading\">Tom I</h3>\n<div class=\"wp-block-image\">\n<figure class=\"alignright size-full\"><img fetchpriority=\"high\" decoding=\"async\" class=\"wp-image-63\" src=\"https://fantazje.adastra.zgora.pl/wp-content/uploads/2020/04/fz1.gif\" alt=\"\" width=\"200\" height=\"284\"></figure>\n</div>\n<p>&nbsp;</p>\n<p>Wiosną 2011 r. Zielonogórski Klub Fantastyki Ad Astra ogłosił ogólnopolski konkurs literacki na opowiadanie fantastyczne o tematyce zielonogórskiej. Napłynęło 40 prac z całego kraju. Wyboru dokonało jury w składzie: dr Bogdan Trocha (Uniwersytet Zielonogórski), Krzysztof Koziołek (pisarz) i Maciej Dobrowolski (Gazeta Lubuska). Spośród ponad 40 nadesłanych z całej Polski prac w książce znalazły się następujące utwory:</p>\n<ul>\n<li>Monika Glibowska „Śmierć zielonego jokera”</li>\n<li>Magdalena Herbert „Dziedzictwo”</li>\n<li>Małgorzata Kobylak (utwór bez tytułu)</li>\n<li>Czesław Markiewicz „Jaskółcza – Ogrodowa Brunatny zapach kamfory”</li>\n<li>Igor Myszkiewicz „Bezpowrotnie”</li>\n<li>Robert Narkun „Dziedzictwo Beuchelta”</li>\n<li>Michał Organiściak „Pradzieje Góry Zielonej”</li>\n<li>Konrad Rataj „Nie jestem stąd”</li>\n<li>Alfred Siatecki „Będzie koniec świata w Grünbergu”</li>\n<li>Sławek Stawarczyk „Podróż”</li>\n<li>Andrzej Janion „Baśń o starym winie” – fragment dramatu o powstaniu miasta Zielonej Góry</li>\n</ul>\n<p>Nagrodę Grand Prix zdobyło opowiadanie Małgorzaty Kobylak&nbsp;<a href=\"http://fantazje.adastra.zgora.pl/wp-content/uploads/sites/2/2020/04/Malgorzata-Kobylak-bez-tytulu.pdf\">(przeczytaj opowiadanie)</a>.</p>\n<p>Projekt okładki i ilustracje do umieszczonych w antologii utworów wykonał Igor Myszkiewicz.</p>\n<p>Zamieszczone w tomie opowiadania reprezentują pełną paletę konwencji szeroko rozumianej fantastyki – od klasycznej science fiction, fantasy, horroru aż po realizm magiczny.</p>\n<p>Książkę wydano przy współpracy Fabryki Reklamy IBI i Galerii Twórców Galera.</p>\n",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/1.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/1-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 699,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": null,
+          "stockStatus": "OUT_OF_STOCK",
+          "soldIndividually": false
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

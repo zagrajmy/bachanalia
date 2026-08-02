@@ -1,0 +1,231 @@
+{
+  "empty": {
+    "isEmpty": true,
+    "subtotal": "0,00&nbsp;zł",
+    "total": "0,00&nbsp;zł",
+    "shippingTotal": "0,00&nbsp;zł",
+    "discountTotal": "0,00&nbsp;zł",
+    "needsShippingAddress": false,
+    "chosenShippingMethods": [],
+    "availableShippingMethods": [],
+    "contents": {
+      "itemCount": 0,
+      "nodes": []
+    }
+  },
+  "carts": {
+    "2055:2106:1": {
+      "isEmpty": false,
+      "subtotal": "250,00&nbsp;zł",
+      "total": "250,00&nbsp;zł",
+      "shippingTotal": "0,00&nbsp;zł",
+      "discountTotal": "0,00&nbsp;zł",
+      "needsShippingAddress": true,
+      "chosenShippingMethods": [
+        "free_shipping:1"
+      ],
+      "availableShippingMethods": [
+        {
+          "rates": [
+            {
+              "id": "free_shipping:1",
+              "label": "Odbiór Osobisty podczas BF 24 (dotyczy Fantazji Zielonogórskich, Golden Ticket, oraz Koszulki)",
+              "cost": "0,00&nbsp;zł"
+            },
+            {
+              "id": "free_shipping:2",
+              "label": "Wysyłka online (dotyczy akredytacji i ebooków)",
+              "cost": "0,00&nbsp;zł"
+            }
+          ]
+        }
+      ],
+      "contents": {
+        "itemCount": 1,
+        "nodes": [
+          {
+            "key": "5f5faf0bad9f7dc0c5a089600492d53e",
+            "quantity": 1,
+            "subtotal": "250,00&nbsp;zł",
+            "total": "250,00&nbsp;zł",
+            "product": {
+              "node": {
+                "databaseId": 2055,
+                "name": "Golden Ticket",
+                "slug": "golden-ticket",
+                "image": {
+                  "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-2026-150x150.jpg",
+                  "altText": ""
+                },
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "label": "Rozmar Koszulki"
+                    }
+                  ]
+                },
+                "soldIndividually": false
+              }
+            },
+            "variation": {
+              "node": {
+                "databaseId": 2106,
+                "name": "Golden Ticket - MĘSKA L"
+              },
+              "attributes": [
+                {
+                  "name": "rozmar-koszulki",
+                  "label": "rozmar-koszulki",
+                  "value": "MĘSKA L"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "2055:2106:2": {
+      "isEmpty": false,
+      "subtotal": "500,00&nbsp;zł",
+      "total": "500,00&nbsp;zł",
+      "shippingTotal": "0,00&nbsp;zł",
+      "discountTotal": "0,00&nbsp;zł",
+      "needsShippingAddress": true,
+      "chosenShippingMethods": [
+        "free_shipping:1"
+      ],
+      "availableShippingMethods": [
+        {
+          "rates": [
+            {
+              "id": "free_shipping:1",
+              "label": "Odbiór Osobisty podczas BF 24 (dotyczy Fantazji Zielonogórskich, Golden Ticket, oraz Koszulki)",
+              "cost": "0,00&nbsp;zł"
+            },
+            {
+              "id": "free_shipping:2",
+              "label": "Wysyłka online (dotyczy akredytacji i ebooków)",
+              "cost": "0,00&nbsp;zł"
+            }
+          ]
+        }
+      ],
+      "contents": {
+        "itemCount": 2,
+        "nodes": [
+          {
+            "key": "5f5faf0bad9f7dc0c5a089600492d53e",
+            "quantity": 2,
+            "subtotal": "500,00&nbsp;zł",
+            "total": "500,00&nbsp;zł",
+            "product": {
+              "node": {
+                "databaseId": 2055,
+                "name": "Golden Ticket",
+                "slug": "golden-ticket",
+                "image": {
+                  "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-2026-150x150.jpg",
+                  "altText": ""
+                },
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "label": "Rozmar Koszulki"
+                    }
+                  ]
+                },
+                "soldIndividually": false
+              }
+            },
+            "variation": {
+              "node": {
+                "databaseId": 2106,
+                "name": "Golden Ticket - MĘSKA L"
+              },
+              "attributes": [
+                {
+                  "name": "rozmar-koszulki",
+                  "label": "rozmar-koszulki",
+                  "value": "MĘSKA L"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "2055:2106:3": {
+      "isEmpty": false,
+      "subtotal": "750,00&nbsp;zł",
+      "total": "750,00&nbsp;zł",
+      "shippingTotal": "0,00&nbsp;zł",
+      "discountTotal": "0,00&nbsp;zł",
+      "needsShippingAddress": true,
+      "chosenShippingMethods": [
+        "free_shipping:1"
+      ],
+      "availableShippingMethods": [
+        {
+          "rates": [
+            {
+              "id": "free_shipping:1",
+              "label": "Odbiór Osobisty podczas BF 24 (dotyczy Fantazji Zielonogórskich, Golden Ticket, oraz Koszulki)",
+              "cost": "0,00&nbsp;zł"
+            },
+            {
+              "id": "free_shipping:2",
+              "label": "Wysyłka online (dotyczy akredytacji i ebooków)",
+              "cost": "0,00&nbsp;zł"
+            }
+          ]
+        }
+      ],
+      "contents": {
+        "itemCount": 3,
+        "nodes": [
+          {
+            "key": "5f5faf0bad9f7dc0c5a089600492d53e",
+            "quantity": 3,
+            "subtotal": "750,00&nbsp;zł",
+            "total": "750,00&nbsp;zł",
+            "product": {
+              "node": {
+                "databaseId": 2055,
+                "name": "Golden Ticket",
+                "slug": "golden-ticket",
+                "image": {
+                  "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-2026-150x150.jpg",
+                  "altText": ""
+                },
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "label": "Rozmar Koszulki"
+                    }
+                  ]
+                },
+                "soldIndividually": false
+              }
+            },
+            "variation": {
+              "node": {
+                "databaseId": 2106,
+                "name": "Golden Ticket - MĘSKA L"
+              },
+              "attributes": [
+                {
+                  "name": "rozmar-koszulki",
+                  "label": "rozmar-koszulki",
+                  "value": "MĘSKA L"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

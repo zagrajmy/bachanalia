@@ -23,10 +23,19 @@ const signature = (lines: Line[]) =>
 
 const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value));
 
+/** Only reached when the fixtures are missing entirely, and it says so. */
+function noSnapshots(what: string): CartNode {
+  console.error(`[mock-wp] no recorded cart for ${what}; run \`bun run e2e:record --cart\``);
+
+  return { isEmpty: true, contents: { itemCount: 0, nodes: [] } };
+}
+
 function snapshotFor(lines: Line[]): CartNode {
   const snapshots = readSnapshots();
 
-  if (lines.length === 0) return clone(snapshots.empty) as CartNode;
+  if (lines.length === 0) {
+    return snapshots.empty ? (clone(snapshots.empty) as CartNode) : noSnapshots("an empty cart");
+  }
 
   const exact = snapshots.carts[signature(lines)];
   if (exact) return clone(exact) as CartNode;
@@ -39,11 +48,7 @@ function snapshotFor(lines: Line[]): CartNode {
    */
   const base = snapshots.carts[`${lines[0].productId}:${lines[0].variationId}:1`];
 
-  if (!base) {
-    console.error(`[mock-wp] no recorded cart for ${signature(lines)}; re-record the fixtures`);
-
-    return clone(snapshots.empty) as CartNode;
-  }
+  if (!base) return noSnapshots(signature(lines));
 
   const cart = clone(base) as CartNode;
   const node = cart.contents?.nodes?.[0];

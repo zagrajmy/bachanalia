@@ -1,0 +1,29 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2735,
+      "date": "2025-08-31T21:33:37",
+      "title": "Michał Cetnarowski",
+      "content": "\n<p class=\"wp-block-paragraph\">Pisarz, redaktor, publicysta. Od 2013 r. w dziale prozy polskiej w magazynie „Nowa Fantastyka”. Podcastowo udziela się na Kanale Fantastycznym. Autor książek beletrystycznych, m.in. <em>I dusza moja</em> i <em>Bestia najgorsza</em>, zbioru esejów o kulturze popularnej <em>Podwójna tożsamość bogów</em>, komiksu <em>Liber Horrorum: Księga grozy</em>, stworzonego z rysownikiem Marcinem Kułakowskim. W ramach „Legend Polskich. Allegro” razem z Łukaszem Orbitowskim napisał <em>Wywiad z Borutą</em>, za który autorzy dostali Nagrodę im. J.A. Zajdla. Za powieść science fiction <em>Gnoza </em>otrzymał Złote Wyróżnienie Nagrody im. J. Żuławskiego. Ostatnio współtworzy gry wideo.</p>\n",
+      "featuredImage": {
+        "node": {
+          "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/michal_cetnarowski_bf25.jpg",
+          "altText": "",
+          "mediaDetails": {
+            "width": 1772,
+            "height": 2480
+          }
+        }
+      }
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

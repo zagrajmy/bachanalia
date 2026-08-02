@@ -1,0 +1,29 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "post",
+      "databaseId": 2847,
+      "date": "2025-09-08T22:10:24",
+      "title": "Bartosz Wabno",
+      "content": "\n<p class=\"wp-block-paragraph\">Twórca efektów komputerowych oraz operator. Współtwórca niezależnego studia filmowego Green Mountain Pictures. Znany jest ze swojego wkładu w produkcje takie jak &#8222;Ostatni Samotnik&#8221; (2019) oraz &#8222;Droga Donikąd&#8221; (2025).</p>\n",
+      "featuredImage": {
+        "node": {
+          "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/bartosz_wabno_bf25.jpg",
+          "altText": "",
+          "mediaDetails": {
+            "width": 1365,
+            "height": 2048
+          }
+        }
+      }
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

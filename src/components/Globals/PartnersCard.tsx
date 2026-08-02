@@ -19,7 +19,7 @@ export function PartnersCard() {
         {PARTNERS.map(({ tier, logos }) => (
           <li key={tier}>
             <p className="eyebrow text-slate">{tier}</p>
-            <div className="mt-4 flex flex-wrap items-center gap-x-7 gap-y-5">
+            <div className="mt-4 flex flex-wrap items-center gap-4">
               {logos.map((logo) => (
                 <a
                   key={logo.name}
@@ -52,7 +52,7 @@ export function PartnersCard() {
             src={cityFunding.src}
             alt={cityFunding.name}
             className="w-auto"
-            style={{ height: "clamp(36px, 6vw, 48px)" }}
+            style={{ height: "clamp(46px, 7.6vw, 62px)" }}
           />
         </a>
         <p className="max-w-[42ch] text-xs text-slate">{cityFunding.name}</p>

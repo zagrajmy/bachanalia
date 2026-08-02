@@ -11,7 +11,7 @@ export type MarkScale = "page" | "footer";
 
 const HEIGHTS: Record<MarkScale, [string, string, string]> = {
   page: ["clamp(34px, 5.2vw, 52px)", "clamp(44px, 7vw, 70px)", "clamp(60px, 9.5vw, 92px)"],
-  footer: ["clamp(22px, 4.2vw, 32px)", "clamp(28px, 5vw, 40px)", "clamp(38px, 6.6vw, 54px)"],
+  footer: ["clamp(26px, 5vw, 38px)", "clamp(36px, 6.4vw, 52px)", "clamp(48px, 8.4vw, 68px)"],
 };
 
 export function markHeight({ src }: PartnerLogo, scale: MarkScale = "page") {

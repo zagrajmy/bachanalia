@@ -1,60 +1,89 @@
+import type { StaticImageData } from "next/image";
+
+import fahrenheit from "./partners/fahrenheit.png";
+import konwentyPoludniowe from "./partners/konwenty-poludniowe.png";
+import miastoZielonaGora from "./partners/miasto-zielona-gora.png";
+import planetariumWenus from "./partners/planetarium-wenus.png";
+import uniwersytetZielonogorski from "./partners/uniwersytet-zielonogorski.jpg";
+import zagrajmy from "./partners/zagrajmy.svg";
+import zok from "./partners/zok.jpg";
+
 /**
- * Who is listed on /wspieraja-nas/ stays in WordPress. Only the wording is
- * ours, because the markup names nobody: alt text is empty on five of the
- * seven logos and the upload's filename on the rest, and filenames lie here —
- * `2026/07/kepler.png` is the Planetarium Wenus mark.
+ * Who supports the con, in one place.
  *
- * The link is the one thing an editor always gets right, so names are keyed by
- * destination. Adding a partner in WordPress is enough to list it; adding a
- * line here only makes the credit read properly.
+ * This was parsed out of WordPress once, and it earned nothing: Elementor's
+ * markup names nobody — alt text is empty on five of the seven logos and the
+ * upload's filename on the rest, and filenames lie here, `kepler.png` being
+ * the Planetarium Wenus mark. So the names lived in code anyway, next to a
+ * parser that could break on a plugin update, while the artwork had to be
+ * committed regardless. A partner is a deploy either way; this way it is one
+ * edit rather than three.
  */
-const NAMES: Record<string, { name: string; note?: string }> = {
-  "centrumnaukikeplera.pl": { name: "Planetarium Wenus" },
-  "fahrenheit.net.pl": { name: "Fahrenheit" },
-  "konwenty-poludniowe.pl": { name: "Konwenty Południowe" },
-  "uz.zgora.pl": { name: "Uniwersytet Zielonogórski" },
-  "youtube.com/@otwartekomiksy": { name: "Otwarte Komiksy" },
-  "zielona-gora.pl": {
-    name: "Miasto Zielona Góra",
-    /** The mark carries this sentence inside the artwork; the strip repeats it as text. */
-    note: "Zrealizowano przy pomocy finansowej Miasta Zielona Góra",
-  },
-  "zagrajmy.net": { name: "Zagrajmy.net" },
-  "zok.com.pl": { name: "Zielonogórski Ośrodek Kultury" },
+export type PartnerLogo = {
+  name: string;
+  src: StaticImageData;
+  /** Every mark is somebody's front door; a logo that goes nowhere wastes it. */
+  href: string;
+  /**
+   * The artwork ships baked onto an opaque white rectangle, so it needs
+   * multiplying into the page instead of sitting in a visible box.
+   */
+  whiteBox?: boolean;
 };
 
-/** `https://www.zok.com.pl/foo/` → `zok.com.pl/foo`, the shape the keys use. */
-function normalise(href: string) {
-  return href
-    .toLowerCase()
-    .replace(/^https?:\/\//, "")
-    .replace(/^www\./, "")
-    .replace(/[?#].*$/, "")
-    .replace(/\/+$/, "");
-}
+export const PARTNERS: { tier: string; logos: PartnerLogo[] }[] = [
+  {
+    tier: "Współorganizatorzy",
+    logos: [
+      {
+        name: "Uniwersytet Zielonogórski",
+        src: uniwersytetZielonogorski,
+        href: "https://uz.zgora.pl/",
+        whiteBox: true,
+      },
+    ],
+  },
+  {
+    tier: "Partnerzy",
+    logos: [
+      {
+        name: "Planetarium Wenus",
+        src: planetariumWenus,
+        href: "https://centrumnaukikeplera.pl/planetarium-wenus/",
+      },
+      {
+        name: "Zagrajmy.net",
+        src: zagrajmy,
+        href: "https://zagrajmy.net/",
+      },
+      {
+        name: "Zielonogórski Ośrodek Kultury",
+        src: zok,
+        href: "https://zok.com.pl/",
+        whiteBox: true,
+      },
+    ],
+  },
+  {
+    tier: "Patroni medialni",
+    logos: [
+      {
+        name: "Fahrenheit",
+        src: fahrenheit,
+        href: "https://fahrenheit.net.pl/",
+      },
+      {
+        name: "Konwenty Południowe",
+        src: konwentyPoludniowe,
+        href: "https://konwenty-poludniowe.pl/",
+      },
+    ],
+  },
+];
 
-/**
- * Longest match wins, so a whole host can be named while one channel on a
- * shared host — a YouTube handle — still gets its own entry.
- */
-export function partnerCredit(href?: string, alt?: string) {
-  if (href) {
-    const parts = normalise(href).split("/");
-
-    for (let end = parts.length; end > 0; end--) {
-      const credit = NAMES[parts.slice(0, end).join("/")];
-      if (credit) return credit;
-    }
-
-    /** An unlisted partner still reads as something; the host is the honest guess. */
-    return { name: usableAlt(alt) ?? parts[0] };
-  }
-
-  return { name: usableAlt(alt) ?? "" };
-}
-
-/** Elementor defaults alt text to the upload's filename, which is not a name. */
-function usableAlt(alt?: string) {
-  const text = alt?.trim();
-  return text && text.includes(" ") && !/\d{5}/.test(text) ? text : undefined;
-}
+/** The sentence is baked into the artwork, so the page sets it as text too. */
+export const cityFunding = {
+  name: "Zrealizowano przy pomocy finansowej Miasta Zielona Góra",
+  src: miastoZielonaGora,
+  href: "https://zielona-gora.pl/",
+};

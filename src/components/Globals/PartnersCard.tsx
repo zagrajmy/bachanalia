@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { cityFunding, PartnerLogo, partners } from "@/content/con";
+import { cityFunding, PARTNERS, PartnerLogo } from "@/content/partners";
 
 /** Wordmarks carry their weight in width; compact marks need more height to match. */
 function logoHeight({ width, height }: PartnerLogo["src"]) {
@@ -23,7 +23,7 @@ export function PartnersCard() {
       />
 
       <ul className="grid gap-9 sm:grid-cols-3 sm:gap-8">
-        {partners.map(({ tier, logos }) => (
+        {PARTNERS.map(({ tier, logos }) => (
           <li key={tier}>
             <p className="eyebrow text-slate">{tier}</p>
             <div className="mt-4 flex flex-wrap items-center gap-x-7 gap-y-5">

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { PartnerMark } from "./PartnerMark";
-import { PartnerLogo } from "./partnersContent";
+import type { PartnerLogo } from "@/content/partners";
 
 const CARD =
   "flex h-full flex-col items-center justify-center rounded-card border border-dashed border-navy/30 px-4 py-6 sm:px-5 sm:py-8";

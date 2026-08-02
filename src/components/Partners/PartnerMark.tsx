@@ -1,14 +1,14 @@
 import Image from "next/image";
 
-import { PartnerLogo } from "./partnersContent";
+import type { PartnerLogo } from "@/content/partners";
 
 /**
  * Wordmarks carry their weight in width; compact marks need more height to
  * match. Same reasoning as the homepage card, a size up — here the logos are
  * the content rather than a footnote.
  */
-function cap({ dimensions }: PartnerLogo) {
-  const ratio = dimensions ? dimensions.width / dimensions.height : 1;
+function cap({ src }: PartnerLogo) {
+  const ratio = src.width / src.height;
   if (ratio >= 3.5) return "clamp(34px, 5.2vw, 52px)";
   if (ratio >= 1.5) return "clamp(44px, 7vw, 70px)";
   return "clamp(60px, 9.5vw, 92px)";
@@ -28,19 +28,13 @@ export function PartnerMark({
 }) {
   return (
     <span className={`relative flex items-center justify-center ${box}`}>
-      {logo.dimensions ? (
-        <Image
-          alt=""
-          className="max-w-full object-contain"
-          height={logo.dimensions.height}
-          sizes="(min-width: 640px) 360px, 45vw"
-          src={logo.src}
-          style={{ height: "auto", maxHeight: cap(logo), width: "auto" }}
-          width={logo.dimensions.width}
-        />
-      ) : (
-        <Image alt="" className="object-contain" fill sizes="120px" src={logo.src} />
-      )}
+      <Image
+        alt=""
+        className={`max-w-full object-contain ${logo.whiteBox ? "mix-blend-multiply" : ""}`}
+        sizes="(min-width: 640px) 360px, 45vw"
+        src={logo.src}
+        style={{ height: "auto", maxHeight: cap(logo), width: "auto" }}
+      />
     </span>
   );
 }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { PartnerMark } from "./PartnerMark";
-import { PartnerLogo } from "./partnersContent";
+import { cityFunding } from "@/content/partners";
 
 /**
  * A logo that WordPress puts above every heading is not a partner tier — it is
@@ -9,12 +9,13 @@ import { PartnerLogo } from "./partnersContent";
  * baked into the artwork. Set as text next to the mark it stays readable at
  * any size, and the page ends the way the homepage card does.
  */
-export function FundingStrip({ logo }: { logo: PartnerLogo }) {
+export function FundingStrip() {
+  const logo = cityFunding;
   const body = (
     <>
       <PartnerMark box="h-20 w-20 shrink-0 sm:h-24 sm:w-24" logo={logo} />
       <span className="max-w-[38ch] text-sm text-ink-muted transition-colors duration-200 group-hover:text-ink">
-        {logo.note ?? logo.name}
+        {logo.name}
       </span>
     </>
   );

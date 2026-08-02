@@ -8,11 +8,11 @@ export function PartnersCard() {
     <div className="relative mt-12 overflow-hidden rounded-card bg-paper px-5 py-8 text-navy sm:px-8 sm:py-10">
       <span
         aria-hidden="true"
-        className="absolute -top-[13px] left-1/2 h-[26px] w-[26px] -translate-x-1/2 rounded-full bg-navy"
+        className="absolute top-[-13px] left-1/2 size-[26px] -translate-x-1/2 rounded-full bg-navy"
       />
       <span
         aria-hidden="true"
-        className="absolute -bottom-[13px] left-1/2 h-[26px] w-[26px] -translate-x-1/2 rounded-full bg-navy"
+        className="absolute bottom-[-13px] left-1/2 size-[26px] -translate-x-1/2 rounded-full bg-navy"
       />
 
       <ul className="grid gap-9 sm:grid-cols-3 sm:gap-8">
@@ -52,10 +52,10 @@ export function PartnersCard() {
             src={cityFunding.src}
             alt={cityFunding.name}
             className="w-auto"
-            style={{ height: "clamp(46px, 7.6vw, 62px)" }}
+            style={{ height: "clamp(58px, 9.4vw, 80px)" }}
           />
         </a>
-        <p className="max-w-[42ch] text-xs text-slate">{cityFunding.name}</p>
+        <p className="text-xs text-slate">{cityFunding.name}</p>
       </div>
     </div>
   );

@@ -29,14 +29,21 @@ export type PartnerLogo = {
    * multiplying into the page instead of sitting in a visible box.
    */
   whiteBox?: boolean;
+  /**
+   * A narrow or padded mark reads lighter than a wordmark of the same height,
+   * so it takes a taller box to carry the same weight in the row. Ratio alone
+   * cannot tell one from a logo that is simply wide, so the mark says so.
+   */
+  narrow?: boolean;
 };
 
-export const PARTNERS: { tier: string; logos: PartnerLogo[] }[] = [
+export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
   {
     tier: "Współorganizatorzy",
     logos: [
       {
         name: "Uniwersytet Zielonogórski",
+        narrow: true,
         src: uniwersytetZielonogorski,
         href: "https://uz.zgora.pl/",
         whiteBox: true,
@@ -48,19 +55,21 @@ export const PARTNERS: { tier: string; logos: PartnerLogo[] }[] = [
     logos: [
       {
         name: "Planetarium Wenus",
+        narrow: true,
         src: planetariumWenus,
         href: "https://centrumnaukikeplera.pl/planetarium-wenus/",
       },
       {
-        name: "Zagrajmy.net",
-        src: zagrajmy,
-        href: "https://zagrajmy.net/",
-      },
-      {
         name: "Zielonogórski Ośrodek Kultury",
+        narrow: true,
         src: zok,
         href: "https://zok.com.pl/",
         whiteBox: true,
+      },
+      {
+        name: "zagrajmy.net",
+        src: zagrajmy,
+        href: "https://zagrajmy.net/",
       },
     ],
   },

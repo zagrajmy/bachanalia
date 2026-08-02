@@ -11,16 +11,15 @@ export type MarkScale = "page" | "footer";
 
 const HEIGHTS: Record<MarkScale, [string, string, string]> = {
   page: ["clamp(34px, 5.2vw, 52px)", "clamp(44px, 7vw, 70px)", "clamp(60px, 9.5vw, 92px)"],
-  footer: ["clamp(26px, 5vw, 38px)", "clamp(36px, 6.4vw, 52px)", "clamp(48px, 8.4vw, 68px)"],
+  footer: ["clamp(28px, 5.4vw, 42px)", "clamp(36px, 6.6vw, 54px)", "clamp(48px, 8.6vw, 72px)"],
 };
 
-export function markHeight({ src }: PartnerLogo, scale: MarkScale = "page") {
-  const ratio = src.width / src.height;
+export function markHeight(logo: PartnerLogo, scale: MarkScale = "page") {
+  const ratio = logo.src.width / logo.src.height;
   const [wide, medium, compact] = HEIGHTS[scale];
+  const height = ratio >= 3.5 ? wide : ratio >= 1.5 ? medium : compact;
 
-  if (ratio >= 3.5) return wide;
-  if (ratio >= 1.5) return medium;
-  return compact;
+  return logo.narrow ? `calc(${height} * 1.35)` : height;
 }
 
 /**

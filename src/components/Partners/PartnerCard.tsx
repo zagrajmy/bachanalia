@@ -12,24 +12,17 @@ const CARD =
  * make that rectangle appear as a box around them.
  */
 export function PartnerCard({ logo }: { logo: PartnerLogo }) {
-  const body = (
-    <>
+  return (
+    <Link
+      href={logo.href}
+      rel="noreferrer"
+      target="_blank"
+      className={`group no-underline transition-colors duration-200 hover:border-navy ${CARD}`}
+    >
       <PartnerMark logo={logo} />
       <span className="mt-4 block text-center text-sm text-ink transition-colors duration-200 group-hover:text-rose">
         {logo.name}
       </span>
-    </>
-  );
-
-  return logo.href ? (
-    <Link
-      href={logo.href}
-      {...(logo.href.startsWith("http") ? { rel: "noreferrer", target: "_blank" } : {})}
-      className={`group no-underline transition-colors duration-200 hover:border-navy ${CARD}`}
-    >
-      {body}
     </Link>
-  ) : (
-    <div className={CARD}>{body}</div>
   );
 }

@@ -9,8 +9,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const BACHANALIA_URL_OPTION    = 'bachanalia_frontend_url';
-const BACHANALIA_SECRET_OPTION = 'bachanalia_headless_secret';
+const BACHANALIA_REVALIDATE_URL_OPTION    = 'bachanalia_frontend_url';
+const BACHANALIA_REVALIDATE_SECRET_OPTION = 'bachanalia_headless_secret';
 
 /**
  * Next runs with trailingSlash: true. Without the slash it answers 308, and
@@ -19,7 +19,7 @@ const BACHANALIA_SECRET_OPTION = 'bachanalia_headless_secret';
 const BACHANALIA_REVALIDATE_PATH = '/api/revalidate/';
 
 function bachanalia_frontend_url() {
-	return untrailingslashit( trim( (string) get_option( BACHANALIA_URL_OPTION, '' ) ) );
+	return untrailingslashit( trim( (string) get_option( BACHANALIA_REVALIDATE_URL_OPTION, '' ) ) );
 }
 
 /**
@@ -40,7 +40,7 @@ function bachanalia_targets_self( $url ) {
  */
 function bachanalia_revalidate( $blocking = false ) {
 	$url    = bachanalia_frontend_url();
-	$secret = (string) get_option( BACHANALIA_SECRET_OPTION, '' );
+	$secret = (string) get_option( BACHANALIA_REVALIDATE_SECRET_OPTION, '' );
 
 	if ( '' === $url || '' === $secret || bachanalia_targets_self( $url ) ) {
 		return new WP_Error( 'bachanalia_not_configured', 'Adres strony lub sekret nie są ustawione.' );
@@ -108,8 +108,8 @@ add_action(
 add_action(
 	'admin_init',
 	function () {
-		register_setting( 'bachanalia_revalidate', BACHANALIA_URL_OPTION, array( 'sanitize_callback' => 'esc_url_raw' ) );
-		register_setting( 'bachanalia_revalidate', BACHANALIA_SECRET_OPTION, array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		register_setting( 'bachanalia_revalidate', BACHANALIA_REVALIDATE_URL_OPTION, array( 'sanitize_callback' => 'esc_url_raw' ) );
+		register_setting( 'bachanalia_revalidate', BACHANALIA_REVALIDATE_SECRET_OPTION, array( 'sanitize_callback' => 'sanitize_text_field' ) );
 	}
 );
 
@@ -153,21 +153,21 @@ function bachanalia_settings_page() {
 			<?php settings_fields( 'bachanalia_revalidate' ); ?>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row"><label for="<?php echo esc_attr( BACHANALIA_URL_OPTION ); ?>">Adres strony Next.js</label></th>
+					<th scope="row"><label for="<?php echo esc_attr( BACHANALIA_REVALIDATE_URL_OPTION ); ?>">Adres strony Next.js</label></th>
 					<td>
-						<input type="url" class="regular-text" id="<?php echo esc_attr( BACHANALIA_URL_OPTION ); ?>"
-							name="<?php echo esc_attr( BACHANALIA_URL_OPTION ); ?>"
-							value="<?php echo esc_attr( get_option( BACHANALIA_URL_OPTION, '' ) ); ?>"
+						<input type="url" class="regular-text" id="<?php echo esc_attr( BACHANALIA_REVALIDATE_URL_OPTION ); ?>"
+							name="<?php echo esc_attr( BACHANALIA_REVALIDATE_URL_OPTION ); ?>"
+							value="<?php echo esc_attr( get_option( BACHANALIA_REVALIDATE_URL_OPTION, '' ) ); ?>"
 							placeholder="https://bachanalia.vercel.app">
 						<p class="description">Bez ukośnika na końcu. Po przepięciu domeny zmień na docelowy adres.</p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="<?php echo esc_attr( BACHANALIA_SECRET_OPTION ); ?>">Sekret</label></th>
+					<th scope="row"><label for="<?php echo esc_attr( BACHANALIA_REVALIDATE_SECRET_OPTION ); ?>">Sekret</label></th>
 					<td>
-						<input type="password" class="regular-text" id="<?php echo esc_attr( BACHANALIA_SECRET_OPTION ); ?>"
-							name="<?php echo esc_attr( BACHANALIA_SECRET_OPTION ); ?>"
-							value="<?php echo esc_attr( get_option( BACHANALIA_SECRET_OPTION, '' ) ); ?>"
+						<input type="password" class="regular-text" id="<?php echo esc_attr( BACHANALIA_REVALIDATE_SECRET_OPTION ); ?>"
+							name="<?php echo esc_attr( BACHANALIA_REVALIDATE_SECRET_OPTION ); ?>"
+							value="<?php echo esc_attr( get_option( BACHANALIA_REVALIDATE_SECRET_OPTION, '' ) ); ?>"
 							autocomplete="off">
 						<p class="description">Musi być identyczny ze zmienną <code>HEADLESS_SECRET</code> w projekcie na Vercelu.</p>
 					</td>

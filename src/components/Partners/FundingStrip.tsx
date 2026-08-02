@@ -10,25 +10,17 @@ import { cityFunding } from "@/content/partners";
  * any size, and the page ends the way the homepage card does.
  */
 export function FundingStrip() {
-  const logo = cityFunding;
-  const body = (
-    <>
-      <PartnerMark box="h-20 w-20 shrink-0 sm:h-24 sm:w-24" logo={logo} />
-      <span className="max-w-[38ch] text-sm text-ink-muted transition-colors duration-200 group-hover:text-ink">
-        {logo.name}
-      </span>
-    </>
-  );
-
-  return logo.href ? (
+  return (
     <Link
-      href={logo.href}
-      {...(logo.href.startsWith("http") ? { rel: "noreferrer", target: "_blank" } : {})}
+      href={cityFunding.href}
+      rel="noreferrer"
+      target="_blank"
       className="group flex items-center gap-5 no-underline"
     >
-      {body}
+      <PartnerMark box="h-20 w-20 shrink-0 sm:h-24 sm:w-24" logo={cityFunding} />
+      <span className="max-w-[38ch] text-sm text-ink-muted transition-colors duration-200 group-hover:text-ink">
+        {cityFunding.name}
+      </span>
     </Link>
-  ) : (
-    <div className="flex items-center gap-5">{body}</div>
   );
 }

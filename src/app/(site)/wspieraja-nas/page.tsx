@@ -12,8 +12,6 @@ export const metadata: Metadata = {
 const idx = (i: number) => String(i + 1).padStart(2, "0");
 
 export default function WspierajaNasPage() {
-  const tiers = PARTNERS;
-
   return (
     <div className="gutter mx-auto max-w-6xl pt-12 sm:pt-16">
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-b-2 border-navy pb-3">
@@ -23,7 +21,7 @@ export default function WspierajaNasPage() {
         </p>
       </div>
 
-      {tiers.map((tier, i) => (
+      {PARTNERS.map((tier, i) => (
         <section className="mt-12 sm:mt-16" key={tier.tier}>
           <div className="flex items-baseline justify-between gap-4 border-b border-dashed border-navy/30 pb-2">
             <h2 className="display text-[clamp(1.5rem,4vw,2.2rem)]">{tier.tier}</h2>

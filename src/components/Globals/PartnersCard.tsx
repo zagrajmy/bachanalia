@@ -1,14 +1,7 @@
 import Image from "next/image";
 
-import { cityFunding, PARTNERS, PartnerLogo } from "@/content/partners";
-
-/** Wordmarks carry their weight in width; compact marks need more height to match. */
-function logoHeight({ width, height }: PartnerLogo["src"]) {
-  const ratio = width / height;
-  if (ratio >= 3.5) return "clamp(22px, 4.2vw, 32px)";
-  if (ratio >= 1.5) return "clamp(28px, 5vw, 40px)";
-  return "clamp(38px, 6.6vw, 54px)";
-}
+import { markHeight } from "@/components/Partners/PartnerMark";
+import { cityFunding, PARTNERS } from "@/content/partners";
 
 export function PartnersCard() {
   return (
@@ -39,7 +32,7 @@ export function PartnersCard() {
                     src={logo.src}
                     alt={logo.name}
                     className={`w-auto ${logo.whiteBox ? "mix-blend-multiply" : ""}`}
-                    style={{ height: logoHeight(logo.src) }}
+                    style={{ height: markHeight(logo, "footer") }}
                   />
                 </a>
               ))}

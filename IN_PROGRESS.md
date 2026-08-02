@@ -58,6 +58,7 @@ run `bun run codegen:refresh`, turn it back off.
 | `/2025/…/<slug>`                                                                                                                    | WP posts                 | ours — 25 dated guest announcements |
 | `/program`                                                                                                                          | ludamus feed             | not built                           |
 | `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty`                                                                                  | WooCommerce              | still WordPress                     |
+| `/zamowienie/order-received/<id>/`                                                                                                  | WooCommerce              | ours at cutover — delivers the ticket |
 
 `/akredytacja` 301s to `/sklep/`. `/info`, `/blog` and `/feed-test` are gone.
 
@@ -253,10 +254,36 @@ carries a two-week expiry, so this is payment state, not expiry. Hand the
 `redirect` straight to the buyer, create a fresh order per attempt, and never
 re-offer an old URL.
 
+**Order 3510 was paid for real** and WooCommerce moved it to `wc-completed`
+on its own, so Paynow's notification handler works and nothing of ours needs
+to run in that loop.
+
+### The page after payment
+
+Paynow returns the buyer to
+`/zamowienie/order-received/<id>/?key=wc_order_…`, which after cutover is a
+URL **we** have to serve. What WooCommerce renders there:
+
+- `ul.woocommerce-order-overview` — number, date, total, payment method.
+- `section.woocommerce-order-details` — the line items and totals.
+- **A ticket.** Event Tickets with Ticket Scanner issues one per order and
+  links it three ways, all under
+  `/wp-content/plugins/event-tickets-with-ticket-scanner/ticket/…`: the order's
+  tickets (`ordertickets-<id>-<hash>`), the ticket itself
+  (`<serial>-<id>-<hash>`) and the same with `?pdf`. The line item also
+  carries a validity window. This is what an attendee shows at the door, so
+  the page is not a courtesy — it delivers the product.
+
+**An order cannot be read anonymously.** `OrderIdTypeEnum` has `ORDER_KEY`,
+but querying with the key from the URL still answers "Not authorized to access
+this order": guest orders belong to the WooCommerce session that placed them.
+Our own checkout holds that session, so the thank-you page should be able to
+read its own order — unproven, and worth proving before building on it. The
+ticket URLs will have to come from order meta or stay pointed at WordPress.
+
 Still unverified:
 
-1. Whether Paynow's notification handler flips the order out of `PENDING` on
-   payment. Nothing of ours runs in that loop, but nothing has proved it here.
+1. Whether the session that placed an order can read it back by `ORDER_KEY`.
 2. At cutover the session cookie's domain changes when WordPress moves to a
    subdomain. A cart built on the apex would silently empty.
 
@@ -369,8 +396,9 @@ posts are free.
 ## Open work
 
 1. **Clear the test orders.** Probing checkout wrote real 1 zł orders to the
-   live shop: 3502 (`bacs`, `ON_HOLD`), 3507 and 3509 (Paynow payments that
-   were consumed before a buyer reached them), and 3510 if it goes unpaid.
+   live shop: 3502 (`bacs`, `ON_HOLD`), 3507 and 3509 (Paynow payments
+   consumed before a buyer reached them). 3510 was paid and is `wc-completed`
+   — leave it, it is the proof the loop works.
 2. **Install the revalidate plugin.** Edits lag an hour until then.
 3. **`/program` + ludamus feed.** Needs the upstream JSON endpoint, the
    Bachanalia sphere at `bachanalia.zagrajmy.net`, and the organizer

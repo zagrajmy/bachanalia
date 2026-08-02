@@ -15,15 +15,7 @@ const idx = (i: number) => String(i + 1).padStart(2, "0");
 export default function WspierajaNasPage() {
   return (
     <div className="gutter mx-auto max-w-6xl pt-12 sm:pt-16">
-      <SectionHeading
-        as="h1"
-        size="page"
-        aside={
-          <p className="max-w-[34ch] text-sm text-ink-muted">
-            XL edycja powstaje dzięki tym instytucjom, partnerom i patronom.
-          </p>
-        }
-      >
+      <SectionHeading as="h1" size="page">
         Wspierają nas
       </SectionHeading>
 

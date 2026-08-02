@@ -5,6 +5,7 @@ import { NewsList } from "@/components/News/NewsList";
 import { SectionHeading } from "@/components/SectionHeading";
 
 export const metadata: Metadata = {
+  title: "Aktualności",
   alternates: { canonical: `${process.env.NEXT_PUBLIC_BASE_URL}${NEWS_PATH}` },
   description: "Ogłoszenia i zapowiedzi gości Bachanaliów Fantastycznych.",
 };
@@ -22,7 +23,7 @@ export default async function AktualnosciPage() {
 
       {items.length === 0 ? (
         <p className="mt-8 max-w-[55ch] text-lg text-ink-muted">
-          Pierwsze ogłoszenia XL edycji pojawią się tutaj.
+          Ogłoszeń XL edycji jeszcze nie ma.
         </p>
       ) : (
         <NewsList items={items} titleAs="h2" />

@@ -305,8 +305,7 @@ async function main() {
 
     try {
       if (needLqip && widthsToBuild.length === 0) {
-        const encoded =
-          (await fetchLqipWebp(job.thumbUrl)) ?? (await fetchLqipWebp(job.fullUrl));
+        const encoded = (await fetchLqipWebp(job.thumbUrl)) ?? (await fetchLqipWebp(job.fullUrl));
         if (!encoded) {
           console.warn(`media: skip lqip ${job.key}`);
           continue;

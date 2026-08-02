@@ -4,9 +4,15 @@ import Link from "next/link";
 import { ShopProduct } from "./products";
 
 /**
- * The image sits in a dashed plate because the covers and the ticket
- * graphics have different aspect ratios, and `object-contain` on a shared
- * frame keeps the grid on one baseline without cropping anyone's artwork.
+ * The image sits in a dashed plate because the covers and the ticket graphics
+ * have different aspect ratios, and each keeps its own rather than being
+ * cropped to a shared frame.
+ *
+ * Its height has to come from the `width`/`height` attributes, which the
+ * browser turns into an aspect ratio through a UA rule. An author-level
+ * `aspect-ratio` — including `aspect-auto` — outranks that rule, so the plate
+ * would reserve nothing, the blur would paint into a zero-height box, and the
+ * grid would jump as each picture decoded.
  */
 export function ProductCard({ product }: { product: ShopProduct }) {
   const { href, image, name, price, soldOut } = product;
@@ -18,7 +24,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
           <Image
             alt=""
             blurDataURL={image.blurDataURL}
-            className="aspect-auto"
+            className="h-auto w-full"
             height={image.height}
             placeholder={image.blurDataURL ? "blur" : "empty"}
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 30vw, 45vw"

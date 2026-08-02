@@ -156,6 +156,13 @@ which costs one of Next's three page attempts rather than killing the build.
 Playwright's default worker count stampedes a cold dev server the same way
 and produces phantom failures. Run e2e at `--workers=2`.
 
+**No spec talks to the live WordPress**, read or write. Not because a read is
+dangerous but because it is slow and rate-limited: a full run against it took
+2.7 hours and failed on requests that passed warm. GraphQL is mocked at the
+Next server with `msw`, keyed by operation name, from fixtures recorded on
+purpose by a script — never as part of `bun run test`. A spec that cannot pass
+with the WordPress host unreachable is a bug in the spec.
+
 Queries go over GET — cacheable, which is what ISR wants. POST also works, so
 mutations are reachable when the cart needs them.
 

@@ -45,6 +45,14 @@ export function GalleryImage({
         fill
         sizes={sizes}
         priority={priority}
+        /**
+         * A cached bitmap is painted before React hears `onLoad`, so gating on
+         * that alone blanks an image the browser already has — which is what
+         * made the lightbox flash on open.
+         */
+        ref={(node) => {
+          if (node?.complete) setLoaded(true);
+        }}
         onLoad={() => setLoaded(true)}
         className={cn(
           "transition-opacity duration-200 ease-[var(--ease-out)]",

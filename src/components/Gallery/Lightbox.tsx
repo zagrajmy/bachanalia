@@ -39,6 +39,7 @@ export function Lightbox({
   onClose,
   finalFocus,
   morphName,
+  thumbSizes,
 }: {
   finalFocus: RefObject<HTMLElement | null>;
   images: WpGalleryImage[];
@@ -46,6 +47,8 @@ export function Lightbox({
   morphName: string;
   onClose: () => void;
   onIndexChange: (index: number) => void;
+  /** What the grid asked for, so the opened photo starts on the same bitmap. */
+  thumbSizes: string;
 }) {
   const [zoomed, setZoomed] = useState(false);
   const stage = useRef<HTMLDivElement>(null);
@@ -57,11 +60,25 @@ export function Lightbox({
 
   useEffect(() => setZoomed(false), [index]);
 
+  /**
+   * Opening at `100vw` would pick a different srcset candidate and fetch it,
+   * blanking the photo mid-flight. Starting on the grid's own candidate means
+   * the bitmap is already decoded; the browser then swaps in the larger one
+   * behind the picture it is already showing.
+   */
+  const [full, setFull] = useState(false);
+
+  useEffect(() => {
+    if (index === null) return setFull(false);
+
+    const frame = requestAnimationFrame(() => setFull(true));
+    return () => cancelAnimationFrame(frame);
+  }, [index]);
+
   const total = images.length;
   const shown = index ?? lastIndex.current;
   const current = images[shown];
-  const step = (delta: number) =>
-    onIndexChange((shown + delta + total) % total);
+  const step = (delta: number) => onIndexChange((shown + delta + total) % total);
 
   const onKeyDown = (event: KeyboardEvent) => {
     const moves: Record<string, () => void> = {
@@ -116,9 +133,7 @@ export function Lightbox({
           onKeyDown={onKeyDown}
           onTouchStart={(event) => {
             const touch = event.touches[0];
-            touchStart.current = touch
-              ? { x: touch.clientX, y: touch.clientY }
-              : null;
+            touchStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
           }}
           onTouchEnd={(event) => {
             const from = touchStart.current;
@@ -127,10 +142,7 @@ export function Lightbox({
             if (!from || !touch || zoomed) return;
 
             const dx = touch.clientX - from.x;
-            if (
-              Math.abs(dx) > SWIPE_THRESHOLD &&
-              Math.abs(dx) > Math.abs(touch.clientY - from.y)
-            ) {
+            if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(touch.clientY - from.y)) {
               step(dx < 0 ? 1 : -1);
             }
           }}
@@ -153,17 +165,10 @@ export function Lightbox({
             onClick={toggleZoom}
             className={cn(
               "relative min-h-0 flex-1",
-              zoomed
-                ? "cursor-zoom-out overflow-auto"
-                : "cursor-zoom-in overflow-hidden",
+              zoomed ? "cursor-zoom-out overflow-auto" : "cursor-zoom-in overflow-hidden",
             )}
           >
-            <div
-              className={cn(
-                "relative",
-                zoomed ? "h-[250%] w-[250%]" : "size-full",
-              )}
-            >
+            <div className={cn("relative", zoomed ? "h-[250%] w-[250%]" : "size-full")}>
               {current && (
                 <GalleryImage
                   key={current.src}
@@ -171,7 +176,7 @@ export function Lightbox({
                   alt={current.alt}
                   fit="contain"
                   priority
-                  sizes={zoomed ? "250vw" : "100vw"}
+                  sizes={zoomed ? "250vw" : full ? "100vw" : thumbSizes}
                   className="size-full bg-transparent"
                   style={zoomed ? undefined : { viewTransitionName: morphName }}
                 />

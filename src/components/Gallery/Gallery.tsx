@@ -51,6 +51,7 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
 
   const dense = images.length >= DENSE_FROM;
   const cell = dense ? "8.5rem" : "15rem";
+  const thumbSizes = dense ? "(min-width: 40rem) 9rem, 45vw" : "(min-width: 40rem) 16rem, 45vw";
 
   return (
     <div className="my-8">
@@ -80,7 +81,7 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
               <GalleryImage
                 src={image.src}
                 alt=""
-                sizes={dense ? "(min-width: 40rem) 9rem, 45vw" : "(min-width: 40rem) 16rem, 45vw"}
+                sizes={thumbSizes}
                 className="aspect-4/3"
                 style={
                   index === null && morph.current === i ? { viewTransitionName: MORPH } : undefined
@@ -100,6 +101,7 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
         }}
         onClose={() => withMorph(() => setIndex(null))}
         morphName={MORPH}
+        thumbSizes={thumbSizes}
         finalFocus={finalFocus}
       />
     </div>

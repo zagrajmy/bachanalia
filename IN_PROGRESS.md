@@ -205,10 +205,9 @@ The goal is WordPress as pure backend. What is known:
   checkout runs the classic `process_payment()` path, which is where
   `pay-by-paynow-pl` lives — so a redirect is plausible, unlike through the
   Store API.
-- Live gateways are `pay_by_paynow_pl_blik` and `bacs`. **Bank transfer needs
+- Live gateways are `pay_by_paynow_pl_paywall` and `bacs`. **Bank transfer needs
   no redirect at all**, so that path is headless today with zero payment work
   — though bank transfer for a 50 zł ticket is friction most people abandon.
-  The prize is BLIK.
 
 **A `bacs` order has been run end to end** (order 3502, 1 zł, 1 August 2026),
 and it settles most of this:
@@ -224,15 +223,63 @@ and it settles most of this:
   next request carries the cart into checkout. Mutations go over POST and
   Wordfence does not block them.
 
+**And a Paynow order has been run end to end** (3510, 1 zł, 2 August 2026).
+`checkout` returned `https://paywall.paynow.pl/<id>?token=<jwt>`, and the
+buyer chooses BLIK, bank or card there. Headless checkout is settled.
+
+Getting there took a WooCommerce setting, and the reason is worth keeping:
+
+- **Only the paywall gateway can be driven from here.** The per-method
+  gateways collect a field on WooCommerce's own checkout page and read it with
+  `filter_input(INPUT_POST, …)` — `authorizationCode` for BLIK level 0,
+  `paymentMethodId` for the bank picked out of the PBL list. WPGraphQL refuses
+  any body that is not `application/json`, so `$_POST` is empty on every
+  GraphQL request and neither can ever be filled. A form-encoded body is
+  rejected outright; `metaData` does not reach the gateway. Both were tried.
+- The paywall gateway posts nothing, so it works. It appears **only** when the
+  plugin's **Pokaż metody płatności** (`show_payment_methods`) is unchecked —
+  `is_available()` is `! $this->show_payment_methods && $is_paynow_enabled`.
+  That `$is_paynow_enabled` means at least one Paynow gateway must stay
+  enabled in WooCommerce; switching the now-invisible per-method gateways off
+  would take the paywall down with them and leave buyers only `bacs`.
+- The trade this bought: buyers used to type a BLIK code on the page and never
+  leave. Now everyone takes one hop to Paynow. Re-checking the box reverses it.
+
+**A Paynow payment is single-use.** Two links died before a buyer reached
+them: one created after failed BLIK and PBL attempts against the same cart —
+the plugin derives Paynow's external id and idempotency key from the cart —
+and one merely opened in a browser to check that it rendered. The signed token
+carries a two-week expiry, so this is payment state, not expiry. Hand the
+`redirect` straight to the buyer, create a fresh order per attempt, and never
+re-offer an old URL.
+
 Still unverified:
 
-1. Whether Paynow's BLIK gateway puts its own URL in `redirect`. The plumbing
-   is proven; the gateway is not. Only a real BLIK order settles it, and that
-   one costs money.
+1. Whether Paynow's notification handler flips the order out of `PENDING` on
+   payment. Nothing of ours runs in that loop, but nothing has proved it here.
 2. At cutover the session cookie's domain changes when WordPress moves to a
    subdomain. A cart built on the apex would silently empty.
 
 Cart routes have to be dynamic, since the session token cannot be cached.
+
+### Shipping, and InPost
+
+The shop is not only accreditation, and **InPost is live**. A cart holding a
+book offers four rates — `free_shipping:1` (personal pickup,
+still labelled "podczas BF 24"), `free_shipping:2` ("Wysyłka online", for
+accreditations and ebooks), `easypack_parcel_machines:4` (Paczkomat, 15 zł)
+and `easypack_shipping_courier:5` (Kurier, 18 zł).
+
+`updateShippingMethod(["easypack_parcel_machines:4"])` selects a rate and
+WooCommerce recalculates, so that half is headless already. What is not
+settled is **which** locker: on WooCommerce's checkout that comes from
+InPost's geowidget. The plugin exposes `POST /wp-json/inpost_pl/v1/order/update`,
+which 403s unauthenticated and is the likely way to attach a point to an order
+after creating it.
+
+Accreditation sidesteps all of it — it is virtual, so `needsShippingAddress`
+is false and no rate applies. A headless flow for tickets needs no address, no
+rate and no locker; books, shirts and the Golden Ticket do.
 
 **Add-to-cart** via `?add-to-cart=<id>` is a plain GET WooCommerce supports,
 but only for SIMPLE products. Every accreditation except Sunday is VARIABLE
@@ -321,8 +368,9 @@ posts are free.
 
 ## Open work
 
-1. **Cancel order 3502.** The `bacs` probe above wrote a real 1 zł order to the
-   live shop; it sits `ON_HOLD` and nobody is going to pay it.
+1. **Clear the test orders.** Probing checkout wrote real 1 zł orders to the
+   live shop: 3502 (`bacs`, `ON_HOLD`), 3507 and 3509 (Paynow payments that
+   were consumed before a buyer reached them), and 3510 if it goes unpaid.
 2. **Install the revalidate plugin.** Edits lag an hour until then.
 3. **`/program` + ludamus feed.** Needs the upstream JSON endpoint, the
    Bachanalia sphere at `bachanalia.zagrajmy.net`, and the organizer

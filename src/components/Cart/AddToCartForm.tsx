@@ -12,6 +12,7 @@ import {
   findVariation,
   initialSelection,
   isOptionAvailable,
+  isSelectionUnavailable,
   type AttributeLabel,
   type ProductVariation,
   type VariationSelection,
@@ -34,7 +35,7 @@ export function AddToCartForm({ productId, slug, variations, attributeLabels, so
 
   const chosen = findVariation(variations, axes, selection);
   const incomplete = axes.some((axis) => !selection[axis.name]);
-  const unavailable = !incomplete && (!chosen || chosen.soldOut);
+  const unavailable = isSelectionUnavailable(variations, axes, selection);
 
   /**
    * Eleven shirt sizes at one price need no price list; two anthology options

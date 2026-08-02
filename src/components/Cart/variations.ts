@@ -122,3 +122,23 @@ export function initialSelection(axes: VariationAxis[]): VariationSelection {
 
   return selection;
 }
+
+/**
+ * Whether the buyer has picked a combination that cannot be sold.
+ *
+ * A product with no axes has nothing to pick: it is simple, and WooCommerce
+ * already said whether it is in stock. Only a variable product can land on a
+ * variant that is sold out or was never built.
+ */
+export function isSelectionUnavailable(
+  variations: ProductVariation[],
+  axes: VariationAxis[],
+  selection: VariationSelection,
+): boolean {
+  if (axes.length === 0) return false;
+  if (axes.some((axis) => !selection[axis.name])) return false;
+
+  const chosen = findVariation(variations, axes, selection);
+
+  return !chosen || chosen.soldOut;
+}

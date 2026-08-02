@@ -5,6 +5,7 @@ import {
   findVariation,
   initialSelection,
   isOptionAvailable,
+  isSelectionUnavailable,
   type ProductVariation,
 } from "./variations";
 
@@ -149,5 +150,23 @@ describe("initialSelection", () => {
     ];
 
     expect(initialSelection(buildAxes(only))).toEqual({ antologia: "Tak" });
+  });
+});
+
+describe("isSelectionUnavailable", () => {
+  it("finds nothing wrong with a simple product, which has nothing to pick", () => {
+    expect(isSelectionUnavailable([], [], {})).toBe(false);
+  });
+
+  it("does not call an unfinished choice sold out", () => {
+    expect(isSelectionUnavailable(shirt, buildAxes(shirt), {})).toBe(false);
+  });
+
+  it("refuses a sold-out variant and a combination that was never built", () => {
+    const axes = buildAxes(shirt);
+
+    expect(isSelectionUnavailable(shirt, axes, { "rozmar-koszulki": "MĘSKA XXL" })).toBe(true);
+    expect(isSelectionUnavailable(shirt, axes, { "rozmar-koszulki": "DAMSKA S" })).toBe(true);
+    expect(isSelectionUnavailable(shirt, axes, { "rozmar-koszulki": "MĘSKA L" })).toBe(false);
   });
 });

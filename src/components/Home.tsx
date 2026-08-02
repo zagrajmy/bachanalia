@@ -4,6 +4,7 @@ import Link from "next/link";
 import { blocks, con, KEY_ART, marks } from "@/content/con";
 import { Ticket } from "@/content/shop";
 import { primaryCta } from "@/components/Globals/siteNav";
+import { GoldPrice } from "@/components/Home/GoldPrice";
 import { NewsEntry } from "@/components/News/news";
 import { NewsSection } from "@/components/News/NewsSection";
 import { Button } from "@/components/ui/warcraftcn/button";
@@ -101,6 +102,9 @@ export function Home({
           <ol className="mt-1">
             {tickets.map(({ href, label, note, price, soldOut }) => {
               const golden = label === "Golden Ticket";
+              const priceClass = `display text-[clamp(1.5rem,4.6vw,3rem)] whitespace-nowrap tabular-nums font-black ${
+                soldOut ? "line-through opacity-60" : ""
+              }`;
               return (
                 <li
                   className="border-b border-dashed border-navy/30"
@@ -118,13 +122,11 @@ export function Home({
                         {soldOut ? "Wyprzedane" : note}
                       </span>
                     </span>
-                    <span
-                      className={`display text-[clamp(1.5rem,4.6vw,3rem)] whitespace-nowrap tabular-nums font-black ${
-                        golden ? "gold" : ""
-                      } ${soldOut ? "line-through opacity-60" : ""}`}
-                    >
-                      {price}
-                    </span>
+                    {golden ? (
+                      <GoldPrice className={priceClass}>{price}</GoldPrice>
+                    ) : (
+                      <span className={priceClass}>{price}</span>
+                    )}
                   </Link>
                 </li>
               );

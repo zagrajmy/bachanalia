@@ -33,7 +33,7 @@ export function PartnersCard() {
                   href={logo.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="no-underline transition-opacity duration-200 ease-[var(--ease-out)] hover:opacity-70"
+                  className="rounded-card p-1 no-underline transition-none outline-2 outline-dashed outline-transparent hover:outline-navy/40"
                 >
                   <Image
                     src={logo.src}
@@ -53,7 +53,7 @@ export function PartnersCard() {
           href={cityFunding.href}
           target="_blank"
           rel="noreferrer"
-          className="shrink-0 no-underline transition-opacity duration-200 ease-[var(--ease-out)] hover:opacity-70"
+          className="shrink-0 rounded-card p-1 no-underline transition-none outline-2 outline-dashed outline-transparent hover:outline-navy/40"
         >
           <Image
             src={cityFunding.src}

@@ -28,6 +28,18 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      /**
+       * Where Paynow returns a buyer, and where their ticket lives: Event
+       * Tickets issues it after payment and serves it from wp-content, and no
+       * guest order can be read back over GraphQL — not even by the session
+       * that placed it. So this one path stays WordPress's after cutover, key
+       * and all, rather than being rebuilt without the thing it delivers.
+       */
+      {
+        source: "/zamowienie/order-received/:path*",
+        destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/index.php/zamowienie/order-received/:path*`,
+        permanent: false,
+      },
       {
         source: "/index.php/:path*",
         destination: "/:path*/",

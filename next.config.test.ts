@@ -59,14 +59,23 @@ test("redirects within the site are permanent, so link equity is not parked on a
   }
 });
 
-test("nothing redirects off the site any more", async () => {
+test("an outbound hop is temporary, because WordPress is about to move", async () => {
   const outbound = (await redirects()).filter((rule) => !rule.destination.startsWith("/"));
 
-  assert.deepEqual(
-    outbound.map((rule) => rule.source),
-    [],
-    "an outbound hop must be temporary — WordPress moves to a subdomain at cutover and a browser caches a 301 indefinitely",
-  );
+  for (const rule of outbound) {
+    assert.equal(
+      rule.permanent,
+      false,
+      `${rule.source} must 307 — WordPress moves to a subdomain at cutover and a browser caches a 301 indefinitely`,
+    );
+  }
+});
+
+test("the order confirmation stays with WordPress, which issues the ticket", async () => {
+  const rule = (await redirects()).find((r) => r.source.startsWith("/zamowienie/order-received"));
+
+  assert.ok(rule, "Paynow returns buyers here and the ticket is served from wp-content");
+  assert.match(rule.destination, /\/index\.php\/zamowienie\/order-received\/:path\*$/);
 });
 
 test("the dropped WordPress news shells land on the news archive", async () => {

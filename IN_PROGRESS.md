@@ -274,18 +274,20 @@ URL **we** have to serve. What WooCommerce renders there:
   carries a validity window. This is what an attendee shows at the door, so
   the page is not a courtesy — it delivers the product.
 
-**An order cannot be read anonymously.** `OrderIdTypeEnum` has `ORDER_KEY`,
-but querying with the key from the URL still answers "Not authorized to access
-this order": guest orders belong to the WooCommerce session that placed them.
-Our own checkout holds that session, so the thank-you page should be able to
-read its own order — unproven, and worth proving before building on it. The
-ticket URLs will have to come from order meta or stay pointed at WordPress.
+**A guest order cannot be read back at all.** `OrderIdTypeEnum` has
+`ORDER_KEY`, but the query answers "Not authorized to access this order" both
+anonymously *and* with the very session that placed the order — tested with a
+throwaway `bacs` order (3511). Guest orders need a logged-in owner.
 
-Still unverified:
+So the confirmation page is not ours to build: it prints an order we cannot
+read and a ticket we cannot mint. `/zamowienie/order-received/:path*` redirects
+to WordPress instead, temporarily, key and all — WooCommerce authorises that
+page on the key alone, so the ticket, its PDF and the emails keep working
+untouched. `next.config.test.ts` pins both the rule and its 307.
 
-1. Whether the session that placed an order can read it back by `ORDER_KEY`.
-2. At cutover the session cookie's domain changes when WordPress moves to a
-   subdomain. A cart built on the apex would silently empty.
+Still unverified: at cutover the session cookie's domain changes when
+WordPress moves to a subdomain, and a cart built on the apex would silently
+empty.
 
 Cart routes have to be dynamic, since the session token cannot be cached.
 
@@ -397,8 +399,8 @@ posts are free.
 
 1. **Clear the test orders.** Probing checkout wrote real 1 zł orders to the
    live shop: 3502 (`bacs`, `ON_HOLD`), 3507 and 3509 (Paynow payments
-   consumed before a buyer reached them). 3510 was paid and is `wc-completed`
-   — leave it, it is the proof the loop works.
+   consumed before a buyer reached them) and 3511 (read-back probe). 3510 was
+   paid and is `wc-completed` — leave it, it is the proof the loop works.
 2. **Install the revalidate plugin.** Edits lag an hour until then.
 3. **`/program` + ludamus feed.** Needs the upstream JSON endpoint, the
    Bachanalia sphere at `bachanalia.zagrajmy.net`, and the organizer

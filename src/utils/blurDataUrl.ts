@@ -1,11 +1,12 @@
-import { fetchLqip } from "./lqipEncode";
-import { lqipForWpUrl } from "./lqip";
+import { fetchLqipWebp } from "./lqipEncode";
+import { lqipForWpUrl, webpToDataUrl } from "./lqip";
 
 const placeholders = new Map<string, Promise<string | undefined>>();
 
 async function render(url: string) {
   try {
-    return await fetchLqip(url);
+    const encoded = await fetchLqipWebp(url);
+    return encoded ? webpToDataUrl(encoded.webp) : undefined;
   } catch {
     return undefined;
   }

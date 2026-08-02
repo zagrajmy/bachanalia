@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "bun run codegen && next dev",
-    "build": "bun run codegen && next build",
+    "build": "bun run codegen && bun run lqip && next build",
     "start": "next start",
     "lint": "oxlint",
     "fmt": "oxfmt",

@@ -18,9 +18,89 @@ import { GalleryImage } from "./GalleryImage";
 
 const SWIPE_THRESHOLD = 44;
 const ZOOM = 2.5;
+const REVEAL_MS = 150;
 
 const CONTROL =
   "flex size-11 shrink-0 items-center justify-center text-ink transition-transform duration-150 ease-[var(--ease-out)] active:scale-[0.96] disabled:pointer-events-none disabled:opacity-35";
+
+const LAYER =
+  "absolute inset-0 transition-opacity ease-[var(--ease-out)] motion-reduce:transition-none";
+
+function LightboxPhoto({
+  src,
+  alt,
+  thumbSizes,
+  zoomed,
+  blurDataURL,
+  onAspect,
+}: {
+  src: string;
+  alt: string;
+  thumbSizes: string;
+  zoomed: boolean;
+  blurDataURL?: string;
+  onAspect: (aspect: number) => void;
+}) {
+  const [fullShown, setFullShown] = useState(false);
+  const [zoomShown, setZoomShown] = useState(false);
+  const [zoomRequested, setZoomRequested] = useState(false);
+
+  useEffect(() => {
+    if (zoomed) setZoomRequested(true);
+  }, [zoomed]);
+
+  return (
+    <div className="relative size-full">
+      <GalleryImage
+        src={src}
+        alt={alt}
+        fit="cover"
+        priority
+        reveal="instant"
+        sizes={thumbSizes}
+        blurDataURL={blurDataURL}
+        className="size-full bg-transparent"
+        onReady={(image) => onAspect(image.naturalWidth / image.naturalHeight)}
+      />
+
+      <div
+        className={cn(LAYER, fullShown ? "opacity-100" : "opacity-0")}
+        style={{ transitionDuration: `${REVEAL_MS}ms` }}
+      >
+        <GalleryImage
+          src={src}
+          alt=""
+          fit="cover"
+          priority
+          reveal="instant"
+          sizes="100vw"
+          blurDataURL={blurDataURL}
+          className="size-full bg-transparent"
+          onReady={() => setFullShown(true)}
+        />
+      </div>
+
+      {zoomRequested && (
+        <div
+          className={cn(LAYER, zoomShown ? "opacity-100" : "opacity-0")}
+          style={{ transitionDuration: `${REVEAL_MS}ms` }}
+        >
+          <GalleryImage
+            src={src}
+            alt=""
+            fit="cover"
+            priority
+            reveal="instant"
+            sizes="250vw"
+            blurDataURL={blurDataURL}
+            className="size-full bg-transparent"
+            onReady={() => setZoomShown(true)}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function Lightbox({
   images,
@@ -103,7 +183,7 @@ export function Lightbox({
       }}
     >
       <Dialog.Portal>
-        <Dialog.Backdrop className="fixed inset-0 z-50 bg-paper/20 backdrop-blur-sm transition-opacity duration-200 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0" />
+        <Dialog.Backdrop className="fixed inset-0 z-50 bg-paper/20 backdrop-blur-sm data-ending-style:opacity-0 data-starting-style:opacity-0" />
 
         <Dialog.Popup
           finalFocus={finalFocus}
@@ -123,7 +203,7 @@ export function Lightbox({
               step(dx < 0 ? 1 : -1);
             }
           }}
-          className="fixed inset-0 z-50 flex flex-col outline-none"
+          className="fixed inset-0 z-50 flex flex-col outline-none data-ending-style:opacity-0"
         >
           <div className="flex items-center justify-end px-4 py-3 sm:px-6">
             <Dialog.Title className="sr-only">
@@ -158,26 +238,25 @@ export function Lightbox({
                     toggleZoom(event);
                   }}
                   className={cn("relative", zoomed ? "cursor-zoom-out" : "cursor-zoom-in")}
-                  style={
-                    aspect
+                  style={{
+                    ...(aspect
                       ? {
                           aspectRatio: `${aspect}`,
                           width: `min(100cqi, calc(${aspect} * 100cqh))`,
-                          ...(zoomed ? undefined : { viewTransitionName: morphName }),
                         }
-                      : { height: "100%", pointerEvents: "none", width: "100%" }
-                  }
+                      : { height: "100%", width: "100%" }),
+                    ...(index !== null && !zoomed
+                      ? { viewTransitionName: morphName }
+                      : undefined),
+                  }}
                 >
-                  <GalleryImage
+                  <LightboxPhoto
                     src={current.src}
                     alt={current.alt}
-                    fit="cover"
-                    priority
-                    reveal="instant"
-                    sizes={thumbSizes}
+                    thumbSizes={thumbSizes}
+                    zoomed={zoomed}
                     blurDataURL={current.blurDataURL}
-                    className="size-full bg-transparent"
-                    onReady={(image) => setAspect(image.naturalWidth / image.naturalHeight)}
+                    onAspect={setAspect}
                   />
                 </div>
               )}

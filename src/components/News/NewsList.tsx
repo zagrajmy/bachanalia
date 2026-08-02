@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { BlurImg } from "./BlurImg";
 import { NewsEntry } from "./news";
 
 type Props = {
@@ -21,15 +22,16 @@ export function NewsList({ items, titleAs = "h3" }: Props) {
           >
             {item.image && (
               <div
-                className="overflow-hidden bg-paper-shade bg-cover bg-center"
+                className="overflow-hidden bg-paper-shade"
                 style={
-                  item.image.blurDataURL
-                    ? { backgroundImage: `url(${item.image.blurDataURL})` }
+                  item.image.width && item.image.height
+                    ? { aspectRatio: `${item.image.width} / ${item.image.height}` }
                     : undefined
                 }
               >
-                <img
+                <BlurImg
                   alt={item.image.alt}
+                  blurDataURL={item.image.blurDataURL}
                   className="h-auto w-full"
                   decoding="async"
                   height={item.image.height}

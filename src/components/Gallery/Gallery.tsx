@@ -8,40 +8,25 @@ import type { WpGalleryImage } from "@/utils/prepareWpContent";
 import { GalleryImage } from "./GalleryImage";
 import { Lightbox } from "./Lightbox";
 
-/** Past a dozen photos the grid reads as a contact sheet, so the cells shrink. */
 const DENSE_FROM = 13;
-
-/**
- * The thumbnail and the opened photo share this name, so the browser tweens
- * one into the other instead of cross-fading a panel over the page. Only one
- * element may carry it at a time, which is what `morph` below tracks.
- */
 const MORPH = "gallery-photo";
 
-function withMorph(run: () => void) {
+function withMorph(run: () => void, ms = 260) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (reduced || !document.startViewTransition) return run();
 
-  document.startViewTransition(() => flushSync(run));
+  const root = document.documentElement;
+  root.style.setProperty("--gallery-morph-ms", `${ms}ms`);
+  const transition = document.startViewTransition(() => flushSync(run));
+  transition.finished.finally(() => root.style.removeProperty("--gallery-morph-ms"));
 }
 
-/**
- * Elementor's image carousel, rendered as a contact sheet.
- *
- * Its Swiper script never runs here, so the slides were already a static grid;
- * this only replaces the raw remote `<img>` tags with `next/image` and makes
- * every cell a real button that opens the photo full size.
- *
- * The alt text WordPress carries is the camera's filename — `IMG_7508-2` — so
- * it is dropped for the positional label a screen reader can actually use.
- */
 export function Gallery({ images }: { images: WpGalleryImage[] }) {
   const [index, setIndex] = useState<number | null>(null);
+  const [morphIndex, setMorphIndex] = useState(0);
   const thumbnails = useRef<(HTMLButtonElement | null)[]>([]);
   const finalFocus = useRef<HTMLButtonElement | null>(null);
-  /** Which thumbnail the photo flies out of, and back into. */
-  const morph = useRef(0);
 
   useEffect(() => {
     if (index !== null) finalFocus.current = thumbnails.current[index] ?? null;
@@ -72,7 +57,7 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
                 thumbnails.current[i] = node;
               }}
               onClick={() => {
-                morph.current = i;
+                flushSync(() => setMorphIndex(i));
                 withMorph(() => setIndex(i));
               }}
               aria-label={`Powiększ zdjęcie ${i + 1} z ${images.length}`}
@@ -85,7 +70,7 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
                 blurDataURL={image.blurDataURL}
                 className="aspect-4/3"
                 style={
-                  index === null && morph.current === i ? { viewTransitionName: MORPH } : undefined
+                  index === null && morphIndex === i ? { viewTransitionName: MORPH } : undefined
                 }
               />
             </button>
@@ -97,7 +82,7 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
         images={images}
         index={index}
         onIndexChange={(next) => {
-          morph.current = next;
+          setMorphIndex(next);
           setIndex(next);
         }}
         onClose={() => withMorph(() => setIndex(null))}

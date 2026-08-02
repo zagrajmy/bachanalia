@@ -1,16 +1,26 @@
-export async function encodeLqip(bytes: ArrayBuffer) {
+const SIZE = 8;
+const QUALITY = 20;
+
+export type EncodedLqip = {
+  webp: Buffer;
+  width: number;
+  height: number;
+};
+
+export async function encodeLqipWebp(bytes: ArrayBuffer | Uint8Array): Promise<EncodedLqip> {
   const { default: sharp } = await import("sharp");
+  const buffer = Buffer.from(bytes instanceof ArrayBuffer ? new Uint8Array(bytes) : bytes);
+  const image = sharp(buffer);
+  const { width, height } = await image.metadata();
+  if (!width || !height) throw new Error("image has no dimensions");
 
-  const webp = await sharp(Buffer.from(bytes))
-    .resize(12, 12, { fit: "inside" })
-    .webp({ quality: 40 })
-    .toBuffer();
+  const webp = await image.resize(SIZE, SIZE, { fit: "inside" }).webp({ quality: QUALITY }).toBuffer();
 
-  return `data:image/webp;base64,${webp.toString("base64")}`;
+  return { webp, width, height };
 }
 
-export async function fetchLqip(url: string) {
+export async function fetchLqipWebp(url: string) {
   const response = await fetch(url, { cache: "force-cache" });
   if (!response.ok) return undefined;
-  return encodeLqip(await response.arrayBuffer());
+  return encodeLqipWebp(await response.arrayBuffer());
 }

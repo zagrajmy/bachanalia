@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile, unlink } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { print } from "graphql/language/printer";
 import gql from "graphql-tag";
@@ -8,19 +8,26 @@ import { NewsQuery } from "../src/components/News/NewsQuery";
 import { AllContentQuery } from "../src/queries/general/AllContentQuery";
 import { ContentQuery } from "../src/queries/general/ContentQuery";
 import { ProductsQuery } from "../src/queries/general/ProductsQuery";
-import { fbPostKey, wpMediaKey } from "../src/utils/lqip";
-import { fetchLqip } from "../src/utils/lqipEncode";
+import { encodeLqipWebp, fetchLqipWebp } from "../src/utils/lqipEncode";
+import { fbPostKey, lqipMetaRelPath, lqipRelPath, wpMediaKey } from "../src/utils/lqipPath";
+import { MEDIA_WIDTHS, mediaStem } from "../src/utils/mediaPaths";
 import { splitWpContent } from "../src/utils/prepareWpContent";
 
 const ROOT = join(import.meta.dir, "..");
-const CACHE_PATH = join(ROOT, "src/content/lqip-cache.json");
+const LQIP_DIR = join(ROOT, "src/content/lqip");
+const IMG_DIR = join(ROOT, "public/_img");
+const MANIFEST_PATH = join(ROOT, "src/content/img-manifest.json");
 const WP = process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://bachanaliafantastyczne.pl";
 const DELAY_MS = 350;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-type Cache = { [key: string]: string };
-type Job = { key: string; fetchUrl: string };
+type Job = {
+  key: string;
+  thumbUrl: string;
+  fullUrl: string;
+  variants: boolean;
+};
 
 async function graphql<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
   const url = new URL(`${WP}/graphql`);
@@ -53,16 +60,85 @@ function thumbUrl(src: string) {
   }
 }
 
-async function encode(fetchUrl: string, displaySrc: string) {
-  const primary = await fetchLqip(fetchUrl);
-  if (primary) return primary;
-  if (fetchUrl === displaySrc) return undefined;
-  return fetchLqip(displaySrc);
+function fullUrl(src: string) {
+  try {
+    const url = new URL(src);
+    url.pathname = url.pathname
+      .replace(/-\d+x\d+(?=\.[^.]+$)/, "")
+      .replace(/-scaled(?=\.[^.]+$)/, "");
+    return url.toString();
+  } catch {
+    return src;
+  }
 }
 
-async function loadCache(): Promise<Cache> {
+function lqipFile(key: string) {
+  return join(LQIP_DIR, lqipRelPath(key));
+}
+
+function lqipMetaFile(key: string) {
+  return join(LQIP_DIR, lqipMetaRelPath(key));
+}
+
+async function writeLqip(key: string, webp: Buffer, width: number, height: number) {
+  await writeBinary(lqipFile(key), webp);
+  await writeFile(lqipMetaFile(key), `${JSON.stringify({ width, height })}\n`);
+}
+
+function variantFile(key: string, width: number) {
+  return join(IMG_DIR, mediaStem(key), `${width}.webp`);
+}
+
+async function exists(path: string) {
   try {
-    return JSON.parse(await readFile(CACHE_PATH, "utf8")) as Cache;
+    return (await readFile(path)).byteLength > 0;
+  } catch {
+    return false;
+  }
+}
+
+async function writeBinary(path: string, bytes: Buffer) {
+  await mkdir(dirname(path), { recursive: true });
+  await writeFile(path, bytes);
+}
+
+async function listFiles(dir: string, suffix: string): Promise<string[]> {
+  try {
+    const nodes = await readdir(dir, { withFileTypes: true });
+    const out: string[] = [];
+    for (const node of nodes) {
+      const path = join(dir, node.name);
+      if (node.isDirectory()) out.push(...(await listFiles(path, suffix)));
+      else if (node.name.endsWith(suffix)) out.push(path);
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
+async function migrateTextLqips() {
+  const files = await listFiles(LQIP_DIR, ".lqip");
+  let moved = 0;
+
+  for (const path of files) {
+    const text = (await readFile(path, "utf8")).trim();
+    const base64 = text.startsWith("data:image/webp;base64,")
+      ? text.slice("data:image/webp;base64,".length)
+      : text;
+    const { webp } = await encodeLqipWebp(Buffer.from(base64, "base64"));
+    const target = path.replace(/(\.[^.]+)?\.lqip$/, ".webp");
+    await writeBinary(target, webp);
+    await unlink(path);
+    moved += 1;
+  }
+
+  return moved;
+}
+
+async function loadManifest() {
+  try {
+    return JSON.parse(await readFile(MANIFEST_PATH, "utf8")) as Record<string, number[]>;
   } catch {
     return {};
   }
@@ -72,10 +148,19 @@ async function collectJobs(): Promise<Job[]> {
   const jobs: Job[] = [];
   const seen = new Set<string>();
 
-  const add = (key: string, fetchUrl: string) => {
-    if (seen.has(key)) return;
-    seen.add(key);
-    jobs.push({ key, fetchUrl });
+  const add = (job: Job) => {
+    if (seen.has(job.key)) return;
+    seen.add(job.key);
+    jobs.push(job);
+  };
+
+  const addWp = (src: string, thumbnail?: string | null, variants = false) => {
+    add({
+      key: wpMediaKey(src),
+      thumbUrl: thumbnail || thumbUrl(src),
+      fullUrl: fullUrl(src),
+      variants,
+    });
   };
 
   const news = await graphql<{
@@ -91,7 +176,7 @@ async function collectJobs(): Promise<Job[]> {
   for (const post of news.posts?.nodes ?? []) {
     const image = post.featuredImage?.node;
     if (!image?.sourceUrl) continue;
-    add(wpMediaKey(image.sourceUrl), image.thumbnail || thumbUrl(image.sourceUrl));
+    addWp(image.sourceUrl, image.thumbnail);
   }
 
   const { nodeByUri } = await graphql<{
@@ -111,7 +196,12 @@ async function collectJobs(): Promise<Job[]> {
 
   for (const entry of parseFeedItems(nodeByUri?.content ?? "")) {
     if (!entry.image?.src) continue;
-    add(fbPostKey(entry.id), entry.image.src);
+    add({
+      key: fbPostKey(entry.id),
+      thumbUrl: entry.image.src,
+      fullUrl: entry.image.src,
+      variants: false,
+    });
   }
 
   const shop = await graphql<{
@@ -123,7 +213,7 @@ async function collectJobs(): Promise<Job[]> {
   for (const product of shop.products?.nodes ?? []) {
     const image = product.image;
     if (!image?.sourceUrl) continue;
-    add(wpMediaKey(image.sourceUrl), image.thumbnail || thumbUrl(image.sourceUrl));
+    addWp(image.sourceUrl, image.thumbnail);
   }
 
   const { pages, posts } = await graphql<{
@@ -144,7 +234,7 @@ async function collectJobs(): Promise<Job[]> {
     for (const segment of splitWpContent(contentNode?.content)) {
       if (segment.type !== "gallery") continue;
       for (const image of segment.images) {
-        add(wpMediaKey(image.src), thumbUrl(image.src));
+        addWp(image.src, null, true);
       }
     }
   }
@@ -152,37 +242,115 @@ async function collectJobs(): Promise<Job[]> {
   return jobs;
 }
 
+async function fetchBytes(url: string) {
+  const response = await fetch(url, { cache: "force-cache" });
+  if (!response.ok) return undefined;
+  return Buffer.from(await response.arrayBuffer());
+}
+
+async function encodeWidths(bytes: Buffer) {
+  const { default: sharp } = await import("sharp");
+  const out: { width: number; webp: Buffer }[] = [];
+
+  for (const width of MEDIA_WIDTHS) {
+    const webp = await sharp(bytes)
+      .resize(width, undefined, { withoutEnlargement: true })
+      .webp({ quality: 75 })
+      .toBuffer();
+    out.push({ width, webp });
+  }
+
+  return out;
+}
+
 async function main() {
-  const cache = await loadCache();
+  await mkdir(LQIP_DIR, { recursive: true });
+  await mkdir(IMG_DIR, { recursive: true });
+
+  const migrated = await migrateTextLqips();
+  if (migrated > 0) console.log(`media: recompressed ${migrated} .lqip → .webp`);
+
   const jobs = await collectJobs();
-  const missing = jobs.filter((job) => !cache[job.key]);
+  const manifest = await loadManifest();
+  let lqipWrote = 0;
+  let variantWrote = 0;
 
-  console.log(`lqip: ${jobs.length} images, ${missing.length} missing`);
+  console.log(`media: ${jobs.length} images`);
 
-  let wrote = 0;
-  for (const job of missing) {
+  for (const job of jobs) {
+    const needLqip = !(await exists(lqipFile(job.key)));
+    const needMeta = !(await exists(lqipMetaFile(job.key)));
+    const widthsToBuild: number[] = [];
+    if (job.variants) {
+      for (const width of MEDIA_WIDTHS) {
+        if (!(await exists(variantFile(job.key, width)))) widthsToBuild.push(width);
+      }
+    }
+
+    if (!needLqip && !needMeta && widthsToBuild.length === 0) continue;
+
     await sleep(DELAY_MS);
+
     try {
-      const displaySrc = job.fetchUrl.includes("-150x150")
-        ? job.fetchUrl.replace("-150x150", "")
-        : job.fetchUrl;
-      const dataUrl = await encode(job.fetchUrl, displaySrc);
-      if (!dataUrl) {
-        console.warn(`lqip: skip ${job.key}`);
+      if (needLqip && widthsToBuild.length === 0) {
+        const encoded =
+          (await fetchLqipWebp(job.thumbUrl)) ?? (await fetchLqipWebp(job.fullUrl));
+        if (!encoded) {
+          console.warn(`media: skip lqip ${job.key}`);
+          continue;
+        }
+        await writeLqip(job.key, encoded.webp, encoded.width, encoded.height);
+        lqipWrote += 1;
+        console.log(`media: lqip ${job.key}`);
         continue;
       }
-      cache[job.key] = dataUrl;
-      wrote += 1;
-      console.log(`lqip: + ${job.key}`);
+
+      const bytes = await fetchBytes(job.fullUrl);
+      if (!bytes) {
+        console.warn(`media: skip fetch ${job.key}`);
+        continue;
+      }
+
+      if (needLqip || needMeta) {
+        const encoded = await encodeLqipWebp(bytes);
+        if (needLqip) {
+          await writeLqip(job.key, encoded.webp, encoded.width, encoded.height);
+          lqipWrote += 1;
+          console.log(`media: lqip ${job.key}`);
+        } else {
+          await writeFile(
+            lqipMetaFile(job.key),
+            `${JSON.stringify({ width: encoded.width, height: encoded.height })}\n`,
+          );
+          console.log(`media: meta ${job.key} ${encoded.width}x${encoded.height}`);
+        }
+      }
+
+      if (widthsToBuild.length > 0) {
+        const encoded = await encodeWidths(bytes);
+        const built: number[] = [...(manifest[job.key] ?? [])];
+        for (const { width, webp } of encoded) {
+          if (!widthsToBuild.includes(width)) continue;
+          await writeBinary(variantFile(job.key, width), webp);
+          if (!built.includes(width)) built.push(width);
+          variantWrote += 1;
+        }
+        manifest[job.key] = built.sort((a, b) => a - b);
+        console.log(`media: widths ${job.key} → ${built.join(",")}`);
+      }
     } catch (error) {
-      console.warn(`lqip: fail ${job.key}`, error);
+      console.warn(`media: fail ${job.key}`, error);
     }
   }
 
-  await mkdir(dirname(CACHE_PATH), { recursive: true });
-  const sorted = Object.fromEntries(Object.entries(cache).sort(([a], [b]) => a.localeCompare(b)));
-  await writeFile(CACHE_PATH, `${JSON.stringify(sorted, null, 2)}\n`);
-  console.log(`lqip: wrote ${wrote} new, ${Object.keys(sorted).length} total → ${CACHE_PATH}`);
+  const sorted = Object.fromEntries(
+    Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)),
+  );
+  await writeFile(MANIFEST_PATH, `${JSON.stringify(sorted, null, 2)}\n`);
+
+  console.log(
+    `media: wrote ${lqipWrote} lqips, ${variantWrote} variants, ${Object.keys(sorted).length} in manifest`,
+  );
 }
 
 main().catch((error) => {

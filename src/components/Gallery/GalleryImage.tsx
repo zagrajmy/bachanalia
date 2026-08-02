@@ -4,6 +4,7 @@ import { type CSSProperties, useRef, useState } from "react";
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
+import { mediaLoader } from "@/utils/mediaPaths";
 
 export function GalleryImage({
   src,
@@ -52,7 +53,7 @@ export function GalleryImage({
         fill
         sizes={sizes}
         priority={priority}
-        unoptimized
+        loader={mediaLoader}
         placeholder={blurDataURL ? "blur" : "empty"}
         blurDataURL={blurDataURL}
         ref={(node) => {

@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 import { print } from "graphql/language/printer";
 
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
-import { fbPostKey, lqip } from "@/utils/lqip";
+import { fbPostKey, lqipAsset } from "@/utils/lqip";
 
 import { parseFeedItems } from "./facebookFeed";
 import { NewsEntry } from "./newsFormat";
@@ -34,11 +34,15 @@ async function withLiveImages(entries: NewsEntry[]) {
   return entries.map((entry, i) => {
     if (!alive[i] || !entry.image) return { ...entry, image: undefined };
 
+    const placeholder = lqipAsset(fbPostKey(entry.id));
+
     return {
       ...entry,
       image: {
         ...entry.image,
-        blurDataURL: lqip(fbPostKey(entry.id)),
+        blurDataURL: placeholder?.blurDataURL,
+        width: placeholder?.width ?? 720,
+        height: placeholder?.height ?? 720,
       },
     };
   });

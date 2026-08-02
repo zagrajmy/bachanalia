@@ -10,7 +10,8 @@ traffic than usual. Polish-only, so no headless i18n.
 
 ```
 bachanaliafantastyczne.pl        → Vercel (Next.js App Router)
-wp.bachanaliafantastyczne.pl     → existing WordPress hosting (editors only)
+sklep.bachanaliafantastyczne.pl  → existing WordPress: checkout, payment,
+                                   shipping, tickets, wp-admin
 bachanalia.zagrajmy.net (?)      → ludamus sphere (programme + enrollment)
 ```
 
@@ -193,8 +194,9 @@ Two things that will bite:
   `errors`, so that form 500s where a 404 is owed. The connection with
   `slugIn` returns an empty list instead.
 
-Cart, checkout and payment hand off to WordPress — one clearly labelled link
-per product, no sessions or nonces crossing the boundary.
+The cart is ours; **checkout is WordPress's**, on `sklep.`, reached through
+WooGraphQL's nonced `/transfer-session` URL so the same cart carries over. See
+[To-do for Prod](#to-do-for-prod) for why, and what is left to wire.
 
 ### Going fully headless
 
@@ -402,11 +404,10 @@ posts are free.
    consumed before a buyer reached them) and 3511 (read-back probe). 3510 was
    paid and is `wc-completed` — leave it, it is the proof the loop works.
 2. **Install the revalidate plugin.** Edits lag an hour until then.
-3. **`/program` + ludamus feed.** Needs the upstream JSON endpoint, the
+3. **Cut over.** Everything for it is in [To-do for Prod](#to-do-for-prod).
+4. **`/program` + ludamus feed.** Needs the upstream JSON endpoint, the
    Bachanalia sphere at `bachanalia.zagrajmy.net`, and the organizer
    onboarding video Ad Astra is owed.
-4. **Cutover:** DNS to Vercel, WordPress to `wp.`, frontend redirect, verify
-   old URLs 301, shop exemptions. Do not touch permalinks before this.
 5. **`/koszyk/`, `/zamowienie/`, `/moje-konto/` and `/zwroty/` answer 200 from
    here.** The catch-all renders the WordPress page bodies, which are nothing
    but WooCommerce shortcodes, so they come out as empty shells. They are kept
@@ -418,6 +419,86 @@ posts are free.
    `AUTOBUSEM`) instead of headings, invisible to screen-reader heading
    navigation. Editorial fix in WordPress, not CSS.
 8. Vercel GitHub app access to the `zagrajmy` org.
+
+## To-do for Prod
+
+**The order is WordPress's.** Browsing and the cart are ours; from "do kasy"
+onward the buyer is on `sklep.` and WooCommerce owns checkout, payment,
+shipping, the ticket and the emails. That is not a retreat — it is the only
+place BLIK level 0 and an InPost locker can be collected at all, because both
+are read from `$_POST` on WooCommerce's own checkout page and a JSON GraphQL
+request can never fill it. What we keep is everything a buyer sees before they
+pay, which is also everything that made the old shop look like 2014.
+
+### 1. WordPress, before anything else
+
+1. **Serve WordPress from `sklep.bachanaliafantastyczne.pl`** and confirm
+   WooCommerce still checks out there — cookies, Paynow's return URL and the
+   ticket links all carry the host.
+2. **Enable the session handoff.** WPGraphQL for WooCommerce → *User Session
+   transferring URLs*, plus the *Checkout URL* checkbox under it. The endpoint
+   already answers at `/transfer-session`; the setting is what exposes the
+   nonced URL our cart needs. The session id has to be bound to the buyer's
+   machine and carry an expiry, or the link works from any machine.
+3. **Re-check *Pokaż metody płatności*.** It was unchecked on 2 August to make
+   the Paynow paywall appear for our own checkout; with checkout back on
+   WordPress it should go back on, which restores inline BLIK, the bank list
+   and the card option. Leave every Paynow gateway enabled either way — the
+   paywall's `is_available()` needs at least one of them on.
+4. **Install `wordpress/bachanalia-revalidate/`** and point it at the Vercel
+   deployment, then at the apex once DNS moves. Until it is installed, an edit
+   takes up to an hour to appear.
+5. **Clear the test orders** — 3502, 3507, 3509, 3511. Keep 3510: it is the
+   paid one that proves the payment loop.
+6. **Fix the pickup label.** The free rate still reads "Odbiór Osobisty podczas
+   BF 24" on a 2026 shop.
+7. **Do not touch permalinks** until the frontend has moved.
+
+### 2. Our side
+
+1. **Delete the checkout half** — `CheckoutForm`, `billing.ts`, `checkoutAction`,
+   the gateway query and `/sklep/kasa/`. None of it can collect a BLIK code or
+   a locker, and keeping a second buy path is how a buyer ends up on the one
+   that cannot take their money.
+2. **Hand the cart over** with the nonced `/transfer-session` URL, so "do kasy"
+   lands on WooCommerce's checkout with the same cart.
+3. **Point `/sklep/`'s "Koszyk →" at our own cart.** It currently links
+   `WP_CART_URL`, which shares no session with the headless cart.
+4. **Add `/koszyk/`, `/zamowienie/`, `/moje-konto/`, `/zwroty/` to
+   `RETIRED_PATHS`.** They are live WordPress pages, so they prerender here as
+   empty shortcode shells beside the real cart.
+5. **Repoint the order-received redirect** at `sklep.` once the host exists.
+6. **Disallow `/sklep/koszyk/` in `robots.ts`** — it is `force-dynamic` and
+   opens a WooCommerce session per crawl.
+7. **Fix the specs `ab46004` broke**: `e2e/shop.spec.ts` and `e2e/cart.spec.ts`
+   still assert a "Kup w sklepie" link that no longer exists.
+8. Work through the rest of the quality review — the shipping-cost mismatch,
+   the retry that can double a line, the unguarded `response.json()`.
+
+### 3. DNS and Vercel
+
+1. Apex and `www` → Vercel; `sklep.` → dhosting.
+2. `HEADLESS_SECRET`, `NEXT_PUBLIC_BASE_URL` and the WordPress host set in all
+   three Vercel environments.
+3. Vercel's GitHub app still needs access to the `zagrajmy` org before pushes
+   deploy themselves.
+
+### 4. Verify, in this order
+
+1. `bun run build` once against the real WordPress — it is slow and hammers a
+   rate-limiting server, so leave time.
+2. Old URLs 301 to the clean paths, and `/index.php/…` with them.
+3. Buy something end to end: product → cart → handoff → BLIK → ticket in the
+   inbox. Cancel the order afterwards.
+4. `sitemap.xml` lists the new routes and none of the WooCommerce four;
+   `robots.txt` points at our sitemap.
+5. Full e2e at `--workers=2` against the deployment.
+
+### 5. If it goes wrong
+
+DNS back to WordPress. Nothing in WooCommerce changes during cutover except
+the two settings above, so the old shop is always one A record away — which
+is the reason to make no schema, permalink or product change on the same day.
 
 ## Open questions
 

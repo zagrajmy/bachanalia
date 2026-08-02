@@ -43,7 +43,11 @@ type CartNode = {
   needsShippingAddress?: boolean | null;
   chosenShippingMethods?: (string | null)[] | null;
   availableShippingMethods?:
-    | ({ rates?: ({ id?: string | null; label?: string | null; cost?: string | null } | null)[] | null } | null)[]
+    | ({
+        rates?:
+          | ({ id?: string | null; label?: string | null; cost?: string | null } | null)[]
+          | null;
+      } | null)[]
     | null;
   contents?: { itemCount?: number | null; nodes?: CartItemNode[] | null } | null;
 };

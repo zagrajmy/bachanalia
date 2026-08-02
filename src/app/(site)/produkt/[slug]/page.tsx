@@ -4,9 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { AddToCartForm } from "@/components/Cart/AddToCartForm";
-import { headlessCartLinked } from "@/components/Cart/flag";
 import { SHOP_PATH } from "@/components/Globals/siteNav";
-import { Button } from "@/components/ui/warcraftcn/button";
 import { fetchProduct, fetchProductSlugs } from "@/components/Shop/products";
 import { hasVisibleContent, prepareWpContent } from "@/utils/prepareWpContent";
 
@@ -34,12 +32,12 @@ export default async function ProduktPage({ params }: Props) {
 
   if (!product) notFound();
 
-  const { name, price, soldOut, image, category, description, variants, wpHref } = product;
+  const { name, price, soldOut, image, category, description, variants } = product;
   const { productId, variations, attributeLabels } = product;
   /** Eleven t-shirt sizes at one price are a choice, not a price list. */
   const pricedVariants = new Set(variants.map((variant) => variant.price)).size > 1;
   /** The picker states the same options as the list below, only buyable. */
-  const showPicker = headlessCartLinked && !soldOut && productId > 0;
+  const showPicker = !soldOut && productId > 0;
 
   return (
     <div className="gutter mx-auto max-w-6xl pt-10 sm:pt-14">
@@ -131,16 +129,10 @@ export default async function ProduktPage({ params }: Props) {
             </div>
           )}
 
-          {soldOut ? (
+          {soldOut && (
             <p className="display mt-9 text-[clamp(1.2rem,3.6vw,1.65rem)] text-ink-muted">
               Wyprzedane
             </p>
-          ) : (
-            <Button asChild className="mt-9 px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]">
-              <a href={wpHref} target="_blank" rel="noreferrer">
-                Kup w sklepie
-              </a>
-            </Button>
           )}
 
           {hasVisibleContent(description) && (

@@ -5,4 +5,3 @@
  */
 export const CART_PATH = "/sklep/koszyk/";
 export const CHECKOUT_PATH = "/sklep/kasa/";
-export const CONFIRMATION_PATH = "/sklep/kasa/potwierdzenie/";

@@ -1,21 +1,13 @@
 "use server";
 
 import { print } from "graphql/language/printer";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { ProductVariationsQuery } from "@/queries/cart/ProductVariationsQuery";
 
 import { BILLING_COUNTRY, hasErrors, readBilling, validateBilling } from "./billing";
-import {
-  addToCart,
-  fetchPaymentGateways,
-  removeLine,
-  setQuantity,
-  submitCheckout,
-} from "./cart";
-import { ORDER_COOKIE, ORDER_COOKIE_MAX_AGE } from "./order";
-import { CART_PATH, CONFIRMATION_PATH } from "./paths";
+import { addToCart, fetchPaymentGateways, removeLine, setQuantity, submitCheckout } from "./cart";
+import { CART_PATH } from "./paths";
 import { wooRequest } from "./session";
 import type { CartActionState, CheckoutState } from "./types";
 import { findVariation, buildAxes, type ProductVariation } from "./variations";
@@ -44,35 +36,42 @@ function readAttributes(formData: FormData) {
 async function resolveVariationId(slug: string, selection: { [name: string]: string }) {
   const result = await wooRequest<{
     products?: {
-      nodes?: {
-        variations?: {
-          nodes?: {
-            databaseId?: number | null;
-            stockStatus?: string | null;
-            attributes?: { nodes?: { name?: string | null; value?: string | null }[] | null } | null;
-          }[] | null;
-        } | null;
-      }[] | null;
+      nodes?:
+        | {
+            variations?: {
+              nodes?:
+                | {
+                    databaseId?: number | null;
+                    stockStatus?: string | null;
+                    attributes?: {
+                      nodes?: { name?: string | null; value?: string | null }[] | null;
+                    } | null;
+                  }[]
+                | null;
+            } | null;
+          }[]
+        | null;
     } | null;
   }>(print(ProductVariationsQuery), { slugs: [slug] }, "read");
 
   if (!result.ok) return undefined;
 
-  const variations: ProductVariation[] = (result.data.products?.nodes?.[0]?.variations?.nodes ?? [])
-    .flatMap((node) =>
-      node?.databaseId
-        ? [
-            {
-              variationId: node.databaseId,
-              price: "",
-              soldOut: node.stockStatus === "OUT_OF_STOCK",
-              attributes: (node.attributes?.nodes ?? []).flatMap((attribute) =>
-                attribute?.name ? [{ name: attribute.name, value: attribute.value ?? "" }] : [],
-              ),
-            },
-          ]
-        : [],
-    );
+  const variations: ProductVariation[] = (
+    result.data.products?.nodes?.[0]?.variations?.nodes ?? []
+  ).flatMap((node) =>
+    node?.databaseId
+      ? [
+          {
+            variationId: node.databaseId,
+            price: "",
+            soldOut: node.stockStatus === "OUT_OF_STOCK",
+            attributes: (node.attributes?.nodes ?? []).flatMap((attribute) =>
+              attribute?.name ? [{ name: attribute.name, value: attribute.value ?? "" }] : [],
+            ),
+          },
+        ]
+      : [],
+  );
 
   return findVariation(variations, buildAxes(variations), selection)?.variationId;
 }
@@ -164,8 +163,6 @@ export async function cartLineAction(
  * `bacs` order finishes here instead and the confirmation page carries the
  * link on for the bank details.
  */
-const isOrderReceived = (url: string) => url.indexOf("order-received") !== -1;
-
 export async function checkoutAction(
   _state: CheckoutState,
   formData: FormData,
@@ -218,29 +215,20 @@ export async function checkoutAction(
     };
   }
 
-  const { redirect: target, order, result: outcome } = result.data;
-  const received = target && isOrderReceived(target);
+  const { redirect: target, result: outcome } = result.data;
 
-  if (order) {
-    const store = await cookies();
-
-    store.set(ORDER_COOKIE, JSON.stringify({ ...order, ...(received && { receivedUrl: target }) }), {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: ORDER_COOKIE_MAX_AGE,
-    });
-  }
-
-  if (target && !received) redirect(target);
-
-  if (order) redirect(CONFIRMATION_PATH);
+  /**
+   * Wherever WooCommerce points, the buyer goes: Paynow's paywall for a card
+   * or BLIK, its own order-received page for a bank transfer. That page is
+   * WordPress's either way — it prints an order no guest may read back over
+   * GraphQL and hands over the ticket Event Tickets mints after payment.
+   */
+  if (target) redirect(target);
 
   return {
     message:
       outcome === "success"
-        ? "Zamówienie zostało przyjęte, ale sklep nie odesłał jego numeru. Sprawdź skrzynkę e-mail i napisz do nas, jeśli nic nie przyszło."
+        ? "Zamówienie zostało przyjęte, ale sklep nie odesłał adresu płatności. Sprawdź skrzynkę e-mail i napisz do nas, jeśli nic nie przyszło."
         : "Sklep nie przyjął zamówienia. Spróbuj ponownie za chwilę.",
     fieldErrors: {},
     indeterminate: outcome === "success",

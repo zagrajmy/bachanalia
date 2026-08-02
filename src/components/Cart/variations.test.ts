@@ -10,10 +10,30 @@ import {
 
 /** The real shape of Golden Ticket, trimmed to four of its eleven sizes. */
 const shirt: ProductVariation[] = [
-  { variationId: 2109, price: "250 zł", soldOut: false, attributes: [{ name: "rozmar-koszulki", value: "MĘSKA XXXL" }] },
-  { variationId: 2108, price: "250 zł", soldOut: true, attributes: [{ name: "rozmar-koszulki", value: "MĘSKA XXL" }] },
-  { variationId: 2107, price: "250 zł", soldOut: false, attributes: [{ name: "rozmar-koszulki", value: "MĘSKA XL" }] },
-  { variationId: 2106, price: "250 zł", soldOut: false, attributes: [{ name: "rozmar-koszulki", value: "MĘSKA L" }] },
+  {
+    variationId: 2109,
+    price: "250 zł",
+    soldOut: false,
+    attributes: [{ name: "rozmar-koszulki", value: "MĘSKA XXXL" }],
+  },
+  {
+    variationId: 2108,
+    price: "250 zł",
+    soldOut: true,
+    attributes: [{ name: "rozmar-koszulki", value: "MĘSKA XXL" }],
+  },
+  {
+    variationId: 2107,
+    price: "250 zł",
+    soldOut: false,
+    attributes: [{ name: "rozmar-koszulki", value: "MĘSKA XL" }],
+  },
+  {
+    variationId: 2106,
+    price: "250 zł",
+    soldOut: false,
+    attributes: [{ name: "rozmar-koszulki", value: "MĘSKA L" }],
+  },
 ];
 
 const twoAxis: ProductVariation[] = [
@@ -50,12 +70,7 @@ describe("buildAxes", () => {
   });
 
   it("keeps every option, sold out ones included, in the order WooCommerce gave them", () => {
-    expect(buildAxes(shirt)[0].options).toEqual([
-      "MĘSKA XXXL",
-      "MĘSKA XXL",
-      "MĘSKA XL",
-      "MĘSKA L",
-    ]);
+    expect(buildAxes(shirt)[0].options).toEqual(["MĘSKA XXXL", "MĘSKA XXL", "MĘSKA XL", "MĘSKA L"]);
   });
 
   it("takes a second axis from the data rather than a hardcoded shape", () => {
@@ -92,7 +107,12 @@ describe("findVariation", () => {
 
   it("treats an empty attribute value as WooCommerce's 'any'", () => {
     const anySize: ProductVariation[] = [
-      { variationId: 9, price: "1 zł", soldOut: false, attributes: [{ name: "rozmiar", value: "" }] },
+      {
+        variationId: 9,
+        price: "1 zł",
+        soldOut: false,
+        attributes: [{ name: "rozmiar", value: "" }],
+      },
     ];
     const axes = buildAxes(anySize, [{ name: "rozmiar", label: "Rozmiar" }]);
 
@@ -120,7 +140,12 @@ describe("initialSelection", () => {
 
   it("answers an axis that offers a single option", () => {
     const only: ProductVariation[] = [
-      { variationId: 5, price: "1 zł", soldOut: false, attributes: [{ name: "antologia", value: "Tak" }] },
+      {
+        variationId: 5,
+        price: "1 zł",
+        soldOut: false,
+        attributes: [{ name: "antologia", value: "Tak" }],
+      },
     ];
 
     expect(initialSelection(buildAxes(only))).toEqual({ antologia: "Tak" });

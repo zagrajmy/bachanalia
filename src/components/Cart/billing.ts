@@ -46,7 +46,8 @@ export function validateBilling(values: BillingValues): FieldErrors {
   if (!values.lastName.trim()) errors.lastName = "Podaj nazwisko.";
 
   if (!values.email.trim()) errors.email = "Podaj adres e-mail.";
-  else if (!EMAIL.test(values.email.trim())) errors.email = "Ten adres e-mail nie wygląda na pełny.";
+  else if (!EMAIL.test(values.email.trim()))
+    errors.email = "Ten adres e-mail nie wygląda na pełny.";
 
   if (!values.phone.trim()) errors.phone = "Podaj numer telefonu.";
   else if (digits(values.phone).length < 9) errors.phone = "Numer telefonu ma dziewięć cyfr.";
@@ -54,7 +55,8 @@ export function validateBilling(values: BillingValues): FieldErrors {
   if (!values.address1.trim()) errors.address1 = "Podaj ulicę i numer.";
 
   if (!values.postcode.trim()) errors.postcode = "Podaj kod pocztowy.";
-  else if (!POSTCODE.test(values.postcode.trim())) errors.postcode = "Kod pocztowy w formacie 00-000.";
+  else if (!POSTCODE.test(values.postcode.trim()))
+    errors.postcode = "Kod pocztowy w formacie 00-000.";
 
   if (!values.city.trim()) errors.city = "Podaj miejscowość.";
 

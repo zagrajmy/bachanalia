@@ -40,9 +40,7 @@ export function AddToCartForm({ productId, slug, variations, attributeLabels, so
    * Eleven shirt sizes at one price need no price list; two anthology options
    * at 25 and 45 zł do, and the option itself is where it belongs.
    */
-  const pricesDiffer = variations.some(
-    (variation) => variation.price !== variations[0]?.price,
-  );
+  const pricesDiffer = variations.some((variation) => variation.price !== variations[0]?.price);
 
   const priceOf = (axisName: string, option: string) =>
     pricesDiffer

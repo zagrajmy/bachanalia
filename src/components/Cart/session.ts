@@ -160,7 +160,11 @@ export async function wooRequest<T>(
     const body = await response.json();
 
     if (body.errors?.length) {
-      return { ok: false, message: translate(String(body.errors[0].message)), indeterminate: false };
+      return {
+        ok: false,
+        message: translate(String(body.errors[0].message)),
+        indeterminate: false,
+      };
     }
 
     return { ok: true, data: body.data as T };

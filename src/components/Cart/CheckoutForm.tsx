@@ -109,9 +109,7 @@ export function CheckoutForm({ gateways, shippingRates, chosenShippingMethod, to
       </div>
 
       <div className="mt-10 flex flex-wrap items-center justify-between gap-6 border-t-2 border-navy pt-6">
-        <p className="display text-[clamp(1.3rem,3.4vw,1.8rem)] tabular-nums">
-          Do zapłaty {total}
-        </p>
+        <p className="display text-[clamp(1.3rem,3.4vw,1.8rem)] tabular-nums">Do zapłaty {total}</p>
 
         <Button type="submit" disabled={locked} className="px-8 py-3.5">
           {pending ? "Składam zamówienie…" : "Zamawiam i płacę"}

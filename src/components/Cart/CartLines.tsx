@@ -18,8 +18,8 @@ function LineForm({
   pending,
 }: {
   line: CartLine;
-  submit: (formData: FormData) => void;
   pending: boolean;
+  submit: (formData: FormData) => void;
 }) {
   const form = useRef<HTMLFormElement>(null);
 
@@ -59,7 +59,8 @@ function LineForm({
         defaultValue={line.quantity}
         disabled={pending}
         onBlur={(event) => {
-          if (Number(event.target.value) !== line.quantity) form.current?.requestSubmit();
+          if (Number(event.target.value) !== line.quantity)
+            form.current?.requestSubmit();
         }}
         className="w-14 rounded-card border border-dashed border-hairline bg-transparent px-2 py-1.5 text-center tabular-nums"
       />
@@ -118,7 +119,8 @@ export function CartLines({ lines }: { lines: CartLine[] }) {
 
               {line.options.map((option) => (
                 <p key={option.label} className="mt-1 text-sm text-ink-muted">
-                  <span className="eyebrow">{option.label}:</span> {option.value}
+                  <span className="eyebrow">{option.label}:</span>{" "}
+                  {option.value}
                 </p>
               ))}
             </div>
@@ -127,8 +129,10 @@ export function CartLines({ lines }: { lines: CartLine[] }) {
               <LineForm line={line} submit={submit} pending={pending} />
             </div>
 
-            <div className="col-start-2 flex items-center justify-between gap-4 sm:col-start-auto sm:flex-col sm:items-end sm:gap-2">
-              <p className="display text-lg tabular-nums">{line.total}</p>
+            <div className="col-start-2 flex items-center justify-between gap-2 sm:col-start-auto sm:flex-col sm:items-end sm:gap-0">
+              <p className="display text-lg tabular-nums leading-none [text-box:trim-both_cap_alphabetic]">
+                {line.total}
+              </p>
 
               <form action={submit}>
                 <input type="hidden" name="key" value={line.key} />
@@ -137,7 +141,7 @@ export function CartLines({ lines }: { lines: CartLine[] }) {
                 <button
                   type="submit"
                   disabled={pending}
-                  className="cursor-pointer text-sm text-ink-muted underline underline-offset-[0.25em] hover:text-rose disabled:opacity-50"
+                  className="cursor-pointer text-sm text-ink-muted underline underline-offset-[0.25em] hover:text-rose disabled:opacity-50 leading-none"
                 >
                   Usuń
                 </button>

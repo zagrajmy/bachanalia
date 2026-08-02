@@ -1,7 +1,7 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
 
-import { parseFeedItems } from "./facebookNews";
+import { parseFeedItems } from "./facebookFeed";
 
 /** Two items as Custom Facebook Feed renders them, trimmed to what we read. */
 const FEED = `<div class="cff-posts-wrap"><div class="cff-item cff-photo-post cff-box author-bachanalia-fantastyczne cff-347748351932621 cff-new" id="cff_347748351932621_1440582534768997" data-page-id="347748351932621" data-cff-timestamp="1785434413" data-object-id="1440582491435668">

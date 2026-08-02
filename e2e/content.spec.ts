@@ -84,10 +84,10 @@ test.describe("WordPress content rendering", () => {
 
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
-    await expect(dialog).toContainText("03");
+    await expect(dialog).toHaveAccessibleName(/Zdjęcie 3 z/);
 
     await page.keyboard.press("ArrowRight");
-    await expect(dialog).toContainText("04");
+    await expect(dialog).toHaveAccessibleName(/Zdjęcie 4 z/);
 
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();

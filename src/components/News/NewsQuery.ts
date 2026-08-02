@@ -18,6 +18,7 @@ export const NewsQuery = gql`
         featuredImage {
           node {
             sourceUrl
+            thumbnail: sourceUrl(size: THUMBNAIL)
             altText
             mediaDetails {
               width

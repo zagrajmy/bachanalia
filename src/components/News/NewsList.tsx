@@ -4,16 +4,9 @@ import { NewsEntry } from "./news";
 
 type Props = {
   items: NewsEntry[];
-  /** h2 under a page title, h3 under a section heading. */
   titleAs?: "h2" | "h3";
 };
 
-/**
- * A board rather than a dated index: the entries come from Facebook, where
- * posts have no titles and no common length. CSS columns give the old site's
- * masonry without a line of JavaScript, and the images keep whatever shape
- * they were posted in — the feed hands over no dimensions to reserve.
- */
 export function NewsList({ items, titleAs = "h3" }: Props) {
   const Title = titleAs;
 
@@ -27,13 +20,22 @@ export function NewsList({ items, titleAs = "h3" }: Props) {
             className="group block no-underline"
           >
             {item.image && (
-              <div className="overflow-hidden bg-paper-shade">
+              <div
+                className="overflow-hidden bg-paper-shade bg-cover bg-center"
+                style={
+                  item.image.blurDataURL
+                    ? { backgroundImage: `url(${item.image.blurDataURL})` }
+                    : undefined
+                }
+              >
                 <img
                   alt={item.image.alt}
                   className="h-auto w-full"
                   decoding="async"
+                  height={item.image.height}
                   loading="lazy"
                   src={item.image.src}
+                  width={item.image.width}
                 />
               </div>
             )}

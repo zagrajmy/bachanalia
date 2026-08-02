@@ -12,7 +12,6 @@
   --color-coral: #ee7489;
   --color-pink: #ff9cb3;
   --color-rose: #c0455f;
-  --color-lilac: #cbbbcf;
   --color-slate: #4e5079;
 
   --color-surface: var(--color-paper);
@@ -56,14 +55,18 @@ body {
 @utility ink-inverted {
   color: var(--color-paper);
   --color-ink: var(--color-paper);
-  --color-ink-muted: var(--color-lilac);
+  --color-ink-muted: color-mix(in oklab, var(--color-paper) 85%, transparent);
   --color-accent: var(--color-pink);
   --color-hairline: color-mix(in oklab, var(--color-paper) 25%, transparent);
 }
 
 @utility punched {
-  background: radial-gradient(circle at 50% 50%, var(--color-paper) 0 3.5px, transparent 3.5px) 0
-    0 / 16px 16px repeat-x;
+  background: radial-gradient(
+      circle at 50% 50%,
+      var(--color-paper) 0 3.5px,
+      transparent 3.5px
+    )
+    0 0 / 16px 16px repeat-x;
 }
 
 @utility screened {
@@ -94,18 +97,18 @@ body {
  * lighter than the paper can support.
  */
 @utility gold {
+  filter: drop-shadow(0.5px 0.5px var(--color-coral));
   background-image: linear-gradient(
-    to bottom,
-    #c9a13a 0%,
-    #e6c86e 24%,
-    #f8eab3 46%,
-    #f1dc95 58%,
-    #d9b04a 80%,
-    #c39a33 100%
+    40deg,
+    #e29144 0%,
+    #f6b353 24%,
+    #ffd592 46%,
+    #f7c482 58%,
+    #eba959 80%,
+    #ea8702 100%
   );
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 1px 0 rgb(150 110 30 / 0.3));
 }
 
 @utility eyebrow {
@@ -119,7 +122,8 @@ body {
   *::before,
   *::after {
     animation: none !important;
-    transition-property: opacity, color, background-color, border-color !important;
+    transition-property:
+      opacity, color, background-color, border-color !important;
     transition-duration: 150ms !important;
   }
 }

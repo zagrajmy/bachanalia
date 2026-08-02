@@ -27,6 +27,7 @@ export const hasVisibleContent = (html?: string | null) => {
 export interface WpGalleryImage {
   src: string;
   alt: string;
+  blurDataURL?: string;
 }
 
 export type WpContentSegment =

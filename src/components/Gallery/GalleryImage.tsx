@@ -1,23 +1,10 @@
 "use client";
 
-import { type CSSProperties, useState } from "react";
+import { type CSSProperties, useRef, useState } from "react";
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
-/**
- * A remote WordPress image on a paper plate.
- *
- * Elementor's carousel markup carries no `width`/`height` and the media details
- * are not in `ContentQuery`, so there is no honest intrinsic size to hand
- * `next/image` — `fill` inside a framed box is the only way to reserve space
- * without inventing an aspect ratio.
- *
- * The plate is also the placeholder. `placeholder="blur"` on a remote source
- * needs a `blurDataURL`, and generating those means pulling every full-size
- * upload off a server that rate-limits bursts at build time; the dashed frame
- * the shop already uses costs nothing and holds the grid steady.
- */
 export function GalleryImage({
   src,
   alt,
@@ -26,6 +13,9 @@ export function GalleryImage({
   className,
   priority,
   style,
+  reveal = "fade",
+  onReady,
+  blurDataURL,
 }: {
   src: string;
   alt: string;
@@ -34,8 +24,25 @@ export function GalleryImage({
   className?: string;
   priority?: boolean;
   style?: CSSProperties;
+  reveal?: "fade" | "instant";
+  onReady?: (image: HTMLImageElement) => void;
+  blurDataURL?: string;
 }) {
   const [loaded, setLoaded] = useState(false);
+  const notified = useRef(false);
+
+  const markReady = (node: HTMLImageElement) => {
+    if (notified.current) return;
+
+    const finish = () => {
+      if (notified.current) return;
+      notified.current = true;
+      setLoaded(true);
+      queueMicrotask(() => onReady?.(node));
+    };
+
+    node.decode().then(finish, finish);
+  };
 
   return (
     <div className={cn("relative overflow-hidden bg-paper-shade", className)} style={style}>
@@ -45,19 +52,17 @@ export function GalleryImage({
         fill
         sizes={sizes}
         priority={priority}
-        /**
-         * A cached bitmap is painted before React hears `onLoad`, so gating on
-         * that alone blanks an image the browser already has — which is what
-         * made the lightbox flash on open.
-         */
+        unoptimized
+        placeholder={blurDataURL ? "blur" : "empty"}
+        blurDataURL={blurDataURL}
         ref={(node) => {
-          if (node?.complete) setLoaded(true);
+          if (node?.complete && node.naturalWidth > 0) markReady(node);
         }}
-        onLoad={() => setLoaded(true)}
+        onLoad={(event) => markReady(event.currentTarget)}
         className={cn(
-          "transition-opacity duration-200 ease-[var(--ease-out)]",
           fit === "cover" ? "object-cover" : "object-contain",
-          loaded ? "opacity-100" : "opacity-0",
+          reveal === "fade" && !blurDataURL && "transition-opacity duration-200 ease-[var(--ease-out)]",
+          reveal === "instant" || loaded || blurDataURL ? "opacity-100" : "opacity-0",
         )}
       />
     </div>

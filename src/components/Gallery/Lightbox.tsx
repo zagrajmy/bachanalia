@@ -20,18 +20,8 @@ const SWIPE_THRESHOLD = 44;
 const ZOOM = 2.5;
 
 const CONTROL =
-  "flex size-11 shrink-0 items-center justify-center rounded-card border border-dashed border-navy/30 text-ink transition-[border-color,transform] duration-150 ease-[var(--ease-out)] hover:border-navy/70 active:scale-[0.96] disabled:pointer-events-none disabled:opacity-35";
+  "flex size-11 shrink-0 items-center justify-center text-ink transition-transform duration-150 ease-[var(--ease-out)] active:scale-[0.96] disabled:pointer-events-none disabled:opacity-35";
 
-/**
- * The photo on paper, framed the way the rest of the ticket is: dashed rules,
- * a 3px trim radius and a zero-padded index. It flies out of its thumbnail
- * rather than fading in over a dark field — the photo is the subject, so
- * nothing else changes colour around it.
- *
- * Base UI's dialog carries the modal contract — focus trap, Escape, scroll
- * lock — and `finalFocus` hands focus back to the thumbnail of whichever photo
- * is on screen when it closes, not necessarily the one that opened it.
- */
 export function Lightbox({
   images,
   index,
@@ -47,32 +37,19 @@ export function Lightbox({
   morphName: string;
   onClose: () => void;
   onIndexChange: (index: number) => void;
-  /** What the grid asked for, so the opened photo starts on the same bitmap. */
   thumbSizes: string;
 }) {
   const [zoomed, setZoomed] = useState(false);
+  const [aspect, setAspect] = useState<number | null>(null);
   const stage = useRef<HTMLDivElement>(null);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
 
-  /** Held across the closing transition, when `index` has already gone null. */
   const lastIndex = useRef(0);
   if (index !== null) lastIndex.current = index;
 
-  useEffect(() => setZoomed(false), [index]);
-
-  /**
-   * Opening at `100vw` would pick a different srcset candidate and fetch it,
-   * blanking the photo mid-flight. Starting on the grid's own candidate means
-   * the bitmap is already decoded; the browser then swaps in the larger one
-   * behind the picture it is already showing.
-   */
-  const [full, setFull] = useState(false);
-
   useEffect(() => {
-    if (index === null) return setFull(false);
-
-    const frame = requestAnimationFrame(() => setFull(true));
-    return () => cancelAnimationFrame(frame);
+    setZoomed(false);
+    setAspect(null);
   }, [index]);
 
   const total = images.length;
@@ -148,11 +125,9 @@ export function Lightbox({
           }}
           className="fixed inset-0 z-50 flex flex-col outline-none"
         >
-          <div className="flex items-center justify-between gap-4 px-4 py-3 sm:px-6">
-            <Dialog.Title className="eyebrow tabular-nums text-ink-muted">
-              {String(shown + 1).padStart(2, "0")}
-              <span className="px-1.5 opacity-50">/</span>
-              {String(total).padStart(2, "0")}
+          <div className="flex items-center justify-end px-4 py-3 sm:px-6">
+            <Dialog.Title className="sr-only">
+              Zdjęcie {shown + 1} z {total}
             </Dialog.Title>
 
             <Dialog.Close aria-label="Zamknij" className={CONTROL}>
@@ -162,29 +137,54 @@ export function Lightbox({
 
           <div
             ref={stage}
-            onClick={toggleZoom}
+            onClick={onClose}
             className={cn(
               "relative min-h-0 flex-1",
-              zoomed ? "cursor-zoom-out overflow-auto" : "cursor-zoom-in overflow-hidden",
+              zoomed ? "overflow-auto" : "overflow-hidden",
             )}
           >
-            <div className={cn("relative", zoomed ? "h-[250%] w-[250%]" : "size-full")}>
+            <div
+              className={cn(
+                "flex items-center justify-center",
+                zoomed ? "size-[250%]" : "size-full",
+              )}
+              style={{ containerType: "size" }}
+            >
               {current && (
-                <GalleryImage
+                <div
                   key={current.src}
-                  src={current.src}
-                  alt={current.alt}
-                  fit="contain"
-                  priority
-                  sizes={zoomed ? "250vw" : full ? "100vw" : thumbSizes}
-                  className="size-full bg-transparent"
-                  style={zoomed ? undefined : { viewTransitionName: morphName }}
-                />
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    toggleZoom(event);
+                  }}
+                  className={cn("relative", zoomed ? "cursor-zoom-out" : "cursor-zoom-in")}
+                  style={
+                    aspect
+                      ? {
+                          aspectRatio: `${aspect}`,
+                          width: `min(100cqi, calc(${aspect} * 100cqh))`,
+                          ...(zoomed ? undefined : { viewTransitionName: morphName }),
+                        }
+                      : { height: "100%", pointerEvents: "none", width: "100%" }
+                  }
+                >
+                  <GalleryImage
+                    src={current.src}
+                    alt={current.alt}
+                    fit="cover"
+                    priority
+                    reveal="instant"
+                    sizes={thumbSizes}
+                    blurDataURL={current.blurDataURL}
+                    className="size-full bg-transparent"
+                    onReady={(image) => setAspect(image.naturalWidth / image.naturalHeight)}
+                  />
+                </div>
               )}
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-3 p-4  sm:gap-5">
+          <div className="flex items-center justify-center gap-3 p-4 sm:gap-5">
             <button
               type="button"
               aria-label="Poprzednie zdjęcie"

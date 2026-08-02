@@ -119,7 +119,7 @@ export function Home({
                       </span>
                     </span>
                     <span
-                      className={`display text-[clamp(1.5rem,4.6vw,2.6rem)] whitespace-nowrap tabular-nums ${
+                      className={`display text-[clamp(1.5rem,4.6vw,3rem)] whitespace-nowrap tabular-nums font-black ${
                         golden ? "gold" : ""
                       } ${soldOut ? "line-through opacity-60" : ""}`}
                     >

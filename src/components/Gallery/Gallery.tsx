@@ -82,6 +82,7 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
                 src={image.src}
                 alt=""
                 sizes={thumbSizes}
+                blurDataURL={image.blurDataURL}
                 className="aspect-4/3"
                 style={
                   index === null && morph.current === i ? { viewTransitionName: MORPH } : undefined

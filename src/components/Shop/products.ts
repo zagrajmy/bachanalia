@@ -1,5 +1,6 @@
 import { print } from "graphql/language/printer";
 
+import type { AttributeLabel, ProductVariation } from "@/components/Cart/variations";
 import { accreditation } from "@/content/con";
 import { formatPrice } from "@/content/shop";
 import { ProductQuery } from "@/queries/general/ProductQuery";
@@ -34,9 +35,15 @@ export type ShopCategory = { slug: string; label: string; products: ShopProduct[
 export type ShopVariant = { label: string; price: string; soldOut: boolean };
 
 export type ShopProductDetail = ShopProduct & {
+  /** WooCommerce's post ID — what `addToCart` takes, not the slug. */
+  productId: number;
   category?: { slug: string; label: string };
   description: string;
   variants: ShopVariant[];
+  /** The picker's raw material: one entry per buyable combination. */
+  variations: ProductVariation[];
+  /** Editor-typed captions for the axes, e.g. "Rozmar Koszulki". */
+  attributeLabels: AttributeLabel[];
 };
 
 type ImageNode = {
@@ -50,6 +57,7 @@ type ImageNode = {
 type TermNode = { slug?: string | null; name?: string | null };
 
 type ProductNode = {
+  databaseId?: number | null;
   slug?: string | null;
   name?: string | null;
   link?: string | null;
@@ -59,10 +67,19 @@ type ProductNode = {
   productCategories?: { nodes?: TermNode[] | null } | null;
 };
 
+type AttributeNode = { name?: string | null; label?: string | null; value?: string | null };
+
 type ProductDetailNode = ProductNode & {
   description?: string | null;
+  attributes?: { nodes?: AttributeNode[] | null } | null;
   variations?: {
-    nodes?: { name?: string | null; price?: string | null; stockStatus?: string | null }[] | null;
+    nodes?: {
+      databaseId?: number | null;
+      name?: string | null;
+      price?: string | null;
+      stockStatus?: string | null;
+      attributes?: { nodes?: AttributeNode[] | null } | null;
+    }[] | null;
   } | null;
 };
 
@@ -207,12 +224,14 @@ export async function fetchProduct(slug: string): Promise<ShopProductDetail | un
   if (!base) return undefined;
 
   const term = product.productCategories?.nodes?.[0];
+  const variationNodes = product.variations?.nodes ?? [];
 
   return {
     ...base,
+    productId: product.databaseId ?? 0,
     ...(term?.slug && { category: { slug: term.slug, label: capitalise(term.name ?? term.slug) } }),
     description: product.description ?? "",
-    variants: (product.variations?.nodes ?? []).flatMap((variation) =>
+    variants: variationNodes.flatMap((variation) =>
       variation.name
         ? [
             {
@@ -222,6 +241,23 @@ export async function fetchProduct(slug: string): Promise<ShopProductDetail | un
             },
           ]
         : [],
+    ),
+    variations: variationNodes.flatMap((variation) =>
+      variation.databaseId
+        ? [
+            {
+              variationId: variation.databaseId,
+              price: formatPrice(variation.price),
+              soldOut: variation.stockStatus === "OUT_OF_STOCK",
+              attributes: (variation.attributes?.nodes ?? []).flatMap((attribute) =>
+                attribute?.name ? [{ name: attribute.name, value: attribute.value ?? "" }] : [],
+              ),
+            },
+          ]
+        : [],
+    ),
+    attributeLabels: (product.attributes?.nodes ?? []).flatMap((attribute) =>
+      attribute?.name ? [{ name: attribute.name, label: attribute.label || attribute.name }] : [],
     ),
   };
 }

@@ -17,6 +17,7 @@ export const ProductQuery = gql`
   query ProductQuery($slugs: [String]) {
     products(first: 1, where: { slugIn: $slugs, status: "publish" }) {
       nodes {
+        databaseId
         slug
         name
         link
@@ -43,11 +44,24 @@ export const ProductQuery = gql`
           stockStatus
         }
         ... on ProductWithVariations {
+          attributes(first: 10) {
+            nodes {
+              name
+              label
+            }
+          }
           variations(first: 50) {
             nodes {
+              databaseId
               name
               price
               stockStatus
+              attributes(first: 5) {
+                nodes {
+                  name
+                  value
+                }
+              }
             }
           }
         }

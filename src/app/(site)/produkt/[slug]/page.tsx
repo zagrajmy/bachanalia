@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { AddToCartForm } from "@/components/Cart/AddToCartForm";
+import { headlessCartLinked } from "@/components/Cart/flag";
 import { SHOP_PATH } from "@/components/Globals/siteNav";
 import { Button } from "@/components/ui/warcraftcn/button";
 import { fetchProduct, fetchProductSlugs } from "@/components/Shop/products";
@@ -33,8 +35,11 @@ export default async function ProduktPage({ params }: Props) {
   if (!product) notFound();
 
   const { name, price, soldOut, image, category, description, variants, wpHref } = product;
+  const { productId, variations, attributeLabels } = product;
   /** Eleven t-shirt sizes at one price are a choice, not a price list. */
   const pricedVariants = new Set(variants.map((variant) => variant.price)).size > 1;
+  /** The picker states the same options as the list below, only buyable. */
+  const showPicker = headlessCartLinked && !soldOut && productId > 0;
 
   return (
     <div className="gutter mx-auto max-w-6xl pt-10 sm:pt-14">
@@ -77,7 +82,17 @@ export default async function ProduktPage({ params }: Props) {
             {price}
           </p>
 
-          {variants.length > 1 && (
+          {showPicker && (
+            <AddToCartForm
+              productId={productId}
+              slug={product.slug}
+              variations={variations}
+              attributeLabels={attributeLabels}
+              soldOut={soldOut}
+            />
+          )}
+
+          {variants.length > 1 && !showPicker && (
             <div className="mt-8">
               <p className="eyebrow text-ink-muted">Do wyboru</p>
 

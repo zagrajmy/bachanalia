@@ -35,7 +35,8 @@ playful, with the confidence of an institution. Not corporate, not a template.
 
 - Date, place and the ticket CTA readable in three seconds.
 - **A printed ticket, not a landing page.** White paper, navy ink, coral
-  accent, dashed rules, prices set like a tariff.
+  accent, prices set like a tariff. Dashed rules **separate** — they are the
+  perforation between sections, never a frame drawn around a picture.
 - Real content over filler: real prices from WooCommerce, real partner names,
   real guest history. A placeholder says it is one.
 - Poster energy, web discipline: big type and committed colour, but WCAG AA,

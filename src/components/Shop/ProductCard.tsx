@@ -19,7 +19,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
 
   return (
     <Link className="group block no-underline" href={href}>
-      <div className="overflow-hidden rounded-card border border-dashed border-hairline bg-paper-shade">
+      <div className="overflow-hidden rounded-card bg-paper-shade">
         {image ? (
           <Image
             alt=""

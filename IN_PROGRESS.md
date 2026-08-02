@@ -89,9 +89,6 @@ indexed URL is the `/index.php/…` form, and that is where the link equity is.
 
 ## Design
 
-The site is a printed ticket: dashed and dotted rules, a 3px trim radius,
-perforation, zero-padded index numbers, prices set like a tariff.
-
 White paper, navy ink. Two darks carry the inverted bands — navy `#191f5c`
 for the hero and footer, petrol `#1f3c50` (the rooster's tail) for the
 opening hours. Coral `#ee7489` is the accent and takes navy text; white on

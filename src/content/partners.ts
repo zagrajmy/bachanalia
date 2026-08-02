@@ -19,6 +19,7 @@ const NAMES: Record<string, { name: string; note?: string }> = {
     /** The mark carries this sentence inside the artwork; the strip repeats it as text. */
     note: "Zrealizowano przy pomocy finansowej Miasta Zielona Góra",
   },
+  "zagrajmy.net": { name: "Zagrajmy.net" },
   "zok.com.pl": { name: "Zielonogórski Ośrodek Kultury" },
 };
 

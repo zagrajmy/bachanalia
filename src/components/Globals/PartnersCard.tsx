@@ -28,13 +28,20 @@ export function PartnersCard() {
             <p className="eyebrow text-slate">{tier}</p>
             <div className="mt-4 flex flex-wrap items-center gap-x-7 gap-y-5">
               {logos.map((logo) => (
-                <Image
+                <a
                   key={logo.name}
-                  src={logo.src}
-                  alt={logo.name}
-                  className={`w-auto ${logo.whiteBox ? "mix-blend-multiply" : ""}`}
-                  style={{ height: logoHeight(logo.src) }}
-                />
+                  href={logo.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="no-underline transition-opacity duration-200 ease-[var(--ease-out)] hover:opacity-70"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.name}
+                    className={`w-auto ${logo.whiteBox ? "mix-blend-multiply" : ""}`}
+                    style={{ height: logoHeight(logo.src) }}
+                  />
+                </a>
               ))}
             </div>
           </li>
@@ -42,12 +49,19 @@ export function PartnersCard() {
       </ul>
 
       <div className="mt-9 flex items-center gap-4 border-t border-dashed border-navy/30 pt-6">
-        <Image
-          src={cityFunding.src}
-          alt={cityFunding.name}
-          className="w-auto shrink-0"
-          style={{ height: "clamp(36px, 6vw, 48px)" }}
-        />
+        <a
+          href={cityFunding.href}
+          target="_blank"
+          rel="noreferrer"
+          className="shrink-0 no-underline transition-opacity duration-200 ease-[var(--ease-out)] hover:opacity-70"
+        >
+          <Image
+            src={cityFunding.src}
+            alt={cityFunding.name}
+            className="w-auto"
+            style={{ height: "clamp(36px, 6vw, 48px)" }}
+          />
+        </a>
         <p className="max-w-[42ch] text-xs text-slate">{cityFunding.name}</p>
       </div>
     </div>

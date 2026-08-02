@@ -8,6 +8,7 @@ import konwentyPoludniowe from "./partners/konwenty-poludniowe.png";
 import miastoZielonaGora from "./partners/miasto-zielona-gora.png";
 import planetariumWenus from "./partners/planetarium-wenus.png";
 import uniwersytetZielonogorski from "./partners/uniwersytet-zielonogorski.jpg";
+import zagrajmy from "./partners/zagrajmy.svg";
 import zok from "./partners/zok.jpg";
 
 export const KEY_ART = keyArt;
@@ -86,6 +87,8 @@ export const accreditation = [
 export type PartnerLogo = {
   name: string;
   src: StaticImageData;
+  /** Every mark is somebody's front door; a logo that goes nowhere wastes it. */
+  href: string;
   /**
    * The artwork ships baked onto an opaque white rectangle, so it needs
    * multiplying into the page instead of sitting in a visible box.
@@ -100,6 +103,7 @@ export const partners: { tier: string; logos: PartnerLogo[] }[] = [
       {
         name: "Uniwersytet Zielonogórski",
         src: uniwersytetZielonogorski,
+        href: "https://uz.zgora.pl/",
         whiteBox: true,
       },
     ],
@@ -110,10 +114,17 @@ export const partners: { tier: string; logos: PartnerLogo[] }[] = [
       {
         name: "Planetarium Wenus",
         src: planetariumWenus,
+        href: "https://centrumnaukikeplera.pl/planetarium-wenus/",
+      },
+      {
+        name: "Zagrajmy.net",
+        src: zagrajmy,
+        href: "https://zagrajmy.net/",
       },
       {
         name: "Zielonogórski Ośrodek Kultury",
         src: zok,
+        href: "https://zok.com.pl/",
         whiteBox: true,
       },
     ],
@@ -124,10 +135,12 @@ export const partners: { tier: string; logos: PartnerLogo[] }[] = [
       {
         name: "Fahrenheit",
         src: fahrenheit,
+        href: "https://fahrenheit.net.pl/",
       },
       {
         name: "Konwenty Południowe",
         src: konwentyPoludniowe,
+        href: "https://konwenty-poludniowe.pl/",
       },
     ],
   },
@@ -136,6 +149,7 @@ export const partners: { tier: string; logos: PartnerLogo[] }[] = [
 export const cityFunding = {
   name: "Zrealizowano przy pomocy finansowej Miasta Zielona Góra",
   src: miastoZielonaGora,
+  href: "https://zielona-gora.pl/",
 };
 
 export type NewsItem = { title: string; href: string; date: string };

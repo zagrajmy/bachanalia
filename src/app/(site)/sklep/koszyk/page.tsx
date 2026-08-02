@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { CartLines } from "@/components/Cart/CartLines";
-import { fetchCart } from "@/components/Cart/cart";
-import { CART_PATH, CHECKOUT_PATH } from "@/components/Cart/paths";
+import { fetchCart, fetchCheckoutUrl } from "@/components/Cart/cart";
+import { CART_PATH } from "@/components/Cart/paths";
 import { SHOP_PATH } from "@/components/Globals/siteNav";
 import { Button } from "@/components/ui/warcraftcn/button";
 
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function KoszykPage() {
-  const result = await fetchCart();
+  const [result, checkoutUrl] = await Promise.all([fetchCart(), fetchCheckoutUrl()]);
 
   /**
    * A cart WooCommerce would not hand over is not an empty cart. Saying so
@@ -90,10 +90,16 @@ export default async function KoszykPage() {
             </dd>
           </dl>
 
-          <div className="mt-8 flex justify-end">
-            <Button asChild className="px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]">
-              <Link href={CHECKOUT_PATH}>Przejdź do płatności</Link>
-            </Button>
+          <div className="mt-8 flex flex-col items-end gap-3">
+            {checkoutUrl ? (
+              <Button asChild className="px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]">
+                <a href={checkoutUrl}>Przejdź do płatności</a>
+              </Button>
+            ) : (
+              <p className="text-sm text-rose">
+                Kasa jest chwilowo niedostępna. Napisz do nas, a dokończymy zamówienie.
+              </p>
+            )}
           </div>
         </>
       )}

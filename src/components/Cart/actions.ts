@@ -5,11 +5,10 @@ import { redirect } from "next/navigation";
 
 import { ProductVariationsQuery } from "@/queries/cart/ProductVariationsQuery";
 
-import { BILLING_COUNTRY, hasErrors, readBilling, validateBilling } from "./billing";
-import { addToCart, fetchPaymentGateways, removeLine, setQuantity, submitCheckout } from "./cart";
+import { addToCart, removeLine, setQuantity } from "./cart";
 import { CART_PATH } from "./paths";
 import { wooRequest } from "./session";
-import type { CartActionState, CheckoutState } from "./types";
+import type { CartActionState } from "./types";
 import { findVariation, buildAxes, type ProductVariation } from "./variations";
 
 const ATTRIBUTE_PREFIX = "attr_";
@@ -163,74 +162,3 @@ export async function cartLineAction(
  * `bacs` order finishes here instead and the confirmation page carries the
  * link on for the bank details.
  */
-export async function checkoutAction(
-  _state: CheckoutState,
-  formData: FormData,
-): Promise<CheckoutState> {
-  const billing = readBilling((name) => {
-    const value = formData.get(name);
-    return typeof value === "string" ? value : undefined;
-  });
-
-  const fieldErrors = validateBilling(billing);
-
-  if (hasErrors(fieldErrors)) {
-    return { message: "Popraw zaznaczone pola.", fieldErrors };
-  }
-
-  const paymentMethod = String(formData.get("paymentMethod") ?? "");
-
-  if (!paymentMethod) {
-    return { message: "Wybierz sposób płatności.", fieldErrors: {} };
-  }
-
-  /**
-   * Re-checked here, not only in the form: the gateways that need a field
-   * typed on WooCommerce's own checkout page refuse every order sent from
-   * this side, and a posted id must not be able to reach one.
-   */
-  const gateways = await fetchPaymentGateways();
-
-  if (!gateways.some((gateway) => gateway.id === paymentMethod)) {
-    return { message: "Ta metoda płatności jest niedostępna.", fieldErrors: {} };
-  }
-
-  const shippingMethod = String(formData.get("shippingMethod") ?? "");
-  const customerNote = String(formData.get("customerNote") ?? "").trim();
-
-  const result = await submitCheckout({
-    paymentMethod,
-    ...(shippingMethod && { shippingMethod: [shippingMethod] }),
-    ...(customerNote && { customerNote }),
-    billing: { ...billing, country: BILLING_COUNTRY },
-  });
-
-  if (!result.ok) {
-    return {
-      message: result.indeterminate
-        ? "Straciliśmy połączenie w trakcie składania zamówienia. Nie wysyłaj go drugi raz — sprawdź skrzynkę e-mail i napisz do nas, jeśli nic nie przyszło."
-        : result.message,
-      fieldErrors: {},
-      indeterminate: result.indeterminate,
-    };
-  }
-
-  const { redirect: target, result: outcome } = result.data;
-
-  /**
-   * Wherever WooCommerce points, the buyer goes: Paynow's paywall for a card
-   * or BLIK, its own order-received page for a bank transfer. That page is
-   * WordPress's either way — it prints an order no guest may read back over
-   * GraphQL and hands over the ticket Event Tickets mints after payment.
-   */
-  if (target) redirect(target);
-
-  return {
-    message:
-      outcome === "success"
-        ? "Zamówienie zostało przyjęte, ale sklep nie odesłał adresu płatności. Sprawdź skrzynkę e-mail i napisz do nas, jeśli nic nie przyszło."
-        : "Sklep nie przyjął zamówienia. Spróbuj ponownie za chwilę.",
-    fieldErrors: {},
-    indeterminate: outcome === "success",
-  };
-}

@@ -59,8 +59,7 @@ function LineForm({
         defaultValue={line.quantity}
         disabled={pending}
         onBlur={(event) => {
-          if (Number(event.target.value) !== line.quantity)
-            form.current?.requestSubmit();
+          if (Number(event.target.value) !== line.quantity) form.current?.requestSubmit();
         }}
         className="w-14 rounded-card border border-dashed border-hairline bg-transparent px-2 py-1.5 text-center tabular-nums"
       />
@@ -119,8 +118,7 @@ export function CartLines({ lines }: { lines: CartLine[] }) {
 
               {line.options.map((option) => (
                 <p key={option.label} className="mt-1 text-sm text-ink-muted">
-                  <span className="eyebrow">{option.label}:</span>{" "}
-                  {option.value}
+                  <span className="eyebrow">{option.label}:</span> {option.value}
                 </p>
               ))}
             </div>

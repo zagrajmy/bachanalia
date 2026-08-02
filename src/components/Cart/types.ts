@@ -39,36 +39,9 @@ export type CartView = {
   lines: CartLine[];
 };
 
-export type PaymentGateway = { id: string; title: string; description: string };
-
-export type BillingFieldName =
-  | "firstName"
-  | "lastName"
-  | "email"
-  | "phone"
-  | "address1"
-  | "postcode"
-  | "city";
-
-export type BillingValues = { [K in BillingFieldName]: string };
-
-export type FieldErrors = { [K in BillingFieldName]?: string };
-
 /** What a cart form hands back to its `useActionState`. */
 export type CartActionState = {
   ok: boolean;
   /** Announced in a live region, so it is written for a screen reader too. */
   message: string;
 };
-
-export type CheckoutState = {
-  message: string;
-  fieldErrors: FieldErrors;
-  /**
-   * Set when the request failed after WooCommerce may already have written
-   * the order. The form locks instead of inviting a second attempt.
-   */
-  indeterminate?: boolean;
-};
-
-export const emptyCheckoutState: CheckoutState = { message: "", fieldErrors: {} };

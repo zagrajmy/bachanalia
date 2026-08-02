@@ -4,13 +4,12 @@ import { productPath } from "@/components/Globals/siteNav";
 import { formatPrice } from "@/content/shop";
 import { AddToCartMutation } from "@/queries/cart/AddToCartMutation";
 import { CartQuery } from "@/queries/cart/CartQuery";
-import { CheckoutMutation } from "@/queries/cart/CheckoutMutation";
-import { PaymentGatewaysQuery } from "@/queries/cart/PaymentGatewaysQuery";
+import { CheckoutUrlQuery } from "@/queries/cart/CheckoutUrlQuery";
 import { RemoveItemsFromCartMutation } from "@/queries/cart/RemoveItemsFromCartMutation";
 import { UpdateItemQuantitiesMutation } from "@/queries/cart/UpdateItemQuantitiesMutation";
 
 import { readSession, wooRequest, type WooResult } from "./session";
-import type { CartLine, CartView, PaymentGateway } from "./types";
+import type { CartLine, CartView } from "./types";
 
 type AttributeNode = { name?: string | null; label?: string | null; value?: string | null };
 
@@ -149,6 +148,21 @@ function unwrap<K extends string>(
  * No session means no cart, and asking a rate-limited WordPress to confirm
  * that for every visitor is a request nobody needs.
  */
+/**
+ * Where "Przejdź do płatności" goes. Undefined while the setting is off, and
+ * the cart says so rather than sending a buyer to a checkout that would greet
+ * them with an empty basket.
+ */
+export async function fetchCheckoutUrl(): Promise<string | undefined> {
+  const result = await wooRequest<{ customer?: { checkoutUrl?: string | null } | null }>(
+    print(CheckoutUrlQuery),
+    {},
+    "read",
+  );
+
+  return result.ok ? (result.data.customer?.checkoutUrl ?? undefined) : undefined;
+}
+
 export async function fetchCart(): Promise<WooResult<CartView>> {
   if (!(await readSession())) return { ok: true, data: EMPTY_CART };
 
@@ -214,121 +228,3 @@ export async function removeLine(key: string) {
  * denial rather than an allowance so it appears on its own when it is.
  */
 const GATEWAYS_NEEDING_POSTED_FIELDS = ["pay_by_paynow_pl_blik", "pay_by_paynow_pl_pbl"];
-
-export async function fetchPaymentGateways(): Promise<PaymentGateway[]> {
-  const result = await wooRequest<{
-    paymentGateways?: {
-      nodes?:
-        | ({ id?: string | null; title?: string | null; description?: string | null } | null)[]
-        | null;
-    } | null;
-  }>(print(PaymentGatewaysQuery), {}, "read");
-
-  if (!result.ok) return [];
-
-  return (result.data.paymentGateways?.nodes ?? []).flatMap((node) =>
-    node?.id && node.title && GATEWAYS_NEEDING_POSTED_FIELDS.indexOf(node.id) === -1
-      ? [{ id: node.id, title: node.title, description: node.description ?? "" }]
-      : [],
-  );
-}
-
-export type CheckoutOrder = {
-  databaseId: number;
-  orderNumber: string;
-  orderKey: string;
-  status: string;
-  total: string;
-  paymentMethodTitle: string;
-  needsPayment: boolean;
-  /**
-   * WooCommerce's own order-received URL when the gateway returned one. It
-   * carries what a bank-transfer buyer still needs — the account number — so
-   * it is kept rather than followed.
-   */
-  receivedUrl?: string;
-};
-
-export type CheckoutOutcome = { result: string; redirect: string; order?: CheckoutOrder };
-
-export type CheckoutArgs = {
-  paymentMethod: string;
-  shippingMethod?: string[];
-  customerNote?: string;
-  billing: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    address1: string;
-    postcode: string;
-    city: string;
-    country: string;
-  };
-};
-
-/**
- * One attempt, ever. WooGraphQL creates the order before the gateway answers,
- * so a repeat of a request that timed out is a second order against the same
- * buyer — the failure this whole feature is not allowed to have.
- */
-export async function submitCheckout(args: CheckoutArgs): Promise<WooResult<CheckoutOutcome>> {
-  const result = await wooRequest<{
-    checkout?: {
-      result?: string | null;
-      redirect?: string | null;
-      order?: {
-        databaseId?: number | null;
-        orderNumber?: string | null;
-        orderKey?: string | null;
-        status?: string | null;
-        total?: string | null;
-        paymentMethodTitle?: string | null;
-        needsPayment?: boolean | null;
-      } | null;
-    } | null;
-  }>(
-    print(CheckoutMutation),
-    { input: { ...args, shipToDifferentAddress: false, createdVia: "bachanalia-headless" } },
-    "once",
-  );
-
-  if (!result.ok) return result;
-
-  const checkout = result.data.checkout;
-  const order = checkout?.order;
-
-  return {
-    ok: true,
-    data: {
-      result: checkout?.result ?? "",
-      redirect: checkout?.redirect ?? "",
-      ...(order?.databaseId && {
-        order: {
-          databaseId: order.databaseId,
-          orderNumber: order.orderNumber ?? String(order.databaseId),
-          orderKey: order.orderKey ?? "",
-          status: order.status ?? "",
-          total: formatPrice(order.total),
-          paymentMethodTitle: order.paymentMethodTitle ?? "",
-          needsPayment: order.needsPayment ?? false,
-        },
-      }),
-    },
-  };
-}
-
-/**
- * Where an unpaid order can still be settled. WooCommerce's own URL first —
- * it wrote it and it works — and its pay page synthesised only when a gateway
- * returned success with no redirect at all. That is the case this whole
- * fallback exists for: an order nobody can pay is the one failure this flow
- * must not have. `/index.php/` because pretty permalinks 404 on that server.
- */
-export function orderPayUrl(order: CheckoutOrder) {
-  if (order.receivedUrl) return order.receivedUrl;
-
-  const base = process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
-
-  return `${base}/index.php/zamowienie/order-pay/${order.databaseId}/?pay_for_order=true&key=${order.orderKey}`;
-}

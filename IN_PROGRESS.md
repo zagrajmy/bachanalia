@@ -10,7 +10,7 @@ traffic than usual. Polish-only, so no headless i18n.
 
 ```
 bachanaliafantastyczne.pl        → Vercel (Next.js App Router)
-sklep.bachanaliafantastyczne.pl  → existing WordPress: checkout, payment,
+wp.bachanaliafantastyczne.pl     → existing WordPress: checkout, payment,
                                    shipping, tickets, wp-admin
 bachanalia.zagrajmy.net (?)      → ludamus sphere (programme + enrollment)
 ```
@@ -194,7 +194,7 @@ Two things that will bite:
   `errors`, so that form 500s where a 404 is owed. The connection with
   `slugIn` returns an empty list instead.
 
-The cart is ours; **checkout is WordPress's**, on `sklep.`, reached through
+The cart is ours; **checkout is WordPress's**, on `wp.`, reached through
 WooGraphQL's nonced `/transfer-session` URL so the same cart carries over. See
 [To-do for Prod](#to-do-for-prod) for why, and what is left to wire.
 
@@ -423,7 +423,7 @@ posts are free.
 ## To-do for Prod
 
 **The order is WordPress's.** Browsing and the cart are ours; from "do kasy"
-onward the buyer is on `sklep.` and WooCommerce owns checkout, payment,
+onward the buyer is on `wp.` and WooCommerce owns checkout, payment,
 shipping, the ticket and the emails. That is not a retreat — it is the only
 place BLIK level 0 and an InPost locker can be collected at all, because both
 are read from `$_POST` on WooCommerce's own checkout page and a JSON GraphQL
@@ -432,7 +432,7 @@ pay, which is also everything that made the old shop look like 2014.
 
 ### 1. WordPress, before anything else
 
-1. **Serve WordPress from `sklep.bachanaliafantastyczne.pl`** and confirm
+1. **Serve WordPress from `wp.bachanaliafantastyczne.pl`** and confirm
    WooCommerce still checks out there — cookies, Paynow's return URL and the
    ticket links all carry the host.
 2. **Enable the session handoff.** WPGraphQL for WooCommerce → *User Session
@@ -440,19 +440,29 @@ pay, which is also everything that made the old shop look like 2014.
    already answers at `/transfer-session`; the setting is what exposes the
    nonced URL our cart needs. The session id has to be bound to the buyer's
    machine and carry an expiry, or the link works from any machine.
-3. **Re-check *Pokaż metody płatności*.** It was unchecked on 2 August to make
-   the Paynow paywall appear for our own checkout; with checkout back on
-   WordPress it should go back on, which restores inline BLIK, the bank list
-   and the card option. Leave every Paynow gateway enabled either way — the
-   paywall's `is_available()` needs at least one of them on.
-4. **Install `wordpress/bachanalia-revalidate/`** and point it at the Vercel
+3. **Leave *Pokaż metody płatności* unchecked.** It was unchecked on 2 August
+   and it stays that way: the buyer takes one hop to Paynow's paywall and
+   picks BLIK, a bank or a card there. The alternative — BLIK level 0 — has
+   the buyer type a six-digit payment code into WordPress, which then posts it
+   onward. On a site that was compromised for two and a half years through an
+   unmaintained plugin, that is a credential we should never be holding. It
+   costs the inline flow's conversion; it removes payment data from the attack
+   surface entirely. Leave every Paynow gateway enabled — the paywall's
+   `is_available()` needs at least one of them on, even though they no longer
+   render separately.
+4. **Put Paynow first.** In *WooCommerce → Ustawienia → Płatności*, drag the
+   paynow.pl row above *Przelew bankowy*. WooCommerce renders gateways in that
+   order and preselects the first available one, so today the checkout opens
+   with bank transfer chosen — the slowest way to pay for a ticket, and the one
+   that leaves the order unpaid until someone reconciles it by hand.
+5. **Install `wordpress/bachanalia-revalidate/`** and point it at the Vercel
    deployment, then at the apex once DNS moves. Until it is installed, an edit
    takes up to an hour to appear.
-5. **Clear the test orders** — 3502, 3507, 3509, 3511. Keep 3510: it is the
+6. **Clear the test orders** — 3502, 3507, 3509, 3511. Keep 3510: it is the
    paid one that proves the payment loop.
-6. **Fix the pickup label.** The free rate still reads "Odbiór Osobisty podczas
+7. **Fix the pickup label.** The free rate still reads "Odbiór Osobisty podczas
    BF 24" on a 2026 shop.
-7. **Do not touch permalinks** until the frontend has moved.
+8. **Do not touch permalinks** until the frontend has moved.
 
 ### 2. Our side
 
@@ -467,7 +477,7 @@ pay, which is also everything that made the old shop look like 2014.
 4. **Add `/koszyk/`, `/zamowienie/`, `/moje-konto/`, `/zwroty/` to
    `RETIRED_PATHS`.** They are live WordPress pages, so they prerender here as
    empty shortcode shells beside the real cart.
-5. **Repoint the order-received redirect** at `sklep.` once the host exists.
+5. **Repoint the order-received redirect** at `wp.` once the host exists.
 6. **Disallow `/sklep/koszyk/` in `robots.ts`** — it is `force-dynamic` and
    opens a WooCommerce session per crawl.
 7. **Fix the specs `ab46004` broke**: `e2e/shop.spec.ts` and `e2e/cart.spec.ts`
@@ -477,7 +487,7 @@ pay, which is also everything that made the old shop look like 2014.
 
 ### 3. DNS and Vercel
 
-1. Apex and `www` → Vercel; `sklep.` → dhosting.
+1. Apex and `www` → Vercel; `wp.` → dhosting.
 2. `HEADLESS_SECRET`, `NEXT_PUBLIC_BASE_URL` and the WordPress host set in all
    three Vercel environments.
 3. Vercel's GitHub app still needs access to the `zagrajmy` org before pushes

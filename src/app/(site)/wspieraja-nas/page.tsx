@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { FundingStrip } from "@/components/Partners/FundingStrip";
 import { PartnerCard } from "@/components/Partners/PartnerCard";
 import { PARTNERS } from "@/content/partners";
+import { SectionHeading } from "@/components/SectionHeading";
 
 export const metadata: Metadata = {
   alternates: { canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/wspieraja-nas/` },
@@ -14,12 +15,17 @@ const idx = (i: number) => String(i + 1).padStart(2, "0");
 export default function WspierajaNasPage() {
   return (
     <div className="gutter mx-auto max-w-6xl pt-12 sm:pt-16">
-      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-b-2 border-navy pb-3">
-        <h1 className="display -ml-[0.04em] text-[clamp(2.1rem,6.4vw,4rem)]">Wspierają nas</h1>
-        <p className="max-w-[34ch] text-sm text-ink-muted">
-          XL edycja powstaje dzięki tym instytucjom, partnerom i patronom.
-        </p>
-      </div>
+      <SectionHeading
+        as="h1"
+        size="page"
+        aside={
+          <p className="max-w-[34ch] text-sm text-ink-muted">
+            XL edycja powstaje dzięki tym instytucjom, partnerom i patronom.
+          </p>
+        }
+      >
+        Wspierają nas
+      </SectionHeading>
 
       {PARTNERS.map((tier, i) => (
         <section className="mt-12 sm:mt-16" key={tier.tier}>

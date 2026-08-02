@@ -424,10 +424,7 @@ posts are free.
 6. **`wsparcie-klubu-1-zl` and `akredytacja-wspierajaca-polcon`** (25–45 zł)
    exist in the shop but are not in the homepage tier list — nobody has said
    where they belong.
-7. Several pages use bare paragraphs as section labels (`POCIĄGIEM`,
-   `AUTOBUSEM`) instead of headings, invisible to screen-reader heading
-   navigation. Editorial fix in WordPress, not CSS.
-8. Vercel GitHub app access to the `zagrajmy` org.
+7. Vercel GitHub app access to the `zagrajmy` org.
 
 ## To-do for Prod
 

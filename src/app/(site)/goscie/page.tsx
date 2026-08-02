@@ -8,6 +8,7 @@ import { Post } from "@/gql/graphql";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
 import { unshoutName } from "@/utils/unshout";
 import { wpUriToPath } from "@/utils/wpUriToPath";
+import { SectionHeading } from "@/components/SectionHeading";
 
 export const metadata: Metadata = {
   title: "Goście",
@@ -30,14 +31,19 @@ export default async function GosciePage() {
 
   return (
     <div className="gutter mx-auto max-w-6xl pt-12 sm:pt-16">
-      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-b-2 border-navy pb-3">
-        <h1 className="display -ml-[0.04em] text-[clamp(2.1rem,6.4vw,4rem)]">Goście</h1>
-        {editions.length > 0 && (
-          <p className="max-w-[34ch] text-sm text-ink-muted">
-            Program XL edycji jest w przygotowaniu. Goście edycji {editions.join(", ")}.
-          </p>
-        )}
-      </div>
+      <SectionHeading
+        as="h1"
+        size="page"
+        aside={
+          editions.length > 0 && (
+            <p className="max-w-[34ch] text-sm text-ink-muted">
+              Program XL edycji jest w przygotowaniu. Goście edycji {editions.join(", ")}.
+            </p>
+          )
+        }
+      >
+        Goście
+      </SectionHeading>
 
       {nodes.length === 0 ? (
         <p className="mt-8 max-w-[55ch] text-lg text-ink-muted">

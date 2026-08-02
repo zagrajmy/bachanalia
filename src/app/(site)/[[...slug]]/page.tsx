@@ -78,10 +78,14 @@ export async function generateStaticParams() {
     posts: { nodes: { uri?: string | null }[] };
   }>(print(AllContentQuery));
 
-  return [...(pages?.nodes ?? []), ...(posts?.nodes ?? [])]
-    .map((node) => wpUriToPath(node.uri))
-    .filter((path) => path !== "/" && !RETIRED_PATHS.includes(path))
-    .map((path) => ({ slug: path.split("/").filter(Boolean) }));
+  return (
+    [...(pages?.nodes ?? []), ...(posts?.nodes ?? [])]
+      .map((node) => wpUriToPath(node.uri))
+      .filter((path) => path !== "/" && !RETIRED_PATHS.includes(path))
+      .map((path) => ({ slug: path.split("/").filter(Boolean) }))
+      /** The homepage is a route here too, and without this it alone stays cold. */
+      .concat([{ slug: [] }])
+  );
 }
 
 export default async function Page({ params }: Props) {

@@ -2,34 +2,40 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function PUT(request: NextRequest) {
-  const requestBody = await request.text();
-  const { paths, tags } = requestBody ? JSON.parse(requestBody) : { paths: [], tags: [] };
-  let revalidated = false;
-
+  /**
+   * Before the body is touched, not after: parsing first meant any unsigned
+   * request with a malformed body answered 500 and a stack trace where it
+   * should have answered 401.
+   */
   if (request.headers.get("X-Headless-Secret-Key") !== process.env.HEADLESS_SECRET) {
     return NextResponse.json({ message: "Invalid secret" }, { status: 401 });
   }
 
+  let paths: unknown;
+  let tags: unknown;
+
   try {
-    if (paths && Array.isArray(paths) && paths.length > 0) {
-      Promise.all(paths.map((path) => revalidatePath(path)));
-      console.log("Revalidated paths:", paths);
+    const body = await request.text();
+    ({ paths = [], tags = [] } = body ? JSON.parse(body) : {});
+  } catch {
+    return NextResponse.json({ message: "Malformed body" }, { status: 400 });
+  }
+
+  let revalidated = false;
+
+  try {
+    if (Array.isArray(paths) && paths.length > 0) {
+      for (const path of paths) revalidatePath(path);
       revalidated = true;
     }
 
-    if (tags && Array.isArray(tags) && tags.length > 0) {
-      tags.map((tag: string) => revalidateTag(tag, "max"));
-      console.log("Revalidated tags:", tags);
+    if (Array.isArray(tags) && tags.length > 0) {
+      for (const tag of tags) revalidateTag(tag, "max");
       revalidated = true;
     }
 
-    return NextResponse.json({
-      revalidated,
-      now: Date.now(),
-      paths,
-      tags: tags,
-    });
-  } catch (error) {
+    return NextResponse.json({ revalidated, now: Date.now(), paths, tags });
+  } catch {
     return NextResponse.json({ message: "Error revalidating paths or tags" }, { status: 500 });
   }
 }

@@ -21,7 +21,7 @@ function toNewsEntry(post: Post): NewsEntry {
     id: post.id,
     title: unshoutName(post.title),
     href: wpUriToPath(post.uri),
-    ...toNewsDate(post.date ? new Date(post.date) : undefined),
+    ...toNewsDate(post.dateGmt ? new Date(`${post.dateGmt}Z`) : undefined),
     excerpt: newsExcerpt(post.excerpt),
     category: post.categories?.nodes?.[0]?.name ?? undefined,
     ...(image?.sourceUrl && {

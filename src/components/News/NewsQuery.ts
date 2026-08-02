@@ -7,7 +7,7 @@ export const NewsQuery = gql`
         id
         title
         uri
-        date
+        dateGmt
         excerpt
         categories(first: 3) {
           nodes {

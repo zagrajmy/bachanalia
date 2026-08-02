@@ -1,6 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   trailingSlash: true,
+  /**
+   * Next allows one dev server per output directory, and the e2e server runs
+   * with WordPress mocked while a hand-driven `bun run dev` is usually already
+   * up. Pointing the two at different directories lets them coexist, and keeps
+   * the dev fetch cache of a mocked run from leaking into a live one.
+   */
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   images: {
     /**
      * An upload never changes under its own URL — WordPress writes a new

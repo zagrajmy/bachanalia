@@ -1,11 +1,13 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/warcraftcn/button";
 
 import { addToCartAction } from "./actions";
+import { CART_PATH } from "./paths";
 import { QuantityInput } from "./QuantityInput";
+import { openCart, setCart } from "./store";
 import type { CartActionState } from "./types";
 import {
   buildAxes,
@@ -24,14 +26,54 @@ type Props = {
   variations: ProductVariation[];
   attributeLabels: AttributeLabel[];
   soldOut: boolean;
+  /** WooCommerce refuses a second unit, so no quantity is offered at all. */
+  soldIndividually: boolean;
 };
 
 const initial: CartActionState = { ok: true, message: "" };
 
-export function AddToCartForm({ productId, slug, variations, attributeLabels, soldOut }: Props) {
+export function AddToCartForm({
+  productId,
+  slug,
+  variations,
+  attributeLabels,
+  soldOut,
+  soldIndividually,
+}: Props) {
   const axes = buildAxes(variations, attributeLabels);
   const [selection, setSelection] = useState<VariationSelection>(() => initialSelection(axes));
   const [state, submit, pending] = useActionState(addToCartAction, initial);
+
+  /**
+   * Disabling the button until a size is picked reads the selection out of
+   * React state, and without scripting that state never changes — so the
+   * server render must leave it enabled or a reader without JavaScript can
+   * never submit at all. The action validates the same rule server-side and
+   * says "Wybierz wariant, zanim dodasz do koszyka." when it is broken.
+   */
+  const [interactive, setInteractive] = useState(false);
+
+  useEffect(() => setInteractive(true), []);
+
+  /**
+   * The cart opens beside the product rather than replacing it — a buyer who
+   * has just picked a size is usually still shopping. Without scripting the
+   * action's message on the page below is the confirmation instead.
+   *
+   * A refusal from WooCommerce opens it too: "you cannot add another one of
+   * these" is a fact about the cart, and showing the cart answers it better
+   * than a second sentence explaining it would.
+   */
+  useEffect(() => {
+    if (state.cart) {
+      setCart(state.cart);
+      openCart();
+
+      return;
+    }
+
+    if (state.showCart) openCart();
+  }, [state]);
 
   const chosen = findVariation(variations, axes, selection);
   const incomplete = axes.some((axis) => !selection[axis.name]);
@@ -96,20 +138,34 @@ export function AddToCartForm({ productId, slug, variations, attributeLabels, so
       ))}
 
       <div className="mt-8 flex flex-wrap items-end gap-4">
-        <QuantityInput name="quantity" label="Ilość" defaultValue={1} />
+        {soldIndividually ? (
+          <input type="hidden" name="quantity" value={1} />
+        ) : (
+          <QuantityInput name="quantity" label="Ilość" defaultValue={1} />
+        )}
 
         <Button
           type="submit"
-          disabled={soldOut || pending || incomplete || unavailable}
+          disabled={soldOut || pending || (interactive && (incomplete || unavailable))}
           className="px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]"
         >
-          {pending ? "Dodaję…" : "Dodaj do koszyka"}
+          {pending ? "Dodajemy…" : "Dodaj do koszyka"}
         </Button>
       </div>
 
       <p aria-live="polite" className="mt-3 min-h-[1.5em] text-sm">
         {state.message ? (
-          <span className="text-rose">{state.message}</span>
+          <span className={state.ok ? "text-ink-muted" : "text-rose"}>
+            {state.message}{" "}
+            {/**
+             * With scripting the sheet is already open over this. Without it,
+             * this sentence is the whole confirmation and this link is the only
+             * way from a product page to the cart.
+             */}
+            <a className="text-ink-muted underline underline-offset-[0.25em]" href={CART_PATH}>
+              Koszyk →
+            </a>
+          </span>
         ) : unavailable ? (
           <span className="text-rose">Ten wariant jest wyprzedany.</span>
         ) : incomplete && axes.length > 0 ? (

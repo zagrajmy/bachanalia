@@ -34,12 +34,12 @@ function LightboxPhoto({
   blurDataURL,
   onAspect,
 }: {
-  src: string;
   alt: string;
-  thumbSizes: string;
-  zoomed: boolean;
   blurDataURL?: string;
   onAspect: (aspect: number) => void;
+  src: string;
+  thumbSizes: string;
+  zoomed: boolean;
 }) {
   const [fullShown, setFullShown] = useState(false);
   const [zoomShown, setZoomShown] = useState(false);
@@ -135,7 +135,8 @@ export function Lightbox({
   const total = images.length;
   const shown = index ?? lastIndex.current;
   const current = images[shown];
-  const step = (delta: number) => onIndexChange((shown + delta + total) % total);
+  const step = (delta: number) =>
+    onIndexChange((shown + delta + total) % total);
 
   const onKeyDown = (event: KeyboardEvent) => {
     const moves: Record<string, () => void> = {
@@ -183,14 +184,16 @@ export function Lightbox({
       }}
     >
       <Dialog.Portal>
-        <Dialog.Backdrop className="fixed inset-0 z-50 bg-paper/20 backdrop-blur-sm data-ending-style:opacity-0 data-starting-style:opacity-0" />
+        <Dialog.Backdrop className="fixed inset-0 z-50 bg-paper/20 backdrop-blur-[6px] data-ending-style:opacity-0 data-starting-style:opacity-0" />
 
         <Dialog.Popup
           finalFocus={finalFocus}
           onKeyDown={onKeyDown}
           onTouchStart={(event) => {
             const touch = event.touches[0];
-            touchStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
+            touchStart.current = touch
+              ? { x: touch.clientX, y: touch.clientY }
+              : null;
           }}
           onTouchEnd={(event) => {
             const from = touchStart.current;
@@ -199,7 +202,10 @@ export function Lightbox({
             if (!from || !touch || zoomed) return;
 
             const dx = touch.clientX - from.x;
-            if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(touch.clientY - from.y)) {
+            if (
+              Math.abs(dx) > SWIPE_THRESHOLD &&
+              Math.abs(dx) > Math.abs(touch.clientY - from.y)
+            ) {
               step(dx < 0 ? 1 : -1);
             }
           }}
@@ -237,11 +243,14 @@ export function Lightbox({
                     event.stopPropagation();
                     toggleZoom(event);
                   }}
-                  className={cn("relative", zoomed ? "cursor-zoom-out" : "cursor-zoom-in")}
+                  className={cn(
+                    "relative",
+                    zoomed ? "cursor-zoom-out" : "cursor-zoom-in",
+                  )}
                   style={{
                     ...(aspect
                       ? {
-                          aspectRatio: `${aspect}`,
+                          aspectRatio: String(aspect),
                           width: `min(100cqi, calc(${aspect} * 100cqh))`,
                         }
                       : { height: "100%", width: "100%" }),

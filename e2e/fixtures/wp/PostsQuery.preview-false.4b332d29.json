@@ -1,0 +1,407 @@
+{
+  "data": {
+    "posts": {
+      "nodes": [
+        {
+          "id": "cG9zdDoyOTU4",
+          "title": "Filmopolis",
+          "uri": "/index.php/2025/09/15/filmopolis/",
+          "date": "2025-09-15T22:47:39",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/filmopolis_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 572,
+                "height": 642
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyOTQw",
+          "title": "Akademia Magii Ramesville",
+          "uri": "/index.php/2025/09/14/akademia-magii-ramesville/",
+          "date": "2025-09-14T20:51:40",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/ramesville_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 920,
+                "height": 518
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyOTM3",
+          "title": "FIGURKOWCY",
+          "uri": "/index.php/2025/09/14/figurkowcy-2/",
+          "date": "2025-09-14T20:38:04",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/figurkowcy_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 768,
+                "height": 720
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyOTMw",
+          "title": "dr Waldemar Grabowski",
+          "uri": "/index.php/2025/09/14/dr-waldemar-grabowski/",
+          "date": "2025-09-14T20:31:21",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/waldemar_grabowski_bf25.png",
+              "altText": "",
+              "mediaDetails": {
+                "width": 832,
+                "height": 1167
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyODUz",
+          "title": "Krzysztof „Jaxa” Rudek",
+          "uri": "/index.php/2025/09/08/krzysztof-jaxa-rudek/",
+          "date": "2025-09-08T22:15:17",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/krzysztof_jaxa_rudek_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 1802,
+                "height": 2048
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyODUw",
+          "title": "Paweł Kaszkowiak",
+          "uri": "/index.php/2025/09/08/pawel-kaszkowiak/",
+          "date": "2025-09-08T22:12:27",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/pawel_kaszkowiak_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 1366,
+                "height": 2048
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyODQ3",
+          "title": "Bartosz Wabno",
+          "uri": "/index.php/2025/09/08/bartosz-wabno/",
+          "date": "2025-09-08T22:10:24",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/bartosz_wabno_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 1365,
+                "height": 2048
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyODQ0",
+          "title": "Amadeusz Kocan",
+          "uri": "/index.php/2025/09/08/amadeusz-kocan/",
+          "date": "2025-09-08T22:09:04",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/amadeusz_kocan_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 1629,
+                "height": 2048
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyODQx",
+          "title": "Radosław Kot",
+          "uri": "/index.php/2025/09/08/radoslaw-kot/",
+          "date": "2025-09-08T22:07:10",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/radoslaw_kot.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 811,
+                "height": 781
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyODM3",
+          "title": "Piotr W. Cholewa",
+          "uri": "/index.php/2025/09/08/piotr-w-cholewa/",
+          "date": "2025-09-08T22:02:03",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/piotr_w_cholewa_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 642,
+                "height": 518
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyODM0",
+          "title": "Gramtok",
+          "uri": "/index.php/2025/09/08/gramtok/",
+          "date": "2025-09-08T21:56:35",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/gramtok_bf25.png",
+              "altText": "",
+              "mediaDetails": {
+                "width": 1500,
+                "height": 1500
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyODA5",
+          "title": "dr Karolina Rożko",
+          "uri": "/index.php/2025/09/02/karolina-rozko-2/",
+          "date": "2025-09-02T23:08:47",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/karolina_rozko_bf25-scaled.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 1920,
+                "height": 2560
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyODA2",
+          "title": "dr Jakub Walicki",
+          "uri": "/index.php/2025/09/02/jakub-walicki/",
+          "date": "2025-09-02T23:06:04",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/jakub_walicki_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 929,
+                "height": 1024
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyNzQ4",
+          "title": "dr Marta Listewnik",
+          "uri": "/index.php/2025/08/31/marta-listewnik/",
+          "date": "2025-08-31T21:59:37",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/marta_listewnik_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 2400,
+                "height": 2400
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyNzQ0",
+          "title": "dr Andrzej Świrkowski",
+          "uri": "/index.php/2025/08/31/andrzej-swirkowski/",
+          "date": "2025-08-31T21:52:12",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/andrzej_swirkowski_bf25.png",
+              "altText": "",
+              "mediaDetails": {
+                "width": 561,
+                "height": 499
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyNzQx",
+          "title": "Paweł Majka",
+          "uri": "/index.php/2025/08/31/pawel-majka/",
+          "date": "2025-08-31T21:47:58",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/pawel_majka_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 1600,
+                "height": 1059
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyNzM4",
+          "title": "Michał Stonawski",
+          "uri": "/index.php/2025/08/31/michal-stonawski-2/",
+          "date": "2025-08-31T21:41:36",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/michal_stonawski_bf25-scaled.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 1707,
+                "height": 2560
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyNzM1",
+          "title": "Michał Cetnarowski",
+          "uri": "/index.php/2025/08/31/michal-cetnarowski-2/",
+          "date": "2025-08-31T21:33:37",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/michal_cetnarowski_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 1772,
+                "height": 2480
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyNzMy",
+          "title": "Lidka Migalska",
+          "uri": "/index.php/2025/08/31/lidka-migalska/",
+          "date": "2025-08-31T21:29:50",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/lidka_migalska_fb25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 861,
+                "height": 1145
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyNzMw",
+          "title": "Konrad „Biały” Klepacki",
+          "uri": "/index.php/2025/08/31/konrad-bialy-klepacki/",
+          "date": "2025-08-31T21:26:08",
+          "featuredImage": null
+        },
+        {
+          "id": "cG9zdDoyNzI3",
+          "title": "Justyna Hankus",
+          "uri": "/index.php/2025/08/31/justyna-hankus/",
+          "date": "2025-08-31T21:17:59",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/justyna_hankus_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 1654,
+                "height": 2480
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyNzI0",
+          "title": "Jacek Komuda",
+          "uri": "/index.php/2025/08/31/jacek-komuda/",
+          "date": "2025-08-31T21:10:41",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/jacek_komuda_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 1024,
+                "height": 683
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyNzIx",
+          "title": "Dominika Węcławek",
+          "uri": "/index.php/2025/08/31/dominika-weclawek-3/",
+          "date": "2025-08-31T20:57:18",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/dominika_weclawek_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 1396,
+                "height": 1602
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyNzE3",
+          "title": "Artur DZIKOWY Olchowy",
+          "uri": "/index.php/2025/08/31/artur-dzikowy-olchowy/",
+          "date": "2025-08-31T20:53:55",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/artur_olchowy_bf25.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 1311,
+                "height": 1992
+              }
+            }
+          }
+        },
+        {
+          "id": "cG9zdDoyNzE0",
+          "title": "Bartek Biedrzycki",
+          "uri": "/index.php/2025/08/31/bartek-biedrzycki-3/",
+          "date": "2025-08-31T20:43:50",
+          "featuredImage": {
+            "node": {
+              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/bartek_biedrzycki_bf2025-scaled.jpg",
+              "altText": "",
+              "mediaDetails": {
+                "width": 2560,
+                "height": 2560
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

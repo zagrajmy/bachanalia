@@ -11,6 +11,8 @@
     "codegen:refresh": "WP_SCHEMA_REFRESH=1 bun run codegen",
     "lqip": "bun scripts/lqip-cache.ts",
     "e2e": "playwright test",
+    "e2e:server": "MOCK_WP=replay NEXT_DIST_DIR=.next-mock next dev",
+    "e2e:record": "bun scripts/record-wp.ts",
     "e2e:ui": "playwright test --ui",
     "test": "bun test src next.config.test.ts",
     "e2e:build": "bun run build && playwright test"
@@ -40,6 +42,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "globals": "17.8.0",
+    "msw": "2.15.0",
     "oxfmt": "0.56.0",
     "oxlint": "1.71.0",
     "tailwindcss": "^4",

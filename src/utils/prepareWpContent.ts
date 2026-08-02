@@ -1,3 +1,5 @@
+import { decodeEntities, htmlToText } from "./wpHtml";
+
 const DROPPED_ATTRIBUTES = [
   / role="region"(?= aria-roledescription="carousel")/g,
   / aria-roledescription="(?:carousel|slide)"/g,
@@ -16,12 +18,7 @@ export const hasVisibleContent = (html?: string | null) => {
   if (!html) return false;
   if (MEDIA.test(html)) return true;
 
-  return (
-    html
-      .replace(/<[^>]+>/g, "")
-      .replace(/&nbsp;/g, " ")
-      .trim().length > 0
-  );
+  return htmlToText(html).length > 0;
 };
 
 export interface WpGalleryImage {
@@ -59,15 +56,7 @@ const TAG = /<!--[\s\S]*?-->|<(\/?)([a-zA-Z][a-zA-Z0-9-]*)((?:'[^']*'|"[^"]*"|[^
 
 const IMG = /<img\b[^>]*>/gi;
 
-const decodeEntities = (value: string) =>
-  value
-    .replace(/&#0?39;|&apos;/g, "'")
-    .replace(/&quot;/g, '"')
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&");
-
-const attribute = (tag: string, name: string) =>
+const attribute =(tag: string, name: string) =>
   new RegExp(`\\s${name}="([^"]*)"`, "i").exec(tag)?.[1];
 
 const galleryImages = (slice: string): WpGalleryImage[] => {

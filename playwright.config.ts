@@ -22,12 +22,22 @@ export default defineConfig({
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
     { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
+  /**
+   * The suite runs against WordPress recorded into `e2e/fixtures/wp` and
+   * replayed by `msw` inside the Next server, so a run writes nothing to the
+   * live shop, needs no network, and is not at the mercy of a server that
+   * answers in ~10s under load.
+   *
+   * It is a dev server rather than `next start` on purpose: `start` serves
+   * whatever was built last, which is a stale build with live data baked into
+   * it more often than not.
+   */
   webServer: process.env.E2E_BASE_URL
     ? undefined
     : {
-        command: `bun run start --port ${PORT}`,
+        command: `bun run e2e:server --port ${PORT}`,
         url: baseURL,
         reuseExistingServer: !process.env.CI,
-        timeout: 120_000,
+        timeout: 180_000,
       },
 });

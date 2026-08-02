@@ -1,0 +1,140 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { ShoppingBagIcon } from "lucide-react";
+
+import { SHOP_PATH } from "@/components/Globals/siteNav";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/warcraftcn/button";
+
+import { CartLines } from "./CartLines";
+import { CartTotals } from "./CartTotals";
+import { CART_PATH, CHECKOUT_UNAVAILABLE } from "./paths";
+import { loadCart, setCartOpen, useCart } from "./store";
+
+/** 1 produkt, 2–4 produkty, 5+ produktów, and 12–14 back to produktów. */
+function products(count: number) {
+  const last = count % 10;
+  const teens = count % 100;
+
+  if (count === 1) return "1 produkt";
+  if (last >= 2 && last <= 4 && (teens < 12 || teens > 14)) return `${count} produkty`;
+
+  return `${count} produktów`;
+}
+
+/**
+ * The cart floats in the corner of the page rather than sitting in the header,
+ * and it only exists once there is something in it — an empty cart is not a
+ * thing to advertise on every route.
+ *
+ * It is still a real button with an accessible name that counts what it holds,
+ * and it still sits in the document right after the header, so a keyboard user
+ * reaches it after the navigation instead of hunting for it past the footer.
+ * A reader without scripting gets nothing here; their way to the cart is the
+ * link the shop index carries and the one the add-to-cart form prints.
+ */
+export function CartTrigger() {
+  const { cart, checkoutUrl, open } = useCart();
+  const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    void loadCart();
+  }, []);
+
+  /** Quantities may have moved in another tab, and the handover URL expires. */
+  useEffect(() => {
+    if (open) void loadCart(true);
+  }, [open]);
+
+  /**
+   * Whether the first cart this page ever saw was empty. A line landing after
+   * that is a buyer's own doing and worth an entrance; a cart that was already
+   * full is just the page loading, and animating it there would be a pop on
+   * every navigation.
+   */
+  const startedEmpty = useRef<boolean | undefined>(undefined);
+  if (cart && startedEmpty.current === undefined) startedEmpty.current = cart.isEmpty;
+
+  const count = cart?.itemCount ?? 0;
+
+  /** The cart page is the cart; a button pointing at it there is noise. */
+  if (!mounted || pathname === CART_PATH) return null;
+
+  /**
+   * Kept while the sheet is open even after the last line goes, so removing
+   * everything leaves the empty state on screen instead of closing the sheet
+   * out from under the buyer.
+   */
+  if (count === 0 && !open) return null;
+
+  return (
+    <Sheet open={open} onOpenChange={setCartOpen}>
+      <SheetTrigger
+        aria-label={`Koszyk, ${products(count)}`}
+        className={`floating-dock flex items-center gap-2 rounded-card border border-navy bg-accent px-4 py-3 text-on-accent shadow-[0_14px_34px_-14px] shadow-navy/50 transition-transform duration-150 ease-[var(--ease-out)] hover:-translate-y-px active:scale-[0.97] ${
+          startedEmpty.current ? "motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200" : ""
+        }`}
+      >
+        <ShoppingBagIcon className="size-5" aria-hidden="true" />
+
+        <span aria-hidden="true" className="text-sm font-semibold tabular-nums">
+          {count}
+        </span>
+      </SheetTrigger>
+
+      <SheetContent side="right" className="data-[side=right]:w-[min(24rem,88vw)]">
+        <SheetHeader className="h-16 flex-row items-center border-b border-dashed border-hairline py-0 sm:h-18">
+          <SheetTitle>Koszyk</SheetTitle>
+        </SheetHeader>
+
+        <div className="scrollview-fade scrollview-fade-y-6 min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-3">
+          {cart ? (
+            cart.isEmpty ? (
+              <div className="py-4">
+                <p className="text-ink-muted">Koszyk jest pusty.</p>
+
+                <Button asChild className="mt-5 w-full">
+                  <Link href={SHOP_PATH} onClick={() => setCartOpen(false)}>
+                    Wybierz akredytację
+                  </Link>
+                </Button>
+              </div>
+            ) : (
+              <CartLines lines={cart.lines} dense />
+            )
+          ) : (
+            <p className="text-sm text-ink-muted">Wczytujemy koszyk…</p>
+          )}
+        </div>
+
+        {cart && !cart.isEmpty && (
+          <SheetFooter className="border-t border-dashed border-hairline">
+            <CartTotals cart={cart} />
+
+            {checkoutUrl ? (
+              <Button asChild className="mt-2 w-full py-3">
+                <a href={checkoutUrl}>Przejdź do płatności</a>
+              </Button>
+            ) : (
+              <p className="mt-2 text-sm text-rose">
+                {CHECKOUT_UNAVAILABLE}
+              </p>
+            )}
+          </SheetFooter>
+        )}
+      </SheetContent>
+    </Sheet>
+  );
+}

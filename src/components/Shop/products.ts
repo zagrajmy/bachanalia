@@ -37,6 +37,11 @@ export type ShopVariant = { label: string; price: string; soldOut: boolean };
 export type ShopProductDetail = ShopProduct & {
   /** WooCommerce's post ID — what `addToCart` takes, not the slug. */
   productId: number;
+  /**
+   * "Sprzedawane pojedynczo" in wp-admin. WooCommerce rejects a second unit
+   * with an error, so the picker never offers a quantity for these.
+   */
+  soldIndividually: boolean;
   category?: { slug: string; label: string };
   description: string;
   variants: ShopVariant[];
@@ -71,6 +76,7 @@ type AttributeNode = { name?: string | null; label?: string | null; value?: stri
 
 type ProductDetailNode = ProductNode & {
   description?: string | null;
+  soldIndividually?: boolean | null;
   attributes?: { nodes?: AttributeNode[] | null } | null;
   variations?: {
     nodes?: {
@@ -229,6 +235,7 @@ export async function fetchProduct(slug: string): Promise<ShopProductDetail | un
   return {
     ...base,
     productId: product.databaseId ?? 0,
+    soldIndividually: product.soldIndividually === true,
     ...(term?.slug && { category: { slug: term.slug, label: capitalise(term.name ?? term.slug) } }),
     description: product.description ?? "",
     variants: variationNodes.flatMap((variation) =>

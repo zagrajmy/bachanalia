@@ -42,6 +42,9 @@ export const ProductQuery = gql`
         }
         ... on InventoriedProduct {
           stockStatus
+          # WooCommerce refuses a second unit of these outright, so the
+          # quantity control has no business offering one.
+          soldIndividually
         }
         ... on ProductWithVariations {
           attributes(first: 10) {

@@ -1,0 +1,209 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 2055,
+          "slug": "golden-ticket",
+          "name": "Golden Ticket",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/golden-ticket/",
+          "description": "<p>Golden Ticket &#8211; jedyny w swoim rodzaju bilet pozwalający nie tylko wziąć udział w Bachanaliach Fantastycznych 2026 przez trzy dni, ale także wyposażyć się w zestaw gadżetów i publikacji bez potrzeby kompletowania ich osobno. GT upoważnia do udziału w głosowaniu na nagrodę im Janusza A. Zajdla</p>\n<p>W Golden Tickecie znajdziecie :</p>\n<p>&#8211; akredytację 3 dniową</p>\n<p>&#8211; egzemplarz Fantazji Zielonogórskich</p>\n<p>&#8211; unikalny pins</p>\n<p>&#8211; koszulkę BF-ową</p>\n<p>&#8211; egzemplarz antologii Nagrody fandomu polskiego im. Janusza A. Zajdla</p>\n<p>&#8211; specjalną publikacje jubileuszową</p>\n<p>&#8211; zestaw gadżetów (szczegóły wkrótce)</p>\n<p>Na adres e-mail podany w zamówieniu będzie wysłany zostanie kod qr który jest biltem wstępu. Prosimy o okazanie go na akredytacji w formie cyfrowej lub na wydruku.</p>\n",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-2026.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-2026-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 819,
+              "height": 1024
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "akredytacje",
+                "name": "akredytacje"
+              }
+            ]
+          },
+          "price": "250,00&nbsp;zł",
+          "stockStatus": "IN_STOCK",
+          "soldIndividually": false,
+          "attributes": {
+            "nodes": [
+              {
+                "name": "rozmar-koszulki",
+                "label": "Rozmar Koszulki"
+              }
+            ]
+          },
+          "variations": {
+            "nodes": [
+              {
+                "databaseId": 2109,
+                "name": "Golden Ticket - MĘSKA XXXL",
+                "price": "250,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "MĘSKA XXXL"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2108,
+                "name": "Golden Ticket - MĘSKA XXL",
+                "price": "250,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "MĘSKA XXL"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2107,
+                "name": "Golden Ticket - MĘSKA XL",
+                "price": "250,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "MĘSKA XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2106,
+                "name": "Golden Ticket - MĘSKA L",
+                "price": "250,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "MĘSKA L"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2105,
+                "name": "Golden Ticket - MĘSKA M",
+                "price": "250,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "MĘSKA M"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2711,
+                "name": "Golden Ticket - MĘSKA XXXXL",
+                "price": "250,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "MĘSKA XXXXL"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2710,
+                "name": "Golden Ticket - DAMSKA XXL",
+                "price": "250,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "DAMSKA XXL"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2709,
+                "name": "Golden Ticket - DAMSKA XL",
+                "price": "250,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "DAMSKA XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2708,
+                "name": "Golden Ticket - DAMSKA L",
+                "price": "250,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "DAMSKA L"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2707,
+                "name": "Golden Ticket - DAMSKA M",
+                "price": "250,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "DAMSKA M"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2706,
+                "name": "Golden Ticket - DAMSKA S",
+                "price": "250,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "DAMSKA S"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

@@ -1,0 +1,98 @@
+"use client";
+
+import { useSyncExternalStore } from "react";
+
+import type { CartView } from "./types";
+
+/**
+ * The layout is static, so no server render of a page may know what is in the
+ * cart — the count would be baked into the HTML every visitor shares. This is
+ * the one copy the chrome reads: filled once after mount from `/api/cart`, and
+ * kept current by the cart actions, which hand their result back rather than
+ * making the browser ask again.
+ *
+ * A module-level store rather than a context, so the product page's form and
+ * the header's trigger reach the same cart without a provider wrapping the
+ * layout.
+ */
+export type CartSnapshot = {
+  cart?: CartView;
+  /** WooCommerce's nonced handover URL, absent while the setting is off. */
+  checkoutUrl?: string;
+  loading: boolean;
+  open: boolean;
+};
+
+const INITIAL: CartSnapshot = { open: false, loading: false };
+
+let snapshot = INITIAL;
+let listeners: (() => void)[] = [];
+let loaded = false;
+/** Bumped by every mutation, so a slow read cannot undo a fresh one. */
+let revision = 0;
+
+function set(next: Partial<CartSnapshot>) {
+  snapshot = { ...snapshot, ...next };
+  for (const listener of listeners) listener();
+}
+
+function subscribe(listener: () => void) {
+  listeners = [...listeners, listener];
+
+  return () => {
+    listeners = listeners.filter((entry) => entry !== listener);
+  };
+}
+
+export function useCart() {
+  return useSyncExternalStore(
+    subscribe,
+    () => snapshot,
+    () => INITIAL,
+  );
+}
+
+export function setCart(cart: CartView) {
+  loaded = true;
+  revision++;
+  set({ cart });
+}
+
+export function setCartOpen(open: boolean) {
+  set({ open });
+}
+
+export function openCart() {
+  set({ open: true });
+}
+
+/**
+ * One request per page load, and one more each time the sheet opens — the
+ * quantities may have moved in another tab, and `checkoutUrl` is only asked
+ * for once there is something to check out with.
+ */
+export async function loadCart(force = false) {
+  if (snapshot.loading || (loaded && !force)) return;
+
+  const asked = revision;
+
+  set({ loading: true });
+
+  try {
+    /** `trailingSlash` is on, and the slashless form costs a 308 first. */
+    const response = await fetch("/api/cart/", { headers: { accept: "application/json" } });
+
+    if (!response.ok) return set({ loading: false });
+
+    const body = (await response.json()) as { cart: CartView; checkoutUrl?: string };
+
+    loaded = true;
+
+    /** A stepper pressed while this was in flight already knows better. */
+    if (revision !== asked) return set({ checkoutUrl: body.checkoutUrl, loading: false });
+
+    set({ cart: body.cart, checkoutUrl: body.checkoutUrl, loading: false });
+  } catch {
+    set({ loading: false });
+  }
+}

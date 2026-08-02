@@ -1,0 +1,21 @@
+{
+  "errors": [
+    {
+      "message": "Cannot query field \"checkoutUrl\" on type \"Customer\".",
+      "locations": [
+        {
+          "line": 3,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

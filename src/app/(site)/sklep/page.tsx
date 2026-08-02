@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
-import { WP_CART_URL } from "@/components/Globals/siteNav";
+import { CART_PATH } from "@/components/Cart/paths";
 import { ProductCard } from "@/components/Shop/ProductCard";
 import { fetchShop } from "@/components/Shop/products";
 
@@ -18,14 +19,12 @@ export default async function SklepPage() {
     <div className="gutter mx-auto max-w-6xl pt-12 sm:pt-16">
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2 border-b-2 border-navy pb-3">
         <h1 className="display -ml-[0.04em] text-[clamp(2.1rem,6.4vw,4rem)]">Sklep</h1>
-        <a
-          href={WP_CART_URL}
-          target="_blank"
-          rel="noreferrer"
+        <Link
+          href={CART_PATH}
           className="eyebrow text-ink-muted no-underline underline-offset-[0.25em] hover:text-rose hover:underline"
         >
           Koszyk →
-        </a>
+        </Link>
       </div>
 
       {categories.length === 0 && (

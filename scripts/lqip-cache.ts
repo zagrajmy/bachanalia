@@ -27,6 +27,13 @@ type Job = {
   thumbUrl: string;
   fullUrl: string;
   variants: boolean;
+  /**
+   * Only the Facebook feed needs its size written down — `lqipAsset` reads
+   * that file for nothing else. Every WordPress image already carries
+   * `mediaDetails`, so recording it here would cost a full-size download per
+   * upload per build to produce a number no component reads.
+   */
+  dimensions: boolean;
 };
 
 async function graphql<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
@@ -80,9 +87,12 @@ function lqipMetaFile(key: string) {
   return join(LQIP_DIR, lqipMetaRelPath(key));
 }
 
-async function writeLqip(key: string, webp: Buffer, width: number, height: number) {
-  await writeBinary(lqipFile(key), webp);
+async function writeMeta(key: string, width: number, height: number) {
   await writeFile(lqipMetaFile(key), `${JSON.stringify({ width, height })}\n`);
+}
+
+async function writeLqip(key: string, webp: Buffer) {
+  await writeBinary(lqipFile(key), webp);
 }
 
 function variantFile(key: string, width: number) {
@@ -160,6 +170,7 @@ async function collectJobs(): Promise<Job[]> {
       thumbUrl: thumbnail || thumbUrl(src),
       fullUrl: fullUrl(src),
       variants,
+      dimensions: false,
     });
   };
 
@@ -201,6 +212,7 @@ async function collectJobs(): Promise<Job[]> {
       thumbUrl: entry.image.src,
       fullUrl: entry.image.src,
       variants: false,
+      dimensions: true,
     });
   }
 
@@ -279,7 +291,7 @@ async function main() {
 
   for (const job of jobs) {
     const needLqip = !(await exists(lqipFile(job.key)));
-    const needMeta = !(await exists(lqipMetaFile(job.key)));
+    const needMeta = job.dimensions && !(await exists(lqipMetaFile(job.key)));
     const widthsToBuild: number[] = [];
     if (job.variants) {
       for (const width of MEDIA_WIDTHS) {
@@ -299,7 +311,8 @@ async function main() {
           console.warn(`media: skip lqip ${job.key}`);
           continue;
         }
-        await writeLqip(job.key, encoded.webp, encoded.width, encoded.height);
+        await writeLqip(job.key, encoded.webp);
+        if (needMeta) await writeMeta(job.key, encoded.width, encoded.height);
         lqipWrote += 1;
         console.log(`media: lqip ${job.key}`);
         continue;
@@ -314,14 +327,12 @@ async function main() {
       if (needLqip || needMeta) {
         const encoded = await encodeLqipWebp(bytes);
         if (needLqip) {
-          await writeLqip(job.key, encoded.webp, encoded.width, encoded.height);
+          await writeLqip(job.key, encoded.webp);
+          if (needMeta) await writeMeta(job.key, encoded.width, encoded.height);
           lqipWrote += 1;
           console.log(`media: lqip ${job.key}`);
         } else {
-          await writeFile(
-            lqipMetaFile(job.key),
-            `${JSON.stringify({ width: encoded.width, height: encoded.height })}\n`,
-          );
+          await writeMeta(job.key, encoded.width, encoded.height);
           console.log(`media: meta ${job.key} ${encoded.width}x${encoded.height}`);
         }
       }

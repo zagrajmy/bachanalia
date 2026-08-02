@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { CartLines } from "@/components/Cart/CartLines";
+import { CartTotals } from "@/components/Cart/CartTotals";
 import { fetchCart, fetchCheckoutUrl } from "@/components/Cart/cart";
-import { CART_PATH } from "@/components/Cart/paths";
+import { CART_PATH, CHECKOUT_UNAVAILABLE } from "@/components/Cart/paths";
 import { SHOP_PATH } from "@/components/Globals/siteNav";
 import { Button } from "@/components/ui/warcraftcn/button";
 
@@ -68,27 +69,7 @@ export default async function KoszykPage() {
             <CartLines lines={cart.lines} />
           </div>
 
-          <dl className="mt-8 ml-auto grid max-w-sm grid-cols-[minmax(0,1fr)_auto] gap-x-8 gap-y-2 text-sm">
-            <dt className="text-ink-muted">Wartość produktów</dt>
-            <dd className="text-right tabular-nums">{cart.subtotal}</dd>
-
-            {cart.discountTotal && cart.discountTotal !== "0 zł" && (
-              <>
-                <dt className="text-ink-muted">Rabat</dt>
-                <dd className="text-right tabular-nums">−{cart.discountTotal}</dd>
-              </>
-            )}
-
-            <dt className="text-ink-muted">Dostawa</dt>
-            <dd className="text-right tabular-nums">{cart.shippingTotal}</dd>
-
-            <dt className="display col-start-1 mt-3 border-t border-dashed border-hairline pt-3 text-lg">
-              Razem
-            </dt>
-            <dd className="display mt-3 border-t border-dashed border-hairline pt-3 text-right text-lg tabular-nums">
-              {cart.total}
-            </dd>
-          </dl>
+          <CartTotals cart={cart} className="mt-8 ml-auto max-w-sm" />
 
           <div className="mt-8 flex flex-col items-end gap-3">
             {checkoutUrl ? (
@@ -97,7 +78,7 @@ export default async function KoszykPage() {
               </Button>
             ) : (
               <p className="text-sm text-rose">
-                Kasa jest chwilowo niedostępna. Napisz do nas, a dokończymy zamówienie.
+                {CHECKOUT_UNAVAILABLE}
               </p>
             )}
           </div>

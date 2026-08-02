@@ -2,13 +2,11 @@
 
 import { useId, useState } from "react";
 
+import { MAX_QUANTITY, STEP_CLASS } from "./quantity";
+
 const MIN = 1;
-const MAX = 20;
 
-const clamp = (value: number) => Math.min(Math.max(value, MIN), MAX);
-
-const stepClass =
-  "flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-card border border-dashed border-hairline text-lg leading-none transition-colors duration-150 hover:border-navy disabled:cursor-not-allowed disabled:opacity-40";
+const clamp = (value: number) => Math.min(Math.max(value, MIN), MAX_QUANTITY);
 
 /**
  * A number input the mouse can nudge and the keyboard can type into, rather
@@ -46,7 +44,7 @@ export function QuantityInput({
       <div className="mt-2 flex items-center gap-1.5">
         <button
           type="button"
-          className={stepClass}
+          className={STEP_CLASS}
           onClick={() => change(value - 1)}
           disabled={disabled || value <= MIN}
           aria-label="Zmniejsz ilość"
@@ -60,7 +58,7 @@ export function QuantityInput({
           type="number"
           inputMode="numeric"
           min={MIN}
-          max={MAX}
+          max={MAX_QUANTITY}
           step={1}
           value={value}
           disabled={disabled}
@@ -70,9 +68,9 @@ export function QuantityInput({
 
         <button
           type="button"
-          className={stepClass}
+          className={STEP_CLASS}
           onClick={() => change(value + 1)}
-          disabled={disabled || value >= MAX}
+          disabled={disabled || value >= MAX_QUANTITY}
           aria-label="Zwiększ ilość"
         >
           +

@@ -33,7 +33,7 @@ export default async function ProduktPage({ params }: Props) {
   if (!product) notFound();
 
   const { name, price, soldOut, image, category, description, variants } = product;
-  const { productId, variations, attributeLabels } = product;
+  const { productId, variations, attributeLabels, soldIndividually } = product;
   /** Eleven t-shirt sizes at one price are a choice, not a price list. */
   const pricedVariants = new Set(variants.map((variant) => variant.price)).size > 1;
   /** The picker states the same options as the list below, only buyable. */
@@ -87,6 +87,7 @@ export default async function ProduktPage({ params }: Props) {
               variations={variations}
               attributeLabels={attributeLabels}
               soldOut={soldOut}
+              soldIndividually={soldIndividually}
             />
           )}
 

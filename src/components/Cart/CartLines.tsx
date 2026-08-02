@@ -2,15 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useActionState, useRef } from "react";
+import { useActionState, useEffect, useRef } from "react";
 
 import { cartLineAction } from "./actions";
+import { MAX_QUANTITY, STEP_CLASS } from "./quantity";
+import { setCart } from "./store";
 import type { CartActionState, CartLine } from "./types";
 
 const initial: CartActionState = { ok: true, message: "" };
-
-const stepClass =
-  "flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-card border border-dashed border-hairline text-lg leading-none transition-colors duration-150 hover:border-navy disabled:cursor-not-allowed disabled:opacity-40";
 
 function LineForm({
   line,
@@ -22,6 +21,7 @@ function LineForm({
   submit: (formData: FormData) => void;
 }) {
   const form = useRef<HTMLFormElement>(null);
+  const ceiling = line.soldIndividually ? 1 : MAX_QUANTITY;
 
   return (
     <form action={submit} ref={form} className="flex items-center gap-1.5">
@@ -36,7 +36,7 @@ function LineForm({
         type="submit"
         name="step"
         value="-1"
-        className={stepClass}
+        className={STEP_CLASS}
         disabled={pending || line.quantity <= 1}
         aria-label={`Zmniejsz ilość: ${line.name}`}
       >
@@ -54,7 +54,7 @@ function LineForm({
         type="number"
         inputMode="numeric"
         min={0}
-        max={20}
+        max={ceiling}
         step={1}
         defaultValue={line.quantity}
         disabled={pending}
@@ -68,8 +68,8 @@ function LineForm({
         type="submit"
         name="step"
         value="1"
-        className={stepClass}
-        disabled={pending || line.quantity >= 20}
+        className={STEP_CLASS}
+        disabled={pending || line.quantity >= ceiling}
         aria-label={`Zwiększ ilość: ${line.name}`}
       >
         +
@@ -78,8 +78,21 @@ function LineForm({
   );
 }
 
-export function CartLines({ lines }: { lines: CartLine[] }) {
+/**
+ * `dense` drops the wide layout the page uses. The sheet is narrower than the
+ * `sm` breakpoint but sits in a viewport that is not, so the columns have to
+ * be told to stay stacked rather than asked.
+ */
+export function CartLines({ lines, dense = false }: { dense?: boolean; lines: CartLine[] }) {
   const [state, submit, pending] = useActionState(cartLineAction, initial);
+
+  /** WooCommerce answers each mutation with the cart, so the chrome follows. */
+  useEffect(() => {
+    if (state.cart) setCart(state.cart);
+  }, [state]);
+
+  const wide = (classes: string) => (dense ? "" : classes);
+  const current = state.cart?.lines ?? lines;
 
   return (
     <div>
@@ -92,10 +105,12 @@ export function CartLines({ lines }: { lines: CartLine[] }) {
       </p>
 
       <ul className="mt-2 border-t-2 border-navy">
-        {lines.map((line) => (
+        {current.map((line) => (
           <li
             key={line.key}
-            className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-4 border-b border-dashed border-hairline py-5 sm:grid-cols-[auto_minmax(0,1fr)_auto_auto] sm:items-center sm:gap-x-6"
+            className={`grid grid-cols-[auto_minmax(0,1fr)] items-start gap-4 border-b border-dashed border-hairline py-5 ${wide(
+              "sm:grid-cols-[auto_minmax(0,1fr)_auto_auto] sm:items-center sm:gap-x-6",
+            )}`}
           >
             <div className="size-16 shrink-0 overflow-hidden rounded-card border border-dashed border-hairline bg-paper-shade">
               {line.image && (
@@ -123,11 +138,15 @@ export function CartLines({ lines }: { lines: CartLine[] }) {
               ))}
             </div>
 
-            <div className="col-start-2 sm:col-start-auto">
+            <div className={`col-start-2 ${wide("sm:col-start-auto")}`}>
               <LineForm line={line} submit={submit} pending={pending} />
             </div>
 
-            <div className="col-start-2 flex items-center justify-between gap-2 sm:col-start-auto sm:flex-col sm:items-end sm:gap-0">
+            <div
+              className={`col-start-2 flex items-center justify-between gap-2 ${wide(
+                "sm:col-start-auto sm:flex-col sm:items-end sm:gap-0",
+              )}`}
+            >
               <p className="display text-lg tabular-nums leading-none [text-box:trim-both_cap_alphabetic]">
                 {line.total}
               </p>

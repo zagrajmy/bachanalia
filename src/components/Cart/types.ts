@@ -22,6 +22,8 @@ export type CartLine = {
   /** The chosen variation, spelled out. A shirt size has to be visible here. */
   options: CartLineOption[];
   variationId?: number;
+  /** WooCommerce refuses a second unit, so the stepper stops at one. */
+  soldIndividually: boolean;
 };
 
 export type ShippingRate = { id: string; label: string; cost: string };
@@ -44,4 +46,14 @@ export type CartActionState = {
   ok: boolean;
   /** Announced in a live region, so it is written for a screen reader too. */
   message: string;
+  /**
+   * WooCommerce answers every cart mutation with the whole cart, so the sheet
+   * and the header count redraw from the reply instead of asking again.
+   */
+  cart?: CartView;
+  /**
+   * A refusal that is about what is already in the cart — "you cannot add
+   * another of these" — so the cart is what should come up alongside it.
+   */
+  showCart?: boolean;
 };

@@ -1,19 +1,16 @@
 "use server";
 
 import { print } from "graphql/language/printer";
-import { redirect } from "next/navigation";
 
 import { ProductVariationsQuery } from "@/queries/cart/ProductVariationsQuery";
 
 import { addToCart, removeLine, setQuantity } from "./cart";
-import { CART_PATH } from "./paths";
+import { MAX_QUANTITY } from "./quantity";
 import { wooRequest } from "./session";
 import type { CartActionState } from "./types";
 import { findVariation, buildAxes, type ProductVariation } from "./variations";
 
 const ATTRIBUTE_PREFIX = "attr_";
-
-const MAX_QUANTITY = 20;
 
 function readAttributes(formData: FormData) {
   const pairs: { attributeName: string; attributeValue: string }[] = [];
@@ -109,9 +106,20 @@ export async function addToCartAction(
     ...(variationId && { variationId, variation: attributes }),
   });
 
-  if (!result.ok) return { ok: false, message: result.message };
+  /**
+   * Every refusal from here on is WooCommerce's own — a stock ceiling, a
+   * product sold individually — and every one of them is about the cart the
+   * buyer already has. The validations above are ours and are not.
+   */
+  if (!result.ok) return { ok: false, message: result.message, showCart: true };
 
-  redirect(CART_PATH);
+  /**
+   * The cart comes back with the reply, so the sheet opens on the line that
+   * was just added instead of a spinner. Without scripting the buyer stays on
+   * the product page and this sentence is the whole confirmation, which is why
+   * it is written as one.
+   */
+  return { ok: true, message: "Dodano do koszyka.", cart: result.data };
 }
 
 /**
@@ -135,7 +143,7 @@ export async function cartLineAction(
     const removed = await removeLine(key);
 
     return removed.ok
-      ? { ok: true, message: `${name} — usunięto z koszyka.` }
+      ? { ok: true, message: `${name} — usunięto z koszyka.`, cart: removed.data }
       : { ok: false, message: removed.message };
   }
 
@@ -153,12 +161,6 @@ export async function cartLineAction(
       quantity === 0
         ? `${name} — usunięto z koszyka.`
         : `${name} — ilość zmieniona na ${quantity}.`,
+    cart: result.data,
   };
 }
-
-/**
- * WooCommerce's order-received URL is the classic gateway-less return value.
- * Following it would hand the buyer back to WordPress at the last step, so a
- * `bacs` order finishes here instead and the confirmation page carries the
- * link on for the bank details.
- */

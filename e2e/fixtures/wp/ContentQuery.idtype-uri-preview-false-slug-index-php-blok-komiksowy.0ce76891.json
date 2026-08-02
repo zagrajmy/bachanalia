@@ -1,0 +1,20 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "page",
+      "databaseId": 3288,
+      "date": "2026-06-08T12:14:37",
+      "title": "Blok Komiksowy",
+      "content": null,
+      "featuredImage": null
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

@@ -1,0 +1,544 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "slug": "akredytacja-3-dniowa",
+          "name": "Akredytacja 3 dniowa",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/akredytacja-3-dniowa/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/3-dniowy.png",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/3-dniowy-150x150.png",
+            "altText": "",
+            "mediaDetails": {
+              "width": 1000,
+              "height": 1001
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "akredytacje",
+                "name": "akredytacje"
+              }
+            ]
+          },
+          "price": "100,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "akredytacja-niedziela",
+          "name": "Akredytacja niedziela",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/akredytacja-niedziela/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/niedziela.png",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/niedziela-150x150.png",
+            "altText": "",
+            "mediaDetails": {
+              "width": 1001,
+              "height": 1001
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "akredytacje",
+                "name": "akredytacje"
+              }
+            ]
+          },
+          "price": "50,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "akredytacja-piatek",
+          "name": "Akredytacja Piątek",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/akredytacja-piatek/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/piatek.png",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/piatek-150x150.png",
+            "altText": "",
+            "mediaDetails": {
+              "width": 1000,
+              "height": 1001
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "akredytacje",
+                "name": "akredytacje"
+              }
+            ]
+          },
+          "price": "50,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "akredytacja-sobota",
+          "name": "Akredytacja Sobota",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/akredytacja-sobota/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/sobota.png",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/sobota-150x150.png",
+            "altText": "",
+            "mediaDetails": {
+              "width": 1000,
+              "height": 1001
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "akredytacje",
+                "name": "akredytacje"
+              }
+            ]
+          },
+          "price": "60,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "akredytacja-wspierajaca-polcon",
+          "name": "Akredytacja wspierająca Polcon",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/akredytacja-wspierajaca-polcon/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/polcon.png",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/polcon-150x150.png",
+            "altText": "",
+            "mediaDetails": {
+              "width": 1000,
+              "height": 1001
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "akredytacje",
+                "name": "akredytacje"
+              }
+            ]
+          },
+          "price": "25,00&nbsp;zł - 45,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-i",
+          "name": "Fantazje Zielonogórskie I",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-i/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/1.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/1-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 699,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": null,
+          "stockStatus": "OUT_OF_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-ii",
+          "name": "Fantazje Zielonogórskie II",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-ii/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/2.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/2-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-iii",
+          "name": "Fantazje Zielonogórskie III",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-iii/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/3.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/3-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "OUT_OF_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-iv",
+          "name": "Fantazje Zielonogórskie IV",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-iv/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/4.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/4-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 695,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-ix",
+          "name": "Fantazje Zielonogórskie IX",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-ix/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/9.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/9-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-v",
+          "name": "Fantazje Zielonogórskie V",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-v/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/5.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/5-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "OUT_OF_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-vi",
+          "name": "Fantazje Zielonogórskie VI",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-vi/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/6.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/6-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-vii",
+          "name": "Fantazje Zielonogórskie VII",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-vii/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/7.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/7-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-viii",
+          "name": "Fantazje Zielonogórskie VIII",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-viii/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/8.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/8-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-xi-2",
+          "name": "Fantazje Zielonogórskie X",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-xi-2/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/10.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/10-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-xi",
+          "name": "Fantazje Zielonogórskie XI",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-xi/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/11.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/11-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 703,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-xii",
+          "name": "Fantazje Zielonogórskie XII",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-xii/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/12.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/12/12-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-xiii",
+          "name": "Fantazje Zielonogórskie XIII",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-xiii/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/09/13.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/09/13-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 693,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-2024",
+          "name": "Fantazje Zielonogórskie XIV",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-2024/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/08/14.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2024/08/14-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 696,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "25,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "fantazje-zielonogorskie-xv",
+          "name": "Fantazje Zielonogórskie XV",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-xv/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/10/540952042_1821287532146085_1028290175044761918_n.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/10/540952042_1821287532146085_1028290175044761918_n-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 1450,
+              "height": 2048
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "25,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "golden-ticket",
+          "name": "Golden Ticket",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/golden-ticket/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-2026.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-2026-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 819,
+              "height": 1024
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "akredytacje",
+                "name": "akredytacje"
+              }
+            ]
+          },
+          "price": "250,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "wsparcie-klubu-1-zl",
+          "name": "Wsparcie Klubu 1 zł",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/wsparcie-klubu-1-zl/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/wsparcie-1-zl.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/wsparcie-1-zl-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 500,
+              "height": 500
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "wsparcie",
+                "name": "wsparcie"
+              }
+            ]
+          },
+          "price": "1,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

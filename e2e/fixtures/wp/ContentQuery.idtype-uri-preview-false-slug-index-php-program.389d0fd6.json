@@ -1,0 +1,20 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "page",
+      "databaseId": 1793,
+      "date": "2023-09-10T20:53:54",
+      "title": "TABELA PROGRAMOWA",
+      "content": "\t\t<div data-elementor-type=\"wp-page\" data-elementor-id=\"1793\" class=\"elementor elementor-1793\">\n\t\t\t\t\t\t<section class=\"elementor-section elementor-top-section elementor-element elementor-element-36c9189 elementor-section-boxed elementor-section-height-default elementor-section-height-default wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no wpr-column-slider-no wpr-equal-height-no\" data-id=\"36c9189\" data-element_type=\"section\" data-e-type=\"section\">\n\t\t\t\t\t\t<div class=\"elementor-container elementor-column-gap-default\">\n\t\t\t\t\t<div class=\"elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-5efa333\" data-id=\"5efa333\" data-element_type=\"column\" data-e-type=\"column\">\n\t\t\t<div class=\"elementor-widget-wrap elementor-element-populated\">\n\t\t\t\t\t\t<div class=\"elementor-element elementor-element-534504d elementor-widget elementor-widget-html\" data-id=\"534504d\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"html.default\">\n\t\t\t\t<div class=\"elementor-widget-container\">\n\t\t\t\t\t<a href=\"https://docs.google.com/spreadsheets/d/1eGj_VHEG3g6BHJeyV3GGIdn0MaPW6qQDtdPp4MB7b6k/edit?usp=sharing\" target=\"_blank\">Bachanalia Fantastyczne 2025 - program</a>\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t</div>\n\t\t\t\t\t</div>\n\t\t</section>\n\t\t\t\t</div>\n\t\t",
+      "featuredImage": null
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

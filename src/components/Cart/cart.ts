@@ -23,6 +23,7 @@ type CartItemNode = {
       databaseId?: number | null;
       name?: string | null;
       slug?: string | null;
+      soldIndividually?: boolean | null;
       image?: { sourceUrl?: string | null; altText?: string | null } | null;
       attributes?: { nodes?: AttributeNode[] | null } | null;
     } | null;
@@ -93,6 +94,7 @@ function toLine(node: CartItemNode): CartLine | undefined {
     slug: product.slug,
     href: productPath(product.slug),
     quantity: node.quantity ?? 1,
+    soldIndividually: product.soldIndividually === true,
     subtotal: formatPrice(node.subtotal),
     total: formatPrice(node.total),
     ...(product.image?.sourceUrl && {
@@ -145,10 +147,6 @@ function unwrap<K extends string>(
 }
 
 /**
- * No session means no cart, and asking a rate-limited WordPress to confirm
- * that for every visitor is a request nobody needs.
- */
-/**
  * Where "Przejdź do płatności" goes. Undefined while the setting is off, and
  * the cart says so rather than sending a buyer to a checkout that would greet
  * them with an empty basket.
@@ -163,6 +161,10 @@ export async function fetchCheckoutUrl(): Promise<string | undefined> {
   return result.ok ? (result.data.customer?.checkoutUrl ?? undefined) : undefined;
 }
 
+/**
+ * No session means no cart, and asking a rate-limited WordPress to confirm
+ * that for every visitor is a request nobody needs.
+ */
 export async function fetchCart(): Promise<WooResult<CartView>> {
   if (!(await readSession())) return { ok: true, data: EMPTY_CART };
 
@@ -210,21 +212,3 @@ export async function removeLine(key: string) {
     "removeItemsFromCart",
   );
 }
-
-/**
- * Gateways that cannot be driven from here, whatever WooCommerce says about
- * them being enabled.
- *
- * Both read a field the buyer types on WooCommerce's own checkout page
- * through `filter_input(INPUT_POST, …)`. WPGraphQL only accepts an
- * `application/json` body, so PHP's `$_POST` is empty by the time the gateway
- * looks, and each refuses before an order exists — "Podaj kod BLIK" and
- * "Aby przejść do płatności dokonaj wyboru banku z listy poniżej". Offering
- * them here would walk a buyer through the whole form into a wall.
- *
- * `pay_by_paynow_pl_paywall` is the one that works: no posted fields, and
- * `process_payment()` returns Paynow's paywall URL, where BLIK, transfer and
- * card all live. It is not switched on in WooCommerce yet, and this list is a
- * denial rather than an allowance so it appears on its own when it is.
- */
-const GATEWAYS_NEEDING_POSTED_FIELDS = ["pay_by_paynow_pl_blik", "pay_by_paynow_pl_pbl"];

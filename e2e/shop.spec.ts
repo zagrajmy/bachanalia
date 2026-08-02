@@ -32,13 +32,11 @@ test.describe("shop", () => {
     await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
   });
 
-  test("the product page hands the sale to WooCommerce in a new tab", async ({ page }) => {
+  test("the product page sells into our own cart", async ({ page }) => {
     await page.goto(PRODUCT);
 
-    const buy = page.getByRole("link", { name: "Kup w sklepie" });
-
-    await expect(buy).toHaveAttribute("href", /index\.php\/produkt\/akredytacja-3-dniowa\//);
-    await expect(buy).toHaveAttribute("target", "_blank");
+    await expect(page.getByRole("button", { name: "Dodaj do koszyka" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Kup w sklepie" })).toHaveCount(0);
   });
 
   test("browsing never leaves the site", async ({ page }) => {
@@ -46,7 +44,16 @@ test.describe("shop", () => {
 
     const outbound = page.getByRole("main").locator('a[href*="bachanaliafantastyczne.pl"]');
 
-    await expect(outbound, "only the cart link may point at WordPress").toHaveCount(1);
+    await expect(outbound, "nothing on the shop index belongs to WordPress").toHaveCount(0);
+  });
+
+  test("the shop's cart link is ours, not WooCommerce's", async ({ page }) => {
+    await page.goto("/sklep/");
+
+    await expect(page.getByRole("link", { name: "Koszyk →" })).toHaveAttribute(
+      "href",
+      "/sklep/koszyk/",
+    );
   });
 
   test("the site no longer sends readers to the WordPress shop", async ({ page }) => {

@@ -1,3 +1,5 @@
+import { htmlToText } from "@/utils/wpHtml";
+
 export const NEWS_PATH = "/aktualnosci/";
 
 export type NewsEntry = {
@@ -24,40 +26,14 @@ const dateFormat = new Intl.DateTimeFormat("pl-PL", {
   year: "numeric",
 });
 
-const NAMED_ENTITIES: { [name: string]: string } = {
-  amp: "&",
-  apos: "'",
-  gt: ">",
-  hellip: "…",
-  laquo: "«",
-  lt: "<",
-  mdash: "—",
-  nbsp: " ",
-  ndash: "–",
-  quot: '"',
-  raquo: "»",
-};
-
-export function decodeEntities(text: string) {
-  return text.replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (entity, body: string) => {
-    if (!body.startsWith("#")) return NAMED_ENTITIES[body.toLowerCase()] ?? entity;
-
-    const hex = body[1] === "x" || body[1] === "X";
-    const codePoint = Number.parseInt(hex ? body.slice(2) : body.slice(1), hex ? 16 : 10);
-
-    return Number.isNaN(codePoint) ? entity : String.fromCodePoint(codePoint);
-  });
-}
+export { decodeEntities } from "@/utils/wpHtml";
 
 const EXCERPT_CHARS = 190;
 
 export function newsExcerpt(html?: string | null, maxChars = EXCERPT_CHARS) {
-  if (!html) return "";
+  const text = htmlToText(html);
 
-  const text = decodeEntities(html.replace(/<[^>]*>/g, " "))
-    .replace(/\s+/g, " ")
-    .trim();
-
+  if (!text) return "";
   if (text.length <= maxChars) return text;
 
   const cut = text.slice(0, maxChars);

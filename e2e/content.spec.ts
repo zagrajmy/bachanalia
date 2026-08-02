@@ -126,7 +126,12 @@ test.describe("WordPress content rendering", () => {
   test("the site never serves the old SEO spam", async ({ page }) => {
     await page.goto("/czas-i-miejsce/");
 
-    const body = await page.locator("body").innerText();
+    /**
+     * `innerText` returns only what is painted, and injected spam is hidden by
+     * construction — off-screen, zero-height, `display: none`. This one test
+     * has to read the DOM, not the render.
+     */
+    const body = (await page.locator("body").textContent()) ?? "";
     expect(body).not.toMatch(/kraken|tryggbitrow/i);
     expect(body, "cyrillic has no business on a Polish convention site").not.toMatch(
       /[а-яА-Я]{4,}/,

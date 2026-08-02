@@ -8,18 +8,23 @@ export const SHOP_PATH = "/sklep/";
 export const productPath = (slug: string) => `/produkt/${slug}/`;
 
 /**
- * Browsing is ours; cart, checkout and Paynow stay on WooCommerce, because
- * `pay-by-paynow-pl` is a classic gateway and nothing about driving it from
- * here is verified.
- */
-export const WP_CART_URL = "https://bachanaliafantastyczne.pl/index.php/koszyk/";
-
-/**
  * Published in WordPress, not part of this site: a 2023 stub, a probe for the
  * Facebook feed, and WordPress's own duplicate of the exhibitor rules. The
  * catch-all would otherwise render all three.
+ *
+ * The four WooCommerce pages are here for a different reason — they are live
+ * and stay on WordPress until cutover, so the catch-all would prerender their
+ * bodies as empty shortcode shells standing beside the real cart.
  */
-export const RETIRED_PATHS = ["/feed-test/", "/info/", "/regulamin-wystawcow-2/"];
+export const RETIRED_PATHS = [
+  "/feed-test/",
+  "/info/",
+  "/regulamin-wystawcow-2/",
+  "/koszyk/",
+  "/zamowienie/",
+  "/moje-konto/",
+  "/zwroty/",
+];
 
 export type NavLink = { href: string; label: string; external?: boolean };
 

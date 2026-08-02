@@ -86,12 +86,12 @@ export function lqip(key?: string | null) {
   return lqipAsset(key)?.blurDataURL;
 }
 
+/**
+ * A WordPress upload has no cached size — `mediaDetails` already carries it —
+ * so this hands back the placeholder alone. Only the Facebook feed, which
+ * reports no dimensions of its own, goes through `lqipAsset`.
+ */
 export function lqipForWpUrl(url?: string | null) {
   if (!url) return undefined;
   return lqip(wpMediaKey(url));
-}
-
-export function lqipAssetForWpUrl(url?: string | null) {
-  if (!url) return undefined;
-  return lqipAsset(wpMediaKey(url));
 }

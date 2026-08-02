@@ -18,18 +18,10 @@ export const revalidate = 3600;
 const ownRoutes = ["/", SHOP_PATH, NEWS_PATH, "/goscie/"];
 
 /**
- * On top of the pages we do not serve at all: the WooCommerce transactional
- * four, which stay on WordPress, and two redirect sources.
+ * On top of the pages we do not serve at all — which already covers the four
+ * WooCommerce transactional pages — two redirect sources.
  */
-const excluded = new Set([
-  ...RETIRED_PATHS,
-  "/akredytacja/",
-  "/blog/",
-  "/koszyk/",
-  "/moje-konto/",
-  "/zamowienie/",
-  "/zwroty/",
-]);
+const excluded = new Set([...RETIRED_PATHS, "/akredytacja/", "/blog/"]);
 
 export function sitemapPaths(uris: (string | null | undefined)[], productSlugs: string[]) {
   const paths = new Set([...ownRoutes, ...productSlugs.map(productPath), ...uris.map(wpUriToPath)]);

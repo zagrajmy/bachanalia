@@ -1,3 +1,4 @@
+import { CartTrigger } from "@/components/Cart/CartSheet";
 import { SiteFooter } from "@/components/Globals/SiteFooter";
 import { SiteHeader } from "@/components/Globals/SiteHeader";
 

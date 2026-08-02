@@ -50,6 +50,10 @@ export const CartFields = gql`
                 }
               }
             }
+            # Or the stepper offers a second unit WooCommerce will refuse.
+            ... on InventoriedProduct {
+              soldIndividually
+            }
           }
         }
         variation {

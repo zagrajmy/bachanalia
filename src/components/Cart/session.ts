@@ -1,5 +1,7 @@
 import { cookies } from "next/headers";
 
+import { wooMessage } from "./message";
+
 /**
  * The WooCommerce session is a JWT, and a JWT is a bearer credential: whoever
  * holds it owns that cart and the billing address typed into it. It lives in
@@ -103,17 +105,6 @@ function mayRetry(policy: RetryPolicy, status: number) {
 const GENERIC_FAILURE = "Nie udało się połączyć ze sklepem. Spróbuj ponownie za chwilę.";
 
 /**
- * WooCommerce answers an empty cart at checkout with its session error, which
- * says nothing a buyer can act on.
- */
-const TRANSLATIONS: { [message: string]: string } = {
-  "Sorry, no session found.": "Koszyk jest pusty.",
-  "Invalid payment method.": "Ta metoda płatności jest niedostępna.",
-};
-
-const translate = (message: string) => TRANSLATIONS[message] ?? message;
-
-/**
  * Cart traffic goes over POST with the session header. Wordfence inspects
  * POST bodies but does not block these — proven by order 3502 — and POST is
  * the only shape a mutation has anyway.
@@ -125,7 +116,6 @@ export async function wooRequest<T>(
 ): Promise<WooResult<T>> {
   const token = await readSession();
   const retries = retriesFor(policy);
-  let indeterminate = false;
 
   for (let attempt = 0; attempt <= retries; attempt++) {
     if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1]);
@@ -143,26 +133,46 @@ export async function wooRequest<T>(
         body: JSON.stringify({ query, variables }),
       });
     } catch {
-      indeterminate = policy !== "read";
-      continue;
+      /**
+       * A socket that died mid-flight says nothing about whether WooCommerce
+       * applied the mutation, so only a read may be replayed — retrying an
+       * `addToCart` here is how a line silently doubles.
+       */
+      if (policy === "read") continue;
+
+      return { ok: false, message: GENERIC_FAILURE, indeterminate: true };
     }
 
     if (!response.ok) {
       if (mayRetry(policy, response.status)) continue;
-      if (response.status >= 500) indeterminate = policy !== "read";
 
-      return { ok: false, message: GENERIC_FAILURE, indeterminate };
+      return {
+        ok: false,
+        message: GENERIC_FAILURE,
+        indeterminate: response.status >= 500 && policy !== "read",
+      };
     }
 
     const refreshed = response.headers.get(SESSION_HEADER);
     if (refreshed) await writeSession(refreshed);
 
-    const body = await response.json();
+    /**
+     * Cloudflare answers automated clients with an HTML challenge under a 200,
+     * and a parse error thrown from here reaches the buyer as an error
+     * boundary instead of the deliberate "do not submit twice" message.
+     */
+    let body: { data?: unknown; errors?: { message?: string }[] };
+
+    try {
+      body = await response.json();
+    } catch {
+      return { ok: false, message: GENERIC_FAILURE, indeterminate: policy !== "read" };
+    }
 
     if (body.errors?.length) {
       return {
         ok: false,
-        message: translate(String(body.errors[0].message)),
+        message: wooMessage(String(body.errors[0].message)),
         indeterminate: false,
       };
     }
@@ -170,5 +180,9 @@ export async function wooRequest<T>(
     return { ok: true, data: body.data as T };
   }
 
-  return { ok: false, message: GENERIC_FAILURE, indeterminate };
+  /**
+   * Every attempt that reached here was refused by the firewall before
+   * WooCommerce saw the request, so nothing was written.
+   */
+  return { ok: false, message: GENERIC_FAILURE, indeterminate: false };
 }

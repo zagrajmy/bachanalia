@@ -26,3 +26,14 @@ Rebuild the zip after editing:
 ```sh
 cd wordpress && rm -f bachanalia-revalidate.zip && zip -qr bachanalia-revalidate.zip bachanalia-revalidate
 ```
+
+## bachanalia-paynow-first
+
+Makes Paynow the first and therefore preselected method in the checkout.
+Nothing to configure; activate and it applies.
+
+```sh
+cd wordpress && zip -r bachanalia-paynow-first.zip bachanalia-paynow-first
+```
+
+Upload through **Wtyczki → Dodaj wtyczkę → Wyślij wtyczkę na serwer**.

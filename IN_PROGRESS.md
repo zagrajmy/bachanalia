@@ -226,9 +226,11 @@ and it settles most of this:
   next request carries the cart into checkout. Mutations go over POST and
   Wordfence does not block them.
 
-**And a Paynow order has been run end to end** (3510, 1 zł, 2 August 2026).
-`checkout` returned `https://paywall.paynow.pl/<id>?token=<jwt>`, and the
-buyer chooses BLIK, bank or card there. Headless checkout is settled.
+**A Paynow order was run end to end from here** (3510, 1 zł, 2 August 2026):
+`checkout` returned `https://paywall.paynow.pl/<id>?token=<jwt>` and the order
+was paid and completed. So a headless checkout *works* — it is simply not what
+we ship, because it can collect neither a BLIK code nor an InPost locker. The
+proof is kept on `wip/headless-checkout`.
 
 Getting there took a WooCommerce setting, and the reason is worth keeping:
 
@@ -450,11 +452,16 @@ pay, which is also everything that made the old shop look like 2014.
    surface entirely. Leave every Paynow gateway enabled — the paywall's
    `is_available()` needs at least one of them on, even though they no longer
    render separately.
-4. **Put Paynow first.** In *WooCommerce → Ustawienia → Płatności*, drag the
-   paynow.pl row above *Przelew bankowy*. WooCommerce renders gateways in that
-   order and preselects the first available one, so today the checkout opens
-   with bank transfer chosen — the slowest way to pay for a ticket, and the one
-   that leaves the order unpaid until someone reconciles it by hand.
+4. **Install `wordpress/bachanalia-paynow-first/`** so Paynow is the first and
+   preselected method. Dragging the row does not do it: the paywall gateway
+   only becomes available once *Pokaż metody płatności* is unchecked, so it has
+   no saved position and `WC_Payment_Gateways::init()` parks it at 999 behind
+   bank transfer — which is the slowest way to pay for a ticket and leaves the
+   order unpaid until somebody reconciles a transfer by hand. The plugin
+   filters `woocommerce_gateway_order`, the one input both the classic and the
+   Blocks checkout read. **Do not hand-edit positions**: `init()` indexes
+   gateways *by* position, so a repeated number deletes a gateway from the
+   store outright.
 5. **Install `wordpress/bachanalia-revalidate/`** and point it at the Vercel
    deployment, then at the apex once DNS moves. Until it is installed, an edit
    takes up to an hour to appear.
@@ -466,13 +473,11 @@ pay, which is also everything that made the old shop look like 2014.
 
 ### 2. Our side
 
-1. **Delete the checkout half** — `CheckoutForm`, `billing.ts`, `checkoutAction`,
-   the gateway query and `/sklep/kasa/`. None of it can collect a BLIK code or
-   a locker, and keeping a second buy path is how a buyer ends up on the one
-   that cannot take their money.
-2. **Hand the cart over** with the nonced `/transfer-session` URL, so "do kasy"
-   lands on WooCommerce's checkout with the same cart.
-3. **Point `/sklep/`'s "Koszyk →" at our own cart.** It currently links
+1. **Done in `192c0cc`:** the checkout half is deleted and "Przejdź do
+   płatności" follows `customer.checkoutUrl`, WooGraphQL's nonced
+   `/transfer-session` link. The button appears once step 2 above is enabled;
+   until then the cart says the till is closed.
+2. **Point `/sklep/`'s "Koszyk →" at our own cart.** It currently links
    `WP_CART_URL`, which shares no session with the headless cart.
 4. **Add `/koszyk/`, `/zamowienie/`, `/moje-konto/`, `/zwroty/` to
    `RETIRED_PATHS`.** They are live WordPress pages, so they prerender here as

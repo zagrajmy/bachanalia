@@ -5,6 +5,13 @@ export default defineConfig({
   extends: [base],
   ignorePatterns: [".next", "src/gql"],
   rules: {
+    /**
+     * `disallowTemplateShorthand` is right about `${x}` alone and its fix is
+     * wrong about everything else: it replaces the whole literal with
+     * `String(x)`, so `${x}\n` loses the newline. It cost us the space RFC 5545
+     * wants on a folded ICS line. Pending the same change upstream.
+     */
+    "no-implicit-coercion": ["warn", { boolean: false, disallowTemplateShorthand: false }],
     "perfectionist/sort-jsx-props": "off",
     "perfectionist/sort-objects": "off",
     "unicorn/no-useless-undefined": "off",

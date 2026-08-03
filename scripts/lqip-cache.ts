@@ -138,7 +138,7 @@ function lqipMetaFile(key: string) {
 }
 
 async function writeMeta(key: string, width: number, height: number) {
-  await writeFile(lqipMetaFile(key), String(JSON.stringify({ width, height })));
+  await writeFile(lqipMetaFile(key), `${JSON.stringify({ width, height })}\n`);
 }
 
 async function writeLqip(key: string, webp: Buffer) {
@@ -470,7 +470,7 @@ async function main() {
     console.log("media: fetches failed, crawl snapshot withheld");
   } else {
     await mkdir(dirname(CRAWL_PATH), { recursive: true });
-    await writeFile(CRAWL_PATH, String(JSON.stringify(crawl, null, 2)));
+    await writeFile(CRAWL_PATH, `${JSON.stringify(crawl, null, 2)}\n`);
   }
 
   console.log(

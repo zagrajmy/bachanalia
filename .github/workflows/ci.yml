@@ -37,7 +37,7 @@ jobs:
 
       - name: Lint and format check
         run: |
-          mise use -g hk
+          mise use -g hk@1.48.0
           hk check --all
 
       - name: Generate Next types

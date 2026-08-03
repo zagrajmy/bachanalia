@@ -29,7 +29,7 @@ function fold(line: string) {
   if (line.length <= 74) return line;
 
   const parts = [line.slice(0, 74)];
-  for (let at = 74; at < line.length; at += 73) parts.push(String(line.slice(at, at + 73)));
+  for (let at = 74; at < line.length; at += 73) parts.push(` ${line.slice(at, at + 73)}`);
 
   return parts.join("\r\n");
 }

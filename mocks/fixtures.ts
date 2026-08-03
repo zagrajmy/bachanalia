@@ -72,7 +72,7 @@ export function writeFixture(operation: string, variables: unknown, body: unknow
 
   const name = fixtureName(operation, variables);
 
-  writeFileSync(join(FIXTURE_DIR, name), String(JSON.stringify(body, null, 2)));
+  writeFileSync(join(FIXTURE_DIR, name), `${JSON.stringify(body, null, 2)}\n`);
 
   return name;
 }
@@ -92,5 +92,5 @@ export function readSnapshots(): CartSnapshots {
 
 export function writeSnapshots(snapshots: CartSnapshots) {
   mkdirSync(FIXTURE_DIR, { recursive: true });
-  writeFileSync(SNAPSHOT_FILE, String(JSON.stringify(snapshots, null, 2)));
+  writeFileSync(SNAPSHOT_FILE, `${JSON.stringify(snapshots, null, 2)}\n`);
 }

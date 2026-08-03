@@ -1,3 +1,5 @@
+import { buttonVariants } from "@/components/ui/warcraftcn/button";
+
 /**
  * Third-party iframes never reach a browser with their `src` intact.
  *
@@ -56,6 +58,17 @@ function isOurs(host: string) {
  */
 const forAttribute = (value: string) => value.replaceAll('"', "");
 
+/**
+ * The site's own button, reached through `cva` rather than the component,
+ * because this is a string of HTML and not a tree of elements. Hand-rolling
+ * one here is how a second button style gets into the design system.
+ *
+ * It answers for the whole site, not for this one embed — `Consent` treats it
+ * as the banner's "Okej", so there is still a single question with a single
+ * answer, just reachable from the place where the absence is noticed.
+ */
+const BUTTON = `${buttonVariants()} px-6 py-2.5 text-sm`;
+
 const LINK = "text-sm text-ink-muted underline-offset-[0.25em] decoration-dashed hover:underline";
 
 export const blockThirdPartyEmbeds = (html: string) =>
@@ -86,6 +99,7 @@ export const blockThirdPartyEmbeds = (html: string) =>
       ` data-embed-src="${forAttribute(src)}"`,
       title ? ` data-embed-title="${forAttribute(title)}"` : "",
       `><p class="max-w-[42ch] text-sm text-ink-muted">Tu jest ${noun}. Pokażemy ${it}, kiedy zgodzisz się na treści z <strong class="font-semibold text-ink">${url.host}</strong>.</p>`,
+      `<button type="button" data-embed-accept class="${BUTTON}">Zaakceptuj ciastka</button>`,
       `<a class="${LINK}" href="${forAttribute(src)}" rel="noreferrer" target="_blank">Otwórz w nowej karcie</a>`,
       `</div>`,
     ].join("");

@@ -33,12 +33,12 @@ test("it names what is behind the curtain", () => {
   assert.match(blockThirdPartyEmbeds(MAPS), /maps\.google\.com/);
 });
 
-test("the banner is the only way in", () => {
+test("the button answers for the site, not for one embed", () => {
   const out = blockThirdPartyEmbeds(MAPS);
 
+  assert.match(out, /data-embed-accept/);
   /** A per-embed opt-in would be a second answer to the same question. */
   assert.ok(!out.includes("data-embed-load"), out);
-  assert.ok(!/<button/.test(out), out);
 });
 
 test("our own embeds are left alone", () => {

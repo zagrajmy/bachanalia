@@ -127,6 +127,20 @@ export function Consent() {
     set({ choice: stored, blocked: stored === "granted" ? 0 : parked().length });
   }, [pathname]);
 
+  /**
+   * The placeholders carry the same "yes" the banner does, so a visitor who
+   * scrolled past the banner can answer from where they noticed the gap.
+   */
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      if ((event.target as Element | null)?.closest?.("[data-embed-accept]")) decide("granted");
+    };
+
+    document.addEventListener("click", onClick);
+
+    return () => document.removeEventListener("click", onClick);
+  }, []);
+
   if (!prompting && (choice !== undefined || blocked === 0)) return null;
 
   return (

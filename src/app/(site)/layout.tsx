@@ -1,4 +1,5 @@
 import { CartTrigger } from "@/components/Cart/CartSheet";
+import { Consent } from "@/components/Consent/Consent";
 import { SiteFooter } from "@/components/Globals/SiteFooter";
 import { SiteHeader } from "@/components/Globals/SiteHeader";
 
@@ -19,6 +20,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <CartTrigger />
       <main id="tresc">{children}</main>
       <SiteFooter />
+      <Consent />
     </>
   );
 }

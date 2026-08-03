@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { con } from "@/content/con";
+import { ConsentLink } from "@/components/Consent/Consent";
 
 import { PartnersCard } from "./PartnersCard";
 import { footerNav } from "./siteNav";
@@ -23,7 +24,7 @@ export function SiteFooter() {
                       {...("external" in link && link.external
                         ? { target: "_blank", rel: "noreferrer" }
                         : {})}
-                      className="text-[0.9375rem] text-ink no-underline underline-offset-[0.25em] hover:underline w-full py-1.25 block"
+                      className="text-[0.9375rem] text-ink no-underline underline-offset-[0.25em] hover:underline decoration-dashed w-full py-1.25 block"
                     >
                       {link.label}
                     </Link>
@@ -41,18 +42,19 @@ export function SiteFooter() {
             Organizator:{" "}
             <Link
               href="/organizator/"
-              className="text-ink no-underline underline-offset-[0.25em] hover:underline"
+              className="text-ink no-underline underline-offset-[0.25em] decoration-dashed hover:underline"
             >
               {con.organiser}
             </Link>
           </p>
-          <p>
+          <p className="flex gap-5">
             <Link
               href="/polityka-prywatnosci/"
-              className="text-ink no-underline underline-offset-[0.25em] hover:underline"
+              className="text-ink no-underline underline-offset-[0.25em] decoration-dashed hover:underline"
             >
               Polityka prywatności
             </Link>
+            <ConsentLink className="cursor-pointer text-ink underline-offset-[0.25em] decoration-dashed hover:underline" />
           </p>
         </div>
       </div>

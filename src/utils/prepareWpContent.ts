@@ -1,4 +1,5 @@
 import { decodeEntities, htmlToText } from "./wpHtml";
+import { blockThirdPartyEmbeds } from "./wpEmbeds";
 
 const DROPPED_ATTRIBUTES = [
   / role="region"(?= aria-roledescription="carousel")/g,
@@ -10,7 +11,9 @@ const DROPPED_ATTRIBUTES = [
 ];
 
 export const prepareWpContent = (html?: string | null) =>
-  DROPPED_ATTRIBUTES.reduce<string>((acc, pattern) => acc.replace(pattern, ""), html ?? "");
+  blockThirdPartyEmbeds(
+    DROPPED_ATTRIBUTES.reduce<string>((acc, pattern) => acc.replace(pattern, ""), html ?? ""),
+  );
 
 const MEDIA = /<(?:img|iframe|video|audio|picture|svg)\b/i;
 
@@ -56,7 +59,7 @@ const TAG = /<!--[\s\S]*?-->|<(\/?)([a-zA-Z][a-zA-Z0-9-]*)((?:'[^']*'|"[^"]*"|[^
 
 const IMG = /<img\b[^>]*>/gi;
 
-const attribute =(tag: string, name: string) =>
+const attribute = (tag: string, name: string) =>
   new RegExp(`\\s${name}="([^"]*)"`, "i").exec(tag)?.[1];
 
 const galleryImages = (slice: string): WpGalleryImage[] => {

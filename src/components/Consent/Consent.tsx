@@ -90,7 +90,10 @@ function loadChoice() {
 
   try {
     const current = parseChoice(localStorage.getItem(KEY));
-    if (current) return current;
+    if (current) {
+      localStorage.removeItem(LEGACY_KEY);
+      return current;
+    }
 
     const legacy = parseChoice(localStorage.getItem(LEGACY_KEY));
     if (legacy) {

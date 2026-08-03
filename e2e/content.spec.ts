@@ -74,6 +74,17 @@ test.describe("WordPress content rendering", () => {
       .toBe("granted");
   });
 
+  test("current consent removes the obsolete choice", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("bf-consent:v1", "granted");
+      localStorage.setItem("bf-consent", "denied");
+    });
+    await page.goto("/czas-i-miejsce/");
+
+    await expect(page.locator(".wp-content iframe").first()).toBeVisible();
+    await expect.poll(() => page.evaluate(() => localStorage.getItem("bf-consent"))).toBeNull();
+  });
+
   test("a gallery shows its photos as a grid, not one image per row", async ({ page }) => {
     await page.goto("/co-to-sa-bachanalia/");
 

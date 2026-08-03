@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Bachanalia — przekazanie do kasy
  * Description: Po przeniesieniu sesji ze sklepu headless kieruje kupującego na właściwą stronę zamówienia zamiast na nieistniejące /checkout/.
- * Version:     1.0.0
+ * Version:     1.1.0
  * Author:      Piotr Monwid-Olechnowicz
  * License:     GPL-2.0-or-later
  */
@@ -23,6 +23,16 @@ defined( 'ABSPATH' ) || exit;
  * hang it off. Everywhere else WooCommerce is passed a real page and its own
  * answer stands.
  *
+ * Every parameter has a default. WooCommerce core passes four, but a filter is
+ * a public square — anything may `apply_filters( 'woocommerce_get_endpoint_url',
+ * $url )` with fewer, and a required parameter turns that into an
+ * ArgumentCountError. A fatal in a GraphQL response prints `<br /><b>Fatal
+ * error</b>` ahead of the JSON and takes the whole static build down with it.
+ *
+ * `wc_get_checkout_url()` ends in `apply_filters( 'woocommerce_get_checkout_url' )`,
+ * and a plugin on that hook is free to ask for an endpoint URL in turn, so the
+ * guard is what keeps the two from calling each other forever.
+ *
  * @param string $url       The URL WooCommerce built.
  * @param string $endpoint  The endpoint being resolved.
  * @param string $value     Endpoint value, unused here.
@@ -30,12 +40,16 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string
  */
-function bachanalia_checkout_handover_url( $url, $endpoint, $value, $permalink ) {
-	if ( 'checkout' !== $endpoint || ! empty( $permalink ) ) {
+function bachanalia_checkout_handover_url( $url, $endpoint = '', $value = '', $permalink = '' ) {
+	static $inside = false;
+
+	if ( $inside || 'checkout' !== $endpoint || ! empty( $permalink ) ) {
 		return $url;
 	}
 
+	$inside   = true;
 	$checkout = wc_get_checkout_url();
+	$inside   = false;
 
 	return $checkout ? $checkout : $url;
 }

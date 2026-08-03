@@ -61,3 +61,4 @@ tools/key-art/key-art-composite.png
 # build-time image variants from `bun run lqip` — generate in CI/local, do not commit
 /public/_img
 .next-mock
+.next-build

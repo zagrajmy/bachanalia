@@ -27,10 +27,18 @@ test("the url is kept for the visitor who says yes", () => {
 });
 
 test("it names what is behind the curtain", () => {
-  assert.match(blockThirdPartyEmbeds(MAPS), /Pokaż mapę/);
-  assert.match(blockThirdPartyEmbeds(FORM), /Pokaż formularz/);
-  assert.match(blockThirdPartyEmbeds(MIRO), /Pokaż tablicę/);
+  assert.match(blockThirdPartyEmbeds(MAPS), /mapa Google/);
+  assert.match(blockThirdPartyEmbeds(FORM), /formularz Google/);
+  assert.match(blockThirdPartyEmbeds(MIRO), /tablica Miro/);
   assert.match(blockThirdPartyEmbeds(MAPS), /maps\.google\.com/);
+});
+
+test("the banner is the only way in", () => {
+  const out = blockThirdPartyEmbeds(MAPS);
+
+  /** A per-embed opt-in would be a second answer to the same question. */
+  assert.ok(!out.includes("data-embed-load"), out);
+  assert.ok(!/<button/.test(out), out);
 });
 
 test("our own embeds are left alone", () => {

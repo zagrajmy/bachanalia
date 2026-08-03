@@ -102,7 +102,7 @@ export function ConsentLink({ className }: { className?: string }) {
  * Both answers carry the same weight. Making the refusal a quiet text link is
  * the standard trick, and it is the one thing a consent banner must not do.
  */
-const ACTION = "flex-1 px-5 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-navy";
+const ACTION = "flex-1 px-5 py-2.5 text-sm";
 
 /**
  * Mounted once in the layout: it both watches for parked embeds and renders
@@ -126,23 +126,6 @@ export function Consent() {
 
     set({ choice: stored, blocked: stored === "granted" ? 0 : parked().length });
   }, [pathname]);
-
-  /** One listener for every "Pokaż mapę" on the page, now and after a route change. */
-  useEffect(() => {
-    const onClick = (event: MouseEvent) => {
-      const button = (event.target as Element | null)?.closest?.("[data-embed-load]");
-      const placeholder = button?.closest("[data-embed-src]");
-
-      if (!placeholder) return;
-
-      reveal(placeholder);
-      set({ blocked: parked().length });
-    };
-
-    document.addEventListener("click", onClick);
-
-    return () => document.removeEventListener("click", onClick);
-  }, []);
 
   if (!prompting && (choice !== undefined || blocked === 0)) return null;
 
@@ -169,9 +152,7 @@ export function Consent() {
           </Button>
         </div>
 
-        <p className="mt-3 text-xs text-ink-muted">
-          Po odmowie nadal pokażesz każdą z osobna. Wybór zmienisz w stopce.
-        </p>
+        <p className="mt-3 text-xs text-ink-muted">Wybór zmienisz w stopce.</p>
       </div>
     </div>
   );

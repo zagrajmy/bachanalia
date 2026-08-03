@@ -1,5 +1,3 @@
-import { buttonVariants } from "@/components/ui/warcraftcn/button";
-
 /**
  * Third-party iframes never reach a browser with their `src` intact.
  *
@@ -7,12 +5,12 @@ import { buttonVariants } from "@/components/ui/warcraftcn/button";
  * and each one is a request to a company the visitor did not choose, made
  * before they can say anything about it. The old site's CookieYes showed a
  * banner and left every `src` alone, which is the failure mode this exists to
- * avoid: the URL is parked in a data attribute, and only a click or a
- * recorded choice puts it back.
+ * avoid: the URL is parked in a data attribute, and only the recorded answer
+ * puts it back.
  *
  * Rendered as static HTML rather than a React component because the page body
- * arrives as one `dangerouslySetInnerHTML` blob. `EmbedConsent` picks these up
- * by their data attributes.
+ * arrives as one `dangerouslySetInnerHTML` blob. `Consent` picks these up by
+ * their data attributes.
  */
 
 /** Anything not served from here is somebody else's server. */
@@ -26,30 +24,24 @@ const attribute = (tag: string, name: string) =>
   new RegExp(`\\s${name}="([^"]*)"`, "i").exec(tag)?.[1];
 
 /**
- * What the visitor is being asked to load, so the button is not "Pokaż treść".
- * `it` carries the gender, because a sentence that has to dodge the pronoun to
- * stay grammatical reads like it was written by a machine.
+ * What is missing from the page, so the notice is not "Tu jest treść". `it`
+ * carries the gender, because a sentence that has to dodge the pronoun to stay
+ * grammatical reads like it was written by a machine.
  */
-const KINDS: { host: RegExp; noun: string; it: string; verb: string }[] = [
-  { host: /(^|\.)google\.[a-z.]+$/, noun: "mapa Google", it: "ją", verb: "Pokaż mapę" },
-  { host: /(^|\.)miro\.com$/, noun: "tablica Miro", it: "ją", verb: "Pokaż tablicę" },
-  {
-    host: /(^|\.)(youtube\.com|youtu\.be)$/,
-    noun: "film z YouTube",
-    it: "go",
-    verb: "Odtwórz film",
-  },
+const KINDS: { host: RegExp; noun: string; it: string }[] = [
+  { host: /(^|\.)google\.[a-z.]+$/, noun: "mapa Google", it: "ją" },
+  { host: /(^|\.)miro\.com$/, noun: "tablica Miro", it: "ją" },
+  { host: /(^|\.)(youtube\.com|youtu\.be)$/, noun: "film z YouTube", it: "go" },
 ];
 
 const FORMS = /docs\.google\.com\/forms/;
 
 function describe(url: URL) {
-  if (FORMS.test(url.host + url.pathname))
-    return { noun: "formularz Google", it: "go", verb: "Pokaż formularz" };
+  if (FORMS.test(url.host + url.pathname)) return { noun: "formularz Google", it: "go" };
 
   for (const kind of KINDS) if (kind.host.test(url.host)) return kind;
 
-  return { noun: `treść z ${url.host}`, it: "ją", verb: "Pokaż" };
+  return { noun: `treść z ${url.host}`, it: "ją" };
 }
 
 function isOurs(host: string) {
@@ -63,13 +55,6 @@ function isOurs(host: string) {
  * carries one.
  */
 const forAttribute = (value: string) => value.replaceAll('"', "");
-
-/**
- * The site's own button, reached through `cva` rather than the component,
- * because this is a string of HTML and not a tree of elements. Hand-rolling
- * one here is how a second button style gets into the design system.
- */
-const BUTTON = `${buttonVariants()} px-6 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-navy focus-visible:ring-offset-2`;
 
 const LINK = "text-sm text-ink-muted underline-offset-[0.25em] decoration-dashed hover:underline";
 
@@ -89,7 +74,7 @@ export const blockThirdPartyEmbeds = (html: string) =>
 
     if (isOurs(url.host)) return raw;
 
-    const { noun, it, verb } = describe(url);
+    const { noun, it } = describe(url);
     const title = attribute(attrs, "title");
 
     return [
@@ -97,11 +82,10 @@ export const blockThirdPartyEmbeds = (html: string) =>
        * No frame. A dashed rule is the perforation between sections here, not
        * something drawn around a picture — the tint alone marks the slot.
        */
-      `<div class="wp-embed my-8 flex w-full flex-col items-center justify-center gap-4 rounded-card bg-paper-shade px-6 py-12 text-center"`,
+      `<div class="wp-embed my-8 flex w-full flex-col items-center justify-center gap-3 rounded-card bg-paper-shade px-6 py-12 text-center"`,
       ` data-embed-src="${forAttribute(src)}"`,
       title ? ` data-embed-title="${forAttribute(title)}"` : "",
-      `><p class="max-w-[42ch] text-sm text-ink-muted">Tu jest ${noun}. Pokaż ${it}, a <strong class="font-semibold text-ink">${url.host}</strong> zobaczy Twój adres IP.</p>`,
-      `<button type="button" data-embed-load class="${BUTTON}">${verb}</button>`,
+      `><p class="max-w-[42ch] text-sm text-ink-muted">Tu jest ${noun}. Pokażemy ${it}, kiedy zgodzisz się na treści z <strong class="font-semibold text-ink">${url.host}</strong>.</p>`,
       `<a class="${LINK}" href="${forAttribute(src)}" rel="noreferrer" target="_blank">Otwórz w nowej karcie</a>`,
       `</div>`,
     ].join("");

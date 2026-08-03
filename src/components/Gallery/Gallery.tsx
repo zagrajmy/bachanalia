@@ -40,13 +40,17 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
   const thumbSizes = dense ? "(min-width: 40rem) 9rem, 45vw" : "(min-width: 40rem) 16rem, 45vw";
 
   const open = async (nextIndex: number) => {
-    const Lightbox = await loadLightbox();
+    try {
+      const Lightbox = await loadLightbox();
 
-    flushSync(() => {
-      setLoadedLightbox(() => Lightbox);
-      setMorphIndex(nextIndex);
-    });
-    withMorph(() => setIndex(nextIndex));
+      flushSync(() => {
+        setLoadedLightbox(() => Lightbox);
+        setMorphIndex(nextIndex);
+      });
+      withMorph(() => setIndex(nextIndex));
+    } catch (error) {
+      reportError(error);
+    }
   };
 
   return (
@@ -67,8 +71,8 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
               ref={(node) => {
                 thumbnails.current[i] = node;
               }}
-              onPointerEnter={() => void loadLightbox()}
-              onFocus={() => void loadLightbox()}
+              onPointerEnter={() => void loadLightbox().catch(reportError)}
+              onFocus={() => void loadLightbox().catch(reportError)}
               onClick={() => void open(i)}
               aria-label={`Powiększ zdjęcie ${i + 1} z ${images.length}`}
               className="block w-full cursor-zoom-in overflow-hidden [&_img]:transition-transform [&_img]:duration-200 [&_img]:ease-[var(--ease-out)] hover:[&_img]:scale-[1.04]"

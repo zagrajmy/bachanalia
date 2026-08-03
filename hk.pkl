@@ -1,0 +1,26 @@
+amends "package://github.com/jdx/hk/releases/download/v1.48.0/hk@1.48.0#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.48.0/hk@1.48.0#/Builtins.pkl"
+
+/// oxfmt is a devDependency, not something on PATH, so both commands go
+/// through bun rather than the builtin's bare `oxfmt`.
+local linters = new Mapping<String, Step> {
+    ["oxfmt"] = (Builtins.oxfmt) {
+        check = "bun x oxfmt --check {{files}}"
+        fix = "bun x oxfmt --write {{files}}"
+    }
+}
+
+hooks {
+    ["pre-commit"] {
+        fix = true
+        stash = "git"
+        steps = linters
+    }
+    ["fix"] {
+        fix = true
+        steps = linters
+    }
+    ["check"] {
+        steps = linters
+    }
+}

@@ -37,6 +37,14 @@ type Job = {
   dimensions: boolean;
 };
 
+/**
+ * `fetchGraphQL`'s ladder, and the same reason: Wordfence throttles the
+ * client, not the request, and recovers on its own if the backoff outlasts it.
+ */
+const RETRY_DELAYS_MS = [500, 2_000, 6_000, 15_000, 30_000];
+
+const isTransient = (status: number) => status === 403 || status === 429 || status >= 500;
+
 async function graphql<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
   const url = new URL(`${WP}/graphql`);
   url.searchParams.set("query", query);
@@ -44,13 +52,48 @@ async function graphql<T>(query: string, variables: Record<string, unknown> = {}
     url.searchParams.set("variables", JSON.stringify(variables));
   }
 
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`GraphQL ${response.status} ${response.statusText}`);
-  const body = await response.json();
-  if (body.errors) {
-    throw new Error(body.errors.map((error: { message: string }) => error.message).join("; "));
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
+    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1]);
+
+    let response: Response;
+
+    try {
+      response = await fetch(url);
+    } catch (error) {
+      lastError = error;
+      continue;
+    }
+
+    if (isTransient(response.status)) {
+      lastError = new Error(`GraphQL ${response.status} ${response.statusText}`);
+      continue;
+    }
+
+    if (!response.ok) throw new Error(`GraphQL ${response.status} ${response.statusText}`);
+
+    /**
+     * The firewall answers an automated client's burst with an HTML challenge
+     * under a 200. Every query here is a read, so replaying is safe.
+     */
+    let body: { data?: unknown; errors?: { message: string }[] };
+
+    try {
+      body = await response.json();
+    } catch {
+      lastError = new Error(`GraphQL: unparseable response from ${url.pathname}`);
+      continue;
+    }
+
+    if (body.errors) {
+      throw new Error(body.errors.map((error) => error.message).join("; "));
+    }
+
+    return body.data as T;
   }
-  return body.data;
+
+  throw lastError;
 }
 
 function thumbUrl(src: string) {

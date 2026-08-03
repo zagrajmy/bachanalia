@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function KoszykPage() {
-  const [result, checkoutUrl] = await Promise.all([fetchCart(), fetchCheckoutUrl()]);
+  const result = await fetchCart();
 
   /**
    * A cart WooCommerce would not hand over is not an empty cart. Saying so
@@ -43,6 +43,7 @@ export default async function KoszykPage() {
   }
 
   const cart = result.data;
+  const checkoutUrl = cart.isEmpty ? undefined : await fetchCheckoutUrl();
 
   return (
     <div className="gutter mx-auto max-w-4xl pt-10 pb-20 sm:pt-14">

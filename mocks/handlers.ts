@@ -55,8 +55,9 @@ function operationNameOf(query: string) {
 
 /**
  * The stateful half. `CheckoutUrlQuery` is deliberately not here: it depends on
- * two WordPress settings rather than on the cart, so it replays whatever the
- * shop actually answered — today, that the field does not exist at all.
+ * two WordPress settings rather than on the cart, so it replays a fixture. The
+ * nonce in that fixture is a stand-in — a real one is bound to one session and
+ * expires, so recording it would save something dead.
  */
 const CART_OPERATIONS = [
   "CartQuery",

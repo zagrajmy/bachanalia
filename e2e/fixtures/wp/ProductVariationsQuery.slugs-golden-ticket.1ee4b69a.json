@@ -1,0 +1,147 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 2055,
+          "variations": {
+            "nodes": [
+              {
+                "databaseId": 2109,
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "MĘSKA XXXL"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2108,
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "MĘSKA XXL"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2107,
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "MĘSKA XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2106,
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "MĘSKA L"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2105,
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "MĘSKA M"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2711,
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "MĘSKA XXXXL"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2710,
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "DAMSKA XXL"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2709,
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "DAMSKA XL"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2708,
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "DAMSKA L"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2707,
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "DAMSKA M"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2706,
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmar-koszulki",
+                      "value": "DAMSKA S"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

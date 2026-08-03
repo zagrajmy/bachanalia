@@ -10,12 +10,14 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 1,
   /**
    * WordPress is mocked, so nothing here waits on a server that answers in
-   * ~10s — this budget is Next's dev server compiling a route and running a
-   * server action, which at two workers costs a few seconds a piece. It used
-   * to be 90s per test purely to survive the live shop.
+   * ~10s. What is left is Turbopack: the first test to reach a route pays for
+   * compiling it, and the first to submit a form pays again for the server
+   * action — 15s each on a cold `.next-mock`, against under a second once warm.
+   * A tighter budget passes locally and fails the whole cart suite in CI, which
+   * always starts cold. It used to be 90s purely to survive the live shop.
    */
-  timeout: 45_000,
-  expect: { timeout: 10_000 },
+  timeout: 60_000,
+  expect: { timeout: 20_000 },
   workers: process.env.CI ? 1 : 2,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : [["list"]],
   use: {

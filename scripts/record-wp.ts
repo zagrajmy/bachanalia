@@ -169,8 +169,17 @@ async function variationToBuy() {
   const product = await woo(print(ProductQuery), { preview: false, slugs: [CART_PRODUCT.slug] });
   const node = product.data?.products?.nodes?.[0];
 
-  const variations = await woo(print(ProductVariationsQuery), { slugs: [CART_PRODUCT.slug] });
+  const slugs = { slugs: [CART_PRODUCT.slug] };
+  const variations = await woo(print(ProductVariationsQuery), slugs);
   const all = variations.data?.products?.nodes?.[0]?.variations?.nodes ?? [];
+
+  /**
+   * No page renders this. The add-to-cart action asks for it, and only when the
+   * browser could not resolve a variation on its own — which is every buyer
+   * with scripting off. The read pass therefore never sees it, so it is saved
+   * here or the no-scripting spec has no fixture to replay.
+   */
+  writeFixture("ProductVariationsQuery", slugs, variations);
 
   const chosen = all.filter((variation: any) =>
     (variation.attributes?.nodes ?? []).some(

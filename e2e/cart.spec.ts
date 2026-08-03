@@ -167,40 +167,57 @@ test.describe("headless cart", () => {
     await expect(page.getByRole("button", { name: "Dodaj do koszyka" })).toBeEnabled();
   });
 
-  test("payment is WooCommerce's, and nothing here pretends otherwise", async ({ page }) => {
+  test("payment is WooCommerce's, and the sheet hands the cart over", async ({ page }) => {
     await addShirtToCart(page);
 
     const sheet = page.getByRole("dialog");
-    const inSheet = await sheet.getByRole("link", { name: "Przejdź do płatności" }).count();
+
+    await expect(sheet.getByText("Razem")).toBeVisible();
+    await expect(sheet.getByText(CHECKOUT_UNAVAILABLE)).toHaveCount(0);
 
     /**
-     * The link only exists once *User Session transferring URLs* is enabled in
-     * WordPress. Whichever way the shop is set today, both surfaces have to say
-     * the same thing — the sheet must not invent a second behaviour.
+     * Read, never followed: the destination is a real WooCommerce checkout.
+     * The nonced `/transfer-session` link is what carries this cart onto `wp.`,
+     * so the host name is not the assertion — the handover is.
      */
-    if (inSheet) {
-      await expect(sheet.getByRole("link", { name: "Przejdź do płatności" })).toHaveAttribute(
-        "href",
-        /transfer-session/,
-      );
-    } else {
-      await expect(sheet.getByText(CHECKOUT_UNAVAILABLE)).toBeVisible();
-    }
+    await expect(sheet.getByRole("link", { name: "Przejdź do płatności" })).toHaveAttribute(
+      "href",
+      /transfer-session/,
+    );
 
+    /** Both surfaces answer alike; the sheet invents no second behaviour. */
     await page.goto(CART);
 
-    const onPage = page.getByRole("link", { name: "Przejdź do płatności" });
-
-    expect(await onPage.count(), "the sheet and the cart page answer alike").toBe(inSheet);
-
-    if (inSheet) {
-      /** Read, never followed: the destination is a real WooCommerce checkout. */
-      await expect(onPage).toHaveAttribute("href", /transfer-session/);
-    } else {
-      await expect(page.getByText(CHECKOUT_UNAVAILABLE)).toBeVisible();
-    }
-
+    await expect(page.getByRole("link", { name: "Przejdź do płatności" })).toHaveAttribute(
+      "href",
+      /transfer-session/,
+    );
+    await expect(page.getByText(CHECKOUT_UNAVAILABLE)).toHaveCount(0);
     await expect(page.getByRole("button", { name: "Zamawiam i płacę" })).toHaveCount(0);
+  });
+
+  test("on a phone the sheet fits and the till stays reachable", async ({ page, isMobile }) => {
+    test.skip(!isMobile, "only a phone viewport is tight enough for this to fail");
+
+    await addShirtToCart(page);
+
+    const sheet = page.getByRole("dialog");
+    const checkout = sheet.getByRole("link", { name: "Przejdź do płatności" });
+    const viewport = page.viewportSize()!;
+
+    /**
+     * A trial click runs Playwright's hit test and stops short of following the
+     * link, so this fails if the footer's button has slid off the bottom or the
+     * scrolling list has grown over it.
+     */
+    await checkout.click({ trial: true });
+    await expect(checkout).toBeInViewport({ ratio: 1 });
+
+    expect((await sheet.boundingBox())!.width).toBeLessThanOrEqual(viewport.width);
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+      "a sheet wider than the phone drags the whole page sideways",
+    ).toBeLessThanOrEqual(viewport.width);
   });
 
   test("the cart is never handed to a crawler", async ({ page }) => {

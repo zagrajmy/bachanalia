@@ -71,7 +71,8 @@ test.describe("WordPress content rendering", () => {
 
     expect(sources.length).toBeGreaterThan(0);
     expect(
-      sources.filter((src) => src.includes("/_next/image")),
+      /** `/_img` is the baked ladder; `/_next/image` catches what it has missed. */
+      sources.filter((src) => src.startsWith("/_img/") || src.startsWith("/_next/image")),
       "raw WordPress originals are multi-megabyte",
     ).toHaveLength(sources.length);
   });

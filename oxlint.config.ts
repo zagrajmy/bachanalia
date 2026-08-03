@@ -7,6 +7,7 @@ export default defineConfig({
   rules: {
     "perfectionist/sort-jsx-props": "off",
     "perfectionist/sort-objects": "off",
+    "unicorn/no-useless-undefined": "off",
   },
   settings: {
     "better-tailwindcss": {

@@ -26,7 +26,7 @@ export function PartnersCard() {
                   href={logo.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="p-1 no-underline transition-none outline-1 outline-dashed outline-transparent hover:outline-navy/20"
+                  className="p-1 no-underline transition-none outline-1 outline-dashed outline-transparent hover:outline-navy/30"
                 >
                   <Image
                     src={logo.src}
@@ -46,7 +46,7 @@ export function PartnersCard() {
           href={cityFunding.href}
           target="_blank"
           rel="noreferrer"
-          className="shrink-0 p-1 no-underline transition-none outline-1 outline-dashed outline-transparent hover:outline-navy/20"
+          className="shrink-0 p-1 no-underline transition-none outline-1 outline-dashed outline-transparent hover:outline-navy/30"
         >
           <Image
             src={cityFunding.src}

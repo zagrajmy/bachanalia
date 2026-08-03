@@ -146,7 +146,12 @@ export function Consent() {
   return (
     <div
       aria-label="Ciasteczka"
-      className="fixed bottom-4 left-4 z-40 w-[min(22rem,calc(100vw-2rem))] rounded-card border-2 border-navy bg-paper text-navy shadow-[0_18px_44px_-18px] shadow-navy/50 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3 motion-safe:duration-300 motion-safe:ease-(--ease-out)"
+      /**
+       * The right margin clears the floating cart dock, which is 48px inset by
+       * 16px and paints under this at the same layer. On anything wider the
+       * `min()` picks 22rem and the two are nowhere near each other.
+       */
+      className="fixed bottom-4 left-4 z-40 w-[min(22rem,calc(100vw-6rem))] rounded-card border-2 border-navy bg-paper text-navy shadow-[0_18px_44px_-18px] shadow-navy/50 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3 motion-safe:duration-300 motion-safe:ease-(--ease-out)"
       role="dialog"
     >
       <p className="eyebrow border-b border-dashed border-hairline px-4 py-2.5">Ciasteczka</p>

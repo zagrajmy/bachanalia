@@ -59,10 +59,16 @@ export function useCart() {
   );
 }
 
+/**
+ * A cart handed back by an action, which never carries a handover URL. An
+ * empty cart is answered with no URL on purpose, so without clearing this a
+ * buyer's first line would inherit "there is no till" from the load that
+ * happened while the cart was still empty.
+ */
 export function setCart(cart: CartView) {
   loaded = true;
   revision++;
-  set({ cart });
+  set({ cart, checkoutKnown: false });
 }
 
 export function setCartOpen(open: boolean) {

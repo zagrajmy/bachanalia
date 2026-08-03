@@ -137,7 +137,7 @@ export function CartTrigger() {
             <CartTotals cart={cart} />
 
             {checkoutUrl ? (
-              <Button asChild className="mt-2 w-full py-3">
+              <Button asChild className="mt-1 w-full py-3">
                 <a href={checkoutUrl}>Przejdź do płatności</a>
               </Button>
             ) : (

@@ -28,8 +28,8 @@ export function CartTotals({
       <dt className="text-ink-muted">Dostawa</dt>
       <dd className="text-right tabular-nums">{cart.shippingTotal}</dd>
 
-      <dt className="display col-start-1 pt-3 text-lg">Razem</dt>
-      <dd className="display pt-3 text-right text-lg tabular-nums">
+      <dt className="display col-start-1 pt-2 text-lg">Razem</dt>
+      <dd className="display pt-2 text-right text-lg tabular-nums">
         {cart.total}
       </dd>
     </dl>

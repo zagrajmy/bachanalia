@@ -205,9 +205,7 @@ async function recordCart() {
       productId,
       variationId,
       quantity: 1,
-      variation: [
-        { attributeName: CART_PRODUCT.attribute, attributeValue: CART_PRODUCT.option },
-      ],
+      variation: [{ attributeName: CART_PRODUCT.attribute, attributeValue: CART_PRODUCT.option }],
     },
   });
 

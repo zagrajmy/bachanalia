@@ -245,7 +245,12 @@ test.describe("without scripting", () => {
     await expect(page.getByRole("heading", { level: 1, name: "Koszyk" })).toBeVisible();
     await expect(page.getByRole("heading", { level: 2, name: "Golden Ticket" })).toBeVisible();
     await expect(page.getByText(`Rozmar Koszulki: ${SIZE}`)).toBeVisible();
-    await expect(page.getByRole("main").getByText(/\d+\s?zł/).first()).toBeVisible();
+    await expect(
+      page
+        .getByRole("main")
+        .getByText(/\d+\s?zł/)
+        .first(),
+    ).toBeVisible();
 
     await page.getByRole("button", { name: "Zwiększ ilość: Golden Ticket" }).click();
 

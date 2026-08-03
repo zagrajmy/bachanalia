@@ -63,11 +63,7 @@ export function AddToCalendar() {
               <span className="text-xs text-ink-muted">nowa karta</span>
             </a>
 
-            <a
-              className={`${item} border-t border-dashed border-hairline`}
-              download
-              href={ICS}
-            >
+            <a className={`${item} border-t border-dashed border-hairline`} download href={ICS}>
               Apple, Outlook…
               <span className="text-xs text-ink-muted">.ics</span>
             </a>

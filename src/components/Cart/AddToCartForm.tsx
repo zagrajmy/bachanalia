@@ -156,8 +156,7 @@ export function AddToCartForm({
       <p aria-live="polite" className="mt-3 min-h-[1.5em] text-sm">
         {state.message ? (
           <span className={state.ok ? "text-ink-muted" : "text-rose"}>
-            {state.message}{" "}
-            {/**
+            {state.message} {/**
              * With scripting the sheet is already open over this. Without it,
              * this sentence is the whole confirmation and this link is the only
              * way from a product page to the cart.

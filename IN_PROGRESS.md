@@ -409,19 +409,24 @@ posts are free.
    live shop: 3502 (`bacs`, `ON_HOLD`), 3507 and 3509 (Paynow payments
    consumed before a buyer reached them) and 3511 (read-back probe). 3510 was
    paid and is `wc-completed` — leave it, it is the proof the loop works.
-2. **Install the revalidate plugin.** Edits lag an hour until then.
-3. **Cut over.** Everything for it is in [To-do for Prod](#to-do-for-prod).
-4. **`/program` + ludamus feed.** Needs the upstream JSON endpoint, the
+2. **Cut over.** Everything for it is in [To-do for Prod](#to-do-for-prod).
+3. **`/program` + ludamus feed.** Needs the upstream JSON endpoint, the
    Bachanalia sphere at `bachanalia.zagrajmy.net`, and the organizer
    onboarding video Ad Astra is owed.
-5. **`/koszyk/`, `/zamowienie/`, `/moje-konto/` and `/zwroty/` answer 200 from
-   here.** The catch-all renders the WordPress page bodies, which are nothing
-   but WooCommerce shortcodes, so they come out as empty shells. They are kept
-   out of the sitemap; at cutover they need a redirect to `wp.` or a 404.
-6. **`wsparcie-klubu-1-zl` and `akredytacja-wspierajaca-polcon`** (25–45 zł)
+4. **`wsparcie-klubu-1-zl` and `akredytacja-wspierajaca-polcon`** (25–45 zł)
    exist in the shop but are not in the homepage tier list — nobody has said
    where they belong.
-7. Vercel GitHub app access to the `zagrajmy` org.
+5. **The free pickup rate still says "BF 24"** on a 2026 shop: *Odbiór
+   Osobisty podczas BF 24 (dotyczy Fantazji Zielonogórskich, Golden Ticket,
+   oraz Koszulki)*. WooCommerce setting, not code, and a buyer sees it at
+   checkout.
+6. Vercel GitHub app access to the `zagrajmy` org.
+7. **Re-test the checkout constraint** before rebuilding anything on it —
+   [#1](https://github.com/zagrajmy/bachanalia/issues/1),
+   [#2](https://github.com/zagrajmy/bachanalia/issues/2),
+   [#3](https://github.com/zagrajmy/bachanalia/issues/3). The Store API takes
+   a JSON body and exposes `payment_data`, so "a JSON request can never fill
+   `$_POST`" may not be the whole story. Not before the con.
 
 ## To-do for Prod
 
@@ -487,22 +492,19 @@ pay, which is also everything that made the old shop look like 2014.
 
 ### 2. Our side
 
-1. **Done in `192c0cc`:** the checkout half is deleted and "Przejdź do
-   płatności" follows `customer.checkoutUrl`, WooGraphQL's nonced
-   `/transfer-session` link. The button appears once step 2 above is enabled;
-   until then the cart says the till is closed.
-2. **Point `/sklep/`'s "Koszyk →" at our own cart.** It currently links
-   `WP_CART_URL`, which shares no session with the headless cart.
-4. **Add `/koszyk/`, `/zamowienie/`, `/moje-konto/`, `/zwroty/` to
-   `RETIRED_PATHS`.** They are live WordPress pages, so they prerender here as
-   empty shortcode shells beside the real cart.
-5. **Repoint the order-received redirect** at `wp.` once the host exists.
-6. **Disallow `/sklep/koszyk/` in `robots.ts`** — it is `force-dynamic` and
-   opens a WooCommerce session per crawl.
-7. **Fix the specs `ab46004` broke**: `e2e/shop.spec.ts` and `e2e/cart.spec.ts`
-   still assert a "Kup w sklepie" link that no longer exists.
-8. Work through the rest of the quality review — the shipping-cost mismatch,
+Only one thing here is still outstanding.
+
+1. **Repoint the order-received redirect** at `wp.` once the host exists.
+   `next.config.js` sends `/zamowienie/order-received/:path*` to
+   `NEXT_PUBLIC_WORDPRESS_API_URL` today, which is the apex.
+2. Work through the rest of the quality review — the shipping-cost mismatch,
    the retry that can double a line, the unguarded `response.json()`.
+
+Done: the checkout half is deleted and "Przejdź do płatności" hands over to
+WooCommerce end to end (`192c0cc`, plus the two WordPress fixes in step 2 and
+3 above); `/sklep/`'s "Koszyk →" points at our own cart; the four WooCommerce
+paths are in `RETIRED_PATHS` and 404 here; `robots.ts` disallows
+`/sklep/koszyk/`; the specs `ab46004` broke are fixed.
 
 ### 3. DNS and Vercel
 

@@ -8,11 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  ArrowLeft01Icon,
-  ArrowRight01Icon,
-  Cancel01Icon,
-} from "@hugeicons/core-free-icons";
+import { ArrowLeft01Icon, ArrowRight01Icon, Cancel01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Dialog } from "@base-ui/react/dialog";
 
@@ -140,8 +136,7 @@ export function Lightbox({
   const total = images.length;
   const shown = index ?? lastIndex.current;
   const current = images[shown];
-  const step = (delta: number) =>
-    onIndexChange((shown + delta + total) % total);
+  const step = (delta: number) => onIndexChange((shown + delta + total) % total);
 
   const onKeyDown = (event: KeyboardEvent) => {
     const moves: Record<string, () => void> = {
@@ -196,9 +191,7 @@ export function Lightbox({
           onKeyDown={onKeyDown}
           onTouchStart={(event) => {
             const touch = event.touches[0];
-            touchStart.current = touch
-              ? { x: touch.clientX, y: touch.clientY }
-              : null;
+            touchStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
           }}
           onTouchEnd={(event) => {
             const from = touchStart.current;
@@ -207,10 +200,7 @@ export function Lightbox({
             if (!from || !touch || zoomed) return;
 
             const dx = touch.clientX - from.x;
-            if (
-              Math.abs(dx) > SWIPE_THRESHOLD &&
-              Math.abs(dx) > Math.abs(touch.clientY - from.y)
-            ) {
+            if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(touch.clientY - from.y)) {
               step(dx < 0 ? 1 : -1);
             }
           }}
@@ -234,10 +224,7 @@ export function Lightbox({
           <div
             ref={stage}
             onClick={onClose}
-            className={cn(
-              "relative min-h-0 flex-1",
-              zoomed ? "overflow-auto" : "overflow-hidden",
-            )}
+            className={cn("relative min-h-0 flex-1", zoomed ? "overflow-auto" : "overflow-hidden")}
           >
             <div
               className={cn(
@@ -253,10 +240,7 @@ export function Lightbox({
                     event.stopPropagation();
                     toggleZoom(event);
                   }}
-                  className={cn(
-                    "relative",
-                    zoomed ? "cursor-zoom-out" : "cursor-zoom-in",
-                  )}
+                  className={cn("relative", zoomed ? "cursor-zoom-out" : "cursor-zoom-in")}
                   style={{
                     ...(aspect
                       ? {
@@ -264,9 +248,7 @@ export function Lightbox({
                           width: `min(100cqi, calc(${aspect} * 100cqh))`,
                         }
                       : { height: "100%", width: "100%" }),
-                    ...(index !== null && !zoomed
-                      ? { viewTransitionName: morphName }
-                      : undefined),
+                    ...(index !== null && !zoomed ? { viewTransitionName: morphName } : undefined),
                   }}
                 >
                   <LightboxPhoto

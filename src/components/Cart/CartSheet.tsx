@@ -28,8 +28,7 @@ function products(count: number) {
   const teens = count % 100;
 
   if (count === 1) return "1 produkt";
-  if (last >= 2 && last <= 4 && (teens < 12 || teens > 14))
-    return `${count} produkty`;
+  if (last >= 2 && last <= 4 && (teens < 12 || teens > 14)) return `${count} produkty`;
 
   return `${count} produktów`;
 }
@@ -67,8 +66,7 @@ export function CartTrigger() {
    * every navigation.
    */
   const startedEmpty = useRef<boolean>(undefined);
-  if (cart && startedEmpty.current === undefined)
-    startedEmpty.current = cart.isEmpty;
+  if (cart && startedEmpty.current === undefined) startedEmpty.current = cart.isEmpty;
 
   const count = cart?.itemCount ?? 0;
 
@@ -104,10 +102,7 @@ export function CartTrigger() {
         </span>
       </SheetTrigger>
 
-      <SheetContent
-        side="right"
-        className="data-[side=right]:w-[min(24rem,88vw)]"
-      >
+      <SheetContent side="right" className="data-[side=right]:w-[min(24rem,88vw)]">
         <SheetHeader className="h-16 flex-row items-center border-b border-dashed border-hairline py-0 sm:h-18">
           <SheetTitle>Koszyk</SheetTitle>
         </SheetHeader>

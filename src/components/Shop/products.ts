@@ -79,13 +79,15 @@ type ProductDetailNode = ProductNode & {
   soldIndividually?: boolean | null;
   attributes?: { nodes?: AttributeNode[] | null } | null;
   variations?: {
-    nodes?: {
-      databaseId?: number | null;
-      name?: string | null;
-      price?: string | null;
-      stockStatus?: string | null;
-      attributes?: { nodes?: AttributeNode[] | null } | null;
-    }[] | null;
+    nodes?:
+      | {
+          databaseId?: number | null;
+          name?: string | null;
+          price?: string | null;
+          stockStatus?: string | null;
+          attributes?: { nodes?: AttributeNode[] | null } | null;
+        }[]
+      | null;
   } | null;
 };
 

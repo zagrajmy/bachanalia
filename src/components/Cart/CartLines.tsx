@@ -64,8 +64,7 @@ function LineForm({
           step={1}
           defaultValue={line.quantity}
           onBlur={(event) => {
-            if (Number(event.target.value) !== line.quantity)
-              form.current?.requestSubmit();
+            if (Number(event.target.value) !== line.quantity) form.current?.requestSubmit();
           }}
           className={INPUT_CLASS}
         />
@@ -90,13 +89,7 @@ function LineForm({
  * `sm` breakpoint but sits in a viewport that is not, so the columns have to
  * be told to stay stacked rather than asked.
  */
-export function CartLines({
-  lines,
-  dense = false,
-}: {
-  dense?: boolean;
-  lines: CartLine[];
-}) {
+export function CartLines({ lines, dense = false }: { dense?: boolean; lines: CartLine[] }) {
   const [state, submit] = useActionState(cartLineAction, initial);
 
   /** WooCommerce answers each mutation with the cart, so the chrome follows. */
@@ -139,9 +132,7 @@ export function CartLines({
     const step = Number(formData.get("step")) || 0;
 
     const quantity =
-      formData.get("intent") === "remove"
-        ? 0
-        : Math.min(Math.max(typed + step, 0), MAX_QUANTITY);
+      formData.get("intent") === "remove" ? 0 : Math.min(Math.max(typed + step, 0), MAX_QUANTITY);
 
     startTransition(() => {
       patchLine({ key, quantity });
@@ -171,23 +162,17 @@ export function CartLines({
               )}
             </div>
 
-            <div
-              className={`flex min-w-0 flex-1 flex-col gap-1 ${wide("sm:contents")}`}
-            >
+            <div className={`flex min-w-0 flex-1 flex-col gap-1 ${wide("sm:contents")}`}>
               <div className="min-w-0">
                 <h2 className="display text-[clamp(1rem,2.4vw,1.2rem)]">
-                  <Link
-                    className="no-underline hover:text-rose"
-                    href={line.href}
-                  >
+                  <Link className="no-underline hover:text-rose" href={line.href}>
                     {line.name}
                   </Link>
                 </h2>
 
                 {line.options.map((option) => (
                   <p key={option.label} className="mt-1 text-sm text-ink-muted">
-                    <span className="eyebrow">{option.label}:</span>{" "}
-                    {option.value}
+                    <span className="eyebrow">{option.label}:</span> {option.value}
                   </p>
                 ))}
               </div>

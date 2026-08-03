@@ -81,8 +81,7 @@ export function addLine(token: string, productId: number, variationId: number, q
   )[0];
 
   if (found) found.quantity += quantity;
-  else
-    lines.push({ productId, variationId, quantity, key: recordedKey(productId, variationId) });
+  else lines.push({ productId, variationId, quantity, key: recordedKey(productId, variationId) });
 
   carts[token] = lines;
 }

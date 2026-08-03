@@ -42,7 +42,11 @@ export function blurPlaceholderStyle(
   } = {},
 ) {
   const backgroundSize =
-    objectFit === "fill" ? "100% 100%" : objectFit === "none" || objectFit === "scale-down" ? undefined : objectFit;
+    objectFit === "fill"
+      ? "100% 100%"
+      : objectFit === "none" || objectFit === "scale-down"
+        ? undefined
+        : objectFit;
 
   return {
     backgroundImage: `url("data:image/svg+xml;charset=utf-8,${getImageBlurSvg({

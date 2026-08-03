@@ -9,3 +9,6 @@ test-results
 # byte-identical.
 src/content/img-manifest.json
 src/content/lqip/**/*.json
+
+# `bun run e2e:record` writes these, and the same disagreement applies.
+e2e/fixtures/wp/**/*.json

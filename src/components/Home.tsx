@@ -14,21 +14,12 @@ const [nameHead, ...nameTail] = con.name.split(" ");
 
 const idx = (i: number) => String(i + 1).padStart(2, "0");
 
-export function Home({
-  news,
-  tickets,
-}: {
-  news: NewsEntry[];
-  tickets: Ticket[];
-}) {
+export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }) {
   return (
     <>
       <section>
         <article className="ink-inverted relative overflow-hidden bg-navy">
-          <span
-            aria-hidden="true"
-            className="screened pointer-events-none absolute inset-0 z-10"
-          />
+          <span aria-hidden="true" className="screened pointer-events-none absolute inset-0 z-10" />
 
           <div className="relative min-w-0">
             <div className="relative">
@@ -104,9 +95,7 @@ export function Home({
       <section className="gutter pt-12 sm:pt-16">
         <div className="mx-auto max-w-6xl">
           <div className="border-b-2 border-navy pb-3">
-            <h2 className="display ml-[-0.04em] text-[clamp(2.1rem,6.4vw,4rem)]">
-              Wejściówki
-            </h2>
+            <h2 className="display ml-[-0.04em] text-[clamp(2.1rem,6.4vw,4rem)]">Wejściówki</h2>
           </div>
 
           <ol className="mt-1">
@@ -116,10 +105,7 @@ export function Home({
                 soldOut ? "line-through opacity-60" : ""
               }`;
               return (
-                <li
-                  className="border-b border-dashed border-navy/30"
-                  key={href}
-                >
+                <li className="border-b border-dashed border-navy/30" key={href}>
                   <Link
                     className="group -mx-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 rounded-card p-3 no-underline transition-colors hover:duration-0 duration-150 hover:before:bg-ink/3 sm:gap-x-8 sm:py-3.5 before:inset-0.5 before:absolute relative before:-z-10"
                     href={href}
@@ -143,10 +129,7 @@ export function Home({
             })}
           </ol>
 
-          <Button
-            asChild
-            className="mt-9 px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]"
-          >
+          <Button asChild className="mt-9 px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]">
             <Link href={primaryCta.href}>Kup akredytację</Link>
           </Button>
         </div>
@@ -170,21 +153,14 @@ export function Home({
       <section className="gutter pt-14 sm:pt-20">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2 border-b-2 border-navy pb-3">
-            <h2 className="display ml-[-0.04em] text-[clamp(1.7rem,4.6vw,2.7rem)]">
-              Program
-            </h2>
-            <p className="eyebrow text-ink-muted">
-              {blocks.length} bloków tematycznych
-            </p>
+            <h2 className="display ml-[-0.04em] text-[clamp(1.7rem,4.6vw,2.7rem)]">Program</h2>
+            <p className="eyebrow text-ink-muted">{blocks.length} bloków tematycznych</p>
           </div>
 
           <ul className="grid sm:grid-cols-2 sm:gap-x-12">
             {blocks.map(({ href, label, note }, i) => (
               <li className="border-b border-dashed border-hairline" key={href}>
-                <Link
-                  className="group flex items-baseline gap-4 py-4 no-underline"
-                  href={href}
-                >
+                <Link className="group flex items-baseline gap-4 py-4 no-underline" href={href}>
                   <span className="w-6 shrink-0 text-[0.62rem] tracking-[0.18em] text-ink-muted tabular-nums">
                     {idx(i)}
                   </span>
@@ -192,9 +168,7 @@ export function Home({
                     <span className="display block text-[clamp(1.1rem,3vw,1.5rem)] text-ink transition-colors duration-200 group-hover:text-rose">
                       {label}
                     </span>
-                    <span className="mt-1 block text-sm text-ink-muted">
-                      {note}
-                    </span>
+                    <span className="mt-1 block text-sm text-ink-muted">{note}</span>
                   </span>
                 </Link>
               </li>
@@ -208,18 +182,13 @@ export function Home({
       <section className="gutter pt-16 sm:pt-24">
         <div className="mx-auto flex max-w-6xl flex-col gap-8 border-t-2 border-navy pt-8 sm:flex-row sm:items-end sm:justify-between sm:gap-12">
           <div>
-            <p className="display text-[clamp(2.1rem,6.4vw,4rem)] leading-[0.9]">
-              {con.dates}
-            </p>
+            <p className="display text-[clamp(2.1rem,6.4vw,4rem)] leading-[0.9]">{con.dates}</p>
             <p className="mt-3 max-w-[38ch] text-ink-muted">
               {con.venue}, {con.address}
             </p>
           </div>
 
-          <Button
-            asChild
-            className="self-start px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]"
-          >
+          <Button asChild className="self-start px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]">
             <Link href={primaryCta.href}>Kup akredytację</Link>
           </Button>
         </div>

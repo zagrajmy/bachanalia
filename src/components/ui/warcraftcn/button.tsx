@@ -35,11 +35,7 @@ function Button({
   const Comp = asChild ? SlotPrimitive.Slot : "button";
 
   return (
-    <Comp
-      className={cn(buttonVariants({ variant }), className)}
-      data-slot="button"
-      {...props}
-    />
+    <Comp className={cn(buttonVariants({ variant }), className)} data-slot="button" {...props} />
   );
 }
 

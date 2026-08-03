@@ -5,7 +5,7 @@ import { wooMessage } from "./message";
 
 /** The one the owner hit: sold-individually product, added twice. */
 const SOLD_INDIVIDUALLY =
-  'Nie możesz dodać kolejnej sztuki &bdquo;Wsparcie Klubu 1 z&#322;&rdquo; do koszyka. ' +
+  "Nie możesz dodać kolejnej sztuki &bdquo;Wsparcie Klubu 1 z&#322;&rdquo; do koszyka. " +
   '<a href="https://bachanaliafantastyczne.pl/index.php/koszyk/" class="button wc-forward">Zobacz koszyk</a>';
 
 test("a WooCommerce error reaches the buyer as text, not markup", () => {
@@ -21,10 +21,7 @@ test("the trailing WordPress cart link is dropped, not translated", () => {
 });
 
 test("a link in the middle of a sentence stays as its own words", () => {
-  assert.equal(
-    wooMessage('Zobacz <a href="/x">regulamin</a> sklepu.'),
-    "Zobacz regulamin sklepu.",
-  );
+  assert.equal(wooMessage('Zobacz <a href="/x">regulamin</a> sklepu.'), "Zobacz regulamin sklepu.");
 });
 
 test("the empty-cart session error is the one sentence worth rewriting", () => {
@@ -32,5 +29,8 @@ test("the empty-cart session error is the one sentence worth rewriting", () => {
 });
 
 test("an untranslated WooCommerce error is passed through rather than hidden", () => {
-  assert.equal(wooMessage("Sorry, this product cannot be purchased."), "Sorry, this product cannot be purchased.");
+  assert.equal(
+    wooMessage("Sorry, this product cannot be purchased."),
+    "Sorry, this product cannot be purchased.",
+  );
 });

@@ -62,7 +62,9 @@ export function GalleryImage({
         onLoad={(event) => markReady(event.currentTarget)}
         className={cn(
           fit === "cover" ? "object-cover" : "object-contain",
-          reveal === "fade" && !blurDataURL && "transition-opacity duration-200 ease-[var(--ease-out)]",
+          reveal === "fade" &&
+            !blurDataURL &&
+            "transition-opacity duration-200 ease-[var(--ease-out)]",
           reveal === "instant" || loaded || blurDataURL ? "opacity-100" : "opacity-0",
         )}
       />

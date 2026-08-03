@@ -77,9 +77,7 @@ export default async function KoszykPage() {
                 <a href={checkoutUrl}>Przejdź do płatności</a>
               </Button>
             ) : (
-              <p className="text-sm text-rose">
-                {CHECKOUT_UNAVAILABLE}
-              </p>
+              <p className="text-sm text-rose">{CHECKOUT_UNAVAILABLE}</p>
             )}
           </div>
         </>

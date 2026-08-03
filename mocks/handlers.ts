@@ -188,9 +188,12 @@ function replay(request: Request, operation: Operation) {
      * 400 rather than 500: `fetchGraphQL` treats 5xx as the rate limiter and
      * spends a minute backing off before it admits anything is wrong.
      */
-    return HttpResponse.json({ errors: [{ message: `No fixture for ${operation.name}` }] }, {
-      status: 400,
-    });
+    return HttpResponse.json(
+      { errors: [{ message: `No fixture for ${operation.name}` }] },
+      {
+        status: 400,
+      },
+    );
   }
 
   return HttpResponse.json(fixture);

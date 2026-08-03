@@ -75,9 +75,7 @@ export function SiteHeader() {
                        */
                       role="link"
                       onFocus={() => setOpenGroup(group.label)}
-                      render={
-                        <Link href={group.href} {...externalProps(group)} />
-                      }
+                      render={<Link href={group.href} {...externalProps(group)} />}
                     >
                       {group.label}
                     </NavigationMenuTrigger>
@@ -87,12 +85,7 @@ export function SiteHeader() {
                         {group.children.map((link) => (
                           <li key={link.href}>
                             <NavigationMenuLink
-                              render={
-                                <Link
-                                  href={link.href}
-                                  {...externalProps(link)}
-                                />
-                              }
+                              render={<Link href={link.href} {...externalProps(link)} />}
                             >
                               {link.label}
                             </NavigationMenuLink>
@@ -104,9 +97,7 @@ export function SiteHeader() {
                 ) : (
                   <NavigationMenuLink
                     className={navigationMenuTriggerStyle()}
-                    render={
-                      <Link href={group.href} {...externalProps(group)} />
-                    }
+                    render={<Link href={group.href} {...externalProps(group)} />}
                   >
                     {group.label}
                   </NavigationMenuLink>
@@ -133,10 +124,7 @@ export function SiteHeader() {
             />
           </SheetTrigger>
 
-          <SheetContent
-            side="right"
-            className="data-[side=right]:w-[min(21rem,88vw)]"
-          >
+          <SheetContent side="right" className="data-[side=right]:w-[min(21rem,88vw)]">
             <SheetHeader className="h-16 flex-row items-center border-b border-dashed border-hairline py-0 sm:h-18">
               <SheetTitle className="sr-only">Menu</SheetTitle>
             </SheetHeader>
@@ -183,12 +171,7 @@ export function SiteHeader() {
 
             <SheetFooter>
               <Button asChild className="w-full">
-                <Link
-                  href={primaryCta.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={closeMenu}
-                >
+                <Link href={primaryCta.href} target="_blank" rel="noreferrer" onClick={closeMenu}>
                   {primaryCta.label}
                 </Link>
               </Button>

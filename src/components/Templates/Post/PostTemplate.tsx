@@ -15,7 +15,7 @@ const dateFormat = new Intl.DateTimeFormat("pl-PL", {
   year: "numeric",
 });
 
-export default function PostTemplate({ node }: TemplateProps) {
+export function PostTemplate({ node }: TemplateProps) {
   const published = node.date ? new Date(node.date) : null;
   const image = node.featuredImage?.node;
   const title = unshoutName(node.title);

@@ -5,11 +5,11 @@ import { print } from "graphql/language/printer";
 
 import { fetchGraphQL, fetchGraphQLAtBuild } from "@/utils/fetchGraphQL";
 import { ContentNodeResult, ContentQuery } from "@/queries/general/ContentQuery";
-import PageTemplate from "@/components/Templates/Page/PageTemplate";
+import { PageTemplate } from "@/components/Templates/Page/PageTemplate";
 import { nextSlugToWpSlug } from "@/utils/nextSlugToWpSlug";
 import { unshoutName, unshoutTitle } from "@/utils/unshout";
 import { wpUriToPath } from "@/utils/wpUriToPath";
-import PostTemplate from "@/components/Templates/Post/PostTemplate";
+import { PostTemplate } from "@/components/Templates/Post/PostTemplate";
 import { AllContentQuery } from "@/queries/general/AllContentQuery";
 import { Home } from "@/components/Home";
 import { fetchNews } from "@/components/News/news";

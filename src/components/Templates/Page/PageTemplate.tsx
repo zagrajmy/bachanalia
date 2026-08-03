@@ -7,7 +7,7 @@ interface TemplateProps {
   node: ContentNodeResult;
 }
 
-export default function PageTemplate({ node }: TemplateProps) {
+export function PageTemplate({ node }: TemplateProps) {
   const segments = splitWpContent(node.content);
 
   return (

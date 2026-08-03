@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Cinzel } from "next/font/google";
+import { Bricolage_Grotesque, Caveat, Cinzel } from "next/font/google";
 
 import "@/app/globals.css";
 
@@ -7,6 +7,7 @@ const bricolage = Bricolage_Grotesque({
   subsets: ["latin", "latin-ext"],
   variable: "--font-bricolage",
   display: "swap",
+  axes: ["opsz", "wdth"],
 });
 
 const cinzel = Cinzel({
@@ -16,7 +17,13 @@ const cinzel = Cinzel({
   display: "swap",
 });
 
-const fontVars = `${bricolage.variable} ${cinzel.variable}`;
+const caveat = Caveat({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-caveat",
+  display: "swap",
+});
+
+const fontVars = `${bricolage.variable} ${cinzel.variable} ${caveat.variable}`;
 
 const TITLE = "Bachanalia Fantastyczne XL";
 const DESCRIPTION =

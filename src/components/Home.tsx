@@ -63,19 +63,22 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
                 </ul>
 
                 <h1 className="display relative ml-[-0.045em] max-w-[16ch] text-[clamp(2.1rem,5.6vw,3.6rem)] leading-[0.88]">
+                  <span>
+                    <span className="text-coral [font-variation-settings:'opsz'_96,'wdth'_85,'wght'_600]">{con.edition}</span>
+                    <small className="ml-1 text-base font-normal font-scribble">(czyli czterdzieste, ale też bardzo duże)</small>
+                  </span>
                   <span className="block">
                     {nameHead} {nameTail.join(" ")}
                   </span>
-                  <span className="text-coral">{con.edition}</span>
                 </h1>
 
-                <dl className="relative mt-7 grid max-w-136 gap-x-7 gap-y-1 text-sm sm:grid-cols-[auto_1fr] gap-y-3 sm:text-base">
-                  <dt className="text-sm text-accent pt-0.75">Termin</dt>
-                  <dd className="flex flex-col items-start gap-1 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-5">
+                <dl className="relative mt-7 grid max-w-136 gap-x-7 text-sm sm:grid-cols-[auto_1fr] sm:gap-y-3 sm:text-base">
+                  <dt className="text-sm text-accent pt-0.75 max-sm:mb-1">Termin</dt>
+                  <dd className="flex flex-col items-start sm:gap-1 sm:flex-row sm:items-center sm:flex-wrap sm:gap-x-5">
                     {con.dates}
                     <AddToCalendar />
                   </dd>
-                  <dt className="text-sm text-accent pt-0.75">Miejsce</dt>
+                  <dt className="text-sm text-accent pt-0.75 max-sm:mb-1 max-sm:mt-4">Miejsce</dt>
                   <dd>
                     {con.venue},<br />
                     <Link

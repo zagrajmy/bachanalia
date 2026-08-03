@@ -3,14 +3,13 @@ import { htmlToText } from "@/utils/wpHtml";
 export const NEWS_PATH = "/aktualnosci/";
 
 export type NewsEntry = {
-  id: string;
-  title: string;
-  href: string;
+  category?: string;
   date: string;
   dateTime: string;
   excerpt: string;
-  category?: string;
   external?: boolean;
+  href: string;
+  id: string;
   image?: {
     src: string;
     alt: string;
@@ -18,6 +17,7 @@ export type NewsEntry = {
     width?: number;
     height?: number;
   };
+  title: string;
 };
 
 const dateFormat = new Intl.DateTimeFormat("pl-PL", {

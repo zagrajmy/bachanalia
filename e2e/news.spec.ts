@@ -37,7 +37,7 @@ test.describe("news archive", () => {
       .locator("time")
       .evaluateAll((nodes) => nodes.map((node) => node.getAttribute("datetime") ?? ""));
 
-    expect([...dates].sort().reverse(), "newest announcement belongs on top").toEqual(dates);
+    expect([...dates].sort().toReversed(), "newest announcement belongs on top").toEqual(dates);
   });
 
   test("both archives share one timeline", async ({ page }) => {

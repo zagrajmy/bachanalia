@@ -42,7 +42,7 @@ export function parseFeedItems(html: string): NewsEntry[] {
 
     const [, pageId, postId] = ids;
     const seconds = Number(item.match(TIMESTAMP)?.[1]);
-    const srcSet = decodeEntities(item.match(SRC_SET)?.[1] ?? "").replace(/\\\//g, "/");
+    const srcSet = decodeEntities(item.match(SRC_SET)?.[1] ?? "").replaceAll(/\\\//g, "/");
     const src = srcSet.match(SRC_720)?.[1];
 
     return [

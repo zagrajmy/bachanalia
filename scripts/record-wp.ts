@@ -23,7 +23,7 @@ import { CartQuery } from "../src/queries/cart/CartQuery";
 import { CheckoutUrlQuery } from "../src/queries/cart/CheckoutUrlQuery";
 import { RemoveItemsFromCartMutation } from "../src/queries/cart/RemoveItemsFromCartMutation";
 import { UpdateItemQuantitiesMutation } from "../src/queries/cart/UpdateItemQuantitiesMutation";
-import { writeFixture, writeSnapshots, type CartSnapshots } from "../mocks/fixtures";
+import { type CartSnapshots, writeFixture, writeSnapshots } from "../mocks/fixtures";
 import { footerNav, primaryNav } from "../src/components/Globals/siteNav";
 
 /** Its own output directory, so a `bun run dev` in this repo keeps working. */
@@ -75,7 +75,7 @@ async function waitForServer() {
       /** Still booting. */
     }
 
-    await sleep(1_000);
+    await sleep(1000);
   }
 
   throw new Error("the recorder's dev server never came up");
@@ -134,7 +134,7 @@ type WooReply = { data?: any; errors?: { message: string }[] };
 let session = "";
 
 /** The reply exactly as WooCommerce sent it, `errors` array and all. */
-async function wooRaw(query: string, variables: { [key: string]: unknown } = {}) {
+async function wooRaw(query: string, variables: Record<string, unknown> = {}) {
   const response = await fetch(GRAPHQL, {
     method: "POST",
     headers: {
@@ -150,7 +150,7 @@ async function wooRaw(query: string, variables: { [key: string]: unknown } = {})
   return (await response.json()) as WooReply;
 }
 
-async function woo(query: string, variables: { [key: string]: unknown }): Promise<WooReply> {
+async function woo(query: string, variables: Record<string, unknown>): Promise<WooReply> {
   const body = await wooRaw(query, variables);
 
   if (body.errors?.length) throw new Error(body.errors.map((e) => e.message).join("; "));

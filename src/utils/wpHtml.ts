@@ -4,7 +4,7 @@
  * the tags and decode the entities" had grown around the repo; this is the one.
  */
 
-const NAMED_ENTITIES: { [name: string]: string } = {
+const NAMED_ENTITIES: Record<string, string> = {
   amp: "&",
   apos: "'",
   gt: ">",
@@ -29,7 +29,7 @@ const NAMED_ENTITIES: { [name: string]: string } = {
  * body copy is somebody's typo to see, not ours to swallow.
  */
 export function decodeEntities(text: string) {
-  return text.replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (entity, body: string) => {
+  return text.replaceAll(/&(#x?[0-9a-f]+|[a-z]+);/gi, (entity, body: string) => {
     if (!body.startsWith("#")) return NAMED_ENTITIES[body.toLowerCase()] ?? entity;
 
     const hex = body[1] === "x" || body[1] === "X";
@@ -43,7 +43,7 @@ export function decodeEntities(text: string) {
 export function htmlToText(html?: string | null) {
   if (!html) return "";
 
-  return decodeEntities(html.replace(/<[^>]*>/g, " "))
-    .replace(/\s+/g, " ")
+  return decodeEntities(html.replaceAll(/<[^>]*>/g, " "))
+    .replaceAll(/\s+/g, " ")
     .trim();
 }

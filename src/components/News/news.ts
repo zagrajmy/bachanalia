@@ -10,7 +10,7 @@ import { fetchFacebookNews } from "./facebookNews";
 import { NewsQuery } from "./NewsQuery";
 import { NewsEntry, newsExcerpt, toNewsDate } from "./newsFormat";
 
-export { NEWS_PATH, type NewsEntry, decodeEntities, newsExcerpt, toNewsDate } from "./newsFormat";
+export { decodeEntities, NEWS_PATH, type NewsEntry, newsExcerpt, toNewsDate } from "./newsFormat";
 
 function toNewsEntry(post: Post): NewsEntry {
   const image = post.featuredImage?.node;

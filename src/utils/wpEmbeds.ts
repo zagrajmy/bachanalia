@@ -30,7 +30,7 @@ const attribute = (tag: string, name: string) =>
  * carries the gender, because a sentence that has to dodge the pronoun to stay
  * grammatical reads like it was written by a machine.
  */
-const KINDS: { host: RegExp; noun: string; it: string }[] = [
+const KINDS: { host: RegExp; it: string; noun: string }[] = [
   { host: /(^|\.)google\.[a-z.]+$/, noun: "mapa Google", it: "ją" },
   { host: /(^|\.)miro\.com$/, noun: "tablica Miro", it: "ją" },
   { host: /(^|\.)(youtube\.com|youtu\.be)$/, noun: "film z YouTube", it: "go" },

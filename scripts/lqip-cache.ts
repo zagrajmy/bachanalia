@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, readdir, writeFile, unlink } from "node:fs/promises";
+import { cp, mkdir, readdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { print } from "graphql/language/printer";
 import gql from "graphql-tag";
@@ -30,9 +30,9 @@ const DELAY_MS = 350;
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 type Job = {
+  fullUrl: string;
   key: string;
   thumbUrl: string;
-  fullUrl: string;
   variants: boolean;
   /**
    * Only the Facebook feed needs its size written down — `lqipAsset` reads
@@ -47,7 +47,7 @@ type Job = {
  * `fetchGraphQL`'s ladder, and the same reason: Wordfence throttles the
  * client, not the request, and recovers on its own if the backoff outlasts it.
  */
-const RETRY_DELAYS_MS = [500, 2_000, 6_000, 15_000, 30_000];
+const RETRY_DELAYS_MS = [500, 2000, 6000, 15_000, 30_000];
 
 const isTransient = (status: number) => status === 403 || status === 429 || status >= 500;
 
@@ -138,7 +138,7 @@ function lqipMetaFile(key: string) {
 }
 
 async function writeMeta(key: string, width: number, height: number) {
-  await writeFile(lqipMetaFile(key), `${JSON.stringify({ width, height })}\n`);
+  await writeFile(lqipMetaFile(key), String(JSON.stringify({ width, height })));
 }
 
 async function writeLqip(key: string, webp: Buffer) {
@@ -212,7 +212,7 @@ async function loadCrawl(): Promise<Record<string, string>> {
   }
 }
 
-async function collectJobs(): Promise<{ jobs: Job[]; crawl: Record<string, string> }> {
+async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job[] }> {
   const jobs: Job[] = [];
   const seen = new Set<string>();
 
@@ -281,14 +281,14 @@ async function collectJobs(): Promise<{ jobs: Job[]; crawl: Record<string, strin
   }>(print(ProductsQuery));
 
   for (const product of shop.products?.nodes ?? []) {
-    const image = product.image;
+    const { image } = product;
     if (!image?.sourceUrl) continue;
     addWp(image.sourceUrl, image.thumbnail);
   }
 
   const { pages, posts } = await graphql<{
-    pages: { nodes: { uri?: string | null; modifiedGmt?: string | null }[] };
-    posts: { nodes: { uri?: string | null; modifiedGmt?: string | null }[] };
+    pages: { nodes: { modifiedGmt?: string | null; uri?: string | null }[] };
+    posts: { nodes: { modifiedGmt?: string | null; uri?: string | null }[] };
   }>(print(AllContentQuery));
 
   const previous = await loadCrawl();
@@ -296,7 +296,7 @@ async function collectJobs(): Promise<{ jobs: Job[]; crawl: Record<string, strin
   let skipped = 0;
 
   const nodes = [...(pages?.nodes ?? []), ...(posts?.nodes ?? [])].filter(
-    (node): node is { uri: string; modifiedGmt?: string | null } => Boolean(node.uri),
+    (node): node is { modifiedGmt?: string | null; uri: string } => Boolean(node.uri),
   );
 
   for (const { uri, modifiedGmt } of nodes) {
@@ -340,7 +340,7 @@ async function fetchBytes(url: string) {
 
 async function encodeWidths(bytes: Buffer) {
   const { default: sharp } = await import("sharp");
-  const out: { width: number; webp: Buffer }[] = [];
+  const out: { webp: Buffer; width: number }[] = [];
 
   for (const width of MEDIA_WIDTHS) {
     const webp = await sharp(bytes)
@@ -470,7 +470,7 @@ async function main() {
     console.log("media: fetches failed, crawl snapshot withheld");
   } else {
     await mkdir(dirname(CRAWL_PATH), { recursive: true });
-    await writeFile(CRAWL_PATH, `${JSON.stringify(crawl, null, 2)}\n`);
+    await writeFile(CRAWL_PATH, String(JSON.stringify(crawl, null, 2)));
   }
 
   console.log(

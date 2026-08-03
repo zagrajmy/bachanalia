@@ -10,22 +10,22 @@ import { QuantityInput } from "./QuantityInput";
 import { openCart, setCart, useCart } from "./store";
 import type { CartActionState } from "./types";
 import {
+  type AttributeLabel,
   buildAxes,
   findVariation,
   initialSelection,
   isOptionAvailable,
   isSelectionUnavailable,
-  type AttributeLabel,
   type ProductVariation,
   type VariationSelection,
 } from "./variations";
 
 type Props = {
+  attributeLabels: AttributeLabel[];
   productId: number;
   slug: string;
-  variations: ProductVariation[];
-  attributeLabels: AttributeLabel[];
   soldOut: boolean;
+  variations: ProductVariation[];
   /** WooCommerce refuses a second unit, so no quantity is offered at all. */
   soldIndividually: boolean;
 };
@@ -137,7 +137,7 @@ export function AddToCartForm({
               return (
                 <label
                   key={option}
-                  className={`rounded-card border px-3.5 py-3 text-sm transition-colors duration-150 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent ${
+                  className={`rounded-card border px-3.5 py-3 text-sm transition-colors duration-150 has-[:focus-visible]:outline has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent ${
                     unbuyable
                       ? "cursor-not-allowed border-hairline text-ink-muted line-through"
                       : active

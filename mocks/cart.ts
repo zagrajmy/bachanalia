@@ -6,14 +6,14 @@ import { readSnapshots } from "./fixtures";
  * is asserting nothing. What the machine hands back is still WooCommerce's own
  * recorded payload — prices included, because money is never computed here.
  */
-type Line = { productId: number; variationId: number; quantity: number; key: string };
+type Line = { key: string; productId: number; quantity: number; variationId: number };
 
 type CartNode = {
-  isEmpty?: boolean;
   contents?: { itemCount?: number; nodes?: { key?: string; quantity?: number }[] };
+  isEmpty?: boolean;
 };
 
-const carts: { [token: string]: Line[] } = {};
+const carts: Record<string, Line[]> = {};
 
 const signature = (lines: Line[]) =>
   lines
@@ -75,7 +75,7 @@ export function cartOf(token: string) {
 }
 
 export function addLine(token: string, productId: number, variationId: number, quantity: number) {
-  const lines = cartOf(token).slice();
+  const lines = [...cartOf(token)];
   const found = lines.filter(
     (line) => line.productId === productId && line.variationId === variationId,
   )[0];

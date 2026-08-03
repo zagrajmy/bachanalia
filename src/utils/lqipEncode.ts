@@ -2,9 +2,9 @@ const SIZE = 8;
 const QUALITY = 20;
 
 export type EncodedLqip = {
+  height: number;
   webp: Buffer;
   width: number;
-  height: number;
 };
 
 export async function encodeLqipWebp(bytes: ArrayBuffer | Uint8Array): Promise<EncodedLqip> {

@@ -25,14 +25,14 @@ export const hasVisibleContent = (html?: string | null) => {
 };
 
 export interface WpGalleryImage {
-  src: string;
   alt: string;
   blurDataURL?: string;
+  src: string;
 }
 
 export type WpContentSegment =
-  | { type: "html"; html: string }
-  | { type: "gallery"; images: WpGalleryImage[] };
+  | { type: "gallery"; images: WpGalleryImage[] }
+  | { type: "html"; html: string };
 
 /** Elementor's carousel wrapper, the element whose subtree holds the slides. */
 const CAROUSEL_CLASS = "elementor-image-carousel-wrapper";
@@ -84,7 +84,7 @@ const galleryImages = (slice: string): WpGalleryImage[] => {
 const closeAll = (names: readonly string[]) =>
   names
     .map((name) => `</${name}>`)
-    .reverse()
+    .toReversed()
     .join("");
 
 /**

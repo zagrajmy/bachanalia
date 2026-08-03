@@ -19,11 +19,11 @@ export function QuantityInput({
   onValueChange,
   disabled,
 }: {
-  name: string;
-  label: string;
   defaultValue: number;
-  onValueChange?: (value: number) => void;
   disabled?: boolean;
+  label: string;
+  name: string;
+  onValueChange?: (value: number) => void;
 }) {
   const id = useId();
 

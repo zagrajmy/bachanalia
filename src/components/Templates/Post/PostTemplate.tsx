@@ -41,7 +41,7 @@ export function PostTemplate({ node }: TemplateProps) {
           </time>
         )}
 
-        <h1 className="display mt-3 -ml-[0.04em] border-b-2 border-navy pb-3 text-[clamp(1.9rem,5.2vw,3rem)]">
+        <h1 className="display mt-3 ml-[-0.04em] border-b-2 border-navy pb-3 text-[clamp(1.9rem,5.2vw,3rem)]">
           {title}
         </h1>
 

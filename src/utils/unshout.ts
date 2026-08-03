@@ -14,7 +14,7 @@ const HAS_LOWERCASE = new RegExp(`[${LOWER}]`);
 /** Shouting is caps with no lowercase in it; digits and punctuation are fine. */
 const isShouted = (title: string) => HAS_LETTER.test(title) && !HAS_LOWERCASE.test(title);
 
-const normalise = (title: string) => title.replace(/\s+/g, " ").trim().toLocaleLowerCase("pl");
+const normalise = (title: string) => title.replaceAll(/\s+/g, " ").trim().toLocaleLowerCase("pl");
 
 /**
  * How the site itself writes the things WordPress also holds. Most shouted page
@@ -34,7 +34,7 @@ const VOCABULARY = [
 ];
 
 /** Prototype-free, so a page titled "CONSTRUCTOR" cannot look up a function. */
-const CANONICAL: { [normalised: string]: string } = Object.create(null);
+const CANONICAL: Record<string, string> = Object.create(null);
 for (const label of VOCABULARY) CANONICAL[normalise(label)] = label;
 
 const ALL_CAPS = new RegExp(`^[${UPPER}]{2,}$`);
@@ -83,11 +83,11 @@ const restore = (title: string) => {
     const isStem = name.endsWith("-");
     const word = isStem ? name.slice(0, -1) : name;
 
-    out = out.replace(new RegExp(START + word + (isStem ? "" : END), "gi"), word);
+    out = out.replaceAll(new RegExp(START + word + (isStem ? "" : END), "gi"), word);
   }
 
   for (const acronym of ACRONYMS) {
-    out = out.replace(new RegExp(START + acronym + END, "gi"), acronym);
+    out = out.replaceAll(new RegExp(START + acronym + END, "gi"), acronym);
   }
 
   return out;

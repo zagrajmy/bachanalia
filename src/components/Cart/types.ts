@@ -11,14 +11,14 @@ export type CartLineOption = { label: string; value: string };
 
 export type CartLine = {
   /** WooCommerce's cart item hash — the handle for update and remove. */
+  href: string;
+  image?: { src: string; alt: string };
   key: string;
   name: string;
-  slug: string;
-  href: string;
   quantity: number;
+  slug: string;
   subtotal: string;
   total: string;
-  image?: { src: string; alt: string };
   /** The chosen variation, spelled out. A shirt size has to be visible here. */
   options: CartLineOption[];
   variationId?: number;
@@ -26,19 +26,19 @@ export type CartLine = {
   soldIndividually: boolean;
 };
 
-export type ShippingRate = { id: string; label: string; cost: string };
+export type ShippingRate = { cost: string; id: string; label: string };
 
 export type CartView = {
+  chosenShippingMethods: string[];
+  discountTotal: string;
   isEmpty: boolean;
   itemCount: number;
+  lines: CartLine[];
+  needsShippingAddress: boolean;
+  shippingRates: ShippingRate[];
+  shippingTotal: string;
   subtotal: string;
   total: string;
-  shippingTotal: string;
-  discountTotal: string;
-  needsShippingAddress: boolean;
-  chosenShippingMethods: string[];
-  shippingRates: ShippingRate[];
-  lines: CartLine[];
 };
 
 /** What a cart form hands back to its `useActionState`. */

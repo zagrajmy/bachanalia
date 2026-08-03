@@ -134,7 +134,7 @@ test("splitting still drops the carousel semantics prepareWpContent removes", ()
 });
 
 test("wrappers around nothing but a carousel yield only the gallery", () => {
-  const segments = splitWpContent(PAGE.replace(/<p>[^<]*<\/p>/g, ""));
+  const segments = splitWpContent(PAGE.replaceAll(/<p>[^<]*<\/p>/g, ""));
 
   assert.deepEqual(
     segments.map((segment) => segment.type),

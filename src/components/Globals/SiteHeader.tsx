@@ -81,7 +81,7 @@ export function SiteHeader() {
                     </NavigationMenuTrigger>
 
                     <NavigationMenuContent>
-                      <ul className="grid w-[15rem] gap-1">
+                      <ul className="grid w-60 gap-1">
                         {group.children.map((link) => (
                           <li key={link.href}>
                             <NavigationMenuLink
@@ -143,7 +143,7 @@ export function SiteHeader() {
                       href={group.href}
                       {...externalProps(group)}
                       onClick={closeMenu}
-                      className="block rounded-card px-2 py-2 text-[0.9375rem] font-semibold text-ink no-underline transition-colors duration-150 hover:bg-paper-shade"
+                      className="block rounded-card p-2  text-[0.9375rem] font-semibold text-ink no-underline transition-colors duration-150 hover:bg-paper-shade"
                     >
                       {group.label}
                     </Link>

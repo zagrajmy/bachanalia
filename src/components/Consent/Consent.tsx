@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/warcraftcn/button";
 
 const KEY = "bf-consent";
 
-type Choice = "granted" | "denied";
+type Choice = "denied" | "granted";
 
 type State = {
   choice?: Choice;
@@ -75,7 +75,7 @@ function reveal(node: Element) {
 const parked = () => document.querySelectorAll("[data-embed-src]");
 
 function revealAll() {
-  for (const node of Array.from(parked())) reveal(node);
+  for (const node of [...parked()]) reveal(node);
 }
 
 export function decide(choice: Choice) {
@@ -151,7 +151,7 @@ export function Consent() {
        * 16px and paints under this at the same layer. On anything wider the
        * `min()` picks 22rem and the two are nowhere near each other.
        */
-      className="fixed bottom-4 left-4 z-40 w-[min(22rem,calc(100vw-6rem))] rounded-card border-2 border-navy bg-paper text-navy shadow-[0_18px_44px_-18px] shadow-navy/50 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3 motion-safe:duration-300 motion-safe:ease-(--ease-out)"
+      className="fixed bottom-4 left-4 z-40 w-[min(22rem,calc(100vw-6rem))] rounded-card border-2 border-navy bg-paper text-navy shadow-[0_18px_44px_-18px] shadow-navy/50 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3 motion-safe:duration-300 motion-safe:ease-out"
       role="dialog"
     >
       <p className="eyebrow border-b border-dashed border-hairline px-4 py-2.5">Ciasteczka</p>

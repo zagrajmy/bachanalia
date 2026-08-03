@@ -17,8 +17,8 @@ function sortKeys(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(sortKeys);
 
   if (value && typeof value === "object") {
-    const source = value as { [key: string]: unknown };
-    const sorted: { [key: string]: unknown } = {};
+    const source = value as Record<string, unknown>;
+    const sorted: Record<string, unknown> = {};
 
     for (const key of Object.keys(source).sort()) sorted[key] = sortKeys(source[key]);
 
@@ -35,8 +35,8 @@ export function stableStringify(value: unknown) {
 
 function readable(json: string) {
   return json
-    .replace(/[^A-Za-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
+    .replaceAll(/[^A-Za-z0-9]+/g, "-")
+    .replaceAll(/^-+|-+$/g, "")
     .slice(0, 56)
     .toLowerCase();
 }
@@ -72,7 +72,7 @@ export function writeFixture(operation: string, variables: unknown, body: unknow
 
   const name = fixtureName(operation, variables);
 
-  writeFileSync(join(FIXTURE_DIR, name), `${JSON.stringify(body, null, 2)}\n`);
+  writeFileSync(join(FIXTURE_DIR, name), String(JSON.stringify(body, null, 2)));
 
   return name;
 }
@@ -81,7 +81,7 @@ export type CartSnapshots = {
   /** WooCommerce's own answer for a cart with nothing in it. */
   empty: unknown;
   /** `<productId>:<variationId>:<quantity>` lines, sorted and joined by `|`. */
-  carts: { [signature: string]: unknown };
+  carts: Record<string, unknown>;
 };
 
 export function readSnapshots(): CartSnapshots {
@@ -92,5 +92,5 @@ export function readSnapshots(): CartSnapshots {
 
 export function writeSnapshots(snapshots: CartSnapshots) {
   mkdirSync(FIXTURE_DIR, { recursive: true });
-  writeFileSync(SNAPSHOT_FILE, `${JSON.stringify(snapshots, null, 2)}\n`);
+  writeFileSync(SNAPSHOT_FILE, String(JSON.stringify(snapshots, null, 2)));
 }

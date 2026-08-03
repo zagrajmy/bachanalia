@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu01Icon } from "@hugeicons/core-free-icons";
+import Menu01Icon from "@hugeicons/core-free-icons/Menu01Icon";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import {

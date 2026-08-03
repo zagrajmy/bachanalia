@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { ShoppingBag01Icon } from "@hugeicons/core-free-icons";
+import { useEffect } from "react";
+import ShoppingBag01Icon from "@hugeicons/core-free-icons/ShoppingBag01Icon";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import { SHOP_PATH } from "@/components/Globals/siteNav";
@@ -19,7 +18,7 @@ import { Button } from "@/components/ui/warcraftcn/button";
 
 import { CartLines } from "./CartLines";
 import { CartTotals } from "./CartTotals";
-import { CART_PATH, CHECKOUT_UNAVAILABLE } from "./paths";
+import { CHECKOUT_UNAVAILABLE } from "./paths";
 import { loadCart, setCartOpen, useCart } from "./store";
 
 /** 1 produkt, 2–4 produkty, 5+ produktów, and 12–14 back to produktów. */
@@ -44,48 +43,22 @@ function products(count: number) {
  * A reader without scripting gets nothing here; their way to the cart is the
  * link the shop index carries and the one the add-to-cart form prints.
  */
-export function CartTrigger() {
+export function CartSheet({ animateEntrance }: { animateEntrance: boolean }) {
   const { cart, checkoutUrl, checkoutKnown, open } = useCart();
-  const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    void loadCart();
-  }, []);
 
   /** Quantities may have moved in another tab, and the handover URL expires. */
   useEffect(() => {
     if (open) void loadCart(true);
   }, [open]);
 
-  /**
-   * Whether the first cart this page ever saw was empty. A line landing after
-   * that is a buyer's own doing and worth an entrance; a cart that was already
-   * full is just the page loading, and animating it there would be a pop on
-   * every navigation.
-   */
-  const startedEmpty = useRef<boolean>(undefined);
-  if (cart && startedEmpty.current === undefined) startedEmpty.current = cart.isEmpty;
-
   const count = cart?.itemCount ?? 0;
-
-  /** The cart page is the cart; a button pointing at it there is noise. */
-  if (!mounted || pathname === CART_PATH) return null;
-
-  /**
-   * Kept while the sheet is open even after the last line goes, so removing
-   * everything leaves the empty state on screen instead of closing the sheet
-   * out from under the buyer.
-   */
-  if (count === 0 && !open) return null;
 
   return (
     <Sheet open={open} onOpenChange={setCartOpen}>
       <SheetTrigger
         aria-label={`Koszyk, ${products(count)}`}
         className={`floating-dock flex items-center justify-center gap-0.5 cursor-pointer rounded-full border border-paper/30 bg-navy size-13 text-paper shadow-[0_14px_34px_-14px] shadow-navy/50 transition-transform duration-150 ease-out hover:-translate-y-px active:scale-[0.97] ${
-          startedEmpty.current
+          animateEntrance
             ? "motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200"
             : ""
         }`}

@@ -145,8 +145,19 @@ body {
       #eba959 80%,
       #ea8702 100%
     );
+  background-size:
+    auto,
+    100% 160%,
+    auto;
+  background-position:
+    0 0,
+    0 12%,
+    0 0;
+  background-repeat: no-repeat;
   background-clip: text;
   color: transparent;
+  animation: gold-sheen-oscillate 10s var(--ease-in-out) infinite;
+  animation-play-state: paused;
 }
 
 .gold-glint {
@@ -168,6 +179,22 @@ body {
     38% 38%
   );
   filter: drop-shadow(0 0 2px rgb(255 236 190 / 0.95));
+}
+
+@keyframes gold-sheen-oscillate {
+  0%,
+  100% {
+    background-position:
+      0 0,
+      0 12%,
+      0 0;
+  }
+  50% {
+    background-position:
+      0 0,
+      0 78%,
+      0 0;
+  }
 }
 
 @keyframes gold-sparkle {
@@ -193,6 +220,10 @@ body {
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .group:hover .gold {
+    animation-play-state: running;
+  }
+
   .group:hover .gold-glint {
     animation: gold-sparkle 2.4s infinite;
   }

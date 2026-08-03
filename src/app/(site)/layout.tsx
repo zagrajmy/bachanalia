@@ -12,6 +12,11 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
         Przejdź do treści
       </a>
       <SiteHeader />
+      {/**
+       * Floated over the page, but sitting here in the document so a keyboard
+       * reaches it straight after the navigation rather than past the footer.
+       */}
+      <CartTrigger />
       <main id="tresc">{children}</main>
       <SiteFooter />
     </>

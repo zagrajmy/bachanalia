@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { CHECKOUT_UNAVAILABLE } from "../src/components/Cart/paths";
+
 /**
  * WordPress is recorded into `e2e/fixtures/wp` and replayed by `msw` inside the
  * Next server, so nothing here reaches the live shop and every mutation is a
@@ -113,6 +115,9 @@ test.describe("headless cart", () => {
 
     await expect(quantity).toHaveValue("2");
     await expect(sheet.getByRole("status")).toContainText("ilość zmieniona na 2");
+
+    /** The sheet is modal, so the count only becomes readable again once it closes. */
+    await page.keyboard.press("Escape");
     await expect(cartButton(page)).toHaveAccessibleName("Koszyk, 2 produkty");
   });
 
@@ -179,7 +184,7 @@ test.describe("headless cart", () => {
         /transfer-session/,
       );
     } else {
-      await expect(sheet.getByText("Kasa jest chwilowo niedostępna.")).toBeVisible();
+      await expect(sheet.getByText(CHECKOUT_UNAVAILABLE)).toBeVisible();
     }
 
     await page.goto(CART);
@@ -192,7 +197,7 @@ test.describe("headless cart", () => {
       /** Read, never followed: the destination is a real WooCommerce checkout. */
       await expect(onPage).toHaveAttribute("href", /transfer-session/);
     } else {
-      await expect(page.getByText("Kasa jest chwilowo niedostępna.")).toBeVisible();
+      await expect(page.getByText(CHECKOUT_UNAVAILABLE)).toBeVisible();
     }
 
     await expect(page.getByRole("button", { name: "Zamawiam i płacę" })).toHaveCount(0);

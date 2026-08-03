@@ -8,6 +8,14 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1,
+  /**
+   * WordPress is mocked, so nothing here waits on a server that answers in
+   * ~10s — this budget is Next's dev server compiling a route and running a
+   * server action, which at two workers costs a few seconds a piece. It used
+   * to be 90s per test purely to survive the live shop.
+   */
+  timeout: 45_000,
+  expect: { timeout: 10_000 },
   workers: process.env.CI ? 1 : 2,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : [["list"]],
   use: {

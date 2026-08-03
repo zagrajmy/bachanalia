@@ -19,11 +19,18 @@ export type CartSnapshot = {
   cart?: CartView;
   /** WooCommerce's nonced handover URL, absent while the setting is off. */
   checkoutUrl?: string;
+  /**
+   * Whether `/api/cart` has answered yet. Adding to the cart fills `cart` from
+   * the action's own result without asking for a handover URL, so until this
+   * flips an absent `checkoutUrl` means "not asked", not "no till" — and the
+   * two must not look the same to a buyer.
+   */
+  checkoutKnown: boolean;
   loading: boolean;
   open: boolean;
 };
 
-const INITIAL: CartSnapshot = { open: false, loading: false };
+const INITIAL: CartSnapshot = { open: false, loading: false, checkoutKnown: false };
 
 let snapshot = INITIAL;
 let listeners: (() => void)[] = [];
@@ -89,9 +96,10 @@ export async function loadCart(force = false) {
     loaded = true;
 
     /** A stepper pressed while this was in flight already knows better. */
-    if (revision !== asked) return set({ checkoutUrl: body.checkoutUrl, loading: false });
+    if (revision !== asked)
+      return set({ checkoutUrl: body.checkoutUrl, checkoutKnown: true, loading: false });
 
-    set({ cart: body.cart, checkoutUrl: body.checkoutUrl, loading: false });
+    set({ cart: body.cart, checkoutUrl: body.checkoutUrl, checkoutKnown: true, loading: false });
   } catch {
     set({ loading: false });
   }

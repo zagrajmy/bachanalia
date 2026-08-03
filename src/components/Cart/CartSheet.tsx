@@ -45,7 +45,7 @@ function products(count: number) {
  * link the shop index carries and the one the add-to-cart form prints.
  */
 export function CartTrigger() {
-  const { cart, checkoutUrl, open } = useCart();
+  const { cart, checkoutUrl, checkoutKnown, open } = useCart();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
@@ -135,8 +135,17 @@ export function CartTrigger() {
               <Button asChild className="mt-1 w-full py-3">
                 <a href={checkoutUrl}>Przejdź do płatności</a>
               </Button>
-            ) : (
+            ) : checkoutKnown ? (
               <p className="mt-2 text-sm text-rose">{CHECKOUT_UNAVAILABLE}</p>
+            ) : (
+              /**
+               * Adding to the cart fills the sheet from the action's own
+               * result, which carries no handover URL, so for a moment there
+               * is nothing to link to and nothing wrong either.
+               */
+              <Button className="mt-1 w-full py-3" disabled>
+                Przejdź do płatności
+              </Button>
             )}
           </SheetFooter>
         )}

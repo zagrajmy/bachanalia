@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/warcraftcn/button";
 import { addToCartAction } from "./actions";
 import { CART_PATH } from "./paths";
 import { QuantityInput } from "./QuantityInput";
-import { openCart, setCart } from "./store";
+import { openCart, setCart, useCart } from "./store";
 import type { CartActionState } from "./types";
 import {
   buildAxes,
@@ -80,6 +80,23 @@ export function AddToCartForm({
   const unavailable = isSelectionUnavailable(variations, axes, selection);
 
   /**
+   * WooCommerce refuses a second unit of these, so offering to add one again
+   * is offering an error. The cart is what the buyer wants from the button at
+   * that point, so the button becomes the cart.
+   *
+   * Only once the store has a cart to read, which is after mount — the server
+   * render and a reader without scripting keep the real submit button, and the
+   * action still answers "Nie możesz dodać kolejnej sztuki" for them.
+   */
+  const { cart } = useCart();
+  const alreadyInCart =
+    interactive &&
+    soldIndividually &&
+    (cart?.lines ?? []).some(
+      (line) => line.slug === slug && (!chosen || line.variationId === chosen.variationId),
+    );
+
+  /**
    * Eleven shirt sizes at one price need no price list; two anthology options
    * at 25 and 45 zł do, and the option itself is where it belongs.
    */
@@ -144,13 +161,23 @@ export function AddToCartForm({
           <QuantityInput name="quantity" label="Ilość" defaultValue={1} />
         )}
 
-        <Button
-          type="submit"
-          disabled={soldOut || pending || (interactive && (incomplete || unavailable))}
-          className="px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]"
-        >
-          {pending ? "Dodajemy…" : "Dodaj do koszyka"}
-        </Button>
+        {alreadyInCart ? (
+          <Button
+            type="button"
+            onClick={() => openCart()}
+            className="px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]"
+          >
+            Otwórz koszyk
+          </Button>
+        ) : (
+          <Button
+            type="submit"
+            disabled={soldOut || pending || (interactive && (incomplete || unavailable))}
+            className="px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]"
+          >
+            {pending ? "Dodajemy…" : "Dodaj do koszyka"}
+          </Button>
+        )}
       </div>
 
       <p aria-live="polite" className="mt-3 min-h-[1.5em] text-sm">

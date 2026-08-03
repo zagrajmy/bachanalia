@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
 import { CART_PATH } from "./paths";
 import { loadCart, useCart } from "./store";
@@ -17,16 +17,18 @@ const CartSheet = dynamic(() => import("./CartSheet").then((module) => module.Ca
 export function CartTrigger() {
   const { cart, open } = useCart();
   const pathname = usePathname();
-  const startedEmpty = useRef<boolean>(undefined);
+  const [startedEmpty, setStartedEmpty] = useState<boolean>();
   const onCartPage = pathname === CART_PATH;
 
   useEffect(() => {
     if (!onCartPage) void loadCart();
   }, [onCartPage]);
 
-  if (cart && startedEmpty.current === undefined) startedEmpty.current = cart.isEmpty;
+  useEffect(() => {
+    if (cart && startedEmpty === undefined) setStartedEmpty(cart.isEmpty);
+  }, [cart, startedEmpty]);
 
   if (onCartPage || (!open && (cart?.isEmpty ?? true))) return null;
 
-  return <CartSheet animateEntrance={startedEmpty.current === true} />;
+  return <CartSheet animateEntrance={startedEmpty === true} />;
 }

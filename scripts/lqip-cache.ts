@@ -296,9 +296,21 @@ async function main() {
     const needMeta = job.dimensions && !(await exists(lqipMetaFile(job.key)));
     const widthsToBuild: number[] = [];
     if (job.variants) {
+      const onDisk: number[] = [];
+
       for (const width of MEDIA_WIDTHS) {
-        if (!(await exists(variantFile(job.key, width)))) widthsToBuild.push(width);
+        if (await exists(variantFile(job.key, width))) onDisk.push(width);
+        else widthsToBuild.push(width);
       }
+
+      /**
+       * A restored `_img` cache means there is nothing to encode, and the loop
+       * below would skip the image entirely — leaving the manifest naming only
+       * whatever this run happened to build, and every other photo falling back
+       * to the raw WordPress original. The file on disk is the fact; record it
+       * whether or not this run is the one that wrote it.
+       */
+      if (onDisk.length > 0) manifest[job.key] = onDisk;
     }
 
     if (!needLqip && !needMeta && widthsToBuild.length === 0) continue;
@@ -358,7 +370,18 @@ async function main() {
   const sorted = Object.fromEntries(
     Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)),
   );
-  await writeFile(MANIFEST_PATH, `${JSON.stringify(sorted, null, 2)}\n`);
+
+  /**
+   * One line per upload, ladders inline. `JSON.stringify(…, 2)` puts each width
+   * on its own line and turns a run that adds one photo into a nine-hundred-line
+   * diff; the formatter is told to leave this file alone, so the shape has to
+   * come from here.
+   */
+  const lines = Object.entries(sorted).map(
+    ([key, ladder]) => `  ${JSON.stringify(key)}: [${ladder.join(", ")}]`,
+  );
+
+  await writeFile(MANIFEST_PATH, `{\n${lines.join(",\n")}\n}\n`);
 
   await cp(IMG_DIR, IMG_CACHE_DIR, { recursive: true }).catch(() => {});
 

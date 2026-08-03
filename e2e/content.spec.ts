@@ -36,15 +36,39 @@ test.describe("WordPress content rendering", () => {
     await expect(section).toHaveCSS("display", "contents");
   });
 
-  test("embedded media stays inside the page", async ({ page }) => {
+  test("an embed reaches nobody until consent is given", async ({ page }) => {
+    await page.goto("/czas-i-miejsce/");
+
+    const placeholder = page.locator(".wp-content [data-embed-src]").first();
+
+    await expect(placeholder).toBeVisible();
+    await expect(
+      placeholder,
+      "the visitor is told whose server they are being asked about",
+    ).toContainText("maps.google.com");
+    await expect(placeholder.getByRole("link", { name: "Otwórz w nowej karcie" })).toHaveAttribute(
+      "href",
+      /maps\.google\.com/,
+    );
+
+    /**
+     * The assertion the whole feature exists for. CookieYes showed a banner and
+     * left every `src` alone, so the request went out before anyone was asked.
+     */
+    await expect(page.locator("iframe"), "no third-party request before a choice").toHaveCount(0);
+  });
+
+  test("consent loads the embed, and it stays inside the page", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("bf-consent", "granted"));
     await page.goto("/czas-i-miejsce/");
 
     const frame = page.locator(".wp-content iframe").first();
-    await expect(frame).toBeVisible();
 
-    const box = await frame.boundingBox();
-    const viewport = page.viewportSize();
-    expect(box!.width).toBeLessThanOrEqual(viewport!.width);
+    await expect(frame).toBeVisible();
+    await expect(frame).toHaveAttribute("src", /maps\.google\.com/);
+
+    const box = (await frame.boundingBox())!;
+    expect(box.width).toBeLessThanOrEqual(page.viewportSize()!.width);
   });
 
   test("a gallery shows its photos as a grid, not one image per row", async ({ page }) => {
@@ -62,7 +86,7 @@ test.describe("WordPress content rendering", () => {
     );
   });
 
-  test("gallery photos go through the image optimiser", async ({ page }) => {
+  test("gallery photos come off the baked ladder, not from WordPress", async ({ page }) => {
     await page.goto("/co-to-sa-bachanalia/");
 
     const sources = await page
@@ -71,8 +95,13 @@ test.describe("WordPress content rendering", () => {
 
     expect(sources.length).toBeGreaterThan(0);
     expect(
-      /** `/_img` is the baked ladder; `/_next/image` catches what it has missed. */
-      sources.filter((src) => src.startsWith("/_img/") || src.startsWith("/_next/image")),
+      /**
+       * `mediaLoader` serves `/_img/<upload>/<width>.webp` and falls back to the
+       * WordPress URL for anything the manifest does not name, so a photo
+       * missing from `img-manifest.json` shows up here rather than as a slow
+       * page nobody measured.
+       */
+      sources.filter((src) => src.startsWith("/_img/")),
       "raw WordPress originals are multi-megabyte",
     ).toHaveLength(sources.length);
   });
@@ -108,8 +137,13 @@ test.describe("WordPress content rendering", () => {
   test("a page whose only content is an embed is not mistaken for empty", async ({ page }) => {
     await page.goto("/sztab-bachanaliowy/");
 
+    const placeholder = page.locator(".wp-content [data-embed-src]").first();
+
+    /** A parked embed is still content — the page must not read as unwritten. */
     await expect(page.getByText(/szykujemy tę stronę/i)).toHaveCount(0);
-    await expect(page.locator(".wp-content iframe")).toBeVisible();
+    await expect(placeholder).toBeVisible();
+    await expect(placeholder).toContainText("miro.com");
+    await expect(page.locator("iframe"), "no third-party request before a choice").toHaveCount(0);
   });
 
   test("no page scrolls sideways", async ({ page }) => {

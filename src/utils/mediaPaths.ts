@@ -24,26 +24,12 @@ export function pickMediaWidth(requested: number, available: number[]) {
 const widths = manifest as { [key: string]: number[] };
 
 /**
- * Serves build-time WebPs from `/_img`. An upload the manifest has not caught
- * up with yet goes through `/_next/image` rather than straight to WordPress:
- * the originals are `-scaled` 2560px JPEGs off a slow, rate-limited server, and
- * handing one to a phone is the whole thing the ladder exists to prevent.
+ * Serves build-time WebPs from `/_img`. Falls back to the WordPress URL when
+ * the manifest has no entry yet — no `/_next/image` either way.
  */
-export function mediaLoader({
-  src,
-  width,
-  quality,
-}: {
-  src: string;
-  width: number;
-  quality?: number;
-}) {
+export function mediaLoader({ src, width }: { src: string; width: number }) {
   const key = wpMediaKey(src);
   const available = widths[key];
-
-  if (!available?.length) {
-    return `/_next/image?url=${encodeURIComponent(src)}&w=${width}&q=${quality ?? 75}`;
-  }
-
+  if (!available?.length) return src;
   return mediaVariantUrl(key, pickMediaWidth(width, available));
 }

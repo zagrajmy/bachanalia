@@ -69,7 +69,7 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
                   <span className="text-coral">{con.edition}</span>
                 </h1>
 
-                <dl className="relative mt-7 grid max-w-136 gap-x-7 gap-y-1 text-sm sm:grid-cols-[auto_1fr] gap-y-3 sm:text-base">
+                <dl className="relative mt-7 grid max-w-136 gap-x-7 text-sm sm:grid-cols-[auto_1fr] sm:gap-y-3 sm:text-base">
                   <dt className="text-sm text-accent pt-0.75">Termin</dt>
                   <dd className="flex flex-col items-start gap-1 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-5">
                     {con.dates}

@@ -47,19 +47,19 @@ run `bun run codegen:refresh`, turn it back off.
 
 ## Site map
 
-| Path                                                                                                                                | Source                   | Status                              |
-| ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ----------------------------------- |
-| `/`                                                                                                                                 | hand-built + WooCommerce | ours                                |
-| `/aktualnosci/`                                                                                                                     | Facebook — see [News](#news) | ours                            |
-| `/goscie/`                                                                                                                          | WP posts                 | ours                                |
-| `/sklep/`, `/produkt/<slug>/`                                                                                                       | WooGraphQL               | ours                                |
-| `/co-to-sa-bachanalia`, `/organizator`, `/sztab-bachanaliowy`, `/czas-i-miejsce`, `/regulamin`, `/polityka-prywatnosci`, `/noclegi` | WP pages                 | ours                                |
-| `/blok-prelekcyjny`, `/blok-konkursowy`, `/blok-naukowy`, `/blok-komiksowy`, `/rpg`, `/gamesroom`, `/retro-gaming`, `/cosplay`      | WP pages                 | ours                                |
-| `/poznaj-wystawcow`, `/regulamin-wystawcow`, `/zgloszenia-*`, `/wspieraja-nas`                                                      | WP pages                 | ours                                |
-| `/2025/…/<slug>`                                                                                                                    | WP posts                 | ours — 25 dated guest announcements |
-| `/program`                                                                                                                          | ludamus feed             | not built                           |
-| `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty`                                                                                  | WooCommerce              | still WordPress                     |
-| `/zamowienie/order-received/<id>/`                                                                                                  | WooCommerce              | ours at cutover — delivers the ticket |
+| Path                                                                                                                                | Source                       | Status                                |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | ------------------------------------- |
+| `/`                                                                                                                                 | hand-built + WooCommerce     | ours                                  |
+| `/aktualnosci/`                                                                                                                     | Facebook — see [News](#news) | ours                                  |
+| `/goscie/`                                                                                                                          | WP posts                     | ours                                  |
+| `/sklep/`, `/produkt/<slug>/`                                                                                                       | WooGraphQL                   | ours                                  |
+| `/co-to-sa-bachanalia`, `/organizator`, `/sztab-bachanaliowy`, `/czas-i-miejsce`, `/regulamin`, `/polityka-prywatnosci`, `/noclegi` | WP pages                     | ours                                  |
+| `/blok-prelekcyjny`, `/blok-konkursowy`, `/blok-naukowy`, `/blok-komiksowy`, `/rpg`, `/gamesroom`, `/retro-gaming`, `/cosplay`      | WP pages                     | ours                                  |
+| `/poznaj-wystawcow`, `/regulamin-wystawcow`, `/zgloszenia-*`, `/wspieraja-nas`                                                      | WP pages                     | ours                                  |
+| `/2025/…/<slug>`                                                                                                                    | WP posts                     | ours — 25 dated guest announcements   |
+| `/program`                                                                                                                          | ludamus feed                 | not built                             |
+| `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty`                                                                                  | WooCommerce                  | still WordPress                       |
+| `/zamowienie/order-received/<id>/`                                                                                                  | WooCommerce                  | ours at cutover — delivers the ticket |
 
 `/akredytacja` 301s to `/sklep/`. `/info`, `/blog` and `/feed-test` are gone.
 
@@ -232,7 +232,7 @@ and it settles most of this:
 
 **A Paynow order was run end to end from here** (3510, 1 zł, 2 August 2026):
 `checkout` returned `https://paywall.paynow.pl/<id>?token=<jwt>` and the order
-was paid and completed. So a headless checkout *works* — it is simply not what
+was paid and completed. So a headless checkout _works_ — it is simply not what
 we ship, because it can collect neither a BLIK code nor an InPost locker. The
 proof is kept on `wip/headless-checkout`.
 
@@ -284,7 +284,7 @@ URL **we** have to serve. What WooCommerce renders there:
 
 **A guest order cannot be read back at all.** `OrderIdTypeEnum` has
 `ORDER_KEY`, but the query answers "Not authorized to access this order" both
-anonymously *and* with the very session that placed the order — tested with a
+anonymously _and_ with the very session that placed the order — tested with a
 throwaway `bacs` order (3511). Guest orders need a logged-in owner.
 
 So the confirmation page is not ours to build: it prints an order we cannot
@@ -416,9 +416,9 @@ posts are free.
 4. **`wsparcie-klubu-1-zl` and `akredytacja-wspierajaca-polcon`** (25–45 zł)
    exist in the shop but are not in the homepage tier list — nobody has said
    where they belong.
-5. **The free pickup rate still says "BF 24"** on a 2026 shop: *Odbiór
+5. **The free pickup rate still says "BF 24"** on a 2026 shop: _Odbiór
    Osobisty podczas BF 24 (dotyczy Fantazji Zielonogórskich, Golden Ticket,
-   oraz Koszulki)*. WooCommerce setting, not code, and a buyer sees it at
+   oraz Koszulki)_. WooCommerce setting, not code, and a buyer sees it at
    checkout.
 6. Vercel GitHub app access to the `zagrajmy` org.
 7. **Re-test the checkout constraint** before rebuilding anything on it —
@@ -444,7 +444,7 @@ pay, which is also everything that made the old shop look like 2014.
    WooCommerce still checks out there — cookies, Paynow's return URL and the
    ticket links all carry the host.
 2. **Enable the session handoff, then save the page a second time.** WPGraphQL
-   for WooCommerce → *User Session transferring URLs*, plus the *Checkout URL*
+   for WooCommerce → _User Session transferring URLs_, plus the _Checkout URL_
    checkbox under it. The endpoint already answers at `/transfer-session`; the
    setting is what exposes the nonced URL our cart needs.
 
@@ -457,11 +457,12 @@ pay, which is also everything that made the old shop look like 2014.
    that handler exits through the same `status_header( 404 )` plus a redirect
    home, so a broken handoff and a missing endpoint are indistinguishable from
    outside. Ours looked like a missing endpoint for a day.
+
 3. **Install `wordpress/bachanalia-checkout-handover/`.** Without it the
    transfer succeeds and then dumps the buyer on `/checkout/`, which 404s
    here — WooGraphQL builds that address from `get_permalink()`, and the
    transfer runs where there is no post to take one from.
-4. **Leave *Pokaż metody płatności* unchecked.** It was unchecked on 2 August
+4. **Leave _Pokaż metody płatności_ unchecked.** It was unchecked on 2 August
    and it stays that way: the buyer takes one hop to Paynow's paywall and
    picks BLIK, a bank or a card there. The alternative — BLIK level 0 — has
    the buyer type a six-digit payment code into WordPress, which then posts it
@@ -473,13 +474,13 @@ pay, which is also everything that made the old shop look like 2014.
    render separately.
 5. **Install `wordpress/bachanalia-paynow-first/`** so Paynow is the first and
    preselected method. Dragging the row does not do it: the paywall gateway
-   only becomes available once *Pokaż metody płatności* is unchecked, so it has
+   only becomes available once _Pokaż metody płatności_ is unchecked, so it has
    no saved position and `WC_Payment_Gateways::init()` parks it at 999 behind
    bank transfer — which is the slowest way to pay for a ticket and leaves the
    order unpaid until somebody reconciles a transfer by hand. The plugin
    filters `woocommerce_gateway_order`, the one input both the classic and the
    Blocks checkout read. **Do not hand-edit positions**: `init()` indexes
-   gateways *by* position, so a repeated number deletes a gateway from the
+   gateways _by_ position, so a repeated number deletes a gateway from the
    store outright.
 6. **Install `wordpress/bachanalia-revalidate/`** and point it at the Vercel
    deployment, then at the apex once DNS moves. Until it is installed, an edit

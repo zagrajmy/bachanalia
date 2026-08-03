@@ -1,5 +1,3 @@
-import type { StaticImageData } from "next/image";
-
 import adAstra from "./logo/ad-astra.png";
 import polcon from "./logo/polcon.png";
 import keyArt from "./key-art.png";
@@ -29,6 +27,9 @@ export const con = {
   name: "Bachanalia Fantastyczne",
   dates: "25-27 września 2026",
   datesShort: "25-27 IX 2026",
+  /** The same three days a machine can read, for the calendar file. */
+  starts: "2026-09-25",
+  ends: "2026-09-27",
   venue: "Kampus B Uniwersytetu Zielonogórskiego",
   address: "Wojska Polskiego 69, Zielona Góra",
   organiser: "Zielonogórski Klub Fantastyki Ad Astra",

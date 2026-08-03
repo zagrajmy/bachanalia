@@ -1,4 +1,4 @@
-name: CI
+name: ci
 
 on:
   push:
@@ -17,7 +17,7 @@ env:
 
 jobs:
   static:
-    name: Lint, types and unit tests
+    name: lint, typecheck and test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -43,7 +43,7 @@ jobs:
         run: bun run test
 
   e2e:
-    name: End-to-end
+    name: e2e
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:

@@ -95,7 +95,7 @@ export async function fetchGraphQL<T = any>(
     query,
     { preview, ...variables },
     { ...(auth && { Authorization: `Bearer ${auth}` }), ...headers },
-    preview ? { cache: "no-store" } : { next: { tags: ["wordpress"], revalidate: 3600 } },
+    preview ? { cache: "no-store" } : { next: { tags: ["wordpress"], revalidate: 10800 } },
   );
 }
 

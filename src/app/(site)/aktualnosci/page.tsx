@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: "Ogłoszenia i zapowiedzi gości Bachanaliów Fantastycznych.",
 };
 
-export const revalidate = 3600;
+export const revalidate = 10800;
 
 export default async function AktualnosciPage() {
   const items = await fetchNews();

@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export const revalidate = 3600;
+export const revalidate = 10800;
 
 export async function generateStaticParams() {
   const { pages, posts } = await fetchGraphQLAtBuild<{

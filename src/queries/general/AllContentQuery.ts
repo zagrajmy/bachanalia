@@ -5,11 +5,13 @@ export const AllContentQuery = gql`
     pages(first: 100, where: { status: PUBLISH }) {
       nodes {
         uri
+        modifiedGmt
       }
     }
     posts(first: 200, where: { status: PUBLISH }) {
       nodes {
         uri
+        modifiedGmt
       }
     }
   }

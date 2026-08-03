@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/sklep/` },
 };
 
-export const revalidate = 3600;
+export const revalidate = 10800;
 
 export default async function SklepPage() {
   const categories = await fetchShop();

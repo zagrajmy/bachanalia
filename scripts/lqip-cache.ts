@@ -18,6 +18,12 @@ const LQIP_DIR = join(ROOT, "src/content/lqip");
 const IMG_DIR = join(ROOT, "public/_img");
 const IMG_CACHE_DIR = join(ROOT, ".next/cache/_img");
 const MANIFEST_PATH = join(ROOT, "src/content/img-manifest.json");
+/**
+ * `{uri: modifiedGmt}` from the last completed run. Lives in `.next/cache` so
+ * it travels with the `_img` cache it vouches for — a cold cache loses both,
+ * and a full crawl rebuilds both.
+ */
+const CRAWL_PATH = join(ROOT, ".next/cache/lqip-crawl.json");
 const WP = process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://bachanaliafantastyczne.pl";
 const DELAY_MS = 350;
 
@@ -198,7 +204,15 @@ async function loadManifest() {
   }
 }
 
-async function collectJobs(): Promise<Job[]> {
+async function loadCrawl(): Promise<Record<string, string>> {
+  try {
+    return JSON.parse(await readFile(CRAWL_PATH, "utf8")) as Record<string, string>;
+  } catch {
+    return {};
+  }
+}
+
+async function collectJobs(): Promise<{ jobs: Job[]; crawl: Record<string, string> }> {
   const jobs: Job[] = [];
   const seen = new Set<string>();
 
@@ -273,15 +287,33 @@ async function collectJobs(): Promise<Job[]> {
   }
 
   const { pages, posts } = await graphql<{
-    pages: { nodes: { uri?: string | null }[] };
-    posts: { nodes: { uri?: string | null }[] };
+    pages: { nodes: { uri?: string | null; modifiedGmt?: string | null }[] };
+    posts: { nodes: { uri?: string | null; modifiedGmt?: string | null }[] };
   }>(print(AllContentQuery));
 
-  const uris = [...(pages?.nodes ?? []), ...(posts?.nodes ?? [])]
-    .map((node) => node.uri)
-    .filter((uri): uri is string => Boolean(uri));
+  const previous = await loadCrawl();
+  const crawl: Record<string, string> = {};
+  let skipped = 0;
 
-  for (const uri of uris) {
+  const nodes = [...(pages?.nodes ?? []), ...(posts?.nodes ?? [])].filter(
+    (node): node is { uri: string; modifiedGmt?: string | null } => Boolean(node.uri),
+  );
+
+  for (const { uri, modifiedGmt } of nodes) {
+    const stamp = modifiedGmt ?? "";
+    crawl[uri] = stamp;
+
+    /**
+     * A page edited since the last run may hold new gallery images; one left
+     * alone cannot — its images are already on disk and in the manifest. So
+     * only edited pages are worth a ContentQuery against a server where each
+     * one costs seconds.
+     */
+    if (stamp && previous[uri] === stamp) {
+      skipped += 1;
+      continue;
+    }
+
     await sleep(DELAY_MS);
     const { contentNode } = await graphql<{
       contentNode: { content?: string | null } | null;
@@ -295,7 +327,9 @@ async function collectJobs(): Promise<Job[]> {
     }
   }
 
-  return jobs;
+  if (skipped > 0) console.log(`media: crawl skipped ${skipped}/${nodes.length} unchanged pages`);
+
+  return { jobs, crawl };
 }
 
 async function fetchBytes(url: string) {
@@ -327,10 +361,11 @@ async function main() {
   const migrated = await migrateTextLqips();
   if (migrated > 0) console.log(`media: recompressed ${migrated} .lqip → .webp`);
 
-  const jobs = await collectJobs();
+  const { jobs, crawl } = await collectJobs();
   const manifest = await loadManifest();
   let lqipWrote = 0;
   let variantWrote = 0;
+  let failed = false;
 
   console.log(`media: ${jobs.length} images`);
 
@@ -365,6 +400,7 @@ async function main() {
         const encoded = (await fetchLqipWebp(job.thumbUrl)) ?? (await fetchLqipWebp(job.fullUrl));
         if (!encoded) {
           console.warn(`media: skip lqip ${job.key}`);
+          failed = true;
           continue;
         }
         await writeLqip(job.key, encoded.webp);
@@ -377,6 +413,7 @@ async function main() {
       const bytes = await fetchBytes(job.fullUrl);
       if (!bytes) {
         console.warn(`media: skip fetch ${job.key}`);
+        failed = true;
         continue;
       }
 
@@ -407,6 +444,7 @@ async function main() {
       }
     } catch (error) {
       console.warn(`media: fail ${job.key}`, error);
+      failed = true;
     }
   }
 
@@ -427,6 +465,13 @@ async function main() {
   await writeFile(MANIFEST_PATH, `{\n${lines.join(",\n")}\n}\n`);
 
   await cp(IMG_DIR, IMG_CACHE_DIR, { recursive: true }).catch(() => {});
+
+  if (failed) {
+    console.log("media: fetches failed, crawl snapshot withheld");
+  } else {
+    await mkdir(dirname(CRAWL_PATH), { recursive: true });
+    await writeFile(CRAWL_PATH, `${JSON.stringify(crawl, null, 2)}\n`);
+  }
 
   console.log(
     `media: wrote ${lqipWrote} lqips, ${variantWrote} variants, ${Object.keys(sorted).length} in manifest`,

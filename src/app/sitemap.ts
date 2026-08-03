@@ -8,7 +8,7 @@ import { AllContentQuery } from "@/queries/general/AllContentQuery";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
 import { wpUriToPath } from "@/utils/wpUriToPath";
 
-export const revalidate = 3600;
+export const revalidate = 10800;
 
 /**
  * Routes without a WordPress URI of their own: the homepage, and the three

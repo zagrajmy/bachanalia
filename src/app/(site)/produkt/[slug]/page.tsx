@@ -10,7 +10,7 @@ import { hasVisibleContent, prepareWpContent } from "@/utils/prepareWpContent";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const revalidate = 3600;
+export const revalidate = 10800;
 
 export async function generateStaticParams() {
   return (await fetchProductSlugs()).map((slug) => ({ slug }));

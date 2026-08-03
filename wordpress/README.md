@@ -37,3 +37,24 @@ cd wordpress && zip -r bachanalia-paynow-first.zip bachanalia-paynow-first
 ```
 
 Upload through **Wtyczki → Dodaj wtyczkę → Wyślij wtyczkę na serwer**.
+
+## bachanalia-checkout-handover
+
+Sends a buyer arriving from `/transfer-session` to the real order page instead
+of a bare `/checkout/` that 404s. WooGraphQL ends the transfer with
+`wc_get_endpoint_url( 'checkout' )`, which hangs the endpoint off
+`get_permalink()` — and the transfer runs from `pre_get_posts`, where there is
+no post to take a permalink from. Nothing to configure.
+
+```sh
+cd wordpress && rm -f bachanalia-checkout-handover.zip && zip -qr bachanalia-checkout-handover.zip bachanalia-checkout-handover
+```
+
+**The handover also needs the WooGraphQL settings saved twice.** Ticking
+**Enable User Session transferring URLs** does not write the four
+`*_nonce_param` options, because those inputs render disabled until a URL
+field is enabled, and a disabled input is not submitted. Until they exist,
+`Protected_Router::get_nonce_names()` returns only `download_url`, the plugin
+never looks for `_wc_checkout`, and every transfer redirects to the homepage
+with no error anyone can see. Open **GraphQL → Settings → WooCommerce** and
+press **Save Changes** a second time.

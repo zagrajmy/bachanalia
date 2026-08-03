@@ -19,7 +19,7 @@ export function PartnersCard() {
         {PARTNERS.map(({ tier, logos }) => (
           <li key={tier}>
             <p className="eyebrow text-slate">{tier}</p>
-            <div className="mt-4 flex flex-wrap items-center gap-4">
+            <div className="mt-4 flex flex-wrap items-center gap-3">
               {logos.map((logo) => (
                 <a
                   key={logo.name}
@@ -41,7 +41,7 @@ export function PartnersCard() {
         ))}
       </ul>
 
-      <div className="mt-9 flex items-center gap-4 border-t border-dashed border-navy/30 pt-6">
+      <div className="mt-9 flex items-center gap-3 border-t border-dashed border-navy/30 pt-6">
         <a
           href={cityFunding.href}
           target="_blank"

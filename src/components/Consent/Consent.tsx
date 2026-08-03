@@ -17,7 +17,8 @@ import { Button } from "@/components/ui/warcraftcn/button";
  * something parked on it.
  */
 
-const KEY = "bf-consent";
+const KEY = "bf-consent:v1";
+const LEGACY_KEY = "bf-consent";
 
 type Choice = "denied" | "granted";
 
@@ -33,6 +34,7 @@ const IDLE: State = { prompting: false, blocked: 0 };
 
 let state = IDLE;
 let listeners: (() => void)[] = [];
+let choiceLoaded = false;
 
 function set(next: Partial<State>) {
   state = { ...state, ...next };
@@ -78,7 +80,36 @@ function revealAll() {
   for (const node of [...parked()]) reveal(node);
 }
 
+function parseChoice(value: string | null): Choice | undefined {
+  return value === "granted" || value === "denied" ? value : undefined;
+}
+
+function loadChoice() {
+  if (choiceLoaded) return state.choice;
+  choiceLoaded = true;
+
+  try {
+    const current = parseChoice(localStorage.getItem(KEY));
+    if (current) {
+      localStorage.removeItem(LEGACY_KEY);
+      return current;
+    }
+
+    const legacy = parseChoice(localStorage.getItem(LEGACY_KEY));
+    if (legacy) {
+      localStorage.setItem(KEY, legacy);
+      localStorage.removeItem(LEGACY_KEY);
+    }
+
+    return legacy;
+  } catch {
+    return undefined;
+  }
+}
+
 export function decide(choice: Choice) {
+  choiceLoaded = true;
+
   try {
     localStorage.setItem(KEY, choice);
   } catch {
@@ -114,13 +145,7 @@ export function Consent() {
   const pathname = usePathname();
 
   useEffect(() => {
-    let stored: Choice | undefined;
-
-    try {
-      stored = (localStorage.getItem(KEY) as Choice | null) ?? undefined;
-    } catch {
-      stored = undefined;
-    }
+    const stored = loadChoice();
 
     if (stored === "granted") revealAll();
 

@@ -6,10 +6,10 @@ import { flushSync } from "react-dom";
 import type { WpGalleryImage } from "@/utils/prepareWpContent";
 
 import { GalleryImage } from "./GalleryImage";
-import { Lightbox } from "./Lightbox";
 
 const DENSE_FROM = 13;
 const MORPH = "gallery-photo";
+const loadLightbox = () => import("./Lightbox").then((module) => module.Lightbox);
 
 function withMorph(run: () => void, ms = 260) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -25,6 +25,7 @@ function withMorph(run: () => void, ms = 260) {
 export function Gallery({ images }: { images: WpGalleryImage[] }) {
   const [index, setIndex] = useState<number | null>(null);
   const [morphIndex, setMorphIndex] = useState(0);
+  const [LoadedLightbox, setLoadedLightbox] = useState<typeof import("./Lightbox").Lightbox>();
   const thumbnails = useRef<(HTMLButtonElement | null)[]>([]);
   const finalFocus = useRef<HTMLButtonElement | null>(null);
 
@@ -37,6 +38,20 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
   const dense = images.length >= DENSE_FROM;
   const cell = dense ? "8.5rem" : "15rem";
   const thumbSizes = dense ? "(min-width: 40rem) 9rem, 45vw" : "(min-width: 40rem) 16rem, 45vw";
+
+  const open = async (nextIndex: number) => {
+    try {
+      const Lightbox = await loadLightbox();
+
+      flushSync(() => {
+        setLoadedLightbox(() => Lightbox);
+        setMorphIndex(nextIndex);
+      });
+      withMorph(() => setIndex(nextIndex));
+    } catch (error) {
+      reportError(error);
+    }
+  };
 
   return (
     <div className="my-8">
@@ -56,10 +71,9 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
               ref={(node) => {
                 thumbnails.current[i] = node;
               }}
-              onClick={() => {
-                flushSync(() => setMorphIndex(i));
-                withMorph(() => setIndex(i));
-              }}
+              onPointerEnter={() => void loadLightbox().catch(reportError)}
+              onFocus={() => void loadLightbox().catch(reportError)}
+              onClick={() => void open(i)}
               aria-label={`Powiększ zdjęcie ${i + 1} z ${images.length}`}
               className="block w-full cursor-zoom-in overflow-hidden [&_img]:transition-transform [&_img]:duration-200 [&_img]:ease-out hover:[&_img]:scale-[1.04]"
             >
@@ -78,18 +92,20 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
         ))}
       </ul>
 
-      <Lightbox
-        images={images}
-        index={index}
-        onIndexChange={(next) => {
-          setMorphIndex(next);
-          setIndex(next);
-        }}
-        onClose={() => withMorph(() => setIndex(null))}
-        morphName={MORPH}
-        thumbSizes={thumbSizes}
-        finalFocus={finalFocus}
-      />
+      {LoadedLightbox && (
+        <LoadedLightbox
+          images={images}
+          index={index}
+          onIndexChange={(next) => {
+            setMorphIndex(next);
+            setIndex(next);
+          }}
+          onClose={() => withMorph(() => setIndex(null))}
+          morphName={MORPH}
+          thumbSizes={thumbSizes}
+          finalFocus={finalFocus}
+        />
+      )}
     </div>
   );
 }

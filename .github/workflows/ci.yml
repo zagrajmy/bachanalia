@@ -1,10 +1,13 @@
-name: CI
+name: ci
 
 on:
   push:
     branches: [main]
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -17,7 +20,7 @@ env:
 
 jobs:
   static:
-    name: Lint, types and unit tests
+    name: lint, typecheck and test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -37,6 +40,9 @@ jobs:
           mise use -g hk
           hk check --all
 
+      - name: Generate Next types
+        run: bunx next typegen
+
       - name: Types
         run: bunx tsc --noEmit
 
@@ -44,7 +50,7 @@ jobs:
         run: bun run test
 
   e2e:
-    name: End-to-end
+    name: e2e
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:

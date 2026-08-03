@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/warcraftcn/button";
 import { addToCartAction } from "./actions";
 import { CART_PATH } from "./paths";
 import { QuantityInput } from "./QuantityInput";
-import { openCart, setCart, useCart } from "./store";
+import { openCart, setCart, useCartLines } from "./store";
 import type { CartActionState } from "./types";
 import {
   type AttributeLabel,
@@ -88,11 +88,11 @@ export function AddToCartForm({
    * render and a reader without scripting keep the real submit button, and the
    * action still answers "Nie możesz dodać kolejnej sztuki" for them.
    */
-  const { cart } = useCart();
+  const cartLines = useCartLines();
   const alreadyInCart =
     interactive &&
     soldIndividually &&
-    (cart?.lines ?? []).some(
+    cartLines.some(
       (line) => line.slug === slug && (!chosen || line.variationId === chosen.variationId),
     );
 

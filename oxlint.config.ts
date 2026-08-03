@@ -9,24 +9,12 @@ export default defineConfig({
     "perfectionist/sort-objects": "off",
     "unicorn/no-useless-undefined": "off",
   },
-  /**
-   * The first two are upstream in @hasparus/oxlint-config now; drop them here
-   * once a release carrying them is installed.
-   */
   overrides: [
     {
-      files: [
-        "src/app/**/{page,layout,template,default,loading,error,global-error,not-found,robots,sitemap,manifest,icon,apple-icon,opengraph-image,twitter-image}.{ts,tsx}",
-        "codegen.ts",
-      ],
+      /** graphql-codegen resolves its config by the default export. */
+      files: ["codegen.ts"],
       rules: {
         "import/no-default-export": "off",
-      },
-    },
-    {
-      files: ["e2e/**"],
-      rules: {
-        "unicorn/prefer-dom-node-text-content": "off",
       },
     },
   ],

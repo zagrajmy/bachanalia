@@ -86,7 +86,7 @@ export function CartTrigger() {
     <Sheet open={open} onOpenChange={setCartOpen}>
       <SheetTrigger
         aria-label={`Koszyk, ${products(count)}`}
-        className={`floating-dock flex items-center justify-center gap-0.5 cursor-pointer rounded-full border-dashed border-paper bg-navy size-12 text-paper shadow-[0_14px_34px_-14px] shadow-navy/50 transition-transform duration-150 ease-out hover:-translate-y-px active:scale-[0.97] ${
+        className={`floating-dock flex items-center justify-center gap-0.5 cursor-pointer rounded-full border border-paper/30 bg-navy size-13 text-paper shadow-[0_14px_34px_-14px] shadow-navy/50 transition-transform duration-150 ease-out hover:-translate-y-px active:scale-[0.97] ${
           startedEmpty.current
             ? "motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200"
             : ""

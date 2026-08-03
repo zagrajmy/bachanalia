@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useActionState, useEffect, useRef } from "react";
 
 import { cartLineAction } from "./actions";
-import { MAX_QUANTITY, STEP_CLASS } from "./quantity";
+import { GROUP_CLASS, INPUT_CLASS, MAX_QUANTITY, STEP_CLASS } from "./quantity";
 import { setCart } from "./store";
 import type { CartActionState, CartLine } from "./types";
 
@@ -24,7 +24,7 @@ function LineForm({
   const ceiling = line.soldIndividually ? 1 : MAX_QUANTITY;
 
   return (
-    <form action={submit} ref={form} className="flex items-center gap-1.5">
+    <form action={submit} ref={form}>
       <input type="hidden" name="key" value={line.key} />
       <input type="hidden" name="name" value={line.name} />
 
@@ -32,48 +32,50 @@ function LineForm({
         Zapisz ilość: {line.name}
       </button>
 
-      <button
-        type="submit"
-        name="step"
-        value="-1"
-        className={STEP_CLASS}
-        disabled={pending || line.quantity <= 1}
-        aria-label={`Zmniejsz ilość: ${line.name}`}
-      >
-        −
-      </button>
+      <div className={GROUP_CLASS}>
+        <button
+          type="submit"
+          name="step"
+          value="-1"
+          className={STEP_CLASS}
+          disabled={pending || line.quantity <= 1}
+          aria-label={`Zmniejsz ilość: ${line.name}`}
+        >
+          −
+        </button>
 
-      <label className="sr-only" htmlFor={`qty-${line.key}`}>
-        Ilość: {line.name}
-      </label>
+        <label className="sr-only" htmlFor={`qty-${line.key}`}>
+          Ilość: {line.name}
+        </label>
 
-      <input
-        key={line.quantity}
-        id={`qty-${line.key}`}
-        name="quantity"
-        type="number"
-        inputMode="numeric"
-        min={0}
-        max={ceiling}
-        step={1}
-        defaultValue={line.quantity}
-        disabled={pending}
-        onBlur={(event) => {
-          if (Number(event.target.value) !== line.quantity) form.current?.requestSubmit();
-        }}
-        className="w-14 rounded-card border border-dashed border-hairline bg-transparent px-2 py-1.5 text-center tabular-nums"
-      />
+        <input
+          key={line.quantity}
+          id={`qty-${line.key}`}
+          name="quantity"
+          type="number"
+          inputMode="numeric"
+          min={0}
+          max={ceiling}
+          step={1}
+          defaultValue={line.quantity}
+          disabled={pending}
+          onBlur={(event) => {
+            if (Number(event.target.value) !== line.quantity) form.current?.requestSubmit();
+          }}
+          className={INPUT_CLASS}
+        />
 
-      <button
-        type="submit"
-        name="step"
-        value="1"
-        className={STEP_CLASS}
-        disabled={pending || line.quantity >= ceiling}
-        aria-label={`Zwiększ ilość: ${line.name}`}
-      >
-        +
-      </button>
+        <button
+          type="submit"
+          name="step"
+          value="1"
+          className={STEP_CLASS}
+          disabled={pending || line.quantity >= ceiling}
+          aria-label={`Zwiększ ilość: ${line.name}`}
+        >
+          +
+        </button>
+      </div>
     </form>
   );
 }

@@ -6,6 +6,15 @@
  */
 export const MAX_QUANTITY = 20;
 
-/** The − and + around a quantity input, wherever that input appears. */
+/**
+ * One solid frame around the whole control; the − and + sit flush inside it,
+ * split off by hairlines, wherever a quantity input appears.
+ */
+export const GROUP_CLASS =
+  "flex w-fit items-stretch divide-x divide-hairline rounded-card border border-hairline transition-colors duration-150 has-[input:focus]:border-navy";
+
 export const STEP_CLASS =
-  "flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-card border border-dashed border-hairline text-lg leading-none transition-colors duration-150 hover:border-navy disabled:cursor-not-allowed disabled:opacity-40";
+  "flex w-9 shrink-0 cursor-pointer items-center justify-center text-lg leading-none transition-colors duration-150 hover:bg-paper-shade disabled:cursor-not-allowed disabled:opacity-40";
+
+export const INPUT_CLASS =
+  "w-14 bg-transparent px-2 py-1.5 text-center tabular-nums focus:outline-none";

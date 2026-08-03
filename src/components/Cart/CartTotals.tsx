@@ -13,7 +13,7 @@ export function CartTotals({
 }) {
   return (
     <dl
-      className={`grid grid-cols-[minmax(0,1fr)_auto] gap-x-8 gap-y-2 text-sm ${className}`}
+      className={`grid grid-cols-[minmax(0,1fr)_auto] gap-x-8 text-sm ${className}`}
     >
       <dt className="text-ink-muted">Wartość produktów</dt>
       <dd className="text-right tabular-nums">{cart.subtotal}</dd>

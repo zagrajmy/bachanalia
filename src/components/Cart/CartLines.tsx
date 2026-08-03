@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useActionState, useEffect, useRef } from "react";
+import { startTransition, useActionState, useEffect, useOptimistic, useRef } from "react";
 
 import { cartLineAction } from "./actions";
 import { GROUP_CLASS, INPUT_CLASS, MAX_QUANTITY, STEP_CLASS } from "./quantity";
@@ -14,11 +14,11 @@ const initial: CartActionState = { ok: true, message: "" };
 function LineForm({
   line,
   submit,
-  pending,
+  onSubmit,
 }: {
   line: CartLine;
-  pending: boolean;
   submit: (formData: FormData) => void;
+  onSubmit: (event: React.SubmitEvent<HTMLFormElement>) => void;
 }) {
   const form = useRef<HTMLFormElement>(null);
   const ceiling = line.soldIndividually ? 1 : MAX_QUANTITY;
@@ -29,7 +29,7 @@ function LineForm({
   }
 
   return (
-    <form action={submit} ref={form}>
+    <form action={submit} onSubmit={onSubmit} ref={form}>
       <input type="hidden" name="key" value={line.key} />
       <input type="hidden" name="name" value={line.name} />
 
@@ -43,7 +43,7 @@ function LineForm({
           name="step"
           value="-1"
           className={STEP_CLASS}
-          disabled={pending || line.quantity <= 1}
+          disabled={line.quantity <= 1}
           aria-label={`Zmniejsz ilość: ${line.name}`}
         >
           −
@@ -63,7 +63,6 @@ function LineForm({
           max={ceiling}
           step={1}
           defaultValue={line.quantity}
-          disabled={pending}
           onBlur={(event) => {
             if (Number(event.target.value) !== line.quantity)
               form.current?.requestSubmit();
@@ -76,7 +75,7 @@ function LineForm({
           name="step"
           value="1"
           className={STEP_CLASS}
-          disabled={pending || line.quantity >= ceiling}
+          disabled={line.quantity >= ceiling}
           aria-label={`Zwiększ ilość: ${line.name}`}
         >
           +
@@ -98,7 +97,7 @@ export function CartLines({
   dense?: boolean;
   lines: CartLine[];
 }) {
-  const [state, submit, pending] = useActionState(cartLineAction, initial);
+  const [state, submit] = useActionState(cartLineAction, initial);
 
   /** WooCommerce answers each mutation with the cart, so the chrome follows. */
   useEffect(() => {
@@ -108,10 +107,52 @@ export function CartLines({
   const wide = (classes: string) => (dense ? "" : classes);
   const current = state.cart?.lines ?? lines;
 
+  /**
+   * The list answers before WooCommerce does. React resets this to `current`
+   * when the action settles, so a refusal rolls the line back on its own and
+   * the status region below says why. Only the quantity moves optimistically —
+   * the zł figures stay WooCommerce's until the reply lands.
+   */
+  const [optimisticLines, patchLine] = useOptimistic(
+    current,
+    (list: CartLine[], patch: { key: string; quantity: number }) =>
+      patch.quantity === 0
+        ? list.filter((line) => line.key !== patch.key)
+        : list.map((line) =>
+            line.key === patch.key ? { ...line, quantity: patch.quantity } : line,
+          ),
+  );
+
+  /**
+   * Layered over `action={submit}` rather than wrapping it, because a client
+   * wrapper would cost the plain-form fallback: with scripting off this
+   * handler never runs and the POST goes through untouched.
+   */
+  const submitOptimistically = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const submitter = event.nativeEvent.submitter;
+    const formData = new FormData(event.currentTarget, submitter);
+
+    const key = String(formData.get("key") ?? "");
+    const typed = Number(formData.get("quantity")) || 0;
+    const step = Number(formData.get("step")) || 0;
+
+    const quantity =
+      formData.get("intent") === "remove"
+        ? 0
+        : Math.min(Math.max(typed + step, 0), MAX_QUANTITY);
+
+    startTransition(() => {
+      patchLine({ key, quantity });
+      submit(formData);
+    });
+  };
+
   return (
     <div>
       <ul>
-        {current.map((line) => (
+        {optimisticLines.map((line) => (
           <li
             key={line.key}
             className={`flex items-start gap-4 border-b border-dashed border-hairline py-4 ${wide(
@@ -151,7 +192,7 @@ export function CartLines({
                 ))}
               </div>
 
-              <LineForm line={line} submit={submit} pending={pending} />
+              <LineForm line={line} submit={submit} onSubmit={submitOptimistically} />
 
               <div
                 className={`flex items-center justify-between gap-2 ${wide(
@@ -162,13 +203,12 @@ export function CartLines({
                   {line.total}
                 </p>
 
-                <form action={submit}>
+                <form action={submit} onSubmit={submitOptimistically}>
                   <input type="hidden" name="key" value={line.key} />
                   <input type="hidden" name="name" value={line.name} />
                   <input type="hidden" name="intent" value="remove" />
                   <button
                     type="submit"
-                    disabled={pending}
                     className="-m-1 cursor-pointer p-1 text-sm leading-none text-ink-muted underline underline-offset-[0.25em] hover:text-rose disabled:opacity-50"
                   >
                     Usuń

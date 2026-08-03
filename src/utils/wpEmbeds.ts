@@ -1,3 +1,5 @@
+import { buttonVariants } from "@/components/ui/warcraftcn/button";
+
 /**
  * Third-party iframes never reach a browser with their `src` intact.
  *
@@ -23,22 +25,31 @@ const IFRAME = /<iframe\b([^>]*)>(?:[\s\S]*?<\/iframe>)?/gi;
 const attribute = (tag: string, name: string) =>
   new RegExp(`\\s${name}="([^"]*)"`, "i").exec(tag)?.[1];
 
-/** What the visitor is being asked to load, so the button is not "Pokaż treść". */
-const KINDS: { host: RegExp; noun: string; verb: string }[] = [
-  { host: /(^|\.)google\.[a-z.]+$/, noun: "mapa Google", verb: "Pokaż mapę" },
-  { host: /(^|\.)miro\.com$/, noun: "tablica Miro", verb: "Pokaż tablicę" },
-  { host: /(^|\.)(youtube\.com|youtu\.be)$/, noun: "film z YouTube", verb: "Odtwórz film" },
+/**
+ * What the visitor is being asked to load, so the button is not "Pokaż treść".
+ * `it` carries the gender, because a sentence that has to dodge the pronoun to
+ * stay grammatical reads like it was written by a machine.
+ */
+const KINDS: { host: RegExp; noun: string; it: string; verb: string }[] = [
+  { host: /(^|\.)google\.[a-z.]+$/, noun: "mapa Google", it: "ją", verb: "Pokaż mapę" },
+  { host: /(^|\.)miro\.com$/, noun: "tablica Miro", it: "ją", verb: "Pokaż tablicę" },
+  {
+    host: /(^|\.)(youtube\.com|youtu\.be)$/,
+    noun: "film z YouTube",
+    it: "go",
+    verb: "Odtwórz film",
+  },
 ];
 
 const FORMS = /docs\.google\.com\/forms/;
 
 function describe(url: URL) {
   if (FORMS.test(url.host + url.pathname))
-    return { noun: "formularz Google", verb: "Pokaż formularz" };
+    return { noun: "formularz Google", it: "go", verb: "Pokaż formularz" };
 
   for (const kind of KINDS) if (kind.host.test(url.host)) return kind;
 
-  return { noun: `treść z ${url.host}`, verb: "Pokaż" };
+  return { noun: `treść z ${url.host}`, it: "ją", verb: "Pokaż" };
 }
 
 function isOurs(host: string) {
@@ -53,8 +64,12 @@ function isOurs(host: string) {
  */
 const forAttribute = (value: string) => value.replaceAll('"', "");
 
-const BUTTON =
-  "cursor-pointer rounded-full border-2 border-navy bg-accent px-5 py-2 text-sm font-semibold text-on-accent transition-transform duration-150 ease-out hover:-translate-y-px active:scale-[0.97]";
+/**
+ * The site's own button, reached through `cva` rather than the component,
+ * because this is a string of HTML and not a tree of elements. Hand-rolling
+ * one here is how a second button style gets into the design system.
+ */
+const BUTTON = `${buttonVariants()} px-6 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-navy focus-visible:ring-offset-2`;
 
 const LINK = "text-sm text-ink-muted underline-offset-[0.25em] decoration-dashed hover:underline";
 
@@ -74,14 +89,18 @@ export const blockThirdPartyEmbeds = (html: string) =>
 
     if (isOurs(url.host)) return raw;
 
-    const { noun, verb } = describe(url);
+    const { noun, it, verb } = describe(url);
     const title = attribute(attrs, "title");
 
     return [
-      `<div class="wp-embed not-prose my-8 flex w-full flex-col items-center justify-center gap-3 rounded-card border-2 border-dashed border-hairline bg-paper-shade/60 px-6 py-10 text-center"`,
+      /**
+       * No frame. A dashed rule is the perforation between sections here, not
+       * something drawn around a picture — the tint alone marks the slot.
+       */
+      `<div class="wp-embed my-8 flex w-full flex-col items-center justify-center gap-4 rounded-card bg-paper-shade px-6 py-12 text-center"`,
       ` data-embed-src="${forAttribute(src)}"`,
       title ? ` data-embed-title="${forAttribute(title)}"` : "",
-      `><p class="max-w-[42ch] text-sm text-ink-muted">Tu jest ${noun}. Wczytanie tej treści połączy Twoją przeglądarkę z <strong class="font-semibold text-ink">${url.host}</strong>.</p>`,
+      `><p class="max-w-[42ch] text-sm text-ink-muted">Tu jest ${noun}. Pokaż ${it}, a <strong class="font-semibold text-ink">${url.host}</strong> zobaczy Twój adres IP.</p>`,
       `<button type="button" data-embed-load class="${BUTTON}">${verb}</button>`,
       `<a class="${LINK}" href="${forAttribute(src)}" rel="noreferrer" target="_blank">Otwórz w nowej karcie</a>`,
       `</div>`,

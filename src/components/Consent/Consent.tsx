@@ -3,6 +3,8 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 
+import { Button } from "@/components/ui/warcraftcn/button";
+
 /**
  * Consent that does something.
  *
@@ -96,8 +98,11 @@ export function ConsentLink({ className }: { className?: string }) {
   );
 }
 
-const ACTION =
-  "cursor-pointer border-2 px-4 py-1.5 text-sm font-semibold transition-transform duration-150 ease-out hover:-translate-y-px active:scale-[0.97]";
+/**
+ * Both answers carry the same weight. Making the refusal a quiet text link is
+ * the standard trick, and it is the one thing a consent banner must not do.
+ */
+const ACTION = "flex-1 px-5 py-2.5 text-sm focus-visible:ring-2 focus-visible:ring-navy";
 
 /**
  * Mounted once in the layout: it both watches for parked embeds and renders
@@ -143,38 +148,29 @@ export function Consent() {
 
   return (
     <div
-      aria-label="Ciasteczka i osadzone treści"
-      className="fixed bottom-4 left-4 z-40 w-[min(22rem,calc(100vw-2rem))] border-2 border-navy bg-paper text-navy shadow-[0_18px_44px_-18px] shadow-navy/50 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 motion-safe:duration-300"
+      aria-label="Ciasteczka"
+      className="fixed bottom-4 left-4 z-40 w-[min(22rem,calc(100vw-2rem))] rounded-card border-2 border-navy bg-paper text-navy shadow-[0_18px_44px_-18px] shadow-navy/50 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-3 motion-safe:duration-300 motion-safe:ease-(--ease-out)"
       role="dialog"
     >
       <p className="eyebrow border-b border-dashed border-hairline px-4 py-2.5">Ciasteczka</p>
 
       <div className="px-4 py-3.5">
         <p className="text-sm text-ink-muted">
-          Mapy, formularze i tablice na tej stronie ładują się{" "}
-          <strong className="font-semibold text-ink">z cudzych serwerów</strong> — zobaczą Twój
-          adres IP.
+          Mapy i formularze na tej stronie ładują się z cudzych serwerów, które zobaczą Twój adres
+          IP.
         </p>
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          <button
-            className={`${ACTION} border-navy bg-accent text-on-accent`}
-            onClick={() => decide("granted")}
-            type="button"
-          >
+        <div className="mt-4 flex gap-2">
+          <Button className={ACTION} onClick={() => decide("granted")}>
             Okej
-          </button>
-          <button
-            className={`${ACTION} border-hairline text-ink hover:border-navy`}
-            onClick={() => decide("denied")}
-            type="button"
-          >
+          </Button>
+          <Button className={ACTION} onClick={() => decide("denied")}>
             Nie, dziękuję
-          </button>
+          </Button>
         </div>
 
         <p className="mt-3 text-xs text-ink-muted">
-          Nic innego Cię tu nie śledzi. Wybór zmienisz w stopce.
+          Po odmowie nadal pokażesz każdą z osobna. Wybór zmienisz w stopce.
         </p>
       </div>
     </div>

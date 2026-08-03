@@ -6,63 +6,72 @@ Audited `main` at `7f997a6` on 2026-08-03 against Vercel's React best-practices 
 
 A production build with replayed WordPress fixtures compiled and typechecked successfully. Next's bundle diagnostics report:
 
-| Route | First-load JS, uncompressed |
-| --- | ---: |
-| ordinary site route | 760,335 B |
-| `/produkt/[slug]` | 790,379 B |
-| `/[[...slug]]` | 802,975 B |
+| Route               | First-load JS, uncompressed |
+| ------------------- | --------------------------: |
+| ordinary site route |                   760,335 B |
+| `/produkt/[slug]`   |                   790,379 B |
+| `/[[...slug]]`      |                   802,975 B |
 
 The optional catch-all adds 42,640 B over an ordinary route. Its two route-specific chunks total 12,264 B gzip. The six chunks attached to the shared site layout total 94,924 B gzip; this is a baseline, not an estimate of removable code.
 
-## Findings
+After remediation, the same fixture-backed production build reports:
+
+| Route               | First-load JS, uncompressed | Change from comparable baseline |
+| ------------------- | --------------------------: | ------------------------------: |
+| ordinary site route |                   753,893 B |                        −6,442 B |
+| `/`                 |                   779,505 B |                       −23,470 B |
+| `/[...slug]`        |                   768,674 B |                       −34,301 B |
+| `/produkt/[slug]`   |                   784,903 B |                        −5,476 B |
+
+## Findings and remediation
 
 ### P1 — Split the homepage from the content catch-all
 
 Rules: `bundle-conditional`, `bundle-dynamic-imports`.
 
-[`src/app/(site)/[[...slug]]/page.tsx`](../src/app/(site)/%5B%5B...slug%5D%5D/page.tsx) imports both the homepage at line 14 and WordPress templates at lines 8 and 12, then selects one branch at lines 95–113. Next therefore gives every homepage visit the gallery/lightbox clients and every WordPress page the homepage's calendar popover, gold animation, and news-image client. The build attributes the full 42,640 B route delta to these combined client references.
+Status: resolved.
 
-Move the homepage to `src/app/(site)/page.tsx`; change the content route to required catch-all `[...slug]`; remove the synthetic empty static param. Then lazy-load the lightbox after gallery activation. This restores route-level code splitting and keeps unopened dialog code out of initial JS.
+The optional catch-all imported both homepage and WordPress template clients, giving each route the other's interactive code. The homepage now lives in [`src/app/(site)/page.tsx`](<../src/app/(site)/page.tsx>), content uses the required [`[...slug]`](<../src/app/(site)/%5B...slug%5D/page.tsx>) route, and the lightbox loads after gallery interaction. Route-level splitting is restored and unopened dialog code stays out of initial JS.
 
 ### P1 — Do not ship the complete cart sheet to every visitor
 
 Rules: `bundle-conditional`, `bundle-dynamic-imports`.
 
-[`src/app/(site)/layout.tsx`](../src/app/(site)/layout.tsx) mounts `CartTrigger` on every site route. [`src/components/Cart/CartSheet.tsx`](../src/components/Cart/CartSheet.tsx) eagerly imports the dialog, cart editor, totals, image, links, and server-action client references, although lines 74–81 return nothing for the cart page and the common empty-cart case. The production client manifest consequently includes `CartSheet` and `CartLines` in every site route.
+Status: resolved.
 
-Keep a small cart bootstrap/trigger in the layout. Dynamically import the full sheet only after the cart is known non-empty or an add action requests it. Preserve the current document order, focus return, and no-JavaScript links.
+The shared layout previously included the dialog, cart editor, totals, and their dependencies for every visitor. It now mounts a small [`CartTrigger`](../src/components/Cart/CartTrigger.tsx) bootstrap and dynamically imports the full sheet only for a non-empty or explicitly opened cart. Document order, focus return, and no-JavaScript links remain intact.
 
 ### P1 — Avoid the checkout request for empty carts
 
 Rule: `async-defer-await`.
 
-[`src/app/(site)/sklep/koszyk/page.tsx`](../src/app/(site)/sklep/koszyk/page.tsx) starts `fetchCheckoutUrl()` unconditionally in the line-23 `Promise.all`. A visitor with no session receives an empty cart locally from `fetchCart()`, yet the second operation still calls the rate-limited WordPress GraphQL endpoint. Existing-session empty carts also pay for it. [`src/app/api/cart/route.ts`](../src/app/api/cart/route.ts) already uses the correct conditional shape.
+Status: resolved.
 
-Fetch the cart first; return the error/empty states before requesting checkout. If non-empty-cart latency matters, extend the cart query to return both cart and checkout URL in one WordPress round trip.
+The cart page now fetches the cart first and skips the rate-limited checkout query for empty carts. If non-empty-cart latency later matters, the cart query can return both values in one WordPress round trip.
 
 ### P2 — Bypass large package barrels
 
 Rule: `bundle-barrel-imports`.
 
-Six client modules import icons from `@hugeicons/core-free-icons`' root. Its installed ESM entry is 6.0 MB and Next 16.2.9 does not include this package in its default `optimizePackageImports` list. Production output is tree-shaken—the audit did not find a 6 MB browser payload—but dev startup, HMR, and builds must still analyze the barrel. [`src/components/ui/warcraftcn/button.tsx`](../src/components/ui/warcraftcn/button.tsx) similarly imports `Slot` through the `radix-ui` aggregate entry.
+Status: resolved.
 
-Use the packages' exported per-module paths, such as `@hugeicons/core-free-icons/Cancel01Icon` and `radix-ui/slot`, or explicitly configure `optimizePackageImports` for Hugeicons. Verify the transformed build before retaining configuration over direct imports.
+Six client modules previously imported icons through Hugeicons' 6.0 MB ESM index, and the button imported `Slot` through the Radix aggregate. All now use exported per-module paths; the production build verifies those paths without extra configuration.
 
 ### P2 — Narrow cart-store subscriptions
 
 Rules: `rerender-derived-state`, `rerender-defer-reads`.
 
-[`src/components/Cart/store.ts`](../src/components/Cart/store.ts) returns the entire snapshot from `useCart()`. Every `loading`, `open`, checkout, or cart update changes its identity. [`src/components/Cart/AddToCartForm.tsx`](../src/components/Cart/AddToCartForm.tsx) needs only cart lines at lines 91–97, but re-renders and recomputes variation axes/availability when the sheet opens, closes, or loads.
+Status: resolved.
 
-Expose stable selector hooks, at minimum one for cart lines and one for the sheet snapshot. Keep selector snapshots referentially stable. Optimize `buildAxes` only after narrowing the subscription; that removes the avoidable renders instead of memoizing around them.
+The product form now subscribes only to referentially stable cart lines. Opening, closing, or loading the sheet no longer makes it recompute product variation state.
 
 ### P3 — Version, validate, and cache consent storage
 
 Rules: `client-localstorage-schema`, `js-cache-storage`.
 
-[`src/components/Consent/Consent.tsx`](../src/components/Consent/Consent.tsx) uses unversioned key `bf-consent`, casts any stored string to `Choice`, and synchronously rereads it on every client navigation. An unknown legacy/corrupt value counts as a decision and suppresses the prompt.
+Status: resolved.
 
-Use a versioned key such as `bf-consent:v1`, accept only `granted` or `denied`, and cache the loaded choice in the existing module store. Route changes still need to recount/reveal parked embeds, but do not need another storage read.
+Consent now uses `bf-consent:v1`, validates both accepted values, migrates the legacy key, and caches the loaded choice in the module store. Route changes still recount or reveal parked embeds without another storage read.
 
 ## Already good
 
@@ -77,6 +86,7 @@ Use a versioned key such as `bf-consent:v1`, accept only `granted` or `denied`, 
 
 - `bun run test`
 - `bun run lint`
+- `bunx playwright test --workers=1`
 - `MOCK_WP=replay NEXT_DIST_DIR=.next-audit bunx next build`
 
-The normal `bun run build` could not complete in the sandbox because its pre-build LQIP refresh contacts live WordPress; the Next production build itself completed against fixtures. No production deployment or production mutation was performed.
+All commands completed against replayed fixtures. No production deployment or production mutation was performed.

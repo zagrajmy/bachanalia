@@ -31,6 +31,7 @@ export type CartSnapshot = {
 };
 
 const INITIAL: CartSnapshot = { open: false, loading: false, checkoutKnown: false };
+const EMPTY_LINES: CartView["lines"] = [];
 
 let snapshot = INITIAL;
 let listeners: (() => void)[] = [];
@@ -56,6 +57,14 @@ export function useCart() {
     subscribe,
     () => snapshot,
     () => INITIAL,
+  );
+}
+
+export function useCartLines() {
+  return useSyncExternalStore(
+    subscribe,
+    () => snapshot.cart?.lines ?? EMPTY_LINES,
+    () => EMPTY_LINES,
   );
 }
 

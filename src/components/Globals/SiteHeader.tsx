@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { MenuIcon } from "lucide-react";
+import { Menu01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 import {
   NavigationMenu,
@@ -74,7 +75,9 @@ export function SiteHeader() {
                        */
                       role="link"
                       onFocus={() => setOpenGroup(group.label)}
-                      render={<Link href={group.href} {...externalProps(group)} />}
+                      render={
+                        <Link href={group.href} {...externalProps(group)} />
+                      }
                     >
                       {group.label}
                     </NavigationMenuTrigger>
@@ -84,7 +87,12 @@ export function SiteHeader() {
                         {group.children.map((link) => (
                           <li key={link.href}>
                             <NavigationMenuLink
-                              render={<Link href={link.href} {...externalProps(link)} />}
+                              render={
+                                <Link
+                                  href={link.href}
+                                  {...externalProps(link)}
+                                />
+                              }
                             >
                               {link.label}
                             </NavigationMenuLink>
@@ -96,7 +104,9 @@ export function SiteHeader() {
                 ) : (
                   <NavigationMenuLink
                     className={navigationMenuTriggerStyle()}
-                    render={<Link href={group.href} {...externalProps(group)} />}
+                    render={
+                      <Link href={group.href} {...externalProps(group)} />
+                    }
                   >
                     {group.label}
                   </NavigationMenuLink>
@@ -107,9 +117,7 @@ export function SiteHeader() {
         </NavigationMenu>
 
         <Button asChild className="ml-auto hidden lg:ml-0 lg:inline-flex">
-          <Link href={primaryCta.href} target="_blank" rel="noreferrer">
-            {primaryCta.label}
-          </Link>
+          <Link href={primaryCta.href}>{primaryCta.label}</Link>
         </Button>
 
         <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
@@ -117,10 +125,18 @@ export function SiteHeader() {
             aria-label="Menu"
             className="ml-auto flex size-10 shrink-0 items-center justify-center rounded-full active:border hover:border border-hairline text-ink transition-transform duration-150 ease-out active:scale-[0.97] lg:hidden"
           >
-            <MenuIcon className="size-5" aria-hidden="true" />
+            <HugeiconsIcon
+              icon={Menu01Icon}
+              strokeWidth={2}
+              className="size-5"
+              aria-hidden="true"
+            />
           </SheetTrigger>
 
-          <SheetContent side="right" className="data-[side=right]:w-[min(21rem,88vw)]">
+          <SheetContent
+            side="right"
+            className="data-[side=right]:w-[min(21rem,88vw)]"
+          >
             <SheetHeader className="h-16 flex-row items-center border-b border-dashed border-hairline py-0 sm:h-18">
               <SheetTitle className="sr-only">Menu</SheetTitle>
             </SheetHeader>
@@ -167,7 +183,12 @@ export function SiteHeader() {
 
             <SheetFooter>
               <Button asChild className="w-full">
-                <Link href={primaryCta.href} target="_blank" rel="noreferrer" onClick={closeMenu}>
+                <Link
+                  href={primaryCta.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={closeMenu}
+                >
                   {primaryCta.label}
                 </Link>
               </Button>

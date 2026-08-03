@@ -8,7 +8,12 @@ import {
   useRef,
   useState,
 } from "react";
-import { ChevronLeftIcon, ChevronRightIcon, XIcon } from "lucide-react";
+import {
+  ArrowLeft01Icon,
+  ArrowRight01Icon,
+  Cancel01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Dialog } from "@base-ui/react/dialog";
 
 import { cn } from "@/lib/utils";
@@ -217,7 +222,12 @@ export function Lightbox({
             </Dialog.Title>
 
             <Dialog.Close aria-label="Zamknij" className={CONTROL}>
-              <XIcon className="size-5" aria-hidden="true" />
+              <HugeiconsIcon
+                icon={Cancel01Icon}
+                strokeWidth={2}
+                className="size-5"
+                aria-hidden="true"
+              />
             </Dialog.Close>
           </div>
 
@@ -280,7 +290,12 @@ export function Lightbox({
               disabled={total < 2}
               className={CONTROL}
             >
-              <ChevronLeftIcon className="size-5" aria-hidden="true" />
+              <HugeiconsIcon
+                icon={ArrowLeft01Icon}
+                strokeWidth={2}
+                className="size-5"
+                aria-hidden="true"
+              />
             </button>
 
             <button
@@ -290,7 +305,12 @@ export function Lightbox({
               disabled={total < 2}
               className={CONTROL}
             >
-              <ChevronRightIcon className="size-5" aria-hidden="true" />
+              <HugeiconsIcon
+                icon={ArrowRight01Icon}
+                strokeWidth={2}
+                className="size-5"
+                aria-hidden="true"
+              />
             </button>
           </div>
         </Dialog.Popup>

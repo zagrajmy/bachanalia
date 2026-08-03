@@ -1,7 +1,8 @@
 "use client";
 
 import { cva } from "class-variance-authority";
-import { ChevronDownIcon } from "lucide-react";
+import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { NavigationMenu as NavigationMenuPrimitive } from "@base-ui/react/navigation-menu";
 
 import { cn } from "@/lib/utils";
@@ -73,7 +74,9 @@ function NavigationMenuTrigger({
       {...props}
     >
       {children}{" "}
-      <ChevronDownIcon
+      <HugeiconsIcon
+        icon={ArrowDown01Icon}
+        strokeWidth={2}
         className="relative top-px ml-1 size-3 text-ink-muted transition-transform duration-250 group-data-[popup-open]/navigation-menu-trigger:rotate-180"
         aria-hidden="true"
       />

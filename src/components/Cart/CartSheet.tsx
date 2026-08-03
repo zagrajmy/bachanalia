@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ShoppingBagIcon } from "lucide-react";
+import { ShoppingBag01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 import { SHOP_PATH } from "@/components/Globals/siteNav";
 import {
@@ -27,7 +28,8 @@ function products(count: number) {
   const teens = count % 100;
 
   if (count === 1) return "1 produkt";
-  if (last >= 2 && last <= 4 && (teens < 12 || teens > 14)) return `${count} produkty`;
+  if (last >= 2 && last <= 4 && (teens < 12 || teens > 14))
+    return `${count} produkty`;
 
   return `${count} produktów`;
 }
@@ -64,8 +66,9 @@ export function CartTrigger() {
    * full is just the page loading, and animating it there would be a pop on
    * every navigation.
    */
-  const startedEmpty = useRef<boolean | undefined>(undefined);
-  if (cart && startedEmpty.current === undefined) startedEmpty.current = cart.isEmpty;
+  const startedEmpty = useRef<boolean>(undefined);
+  if (cart && startedEmpty.current === undefined)
+    startedEmpty.current = cart.isEmpty;
 
   const count = cart?.itemCount ?? 0;
 
@@ -83,18 +86,28 @@ export function CartTrigger() {
     <Sheet open={open} onOpenChange={setCartOpen}>
       <SheetTrigger
         aria-label={`Koszyk, ${products(count)}`}
-        className={`floating-dock flex items-center gap-2 rounded-card border border-navy bg-accent px-4 py-3 text-on-accent shadow-[0_14px_34px_-14px] shadow-navy/50 transition-transform duration-150 ease-[var(--ease-out)] hover:-translate-y-px active:scale-[0.97] ${
-          startedEmpty.current ? "motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200" : ""
+        className={`floating-dock flex items-center justify-center gap-0.5 cursor-pointer rounded-full bg-navy size-12 text-paper shadow-[0_14px_34px_-14px] shadow-navy/50 transition-transform duration-150 ease-out hover:-translate-y-px active:scale-[0.97] ${
+          startedEmpty.current
+            ? "motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200"
+            : ""
         }`}
       >
-        <ShoppingBagIcon className="size-5" aria-hidden="true" />
+        <HugeiconsIcon
+          icon={ShoppingBag01Icon}
+          strokeWidth={2}
+          className="size-5"
+          aria-hidden="true"
+        />
 
         <span aria-hidden="true" className="text-sm font-semibold tabular-nums">
           {count}
         </span>
       </SheetTrigger>
 
-      <SheetContent side="right" className="data-[side=right]:w-[min(24rem,88vw)]">
+      <SheetContent
+        side="right"
+        className="data-[side=right]:w-[min(24rem,88vw)]"
+      >
         <SheetHeader className="h-16 flex-row items-center border-b border-dashed border-hairline py-0 sm:h-18">
           <SheetTitle>Koszyk</SheetTitle>
         </SheetHeader>
@@ -128,9 +141,7 @@ export function CartTrigger() {
                 <a href={checkoutUrl}>Przejdź do płatności</a>
               </Button>
             ) : (
-              <p className="mt-2 text-sm text-rose">
-                {CHECKOUT_UNAVAILABLE}
-              </p>
+              <p className="mt-2 text-sm text-rose">{CHECKOUT_UNAVAILABLE}</p>
             )}
           </SheetFooter>
         )}

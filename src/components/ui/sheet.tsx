@@ -1,7 +1,8 @@
 "use client";
 
 import type { ComponentProps } from "react";
-import { XIcon } from "lucide-react";
+import { Cancel01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
 
 import { cn } from "@/lib/utils";
@@ -77,7 +78,12 @@ function SheetContent({
             aria-label={closeLabel}
             className="absolute inset-e-4 top-3 flex size-10 items-center justify-center rounded-full hover:border active:border border-hairline text-ink transition-transform duration-150 ease-out active:scale-[0.97]"
           >
-            <XIcon aria-hidden="true" className="size-4" />
+            <HugeiconsIcon
+              icon={Cancel01Icon}
+              strokeWidth={2}
+              aria-hidden="true"
+              className="size-4"
+            />
           </SheetClose>
         )}
       </SheetPrimitive.Popup>

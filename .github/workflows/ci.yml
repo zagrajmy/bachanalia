@@ -30,13 +30,12 @@ jobs:
       - name: Generate types from the committed schema
         run: bun run codegen
 
-      - name: Install hk
-        uses: jdx/mise-action@v4
-        with:
-          install_args: hk
+      - uses: jdx/mise-action@v4
 
       - name: Lint and format check
-        run: hk check --all
+        run: |
+          mise use -g hk
+          hk check --all
 
       - name: Types
         run: bunx tsc --noEmit

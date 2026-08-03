@@ -1,4 +1,4 @@
-import { mkdir, readFile, readdir, writeFile, unlink } from "node:fs/promises";
+import { cp, mkdir, readFile, readdir, writeFile, unlink } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { print } from "graphql/language/printer";
 import gql from "graphql-tag";
@@ -13,9 +13,10 @@ import { fbPostKey, lqipMetaRelPath, lqipRelPath, wpMediaKey } from "../src/util
 import { MEDIA_WIDTHS, mediaStem } from "../src/utils/mediaPaths";
 import { splitWpContent } from "../src/utils/prepareWpContent";
 
-const ROOT = join(import.meta.dir, "..");
+const ROOT = join(import.meta.dirname, "..");
 const LQIP_DIR = join(ROOT, "src/content/lqip");
 const IMG_DIR = join(ROOT, "public/_img");
+const IMG_CACHE_DIR = join(ROOT, ".next/cache/_img");
 const MANIFEST_PATH = join(ROOT, "src/content/img-manifest.json");
 const WP = process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://bachanaliafantastyczne.pl";
 const DELAY_MS = 350;
@@ -278,6 +279,7 @@ async function encodeWidths(bytes: Buffer) {
 async function main() {
   await mkdir(LQIP_DIR, { recursive: true });
   await mkdir(IMG_DIR, { recursive: true });
+  await cp(IMG_CACHE_DIR, IMG_DIR, { recursive: true, force: false }).catch(() => {});
 
   const migrated = await migrateTextLqips();
   if (migrated > 0) console.log(`media: recompressed ${migrated} .lqip → .webp`);
@@ -357,6 +359,8 @@ async function main() {
     Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)),
   );
   await writeFile(MANIFEST_PATH, `${JSON.stringify(sorted, null, 2)}\n`);
+
+  await cp(IMG_DIR, IMG_CACHE_DIR, { recursive: true }).catch(() => {});
 
   console.log(
     `media: wrote ${lqipWrote} lqips, ${variantWrote} variants, ${Object.keys(sorted).length} in manifest`,

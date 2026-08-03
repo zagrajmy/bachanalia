@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { ShoppingBag01Icon } from "@hugeicons/core-free-icons";
+import ShoppingBag01Icon from "@hugeicons/core-free-icons/ShoppingBag01Icon";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import { SHOP_PATH } from "@/components/Globals/siteNav";

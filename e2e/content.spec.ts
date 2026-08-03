@@ -81,7 +81,7 @@ test.describe("WordPress content rendering", () => {
     });
     await page.goto("/czas-i-miejsce/");
 
-    await expect(page.locator(".wp-content iframe").first()).toBeVisible();
+    await expect(page.getByTitle("Wojska Polskiego 69, Zielona Góra, Poland")).toBeVisible();
     await expect.poll(() => page.evaluate(() => localStorage.getItem("bf-consent"))).toBeNull();
   });
 

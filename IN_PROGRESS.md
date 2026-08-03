@@ -438,12 +438,25 @@ pay, which is also everything that made the old shop look like 2014.
 1. **Serve WordPress from `wp.bachanaliafantastyczne.pl`** and confirm
    WooCommerce still checks out there — cookies, Paynow's return URL and the
    ticket links all carry the host.
-2. **Enable the session handoff.** WPGraphQL for WooCommerce → *User Session
-   transferring URLs*, plus the *Checkout URL* checkbox under it. The endpoint
-   already answers at `/transfer-session`; the setting is what exposes the
-   nonced URL our cart needs. The session id has to be bound to the buyer's
-   machine and carry an expiry, or the link works from any machine.
-3. **Leave *Pokaż metody płatności* unchecked.** It was unchecked on 2 August
+2. **Enable the session handoff, then save the page a second time.** WPGraphQL
+   for WooCommerce → *User Session transferring URLs*, plus the *Checkout URL*
+   checkbox under it. The endpoint already answers at `/transfer-session`; the
+   setting is what exposes the nonced URL our cart needs.
+
+   The second save is not superstition. The four `*_nonce_param` inputs render
+   disabled until a URL field is enabled, and a disabled input is not
+   submitted — so the save that enables the checkboxes cannot write them.
+   Without those options `Protected_Router::get_nonce_names()` returns only
+   `download_url`, the plugin never looks for the `_wc_checkout` our URL
+   carries, and it gives up before the nonce is even checked. Every failure in
+   that handler exits through the same `status_header( 404 )` plus a redirect
+   home, so a broken handoff and a missing endpoint are indistinguishable from
+   outside. Ours looked like a missing endpoint for a day.
+3. **Install `wordpress/bachanalia-checkout-handover/`.** Without it the
+   transfer succeeds and then dumps the buyer on `/checkout/`, which 404s
+   here — WooGraphQL builds that address from `get_permalink()`, and the
+   transfer runs where there is no post to take one from.
+4. **Leave *Pokaż metody płatności* unchecked.** It was unchecked on 2 August
    and it stays that way: the buyer takes one hop to Paynow's paywall and
    picks BLIK, a bank or a card there. The alternative — BLIK level 0 — has
    the buyer type a six-digit payment code into WordPress, which then posts it
@@ -453,7 +466,7 @@ pay, which is also everything that made the old shop look like 2014.
    surface entirely. Leave every Paynow gateway enabled — the paywall's
    `is_available()` needs at least one of them on, even though they no longer
    render separately.
-4. **Install `wordpress/bachanalia-paynow-first/`** so Paynow is the first and
+5. **Install `wordpress/bachanalia-paynow-first/`** so Paynow is the first and
    preselected method. Dragging the row does not do it: the paywall gateway
    only becomes available once *Pokaż metody płatności* is unchecked, so it has
    no saved position and `WC_Payment_Gateways::init()` parks it at 999 behind
@@ -463,14 +476,14 @@ pay, which is also everything that made the old shop look like 2014.
    Blocks checkout read. **Do not hand-edit positions**: `init()` indexes
    gateways *by* position, so a repeated number deletes a gateway from the
    store outright.
-5. **Install `wordpress/bachanalia-revalidate/`** and point it at the Vercel
+6. **Install `wordpress/bachanalia-revalidate/`** and point it at the Vercel
    deployment, then at the apex once DNS moves. Until it is installed, an edit
    takes up to an hour to appear.
-6. **Clear the test orders** — 3502, 3507, 3509, 3511. Keep 3510: it is the
+7. **Clear the test orders** — 3502, 3507, 3509, 3511. Keep 3510: it is the
    paid one that proves the payment loop.
-7. **Fix the pickup label.** The free rate still reads "Odbiór Osobisty podczas
+8. **Fix the pickup label.** The free rate still reads "Odbiór Osobisty podczas
    BF 24" on a 2026 shop.
-8. **Do not touch permalinks** until the frontend has moved.
+9. **Do not touch permalinks** until the frontend has moved.
 
 ### 2. Our side
 

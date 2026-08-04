@@ -30,6 +30,16 @@ const TRANSLATIONS: Record<string, string> = {
   "Invalid payment method.": "Ta metoda płatności jest niedostępna.",
 };
 
+/**
+ * WooGraphQL's answer when a line's key is no longer in the session — the cart
+ * moved on without this tab: WordPress's checkout emptied it after handoff, or
+ * the session rotated. The line being gone is the buyer's goal state, not an
+ * error to show them in English.
+ */
+export function isStaleLine(message: string) {
+  return /no cart item found/i.test(message);
+}
+
 export function wooMessage(raw: string) {
   let html = raw;
 

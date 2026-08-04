@@ -1,7 +1,7 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
 
-import { wooMessage } from "./message";
+import { isStaleLine, wooMessage } from "./message";
 
 /** The one the owner hit: sold-individually product, added twice. */
 const SOLD_INDIVIDUALLY =
@@ -26,6 +26,11 @@ test("a link in the middle of a sentence stays as its own words", () => {
 
 test("the empty-cart session error is the one sentence worth rewriting", () => {
   assert.equal(wooMessage("Sorry, no session found."), "Koszyk jest pusty.");
+});
+
+test("a key WooCommerce no longer holds reads as a stale line, not an error", () => {
+  assert.ok(isStaleLine("No cart item found with the key: 3f51444b056e46376e55d6f5d0439477"));
+  assert.ok(!isStaleLine("Sorry, this product cannot be purchased."));
 });
 
 test("an untranslated WooCommerce error is passed through rather than hidden", () => {

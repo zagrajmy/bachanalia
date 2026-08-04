@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Bachanalia — Paynow na górze
  * Description: Ustawia płatność Paynow jako pierwszą i domyślną w kasie.
- * Version:     1.1.0
+ * Version:     1.2.0
  * Author:      Piotr Monwid-Olechnowicz
  * License:     GPL-2.0-or-later
  * Requires PHP: 7.4
@@ -54,6 +54,39 @@ function bachanalia_paynow_first( $order ) {
 }
 
 add_filter( 'option_woocommerce_gateway_order', 'bachanalia_paynow_first' );
+
+/**
+ * The Blocks checkout sorts by `paymentMethodSortOrder`, which it builds from
+ * `payment_gateways()` filtered by each gateway's `enabled` flag — not by
+ * `is_available()`. The paywall gateway never gets that flag: it appears on
+ * checkout through `is_available()` alone and hides from the Payments table,
+ * so there is no toggle to click. Without the flag, Blocks drops it from the
+ * sort order and appends it after every listed gateway — bank transfer first
+ * and preselected, which is the slowest way to pay for a ticket.
+ *
+ * Forcing `enabled` on is inert everywhere else: the paywall's own
+ * `is_available()` decides visibility and does not consult the flag.
+ */
+function bachanalia_paynow_enabled_flag( $settings ) {
+	if ( ! is_array( $settings ) ) {
+		$settings = array();
+	}
+
+	$settings['enabled'] = 'yes';
+
+	return $settings;
+}
+
+add_filter(
+	'option_woocommerce_' . BACHANALIA_PAYNOW_FIRST_GATEWAY . '_settings',
+	'bachanalia_paynow_enabled_flag'
+);
+
+/** `option_…` never fires when the option row does not exist yet. */
+add_filter(
+	'default_option_woocommerce_' . BACHANALIA_PAYNOW_FIRST_GATEWAY . '_settings',
+	'bachanalia_paynow_enabled_flag'
+);
 
 /** HPOS and the Blocks checkout, so the store stops calling this uncertain. */
 add_action(

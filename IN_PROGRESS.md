@@ -400,14 +400,12 @@ posts are free.
   `/index.php/` permalink structure, WordPress builds product links as
   `index.php/` + base, so `/produkt/` yields `index.php//produkt/…` — and the
   slash lands inside the rewrite rule too, which then matches nothing:
-  every product URL 404s while pages and posts keep working. It happened on
-  4 August 2026 (base saved as `/produkt/` sometime after the 3 August 01:21
-  fixture recording); the fix is the custom base `produkt`, saved on
-  Ustawienia → Bezpośrednie odnośniki. How it got there: "press Zapisz zmiany
-  to flush the rules, change nothing else" — but saving that page also
-  re-submits the WooCommerce product-base fields, whose preset radios carry
-  leading slashes, so the save was not idempotent. Before any rewrite-flush
-  save, check the product base field reads `produkt`, bare. Propagation took ~10 minutes — the
+  every product URL 404s while pages and posts keep working. The right value
+  is the custom base `produkt`, bare, on Ustawienia → Bezpośrednie odnośniki.
+  That screen is also the trap: saving it for any reason (flushing rewrite
+  rules, say) re-submits the WooCommerce product-base fields along with
+  everything else, and the preset radios carry leading slashes — so check the
+  base field before every save there. Propagation took ~10 minutes — the
   admin shows the new value immediately while the frontend serves the stale
   option and LiteSpeed caches the 404s, so verify with an uncached POST to
   `/graphql`, not the admin screen. The preset options are no alternative:

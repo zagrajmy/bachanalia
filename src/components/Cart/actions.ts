@@ -124,16 +124,17 @@ export async function addToCartAction(
 }
 
 /**
- * The tab holds a line WooCommerce no longer has — checkout emptied the cart,
- * or the session rotated. What the buyer asked for is already true, so answer
- * with the fresh cart and let the list drop the ghost.
+ * A refused line mutation ends here. Usually the refusal just gets announced,
+ * but when the tab holds a line WooCommerce no longer has — checkout emptied
+ * the cart, or the session rotated — what the buyer asked for is already
+ * true, so answer with the fresh cart and let the list drop the ghost.
  */
-async function staleLineResync(name: string): Promise<CartActionState> {
+async function lineRefusal(name: string, message: string): Promise<CartActionState> {
+  if (!isStaleLine(message)) return { ok: false, message };
+
   const cart = await fetchCart();
 
-  if (!cart.ok) {
-    return { ok: false, message: "Nie udało się odświeżyć koszyka." };
-  }
+  if (!cart.ok) return { ok: false, message: cart.message };
 
   return {
     ok: true,
@@ -162,11 +163,7 @@ export async function cartLineAction(
   if (formData.get("intent") === "remove") {
     const removed = await removeLine(key);
 
-    if (!removed.ok) {
-      return isStaleLine(removed.message)
-        ? staleLineResync(name)
-        : { ok: false, message: removed.message };
-    }
+    if (!removed.ok) return lineRefusal(name, removed.message);
 
     return { ok: true, message: `${name} — usunięto z koszyka.`, cart: removed.data };
   }
@@ -177,11 +174,7 @@ export async function cartLineAction(
 
   const result = await setQuantity(key, quantity);
 
-  if (!result.ok) {
-    return isStaleLine(result.message)
-      ? staleLineResync(name)
-      : { ok: false, message: result.message };
-  }
+  if (!result.ok) return lineRefusal(name, result.message);
 
   return {
     ok: true,

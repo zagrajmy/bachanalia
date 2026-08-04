@@ -25,7 +25,7 @@ const TRAILING_LINK = /(?:\s|&nbsp;|<br\s*\/?>)*<a\b[^>]*>[\s\S]*?<\/a>\s*$/i;
  * came — most of these are still English, and seeing the real ones while the
  * cart is this new is worth more than a generic sentence hiding them.
  */
-const TRANSLATIONS: { [message: string]: string } = {
+const TRANSLATIONS: Record<string, string> = {
   "Sorry, no session found.": "Koszyk jest pusty.",
   "Invalid payment method.": "Ta metoda płatności jest niedostępna.",
 };

@@ -75,7 +75,7 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
               onFocus={() => void loadLightbox().catch(reportError)}
               onClick={() => void open(i)}
               aria-label={`Powiększ zdjęcie ${i + 1} z ${images.length}`}
-              className="block w-full cursor-zoom-in overflow-hidden [&_img]:transition-transform [&_img]:duration-200 [&_img]:ease-[var(--ease-out)] hover:[&_img]:scale-[1.04]"
+              className="block w-full cursor-zoom-in overflow-hidden [&_img]:transition-transform [&_img]:duration-200 [&_img]:ease-out hover:[&_img]:scale-[1.04]"
             >
               <GalleryImage
                 src={image.src}

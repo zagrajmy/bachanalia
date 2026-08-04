@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import { print } from "graphql/language/printer";
 
 import { RETIRED_PATHS } from "@/components/Globals/siteNav";
-import PageTemplate from "@/components/Templates/Page/PageTemplate";
-import PostTemplate from "@/components/Templates/Post/PostTemplate";
+import { PageTemplate } from "@/components/Templates/Page/PageTemplate";
+import { PostTemplate } from "@/components/Templates/Post/PostTemplate";
 import { AllContentQuery } from "@/queries/general/AllContentQuery";
 import { ContentNodeResult, ContentQuery } from "@/queries/general/ContentQuery";
 import { fetchGraphQL, fetchGraphQLAtBuild } from "@/utils/fetchGraphQL";
@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export const revalidate = 10800;
+export const revalidate = 10_800;
 
 export async function generateStaticParams() {
   const { pages, posts } = await fetchGraphQLAtBuild<{

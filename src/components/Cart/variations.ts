@@ -14,18 +14,18 @@
 export type VariationAttributeValue = { name: string; value: string };
 
 export type ProductVariation = {
-  variationId: number;
+  attributes: VariationAttributeValue[];
   price: string;
   soldOut: boolean;
-  attributes: VariationAttributeValue[];
+  variationId: number;
 };
 
-export type VariationAxis = { name: string; label: string; options: string[] };
+export type VariationAxis = { label: string; name: string; options: string[] };
 
-export type VariationSelection = { [attributeName: string]: string | undefined };
+export type VariationSelection = Record<string, string | undefined>;
 
 /** Parent-product attribute metadata, used for the label and the axis order. */
-export type AttributeLabel = { name: string; label: string };
+export type AttributeLabel = { label: string; name: string };
 
 function push(list: string[], value: string) {
   if (list.indexOf(value) === -1) list.push(value);
@@ -44,7 +44,7 @@ export function buildAxes(
   labels: AttributeLabel[] = [],
 ): VariationAxis[] {
   const names: string[] = [];
-  const optionsByName: { [name: string]: string[] } = {};
+  const optionsByName: Record<string, string[]> = {};
 
   for (const label of labels) push(names, label.name);
 

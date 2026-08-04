@@ -17,8 +17,8 @@ function sortKeys(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(sortKeys);
 
   if (value && typeof value === "object") {
-    const source = value as { [key: string]: unknown };
-    const sorted: { [key: string]: unknown } = {};
+    const source = value as Record<string, unknown>;
+    const sorted: Record<string, unknown> = {};
 
     for (const key of Object.keys(source).sort()) sorted[key] = sortKeys(source[key]);
 
@@ -35,8 +35,8 @@ export function stableStringify(value: unknown) {
 
 function readable(json: string) {
   return json
-    .replace(/[^A-Za-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
+    .replaceAll(/[^A-Za-z0-9]+/g, "-")
+    .replaceAll(/^-+|-+$/g, "")
     .slice(0, 56)
     .toLowerCase();
 }
@@ -81,7 +81,7 @@ export type CartSnapshots = {
   /** WooCommerce's own answer for a cart with nothing in it. */
   empty: unknown;
   /** `<productId>:<variationId>:<quantity>` lines, sorted and joined by `|`. */
-  carts: { [signature: string]: unknown };
+  carts: Record<string, unknown>;
 };
 
 export function readSnapshots(): CartSnapshots {

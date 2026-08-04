@@ -10,31 +10,31 @@ import { fetchGraphQL, fetchGraphQLAtBuild } from "@/utils/fetchGraphQL";
 import { productPath } from "@/components/Globals/siteNav";
 
 export type ShopImage = {
-  src: string;
   alt: string;
-  width: number;
   height: number;
+  src: string;
+  width: number;
   /** A 12px WebP of the same upload, inlined so the card never opens empty. */
   blurDataURL?: string;
 };
 
 export type ShopProduct = {
-  slug: string;
   name: string;
+  slug: string;
   /** WooCommerce's display string, e.g. "100 zł" or "25 zł – 45 zł". */
-  price: string;
   href: string;
+  price: string;
   /** Where the sale happens. Cart, checkout and Paynow stay on WooCommerce. */
-  wpHref: string;
-  soldOut: boolean;
   image?: ShopImage;
+  soldOut: boolean;
+  wpHref: string;
 };
 
-export type ShopCategory = { slug: string; label: string; products: ShopProduct[] };
+export type ShopCategory = { label: string; products: ShopProduct[]; slug: string };
 
 export type ShopVariant = { label: string; price: string; soldOut: boolean };
 
-export type ShopProductDetail = ShopProduct & {
+export type ShopProductDetail = {
   /** WooCommerce's post ID — what `addToCart` takes, not the slug. */
   productId: number;
   /**
@@ -49,43 +49,43 @@ export type ShopProductDetail = ShopProduct & {
   variations: ProductVariation[];
   /** Editor-typed captions for the axes, e.g. "Rozmar Koszulki". */
   attributeLabels: AttributeLabel[];
-};
+} & ShopProduct;
 
 type ImageNode = {
   sourceUrl?: string | null;
   /** WordPress's 150px copy — the placeholder source, never rendered as-is. */
-  thumbnail?: string | null;
   altText?: string | null;
   mediaDetails?: { width?: number | null; height?: number | null } | null;
+  thumbnail?: string | null;
 };
 
-type TermNode = { slug?: string | null; name?: string | null };
+type TermNode = { name?: string | null; slug?: string | null };
 
 type ProductNode = {
   databaseId?: number | null;
-  slug?: string | null;
-  name?: string | null;
-  link?: string | null;
-  price?: string | null;
-  stockStatus?: string | null;
   image?: ImageNode | null;
+  link?: string | null;
+  name?: string | null;
+  price?: string | null;
   productCategories?: { nodes?: TermNode[] | null } | null;
+  slug?: string | null;
+  stockStatus?: string | null;
 };
 
-type AttributeNode = { name?: string | null; label?: string | null; value?: string | null };
+type AttributeNode = { label?: string | null; name?: string | null; value?: string | null };
 
 type ProductDetailNode = ProductNode & {
+  attributes?: { nodes?: AttributeNode[] | null } | null;
   description?: string | null;
   soldIndividually?: boolean | null;
-  attributes?: { nodes?: AttributeNode[] | null } | null;
   variations?: {
     nodes?:
       | {
+          attributes?: { nodes?: AttributeNode[] | null } | null;
           databaseId?: number | null;
           name?: string | null;
           price?: string | null;
           stockStatus?: string | null;
-          attributes?: { nodes?: AttributeNode[] | null } | null;
         }[]
       | null;
   } | null;
@@ -99,7 +99,7 @@ const CATEGORY_ORDER = ["akredytacje", "antologie", "wsparcie"];
 
 const ACCREDITATION_ORDER = new Map(accreditation.map(({ slug }, i) => [slug, i]));
 
-const ROMAN: { [numeral: string]: number } = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
+const ROMAN: Record<string, number> = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
 
 /**
  * Volume numbers live in the title ("Fantazje Zielonogórskie XIV") and
@@ -109,13 +109,11 @@ function volume(name: string) {
   const numeral = /\s([IVXLCDM]+)$/.exec(name.trim())?.[1];
   if (!numeral) return 0;
 
-  return numeral
-    .split("")
-    .reduce(
-      (total, letter, i, all) =>
-        total + (ROMAN[letter] < (ROMAN[all[i + 1]] ?? 0) ? -ROMAN[letter] : ROMAN[letter]),
-      0,
-    );
+  return [...numeral].reduce(
+    (total, letter, i, all) =>
+      total + (ROMAN[letter] < (ROMAN[all[i + 1]] ?? 0) ? -ROMAN[letter] : ROMAN[letter]),
+    0,
+  );
 }
 
 /**

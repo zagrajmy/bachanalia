@@ -29,7 +29,7 @@ export function blurDataUrl(url?: string | null): Promise<string | undefined> {
 }
 
 export async function blurDataUrls(urls: (string | null | undefined)[]) {
-  const unique = Array.from(new Set(urls.filter((url): url is string => Boolean(url))));
+  const unique = [...new Set(urls.filter((url): url is string => Boolean(url)))];
 
   const entries = await Promise.all(
     unique.map(async (url) => [url, await blurDataUrl(url)] as const),

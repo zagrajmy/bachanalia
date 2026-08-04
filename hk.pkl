@@ -1,0 +1,35 @@
+amends "package://github.com/jdx/hk/releases/download/v1.48.0/hk@1.48.0#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.48.0/hk@1.48.0#/Builtins.pkl"
+
+/// Both linters are devDependencies, so `bun install` puts them in
+/// node_modules/.bin, which is on PATH only inside a bun script. A git hook
+/// is not one.
+local linters = new Mapping<String, Step> {
+    ["oxfmt"] = (Builtins.oxfmt) {
+        prefix = "bun x"
+    }
+    /// Without --deny-warnings, which the builtin passes: the repo carries
+    /// ~360 of them and every commit would be refused. Errors still fail the
+    /// commit, `bun run lint` still shows the warnings, and --deny-warnings
+    /// goes back on the day the count reaches zero.
+    ["ox_lint"] = (Builtins.ox_lint) {
+        prefix = "bun x"
+        check = "oxlint {{files}}"
+        fix = "oxlint --fix {{files}}"
+    }
+}
+
+hooks {
+    ["pre-commit"] {
+        fix = true
+        stash = "git"
+        steps = linters
+    }
+    ["fix"] {
+        fix = true
+        steps = linters
+    }
+    ["check"] {
+        steps = linters
+    }
+}

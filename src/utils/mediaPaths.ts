@@ -18,10 +18,11 @@ export function pickMediaWidth(requested: number, available: number[]) {
   for (const width of available) {
     if (width >= requested) return width;
   }
+  // eslint-disable-next-line unicorn/prefer-at -- at() is `number | undefined`, and every caller has already checked the list is not empty
   return available[available.length - 1];
 }
 
-const widths = manifest as { [key: string]: number[] };
+const widths = manifest as Record<string, number[]>;
 
 /**
  * Serves build-time WebPs from `/_img`. Falls back to the WordPress URL when

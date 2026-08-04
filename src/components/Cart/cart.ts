@@ -11,13 +11,10 @@ import { UpdateItemQuantitiesMutation } from "@/queries/cart/UpdateItemQuantitie
 import { readSession, wooRequest, type WooResult } from "./session";
 import type { CartLine, CartView } from "./types";
 
-type AttributeNode = { name?: string | null; label?: string | null; value?: string | null };
+type AttributeNode = { label?: string | null; name?: string | null; value?: string | null };
 
 type CartItemNode = {
   key?: string | null;
-  quantity?: number | null;
-  subtotal?: string | null;
-  total?: string | null;
   product?: {
     node?: {
       databaseId?: number | null;
@@ -28,20 +25,16 @@ type CartItemNode = {
       attributes?: { nodes?: AttributeNode[] | null } | null;
     } | null;
   } | null;
+  quantity?: number | null;
+  subtotal?: string | null;
+  total?: string | null;
   variation?: {
-    node?: { databaseId?: number | null; name?: string | null } | null;
     attributes?: AttributeNode[] | null;
+    node?: { databaseId?: number | null; name?: string | null } | null;
   } | null;
 };
 
 type CartNode = {
-  isEmpty?: boolean | null;
-  subtotal?: string | null;
-  total?: string | null;
-  shippingTotal?: string | null;
-  discountTotal?: string | null;
-  needsShippingAddress?: boolean | null;
-  chosenShippingMethods?: (string | null)[] | null;
   availableShippingMethods?:
     | ({
         rates?:
@@ -49,7 +42,14 @@ type CartNode = {
           | null;
       } | null)[]
     | null;
+  chosenShippingMethods?: (string | null)[] | null;
   contents?: { itemCount?: number | null; nodes?: CartItemNode[] | null } | null;
+  discountTotal?: string | null;
+  isEmpty?: boolean | null;
+  needsShippingAddress?: boolean | null;
+  shippingTotal?: string | null;
+  subtotal?: string | null;
+  total?: string | null;
 };
 
 export const EMPTY_CART: CartView = {
@@ -70,7 +70,7 @@ export const EMPTY_CART: CartView = {
  * sanitised name made readable — "rozmar-koszulki" is not a caption.
  */
 function humanise(name: string) {
-  const spaced = name.replace(/[-_]+/g, " ").trim();
+  const spaced = name.replaceAll(/[-_]+/g, " ").trim();
   return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 }
 
@@ -138,7 +138,7 @@ export function toCartView(cart: CartNode | null | undefined): CartView {
 }
 
 function unwrap<K extends string>(
-  result: WooResult<{ [key in K]?: { cart?: CartNode | null } | null }>,
+  result: WooResult<Partial<Record<K, { cart?: CartNode | null } | null>>>,
   field: K,
 ): WooResult<CartView> {
   if (!result.ok) return result;
@@ -176,8 +176,8 @@ export async function fetchCart(): Promise<WooResult<CartView>> {
 export type AddToCartArgs = {
   productId: number;
   quantity: number;
-  variationId?: number;
   variation?: { attributeName: string; attributeValue: string }[];
+  variationId?: number;
 };
 
 export async function addToCart(args: AddToCartArgs) {

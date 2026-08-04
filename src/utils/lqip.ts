@@ -10,8 +10,8 @@ const PREFIX = "data:image/webp;base64,";
 
 export type LqipAsset = {
   blurDataURL: string;
-  width: number;
   height: number;
+  width: number;
 };
 
 export function webpToDataUrl(webp: Uint8Array) {
@@ -19,7 +19,7 @@ export function webpToDataUrl(webp: Uint8Array) {
 }
 
 /** Intrinsic size from a VP8/VP8L/VP8X WebP. */
-export function webpSize(bytes: Uint8Array): { width: number; height: number } | undefined {
+export function webpSize(bytes: Uint8Array): { height: number; width: number } | undefined {
   if (
     bytes.length < 30 ||
     Buffer.from(bytes.subarray(0, 4)).toString("ascii") !== "RIFF" ||
@@ -43,14 +43,14 @@ export function webpSize(bytes: Uint8Array): { width: number; height: number } |
 
     if (fourcc === "VP8 " && payload + 10 <= bytes.length) {
       return {
-        width: Buffer.from(bytes.subarray(payload + 6, payload + 8)).readUInt16LE(0) & 0x3fff,
-        height: Buffer.from(bytes.subarray(payload + 8, payload + 10)).readUInt16LE(0) & 0x3fff,
+        width: Buffer.from(bytes.subarray(payload + 6, payload + 8)).readUInt16LE(0) & 0x3f_ff,
+        height: Buffer.from(bytes.subarray(payload + 8, payload + 10)).readUInt16LE(0) & 0x3f_ff,
       };
     }
 
     if (fourcc === "VP8L" && payload + 5 <= bytes.length) {
       const bits = Buffer.from(bytes.subarray(payload + 1, payload + 5)).readUInt32LE(0);
-      return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
+      return { width: (bits & 0x3f_ff) + 1, height: ((bits >> 14) & 0x3f_ff) + 1 };
     }
 
     offset = payload + size + (size & 1);
@@ -62,7 +62,7 @@ export function webpSize(bytes: Uint8Array): { width: number; height: number } |
 function readDims(key: string, webp: Buffer) {
   const metaPath = join(DIR, lqipMetaRelPath(key));
   if (existsSync(metaPath)) {
-    const meta = JSON.parse(readFileSync(metaPath, "utf8")) as { width?: number; height?: number };
+    const meta = JSON.parse(readFileSync(metaPath, "utf8")) as { height?: number; width?: number };
     if (meta.width && meta.height) return { width: meta.width, height: meta.height };
   }
 

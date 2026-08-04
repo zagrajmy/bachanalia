@@ -24,7 +24,7 @@ test("builds a permalink out of the page and post ids", () => {
 test("dates a post from the feed's own timestamp", () => {
   const [first] = parseFeedItems(FEED);
 
-  assert.equal(first.dateTime, new Date(1785434413 * 1000).toISOString());
+  assert.equal(first.dateTime, new Date(1_785_434_413 * 1000).toISOString());
   assert.match(first.date, /2026/);
 });
 

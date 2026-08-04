@@ -6,8 +6,8 @@ export function WpContent({
   segments,
   className,
 }: {
-  segments: WpContentSegment[];
   className?: string;
+  segments: WpContentSegment[];
 }) {
   return (
     <div className={className}>

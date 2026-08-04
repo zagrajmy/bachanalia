@@ -8,7 +8,7 @@ import { AllContentQuery } from "@/queries/general/AllContentQuery";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
 import { wpUriToPath } from "@/utils/wpUriToPath";
 
-export const revalidate = 10800;
+export const revalidate = 10_800;
 
 /**
  * Routes without a WordPress URI of their own: the homepage, and the three
@@ -21,12 +21,12 @@ const ownRoutes = ["/", SHOP_PATH, NEWS_PATH, "/goscie/"];
  * On top of the pages we do not serve at all — which already covers the four
  * WooCommerce transactional pages — two redirect sources.
  */
-const excluded = new Set([...RETIRED_PATHS, "/akredytacja/", "/blog/"]);
+const excluded = new Set(["/akredytacja/", "/blog/", ...RETIRED_PATHS]);
 
 export function sitemapPaths(uris: (string | null | undefined)[], productSlugs: string[]) {
   const paths = new Set([...ownRoutes, ...productSlugs.map(productPath), ...uris.map(wpUriToPath)]);
 
-  return Array.from(paths).filter((path) => !excluded.has(path));
+  return [...paths].filter((path) => !excluded.has(path));
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

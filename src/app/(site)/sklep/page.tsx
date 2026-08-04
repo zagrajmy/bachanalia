@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/sklep/` },
 };
 
-export const revalidate = 10800;
+export const revalidate = 10_800;
 
 export default async function SklepPage() {
   const categories = await fetchShop();
@@ -18,7 +18,7 @@ export default async function SklepPage() {
   return (
     <div className="gutter mx-auto max-w-6xl pt-12 sm:pt-16">
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2 border-b-2 border-navy pb-3">
-        <h1 className="display -ml-[0.04em] text-[clamp(2.1rem,6.4vw,4rem)]">Sklep</h1>
+        <h1 className="display ml-[-0.04em] text-[clamp(2.1rem,6.4vw,4rem)]">Sklep</h1>
         <Link
           href={CART_PATH}
           className="eyebrow text-ink-muted no-underline underline-offset-[0.25em] hover:text-rose hover:underline"

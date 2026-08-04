@@ -1,8 +1,8 @@
-import { draftMode, cookies } from "next/headers";
+import { cookies, draftMode } from "next/headers";
 
-type Variables = { [key: string]: any };
+type Variables = Record<string, any>;
 
-type CacheInit = RequestInit & { next?: { tags?: string[]; revalidate?: number } };
+type CacheInit = RequestInit & { next?: { revalidate?: number; tags?: string[] } };
 
 /**
  * Queries go over GET. Wordfence's firewall inspects POST bodies and rejects
@@ -26,7 +26,7 @@ function endpoint(query: string, variables: Variables) {
  * recovers on its own. Backing off well past that is the difference between
  * a slow build and a failed one, so the tail is deliberately long.
  */
-const RETRY_DELAYS_MS = [500, 2_000, 6_000, 15_000, 30_000];
+const RETRY_DELAYS_MS = [500, 2000, 6000, 15_000, 30_000];
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -65,7 +65,7 @@ async function fetchWithRetry(url: string, init: RequestInit): Promise<Response>
 async function request<T>(
   query: string,
   variables: Variables,
-  headers: { [key: string]: string },
+  headers: Record<string, string>,
   init: CacheInit,
 ): Promise<T> {
   const response = await fetchWithRetry(endpoint(query, variables), { headers, ...init });
@@ -86,7 +86,7 @@ async function request<T>(
 export async function fetchGraphQL<T = any>(
   query: string,
   variables?: Variables,
-  headers?: { [key: string]: string },
+  headers?: Record<string, string>,
 ): Promise<T> {
   const { isEnabled: preview } = await draftMode();
   const auth = preview ? (await cookies()).get("wp_jwt")?.value : undefined;
@@ -95,7 +95,7 @@ export async function fetchGraphQL<T = any>(
     query,
     { preview, ...variables },
     { ...(auth && { Authorization: `Bearer ${auth}` }), ...headers },
-    preview ? { cache: "no-store" } : { next: { tags: ["wordpress"], revalidate: 10800 } },
+    preview ? { cache: "no-store" } : { next: { tags: ["wordpress"], revalidate: 10_800 } },
   );
 }
 

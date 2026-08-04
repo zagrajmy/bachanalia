@@ -10,7 +10,7 @@ import { hasVisibleContent, prepareWpContent } from "@/utils/prepareWpContent";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const revalidate = 10800;
+export const revalidate = 10_800;
 
 export async function generateStaticParams() {
   return (await fetchProductSlugs()).map((slug) => ({ slug }));
@@ -63,14 +63,14 @@ export default async function ProduktPage({ params }: Props) {
               className="h-auto w-full"
             />
           ) : (
-            <div className="aspect-[4/5] w-full" />
+            <div className="aspect-4/5 w-full" />
           )}
         </div>
 
         <div className="min-w-0">
           {category && <p className="eyebrow text-rose">{category.label}</p>}
 
-          <h1 className="display mt-2 -ml-[0.04em] text-[clamp(2rem,5.4vw,3.2rem)]">{name}</h1>
+          <h1 className="display mt-2 ml-[-0.04em] text-[clamp(2rem,5.4vw,3.2rem)]">{name}</h1>
 
           <p
             className={`display mt-5 text-[clamp(1.6rem,4vw,2.2rem)] tabular-nums ${
@@ -96,11 +96,11 @@ export default async function ProduktPage({ params }: Props) {
               <p className="eyebrow text-ink-muted">Do wyboru</p>
 
               {pricedVariants ? (
-                <ul className="mt-3 border-t border-navy/25">
+                <ul className="mt-3 border-t border-hairline">
                   {variants.map(({ label, price: variantPrice, soldOut: variantSoldOut }) => (
                     <li
                       key={label}
-                      className="flex items-baseline justify-between gap-6 border-b border-dashed border-navy/25 py-2.5"
+                      className="flex items-baseline justify-between gap-6 border-b border-dashed border-hairline py-2.5"
                     >
                       <span className="text-sm">{label}</span>
                       <span
@@ -118,7 +118,7 @@ export default async function ProduktPage({ params }: Props) {
                   {variants.map(({ label, soldOut: variantSoldOut }) => (
                     <li
                       key={label}
-                      className={`rounded-full border border-navy/25 px-3 py-1 text-xs ${
+                      className={`rounded-full border border-hairline px-3 py-1 text-xs ${
                         variantSoldOut ? "text-ink-muted line-through" : ""
                       }`}
                     >
@@ -138,7 +138,7 @@ export default async function ProduktPage({ params }: Props) {
 
           {hasVisibleContent(description) && (
             <div
-              className="wp-content mt-10 border-t border-dashed border-navy/25 pt-8"
+              className="wp-content mt-10 border-t border-dashed border-hairline pt-8"
               dangerouslySetInnerHTML={{ __html: prepareWpContent(description) }}
             />
           )}

@@ -65,8 +65,8 @@ export async function writeSession(token: string) {
 }
 
 export type WooResult<T> =
-  | { ok: true; data: T }
-  | { ok: false; message: string; indeterminate: boolean };
+  | { ok: false; message: string; indeterminate: boolean }
+  | { ok: true; data: T };
 
 /**
  * How much a failed attempt may be repeated.
@@ -77,7 +77,7 @@ export type WooResult<T> =
  *   applied, and a retried `addToCart` silently doubles the line.
  * - `once` — checkout. A retry here is a second order and a second charge.
  */
-export type RetryPolicy = "read" | "replayable" | "once";
+export type RetryPolicy = "once" | "read" | "replayable";
 
 /**
  * Shorter than `fetchGraphQL`'s ladder because a person is watching this one,
@@ -85,7 +85,7 @@ export type RetryPolicy = "read" | "replayable" | "once";
  * under load and aborting a request that was about to succeed only adds to
  * the pile.
  */
-const RETRY_DELAYS_MS = [400, 1_200, 3_000];
+const RETRY_DELAYS_MS = [400, 1200, 3000];
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -111,7 +111,7 @@ const GENERIC_FAILURE = "Nie udało się połączyć ze sklepem. Spróbuj ponown
  */
 export async function wooRequest<T>(
   query: string,
-  variables: { [key: string]: unknown },
+  variables: Record<string, unknown>,
   policy: RetryPolicy,
 ): Promise<WooResult<T>> {
   const token = await readSession();

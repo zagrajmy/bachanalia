@@ -15,7 +15,7 @@ const dateFormat = new Intl.DateTimeFormat("pl-PL", {
   year: "numeric",
 });
 
-export default function PostTemplate({ node }: TemplateProps) {
+export function PostTemplate({ node }: TemplateProps) {
   const published = node.date ? new Date(node.date) : null;
   const image = node.featuredImage?.node;
   const title = unshoutName(node.title);
@@ -41,7 +41,7 @@ export default function PostTemplate({ node }: TemplateProps) {
           </time>
         )}
 
-        <h1 className="display mt-3 -ml-[0.04em] border-b-2 border-navy pb-3 text-[clamp(1.9rem,5.2vw,3rem)]">
+        <h1 className="display mt-3 ml-[-0.04em] border-b-2 border-navy pb-3 text-[clamp(1.9rem,5.2vw,3rem)]">
           {title}
         </h1>
 

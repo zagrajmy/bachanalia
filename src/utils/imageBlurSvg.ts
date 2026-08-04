@@ -7,12 +7,12 @@ export function getImageBlurSvg({
   blurDataURL,
   objectFit,
 }: {
-  widthInt?: number;
-  heightInt?: number;
-  blurWidth?: number;
-  blurHeight?: number;
   blurDataURL: string;
+  blurHeight?: number;
+  blurWidth?: number;
+  heightInt?: number;
   objectFit?: string;
+  widthInt?: number;
 }) {
   const std = 20;
   const svgWidth = blurWidth ? blurWidth * 40 : widthInt;
@@ -36,9 +36,9 @@ export function blurPlaceholderStyle(
     height,
     objectFit = "cover",
   }: {
-    width?: number;
     height?: number;
     objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
+    width?: number;
   } = {},
 ) {
   const backgroundSize =

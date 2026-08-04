@@ -9,10 +9,10 @@ Install through **Wtyczki → Dodaj wtyczkę → Wyślij wtyczkę na serwer** wi
 `bachanalia-revalidate.zip`, activate, then fill in **Ustawienia →
 Rewalidacja strony**:
 
-| Field  | Value                                                          |
-| ------ | -------------------------------------------------------------- |
+| Field  | Value                                                                  |
+| ------ | ---------------------------------------------------------------------- |
 | Adres  | the Vercel URL **until the domain is rewired**, the con's domain after |
-| Sekret | the `HEADLESS_SECRET` value from the Vercel project             |
+| Sekret | the `HEADLESS_SECRET` value from the Vercel project                    |
 
 Then press **Wyślij testowy sygnał**. A green notice means WordPress reached
 the frontend and the secret matched.

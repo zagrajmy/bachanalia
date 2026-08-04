@@ -396,6 +396,19 @@ posts are free.
 - **`shadcn init` rewrites the design system** — an oklch grey palette, a dark
   variant, `@theme inline`, and Geist plus `font-sans` on `<html>` overriding
   the body font. Take component files, not the init.
+- **The WooCommerce product base must not start with a slash.** With the
+  `/index.php/` permalink structure, WordPress builds product links as
+  `index.php/` + base, so `/produkt/` yields `index.php//produkt/…` — and the
+  slash lands inside the rewrite rule too, which then matches nothing:
+  every product URL 404s while pages and posts keep working. It happened on
+  4 August 2026 (base saved as `/produkt/` sometime after the 3 August 01:21
+  fixture recording); the fix is the custom base `produkt`, saved on
+  Ustawienia → Bezpośrednie odnośniki. Propagation took ~10 minutes — the
+  admin shows the new value immediately while the frontend serves the stale
+  option and LiteSpeed caches the 404s, so verify with an uncached POST to
+  `/graphql`, not the admin screen. The preset options are no alternative:
+  their clean URLs die on the same broken server rewrite that forced
+  `/index.php/` everywhere.
 - **Cloudflare fronts the site** and challenges document requests from
   automated clients, returning 403 on HTML while `/graphql` and
   `/wp-content` keep answering. It expires on its own. Wordfence rate

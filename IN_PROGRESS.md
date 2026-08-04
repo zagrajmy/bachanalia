@@ -169,15 +169,13 @@ mutations are reachable when the cart needs them.
 authenticates on `X-Headless-Secret-Key` against `HEADLESS_SECRET`, which is
 set in all three Vercel environments.
 
-`wordpress/bachanalia-revalidate/` is the WordPress half — written,
-syntax-checked, **never installed**. Install via **Wtyczki → Dodaj wtyczkę →
-Wyślij wtyczkę na serwer**, activate, then fill in **Ustawienia →
-Rewalidacja strony**. The target is a setting rather than a constant because
-it must point at Vercel until the domain is rewired and at the con's domain
-afterwards; it refuses to fire while the target host equals WordPress's own,
-and there is a test button.
-
-Until it is installed, edits take up to an hour to appear.
+`wordpress/bachanalia-revalidate/` is the WordPress half — **installed and
+active**, target set to `https://bachanalia.vercel.app`, secret filled
+(verified in wp-admin, 4 August 2026). The target is a setting rather than a
+constant — **Ustawienia → Rewalidacja strony** — because it must point at
+Vercel until the domain is rewired and at the con's domain afterwards; it
+refuses to fire while the target host equals WordPress's own, and there is a
+test button. Repointing it at the apex is a cutover step.
 
 ## Shop
 
@@ -440,9 +438,16 @@ pay, which is also everything that made the old shop look like 2014.
 
 ### 1. WordPress, before anything else
 
-1. **Serve WordPress from `wp.bachanaliafantastyczne.pl`** and confirm
-   WooCommerce still checks out there — cookies, Paynow's return URL and the
-   ticket links all carry the host.
+1. **Serve WordPress from `wp.bachanaliafantastyczne.pl`.** Two changes
+   that must land together: the DNS record (dhosting) and WordPress's own
+   address — **Ustawienia → Ogólne**, both Adres WordPress (`siteurl`) and
+   Adres witryny (`home`). WordPress builds every absolute URL from that
+   setting, not from DNS: Paynow's return URL, the ticket links in emails
+   and on order-received, and the host the session cookie is scoped to.
+   Then, while the apex still points at old WordPress, run one test
+   purchase on `wp.`: checkout completes, Paynow returns the buyer to a
+   `wp.` URL, the ticket email links to `wp.` and opens. Only after that
+   flip the apex.
 2. **Enable the session handoff, then save the page a second time.** WPGraphQL
    for WooCommerce → _User Session transferring URLs_, plus the _Checkout URL_
    checkbox under it. The endpoint already answers at `/transfer-session`; the
@@ -458,7 +463,8 @@ pay, which is also everything that made the old shop look like 2014.
    home, so a broken handoff and a missing endpoint are indistinguishable from
    outside. Ours looked like a missing endpoint for a day.
 
-3. **Install `wordpress/bachanalia-checkout-handover/`.** Without it the
+3. **`wordpress/bachanalia-checkout-handover/` is installed and active**
+   (verified 4 August 2026, with the other two plugins below). Without it the
    transfer succeeds and then dumps the buyer on `/checkout/`, which 404s
    here — WooGraphQL builds that address from `get_permalink()`, and the
    transfer runs where there is no post to take one from.
@@ -472,7 +478,8 @@ pay, which is also everything that made the old shop look like 2014.
    surface entirely. Leave every Paynow gateway enabled — the paywall's
    `is_available()` needs at least one of them on, even though they no longer
    render separately.
-5. **Install `wordpress/bachanalia-paynow-first/`** so Paynow is the first and
+5. **`wordpress/bachanalia-paynow-first/` is installed and active**, so
+   Paynow is the first and
    preselected method. Dragging the row does not do it: the paywall gateway
    only becomes available once _Pokaż metody płatności_ is unchecked, so it has
    no saved position and `WC_Payment_Gateways::init()` parks it at 999 behind
@@ -482,9 +489,8 @@ pay, which is also everything that made the old shop look like 2014.
    Blocks checkout read. **Do not hand-edit positions**: `init()` indexes
    gateways _by_ position, so a repeated number deletes a gateway from the
    store outright.
-6. **Install `wordpress/bachanalia-revalidate/`** and point it at the Vercel
-   deployment, then at the apex once DNS moves. Until it is installed, an edit
-   takes up to an hour to appear.
+6. **`wordpress/bachanalia-revalidate/` is installed, active and pointed at
+   the Vercel deployment.** Repoint it at the apex once DNS moves.
 7. **Clear the test orders** — 3502, 3507, 3509, 3511. Keep 3510: it is the
    paid one that proves the payment loop.
 8. **Fix the pickup label.** The free rate still reads "Odbiór Osobisty podczas

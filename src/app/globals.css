@@ -23,6 +23,7 @@
 
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-scribble: var(--font-caveat), cursive;
 
   --radius-card: 3px;
 

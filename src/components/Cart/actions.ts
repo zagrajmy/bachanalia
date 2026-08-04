@@ -4,7 +4,8 @@ import { print } from "graphql/language/printer";
 
 import { ProductVariationsQuery } from "@/queries/cart/ProductVariationsQuery";
 
-import { addToCart, removeLine, setQuantity } from "./cart";
+import { addToCart, fetchCart, removeLine, setQuantity } from "./cart";
+import { isStaleLine } from "./message";
 import { MAX_QUANTITY } from "./quantity";
 import { wooRequest } from "./session";
 import type { CartActionState } from "./types";
@@ -123,6 +124,21 @@ export async function addToCartAction(
 }
 
 /**
+ * The tab holds a line WooCommerce no longer has — checkout emptied the cart,
+ * or the session rotated. What the buyer asked for is already true, so answer
+ * with the fresh cart and let the list drop the ghost.
+ */
+async function staleLineResync(name: string): Promise<CartActionState> {
+  const cart = await fetchCart();
+
+  return {
+    ok: true,
+    message: `${name} — już nie ma w koszyku.`,
+    ...(cart.ok && { cart: cart.data }),
+  };
+}
+
+/**
  * One action behind every control on a cart line, so the page has one live
  * region to announce into instead of a status message per row.
  *
@@ -142,9 +158,13 @@ export async function cartLineAction(
   if (formData.get("intent") === "remove") {
     const removed = await removeLine(key);
 
-    return removed.ok
-      ? { ok: true, message: `${name} — usunięto z koszyka.`, cart: removed.data }
-      : { ok: false, message: removed.message };
+    if (!removed.ok) {
+      return isStaleLine(removed.message)
+        ? staleLineResync(name)
+        : { ok: false, message: removed.message };
+    }
+
+    return { ok: true, message: `${name} — usunięto z koszyka.`, cart: removed.data };
   }
 
   const typed = Number(formData.get("quantity")) || 0;
@@ -153,7 +173,11 @@ export async function cartLineAction(
 
   const result = await setQuantity(key, quantity);
 
-  if (!result.ok) return { ok: false, message: result.message };
+  if (!result.ok) {
+    return isStaleLine(result.message)
+      ? staleLineResync(name)
+      : { ok: false, message: result.message };
+  }
 
   return {
     ok: true,

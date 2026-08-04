@@ -64,8 +64,12 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
 
                 <h1 className="display relative ml-[-0.045em] max-w-[16ch] text-[clamp(2.1rem,5.6vw,3.6rem)] leading-[0.88]">
                   <span>
-                    <span className="text-coral [font-variation-settings:'opsz'_96,'wdth'_85,'wght'_600]">{con.edition}</span>
-                    <small className="ml-1 text-base font-normal font-scribble">(czyli czterdzieste, ale też bardzo duże)</small>
+                    <span className="text-coral [font-variation-settings:'opsz'_96,'wdth'_85,'wght'_600]">
+                      {con.edition}
+                    </span>
+                    <small className="ml-1 text-base font-normal font-scribble">
+                      (czyli czterdzieste, ale też bardzo duże)
+                    </small>
                   </span>
                   <span className="block">
                     {nameHead} {nameTail.join(" ")}

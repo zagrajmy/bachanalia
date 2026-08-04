@@ -404,8 +404,12 @@ posts are free.
   is the custom base `produkt`, bare, on Ustawienia → Bezpośrednie odnośniki.
   That screen is also the trap: saving it for any reason (flushing rewrite
   rules, say) re-submits the WooCommerce product-base fields along with
-  everything else, and the preset radios carry leading slashes — so check the
-  base field before every save there. Propagation took ~10 minutes — the
+  everything else, and WooCommerce's custom-base save path _prepends_ a slash
+  to whatever the field shows (`'/' . trim(...)` in
+  `WC_Admin_Permalink_Settings::settings_save()`), while the form renders the
+  safe bare value and the broken slashed value identically. Checking the field
+  is not enough — after any save there, curl a product URL before walking
+  away. Propagation took ~10 minutes — the
   admin shows the new value immediately while the frontend serves the stale
   option and LiteSpeed caches the 404s, so verify with an uncached POST to
   `/graphql`, not the admin screen. The preset options are no alternative:

@@ -8,7 +8,7 @@ import { addToCart, removeLine, setQuantity } from "./cart";
 import { MAX_QUANTITY } from "./quantity";
 import { wooRequest } from "./session";
 import type { CartActionState } from "./types";
-import { findVariation, buildAxes, type ProductVariation } from "./variations";
+import { buildAxes, findVariation, type ProductVariation } from "./variations";
 
 const ATTRIBUTE_PREFIX = "attr_";
 
@@ -29,7 +29,7 @@ function readAttributes(formData: FormData) {
  * cannot be swapped for a cheaper product's. When the browser could not
  * resolve one, ask WooCommerce.
  */
-async function resolveVariationId(slug: string, selection: { [name: string]: string }) {
+async function resolveVariationId(slug: string, selection: Record<string, string>) {
   const result = await wooRequest<{
     products?: {
       nodes?:
@@ -37,11 +37,11 @@ async function resolveVariationId(slug: string, selection: { [name: string]: str
             variations?: {
               nodes?:
                 | {
-                    databaseId?: number | null;
-                    stockStatus?: string | null;
                     attributes?: {
                       nodes?: { name?: string | null; value?: string | null }[] | null;
                     } | null;
+                    databaseId?: number | null;
+                    stockStatus?: string | null;
                   }[]
                 | null;
             } | null;
@@ -91,7 +91,7 @@ export async function addToCartAction(
   let variationId = Number(formData.get("variationId")) || undefined;
 
   if (!variationId && attributes.length > 0 && slug) {
-    const selection: { [name: string]: string } = {};
+    const selection: Record<string, string> = {};
     for (const pair of attributes) selection[pair.attributeName] = pair.attributeValue;
     variationId = await resolveVariationId(slug, selection);
   }

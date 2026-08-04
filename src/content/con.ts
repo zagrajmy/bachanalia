@@ -78,4 +78,4 @@ export const accreditation = [
   { slug: "akredytacja-niedziela", label: "Niedziela" },
 ];
 
-export type NewsItem = { title: string; href: string; date: string };
+export type NewsItem = { date: string; href: string; title: string };

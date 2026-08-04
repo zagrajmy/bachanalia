@@ -8,10 +8,10 @@ added later has to be added here too.
 
 Two, and one of them is not a visitor's.
 
-| Name | Set by | Contents | Lifetime | Flags |
-| --- | --- | --- | --- | --- |
-| `bf_wc_session` | `src/components/Cart/session.ts` | The WooCommerce session JWT — the bearer credential for a cart and the billing address typed into it. | The token's own `exp`, currently 48h, read out of the JWT so the cookie dies exactly when the cart behind it does. | `httpOnly`, `secure`, `SameSite=Lax`, `path=/` |
-| `wp_jwt` | Nothing here — read only, in `src/utils/fetchGraphQL.ts` | An editor's WordPress credential, used to render an unpublished draft. | Whatever set it. | — |
+| Name            | Set by                                                   | Contents                                                                                              | Lifetime                                                                                                           | Flags                                          |
+| --------------- | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
+| `bf_wc_session` | `src/components/Cart/session.ts`                         | The WooCommerce session JWT — the bearer credential for a cart and the billing address typed into it. | The token's own `exp`, currently 48h, read out of the JWT so the cookie dies exactly when the cart behind it does. | `httpOnly`, `secure`, `SameSite=Lax`, `path=/` |
+| `wp_jwt`        | Nothing here — read only, in `src/utils/fetchGraphQL.ts` | An editor's WordPress credential, used to render an unpublished draft.                                | Whatever set it.                                                                                                   | —                                              |
 
 `localStorage` holds one key, `bf-consent`, which is the answer to the banner
 below. Not a cookie, never sent anywhere, and written only after someone
@@ -40,11 +40,11 @@ None of these are ours, and all of them arrive through content editors write
 in WordPress, so they can reappear on a new page without anyone touching this
 repo.
 
-| Where | Who | What it costs the visitor |
-| --- | --- | --- |
-| `/czas-i-miejsce/` | `maps.google.com` iframe | Google sets `NID`. The only one on a page people actually visit. |
-| `/zgloszenia-obslugi/` | `docs.google.com/forms` iframe | Google account cookies. |
-| `/sztab-bachanaliowy/` | `miro.com` live embed | Miro's own set. |
+| Where                   | Who                              | What it costs the visitor                                                                                                                                      |
+| ----------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/czas-i-miejsce/`      | `maps.google.com` iframe         | Google sets `NID`. The only one on a page people actually visit.                                                                                               |
+| `/zgloszenia-obslugi/`  | `docs.google.com/forms` iframe   | Google account cookies.                                                                                                                                        |
+| `/sztab-bachanaliowy/`  | `miro.com` live embed            | Miro's own set.                                                                                                                                                |
 | `/` and `/aktualnosci/` | `scontent-*.xx.fbcdn.net` images | No cookie — Meta serves media from a cookieless domain — but every view hands Meta an IP and a referer. Rendered as a plain `<img>`, not through `next/image`. |
 
 ## How the iframes are handled

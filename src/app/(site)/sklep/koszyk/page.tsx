@@ -29,7 +29,7 @@ export default async function KoszykPage() {
   if (!result.ok) {
     return (
       <div className="gutter mx-auto max-w-4xl pt-10 pb-20 sm:pt-14">
-        <h1 className="display -ml-[0.04em] text-[clamp(2.1rem,6.4vw,3.4rem)]">Koszyk</h1>
+        <h1 className="display ml-[-0.04em] text-[clamp(2.1rem,6.4vw,3.4rem)]">Koszyk</h1>
 
         <p className="mt-8 rounded-card border border-rose px-4 py-3 text-rose">{result.message}</p>
 
@@ -54,7 +54,7 @@ export default async function KoszykPage() {
         ← Sklep
       </Link>
 
-      <h1 className="display mt-6 -ml-[0.04em] text-[clamp(2.1rem,6.4vw,3.4rem)]">Koszyk</h1>
+      <h1 className="display mt-6 ml-[-0.04em] text-[clamp(2.1rem,6.4vw,3.4rem)]">Koszyk</h1>
 
       {cart.isEmpty ? (
         <div className="mt-10 border-t-2 border-navy pt-8">

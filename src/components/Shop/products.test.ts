@@ -2,7 +2,7 @@ import { describe, expect, it } from "bun:test";
 
 import { accreditation } from "@/content/con";
 
-import { sortShopProducts, variantLabel, type ShopProduct } from "./products";
+import { type ShopProduct, sortShopProducts, variantLabel } from "./products";
 
 const product = (slug: string, name: string): ShopProduct => ({
   slug,
@@ -17,7 +17,7 @@ describe("sortShopProducts", () => {
   it("repeats the taryfikator's order rather than WooCommerce's alphabetical one", () => {
     const sorted = sortShopProducts(
       "akredytacje",
-      accreditation.map(({ slug, label }) => product(slug, label)).reverse(),
+      accreditation.map(({ slug, label }) => product(slug, label)).toReversed(),
     );
 
     expect(sorted.map((p) => p.slug)).toEqual(accreditation.map(({ slug }) => slug));

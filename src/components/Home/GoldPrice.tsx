@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, type ReactNode } from "react";
+import { type ReactNode, useCallback, useRef } from "react";
 
 function Glint({ className = "" }: { className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);

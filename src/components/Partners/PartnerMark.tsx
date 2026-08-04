@@ -7,7 +7,7 @@ import type { PartnerLogo } from "@/content/partners";
  * match. The footer card is the same ladder a size down, which is why the
  * scale is a parameter rather than a second copy of these thresholds.
  */
-export type MarkScale = "page" | "footer";
+export type MarkScale = "footer" | "page";
 
 const HEIGHTS: Record<MarkScale, [string, string, string]> = {
   page: ["clamp(34px, 5.2vw, 52px)", "clamp(44px, 7vw, 70px)", "clamp(60px, 9.5vw, 92px)"],

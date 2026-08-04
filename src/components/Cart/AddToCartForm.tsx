@@ -10,22 +10,22 @@ import { QuantityInput } from "./QuantityInput";
 import { openCart, setCart, useCartLines } from "./store";
 import type { CartActionState } from "./types";
 import {
+  type AttributeLabel,
   buildAxes,
   findVariation,
   initialSelection,
   isOptionAvailable,
   isSelectionUnavailable,
-  type AttributeLabel,
   type ProductVariation,
   type VariationSelection,
 } from "./variations";
 
 type Props = {
+  attributeLabels: AttributeLabel[];
   productId: number;
   slug: string;
-  variations: ProductVariation[];
-  attributeLabels: AttributeLabel[];
   soldOut: boolean;
+  variations: ProductVariation[];
   /** WooCommerce refuses a second unit, so no quantity is offered at all. */
   soldIndividually: boolean;
 };
@@ -122,31 +122,41 @@ export function AddToCartForm({
             {axis.options.map((option) => {
               const available = isOptionAvailable(variations, axis.name, option, selection);
               const active = selection[axis.name] === option;
+              const price = priceOf(axis.name, option);
+
+              /**
+               * Unbuyable on its own, as opposed to merely stranded by a change
+               * on another axis. A stranded pick stays enabled and stays plainly
+               * chosen: what cannot be sold is the combination, not this option,
+               * and a radio that is both checked and disabled can take its whole
+               * group out of the tab order. The sentence below the button names
+               * the combination, and the submit button is already off.
+               */
+              const unbuyable = !available && !active;
 
               return (
                 <label
                   key={option}
-                  className={`cursor-pointer rounded-card border px-3 py-1.5 text-sm transition-colors duration-150 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent ${
-                    active
-                      ? "border-navy bg-navy text-paper"
-                      : "border-dashed border-hairline hover:border-navy"
-                  } ${available ? "" : "cursor-not-allowed text-ink-muted line-through"}`}
+                  className={`rounded-card border px-3.5 py-3 text-sm transition-colors duration-150 has-focus-visible:outline has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent ${
+                    unbuyable
+                      ? "cursor-not-allowed border-hairline text-ink-muted line-through"
+                      : active
+                        ? "cursor-pointer border-navy bg-navy text-paper"
+                        : "cursor-pointer border-hairline hover:border-navy"
+                  }`}
                 >
                   <input
                     type="radio"
                     name={`attr_${axis.name}`}
                     value={option}
                     checked={active}
-                    disabled={!available}
+                    disabled={unbuyable}
                     onChange={() => setSelection({ ...selection, [axis.name]: option })}
                     className="sr-only"
                   />
                   {option}
-                  {priceOf(axis.name, option) && (
-                    <span className="ml-2 tabular-nums opacity-80">
-                      {priceOf(axis.name, option)}
-                    </span>
-                  )}
+                  {unbuyable && <span className="sr-only"> — wyprzedane</span>}
+                  {price && <span className="ml-2 tabular-nums opacity-80">{price}</span>}
                 </label>
               );
             })}

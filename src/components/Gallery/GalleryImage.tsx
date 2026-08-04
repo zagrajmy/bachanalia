@@ -18,16 +18,16 @@ export function GalleryImage({
   onReady,
   blurDataURL,
 }: {
-  src: string;
   alt: string;
-  sizes: string;
-  fit?: "cover" | "contain";
-  className?: string;
-  priority?: boolean;
-  style?: CSSProperties;
-  reveal?: "fade" | "instant";
-  onReady?: (image: HTMLImageElement) => void;
   blurDataURL?: string;
+  className?: string;
+  fit?: "cover" | "contain";
+  onReady?: (image: HTMLImageElement) => void;
+  priority?: boolean;
+  reveal?: "fade" | "instant";
+  sizes: string;
+  src: string;
+  style?: CSSProperties;
 }) {
   const [loaded, setLoaded] = useState(false);
   const notified = useRef(false);
@@ -62,9 +62,7 @@ export function GalleryImage({
         onLoad={(event) => markReady(event.currentTarget)}
         className={cn(
           fit === "cover" ? "object-cover" : "object-contain",
-          reveal === "fade" &&
-            !blurDataURL &&
-            "transition-opacity duration-200 ease-[var(--ease-out)]",
+          reveal === "fade" && !blurDataURL && "transition-opacity duration-200 ease-out",
           reveal === "instant" || loaded || blurDataURL ? "opacity-100" : "opacity-0",
         )}
       />

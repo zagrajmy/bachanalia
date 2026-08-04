@@ -3,7 +3,7 @@ import { bypass, http, HttpResponse, passthrough } from "msw";
 import { addLine, cartResponse, removeLines, setLineQuantity } from "./cart";
 import { readFixture, writeFixture } from "./fixtures";
 
-export type Mode = "replay" | "record";
+export type Mode = "record" | "replay";
 
 const SESSION_HEADER = "woocommerce-session";
 
@@ -90,7 +90,7 @@ function tokenOf(request: Request) {
   return header ? header.replace(/^Session\s+/, "") : "";
 }
 
-type Operation = { name: string; query: string; variables: { [key: string]: any } };
+type Operation = { name: string; query: string; variables: Record<string, any> };
 
 async function readOperation(request: Request): Promise<Operation> {
   const url = new URL(request.url);
@@ -108,14 +108,14 @@ async function readOperation(request: Request): Promise<Operation> {
   return {
     name: operationNameOf(query),
     query,
-    variables: (body.variables as { [key: string]: any }) ?? {},
+    variables: (body.variables as Record<string, any>) ?? {},
   };
 }
 
 function cartReply(request: Request, operation: Operation) {
   const existing = tokenOf(request);
   const token = existing || mintToken();
-  const input = (operation.variables.input ?? {}) as { [key: string]: any };
+  const input = (operation.variables.input ?? {}) as Record<string, any>;
 
   switch (operation.name) {
     case "AddToCartMutation":
@@ -128,6 +128,14 @@ function cartReply(request: Request, operation: Operation) {
 
       return { headers: token, body: { data: { addToCart: { cart: cartResponse(token) } } } };
 
+    case "RemoveItemsFromCartMutation":
+      removeLines(token, (input.keys ?? []) as string[]);
+
+      return {
+        headers: token,
+        body: { data: { removeItemsFromCart: { cart: cartResponse(token) } } },
+      };
+
     case "UpdateItemQuantitiesMutation":
       for (const item of (input.items ?? []) as { key: string; quantity: number }[]) {
         setLineQuantity(token, item.key, Number(item.quantity));
@@ -136,14 +144,6 @@ function cartReply(request: Request, operation: Operation) {
       return {
         headers: token,
         body: { data: { updateItemQuantities: { cart: cartResponse(token) } } },
-      };
-
-    case "RemoveItemsFromCartMutation":
-      removeLines(token, (input.keys ?? []) as string[]);
-
-      return {
-        headers: token,
-        body: { data: { removeItemsFromCart: { cart: cartResponse(token) } } },
       };
 
     default:

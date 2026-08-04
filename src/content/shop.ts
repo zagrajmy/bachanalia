@@ -8,17 +8,17 @@ import { accreditation } from "./con";
 
 /** WooCommerce owns the prices; hardcoding them advertises last year's. */
 export type Ticket = {
+  href: string;
   label: string;
   note?: string;
   price: string;
-  href: string;
   soldOut: boolean;
 };
 
 type ProductNode = {
-  slug?: string | null;
   link?: string | null;
   price?: string | null;
+  slug?: string | null;
   stockStatus?: string | null;
 };
 
@@ -27,10 +27,10 @@ export function formatPrice(raw?: string | null) {
   if (!raw) return "";
 
   return raw
-    .replace(/&nbsp;| /g, " ")
-    .replace(/&#8211;|&ndash;/g, "–")
-    .replace(/(\d),00\b/g, "$1")
-    .replace(/\s+/g, " ")
+    .replaceAll(/&nbsp;| /g, " ")
+    .replaceAll(/&#8211;|&ndash;/g, "–")
+    .replaceAll(/(\d),00\b/g, "$1")
+    .replaceAll(/\s+/g, " ")
     .trim();
 }
 

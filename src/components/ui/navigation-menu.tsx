@@ -55,7 +55,7 @@ function NavigationMenuItem({ className, ...props }: NavigationMenuPrimitive.Ite
 }
 
 const navigationMenuTriggerStyle = cva(
-  "group/navigation-menu-trigger inline-flex h-9 w-max items-center justify-center rounded-card bg-transparent px-2 py-2 text-sm whitespace-nowrap text-ink no-underline underline-offset-[0.35em] outline-none select-none hover:underline focus-visible:underline data-[popup-open]:underline disabled:pointer-events-none xl:px-3",
+  "group/navigation-menu-trigger inline-flex h-9 w-max items-center justify-center rounded-card bg-transparent p-2  text-sm whitespace-nowrap text-ink no-underline underline-offset-[0.35em] outline-none select-none hover:underline focus-visible:underline data-popup-open:underline disabled:pointer-events-none xl:px-3",
 );
 
 /**
@@ -77,7 +77,7 @@ function NavigationMenuTrigger({
       <HugeiconsIcon
         icon={ArrowDown01Icon}
         strokeWidth={2}
-        className="relative top-px ml-1 size-3 text-ink-muted transition-transform duration-250 group-data-[popup-open]/navigation-menu-trigger:rotate-180"
+        className="relative top-px ml-1 size-3 text-ink-muted transition-transform duration-250 group-data-popup-open/navigation-menu-trigger:rotate-180"
         aria-hidden="true"
       />
     </NavigationMenuPrimitive.Trigger>
@@ -89,9 +89,9 @@ function NavigationMenuContent({ className, ...props }: NavigationMenuPrimitive.
     <NavigationMenuPrimitive.Content
       data-slot="navigation-menu-content"
       className={cn(
-        "h-full w-auto p-2 transition-[opacity,transform,translate] duration-300 data-[starting-style]:opacity-0 data-[ending-style]:opacity-0 motion-reduce:translate-x-0!",
-        "data-[starting-style]:data-[activation-direction=left]:translate-x-[-50%] data-[starting-style]:data-[activation-direction=right]:translate-x-[50%]",
-        "data-[ending-style]:data-[activation-direction=left]:translate-x-[50%] data-[ending-style]:data-[activation-direction=right]:translate-x-[-50%]",
+        "h-full w-auto p-2 transition-[opacity,transform,translate] duration-300 data-starting-style:opacity-0 data-ending-style:opacity-0 motion-reduce:translate-x-0!",
+        "data-starting-style:data-[activation-direction=left]:translate-x-[-50%] data-starting-style:data-[activation-direction=right]:translate-x-[50%]",
+        "data-ending-style:data-[activation-direction=left]:translate-x-[50%] data-ending-style:data-[activation-direction=right]:translate-x-[-50%]",
         "**:data-[slot=navigation-menu-link]:focus:ring-0 **:data-[slot=navigation-menu-link]:focus:outline-none",
         className,
       )}
@@ -116,12 +116,12 @@ function NavigationMenuPositioner({
         align={align}
         alignOffset={alignOffset}
         className={cn(
-          "isolate z-50 h-(--positioner-height) w-(--positioner-width) max-w-(--available-width) transition-[top,left,right,bottom] duration-300 data-[instant]:transition-none motion-reduce:transition-none",
+          "isolate z-50 h-(--positioner-height) w-(--positioner-width) max-w-(--available-width) transition-[top,left,right,bottom] duration-300 data-instant:transition-none motion-reduce:transition-none",
           className,
         )}
         {...props}
       >
-        <NavigationMenuPrimitive.Popup className="relative h-(--popup-height) w-(--popup-width) origin-(--transform-origin) overflow-hidden rounded-card border border-hairline bg-paper text-ink shadow-[0_18px_50px_-24px] shadow-navy/50 transition-[opacity,transform,width,height,scale,translate] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] data-[starting-style]:scale-95 data-[starting-style]:opacity-0 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[ending-style]:ease-out motion-reduce:transition-[opacity]">
+        <NavigationMenuPrimitive.Popup className="relative h-(--popup-height) w-(--popup-width) origin-(--transform-origin) overflow-hidden rounded-card border border-hairline bg-paper text-ink shadow-[0_18px_50px_-24px] shadow-navy/50 transition-[opacity,transform,width,height,scale,translate] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 data-ending-style:ease-out motion-reduce:transition-opacity">
           <NavigationMenuPrimitive.Viewport className="relative size-full overflow-hidden" />
         </NavigationMenuPrimitive.Popup>
       </NavigationMenuPrimitive.Positioner>
@@ -134,7 +134,7 @@ function NavigationMenuLink({ className, ...props }: NavigationMenuPrimitive.Lin
     <NavigationMenuPrimitive.Link
       data-slot="navigation-menu-link"
       className={cn(
-        "flex flex-col gap-1 rounded-sm p-2 text-sm whitespace-nowrap text-ink no-underline transition-colors outline-none hover:bg-paper-shade focus-visible:bg-paper-shade data-[active]:bg-paper-shade [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-ink-muted",
+        "flex flex-col gap-1 rounded-sm p-2 text-sm whitespace-nowrap text-ink no-underline transition-colors outline-none hover:bg-paper-shade focus-visible:bg-paper-shade data-active:bg-paper-shade [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-ink-muted",
         className,
       )}
       {...props}
@@ -144,11 +144,11 @@ function NavigationMenuLink({ className, ...props }: NavigationMenuPrimitive.Lin
 
 export {
   NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
   NavigationMenuContent,
-  NavigationMenuTrigger,
+  NavigationMenuItem,
   NavigationMenuLink,
+  NavigationMenuList,
   NavigationMenuPositioner,
+  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 };

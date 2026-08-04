@@ -7,9 +7,10 @@ import { con } from "@/content/con";
  */
 
 /** Commas, semicolons and backslashes carry meaning in a property value. */
-const escape = (value: string) => value.replace(/([\\,;])/g, "\\$1").replace(/\n/g, "\\n");
+const escape = (value: string) =>
+  value.replaceAll(/([\\,;])/g, String.raw`\$1`).replaceAll(/\n/g, String.raw`\n`);
 
-const compact = (iso: string) => iso.replace(/-/g, "");
+const compact = (iso: string) => iso.replaceAll(/-/g, "");
 
 /** `DTEND` is exclusive for an all-day event, so the con ends the day after. */
 function dayAfter(iso: string) {
@@ -42,7 +43,7 @@ export function GET() {
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
     `UID:${con.edition.toLowerCase()}-${con.starts}@bachanaliafantastyczne.pl`,
-    `DTSTAMP:${new Date().toISOString().replace(/[-:]|\.\d{3}/g, "")}`,
+    `DTSTAMP:${new Date().toISOString().replaceAll(/[-:]|\.\d{3}/g, "")}`,
     `DTSTART;VALUE=DATE:${compact(con.starts)}`,
     `DTEND;VALUE=DATE:${compact(dayAfter(con.ends))}`,
     `SUMMARY:${escape(`${con.name} ${con.edition}`)}`,

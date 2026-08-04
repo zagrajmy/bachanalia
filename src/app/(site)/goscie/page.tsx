@@ -65,10 +65,10 @@ export default async function GosciePage() {
                         width={image.mediaDetails?.width ?? 800}
                         height={image.mediaDetails?.height ?? 600}
                         sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 27vw, (min-width: 640px) 45vw, 90vw"
-                        className="aspect-[3/4] w-full object-contain"
+                        className="aspect-3/4 w-full object-contain"
                       />
                     ) : (
-                      <div className="aspect-[3/4] w-full" />
+                      <div className="aspect-3/4 w-full" />
                     )}
                   </div>
 

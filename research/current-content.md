@@ -33,30 +33,30 @@ Migration to headless + locked-down wp-admin becomes more urgent, not less.
 
 ## Page-by-page
 
-| Page | Content |
-| --- | --- |
-| `/` (home) | FB feed embed; posts promote programme items ("Autostopem przez fantastykę" series), accreditation launch |
-| co-to-sa-bachanalia | About text; ~500–850 attendees; **historical guest list** (see below) |
-| organizator | ZKF Ad Astra, Fabryczna 13B, 65-410 Zielona Góra, NIP 973-06-79-285, REGON 971286390, KRS 0000170986; "Napisz do nas" |
-| sztab-bachanaliowy | Empty (heading only) |
-| czas-i-miejsce | 25–27 IX 2026, UZ kampus B, Wojska Polskiego 69; hours (Fri from 14:00, Sat/Sun from 9:30, building closes 20:00); travel: train/bus/car/plane, MZK lines 5/12/26 and 0/8; free parking |
-| regulamin | Full con rules, ~14k chars |
-| blok-prelekcyjny | Stub: "sci-fi is this year's theme, details soon" |
-| blok-konkursowy | Short blurb; con currency "Bachele" exchangeable in con shop |
-| blok-naukowy | Empty (heading only) |
-| rpg | Blurb; sessions run by "Skrzywienie Fabularne" |
-| gamesroom | Blurb; several hundred games; "Trzymaj Pion" section |
-| retro-gaming | Blurb; lan-party + free play |
-| cosplay | Full contest rules (2025), signup via paper form in manga&anime room |
-| blok-komiksowy | Empty (heading only) |
-| zgloszenia-programu | Empty (heading only — 2026 form not up) |
-| zgloszenia-obslugi | Empty (heading only) |
-| poznaj-wystawcow | Empty (heading only — 2026 exhibitors not announced) |
-| zgloszenia-wystawcow | Contact: wystawcy@bachanaliafantastyczne.pl |
-| wspieraja-nas | Logo grid by tier (below) |
-| noclegi | UZ dorm lodging, "details soon, limited places" |
-| sklep | WooCommerce, see below |
-| polityka-prywatnosci | Privacy policy, ~11k chars |
+| Page                 | Content                                                                                                                                                                                 |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/` (home)           | FB feed embed; posts promote programme items ("Autostopem przez fantastykę" series), accreditation launch                                                                               |
+| co-to-sa-bachanalia  | About text; ~500–850 attendees; **historical guest list** (see below)                                                                                                                   |
+| organizator          | ZKF Ad Astra, Fabryczna 13B, 65-410 Zielona Góra, NIP 973-06-79-285, REGON 971286390, KRS 0000170986; "Napisz do nas"                                                                   |
+| sztab-bachanaliowy   | Empty (heading only)                                                                                                                                                                    |
+| czas-i-miejsce       | 25–27 IX 2026, UZ kampus B, Wojska Polskiego 69; hours (Fri from 14:00, Sat/Sun from 9:30, building closes 20:00); travel: train/bus/car/plane, MZK lines 5/12/26 and 0/8; free parking |
+| regulamin            | Full con rules, ~14k chars                                                                                                                                                              |
+| blok-prelekcyjny     | Stub: "sci-fi is this year's theme, details soon"                                                                                                                                       |
+| blok-konkursowy      | Short blurb; con currency "Bachele" exchangeable in con shop                                                                                                                            |
+| blok-naukowy         | Empty (heading only)                                                                                                                                                                    |
+| rpg                  | Blurb; sessions run by "Skrzywienie Fabularne"                                                                                                                                          |
+| gamesroom            | Blurb; several hundred games; "Trzymaj Pion" section                                                                                                                                    |
+| retro-gaming         | Blurb; lan-party + free play                                                                                                                                                            |
+| cosplay              | Full contest rules (2025), signup via paper form in manga&anime room                                                                                                                    |
+| blok-komiksowy       | Empty (heading only)                                                                                                                                                                    |
+| zgloszenia-programu  | Empty (heading only — 2026 form not up)                                                                                                                                                 |
+| zgloszenia-obslugi   | Empty (heading only)                                                                                                                                                                    |
+| poznaj-wystawcow     | Empty (heading only — 2026 exhibitors not announced)                                                                                                                                    |
+| zgloszenia-wystawcow | Contact: wystawcy@bachanaliafantastyczne.pl                                                                                                                                             |
+| wspieraja-nas        | Logo grid by tier (below)                                                                                                                                                               |
+| noclegi              | UZ dorm lodging, "details soon, limited places"                                                                                                                                         |
+| sklep                | WooCommerce, see below                                                                                                                                                                  |
+| polityka-prywatnosci | Privacy policy, ~11k chars                                                                                                                                                              |
 
 ## Partners (wspieraja-nas, logos by tier)
 

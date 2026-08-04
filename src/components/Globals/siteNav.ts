@@ -26,7 +26,7 @@ export const RETIRED_PATHS = [
   "/zwroty/",
 ];
 
-export type NavLink = { href: string; label: string; external?: boolean };
+export type NavLink = { external?: boolean; href: string; label: string };
 
 /**
  * A group's `href` is a real destination, not a toggle. The WordPress menu

@@ -17,8 +17,8 @@ function LineForm({
   onSubmit,
 }: {
   line: CartLine;
-  submit: (formData: FormData) => void;
   onSubmit: (event: React.SubmitEvent<HTMLFormElement>) => void;
+  submit: (formData: FormData) => void;
 }) {
   const form = useRef<HTMLFormElement>(null);
   const ceiling = line.soldIndividually ? 1 : MAX_QUANTITY;
@@ -124,7 +124,7 @@ export function CartLines({ lines, dense = false }: { dense?: boolean; lines: Ca
   const submitOptimistically = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const submitter = event.nativeEvent.submitter;
+    const { submitter } = event.nativeEvent;
     const formData = new FormData(event.currentTarget, submitter);
 
     const key = String(formData.get("key") ?? "");

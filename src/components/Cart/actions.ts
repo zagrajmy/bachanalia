@@ -131,10 +131,14 @@ export async function addToCartAction(
 async function staleLineResync(name: string): Promise<CartActionState> {
   const cart = await fetchCart();
 
+  if (!cart.ok) {
+    return { ok: false, message: "Nie udało się odświeżyć koszyka." };
+  }
+
   return {
     ok: true,
     message: `${name} — już nie ma w koszyku.`,
-    ...(cart.ok && { cart: cart.data }),
+    cart: cart.data,
   };
 }
 

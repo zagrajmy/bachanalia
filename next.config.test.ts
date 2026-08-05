@@ -78,6 +78,21 @@ test("the order confirmation stays with WordPress, which issues the ticket", asy
   assert.match(rule.destination, /\/index\.php\/zamowienie\/order-received\/:path\*$/);
 });
 
+test("a Paynow notification aimed at the apex still reaches WordPress", async () => {
+  const rule = await find("/");
+
+  assert.deepEqual(
+    rule.has,
+    [{ type: "query", key: "wc-api" }],
+    "only the notification carries wc-api; the home page must not redirect for anyone else",
+  );
+  assert.equal(
+    rule.permanent,
+    false,
+    "the notification is a POST and a 308 is the only other option that keeps the body, but WordPress moves again if the subdomain ever changes",
+  );
+});
+
 test("uploads keep resolving after the apex stops being WordPress", async () => {
   const rule = await find("/wp-content/:path*");
 

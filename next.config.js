@@ -64,6 +64,23 @@ const nextConfig = {
         destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/${prefix}/:path*`,
         permanent: false,
       })),
+      /**
+       * Paynow posts its payment notification to whatever single address is
+       * typed into the merchant panel, and that address is the apex. Left
+       * behind at cutover it would reach this app, which has no idea what to
+       * do with it: the buyer pays, the order never leaves pending, and no
+       * ticket is issued. Nothing anywhere reports an error.
+       *
+       * The panel field is the real fix — this is the net under it. 307 rather
+       * than 308 because the notification is a POST and only a 307 carries the
+       * body across.
+       */
+      {
+        source: "/",
+        has: [{ type: "query", key: "wc-api" }],
+        destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/`,
+        permanent: false,
+      },
       /** Bookmarked directly often enough to be worth its own rule. */
       {
         source: "/wp-login.php",

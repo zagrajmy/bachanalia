@@ -81,11 +81,17 @@ test("the order confirmation stays with WordPress, which issues the ticket", asy
 test("a Paynow notification aimed at the apex still reaches WordPress", async () => {
   assert.ok(nextConfig.rewrites, "next.config.js must declare rewrites()");
   const rules = await nextConfig.rewrites();
+
+  /**
+   * The array form runs as `afterFiles`, and the front page is a file: Next
+   * answers the notification from the static route and never reaches the
+   * rewrite. That failure looks like a 405 with `x-matched-path: /`.
+   */
   assert.ok(
-    Array.isArray(rules),
-    "the phased beforeFiles/afterFiles form would change when this runs",
+    !Array.isArray(rules) && rules.beforeFiles,
+    "the notification rewrite has to outrank the front page, so it belongs in beforeFiles",
   );
-  const rule = rules.find((r) => r.source === "/");
+  const rule = rules.beforeFiles.find((r) => r.source === "/");
 
   assert.ok(rule, "the notification lands on / with a wc-api query");
   assert.deepEqual(

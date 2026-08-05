@@ -52,13 +52,22 @@ const nextConfig = {
    * field costs nobody their ticket.
    */
   async rewrites() {
-    return [
-      {
-        source: "/",
-        has: [{ type: "query", key: "wc-api" }],
-        destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/`,
-      },
-    ];
+    return {
+      /**
+       * `beforeFiles`, because the plain array form runs as `afterFiles` and
+       * the front page is a file. Next would answer the notification from the
+       * static route and the rewrite would never be consulted — a POST to `/`
+       * comes back 405 with `x-matched-path: /`, which is what this looked
+       * like before the phased form went in.
+       */
+      beforeFiles: [
+        {
+          source: "/",
+          has: [{ type: "query", key: "wc-api" }],
+          destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/`,
+        },
+      ],
+    };
   },
   async redirects() {
     return [

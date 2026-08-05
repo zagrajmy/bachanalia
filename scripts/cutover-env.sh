@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Krok 3 z RUNBOOK.md — przestawia zmienne na Vercelu i wypuszcza build.
+# Krok 3 runbooka migracji — przestawia zmienne na Vercelu i wypuszcza build.
 #
 # Uruchamiać dopiero, kiedy WordPress siedzi już na wp. i ma tam ustawiony
 # siteurl. Build generuje wszystkie strony z treści pobranej z WordPressa, więc

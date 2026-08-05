@@ -3,8 +3,6 @@
 WordPress przenosi się na `wp.bachanaliafantastyczne.pl`. Apeks i `www` idą na
 Vercela.
 
-Kod rabatowy do testów zakupu: `test-domeny-2026`.
-
 Między krokiem 2 a 3 `bachanalia.vercel.app` nie działa. Tak ma być. Stara strona
 odpowiada cały czas, od kroku 2 pod adresem `wp.`.
 
@@ -15,6 +13,7 @@ odpowiada cały czas, od kroku 2 pod adresem `wp.`.
       na dzisiejszym adresie. W kroku 4 zostaje tylko podmienić adres, zamiast
       zgadywać przez telefon, czy sekret w ogóle kiedykolwiek był ustawiony.
 - [ ] Jest dostęp do panelu Paynow, czyli do mBanku firmowego (krok 2d)
+- [ ] Kupon testowy założony według opisu w kroku 2e
 - [ ] Przekierowania `/wp-content`, `/wp-includes`, `/wp-admin`, `/wp-login.php`
       wdrożone na Vercelu
 - [ ] Proxy powiadomień Paynow odpowiada. POST na
@@ -96,7 +95,20 @@ Adresu powrotu nie ruszamy, wtyczka ustawia go sama przy każdym zamówieniu.
 
 ### e) Test kasy
 
-Na `wp.`, kod `test-domeny-2026`:
+Kupon zakładamy przed rozmową, a kodu nie zapisujemy w repo, bo jest publiczne:
+
+- zniżka procentowa 90%, nie 100%. Przy zerowej kwocie WooCommerce uznaje
+  zamówienie za darmowe, chowa wszystkie bramki i powiadomienie z Paynow nigdy
+  nie leci, czyli test omija dokładnie to, co ma sprawdzić.
+- ograniczony do produktu Wsparcie Klubu 20 zł, więc test kosztuje 2 zł
+  niezależnie od tego, kto go klika
+- limit użyć 2, ważny do dnia po migracji
+
+Dlaczego nie 99%: minimum transakcji w Paynow to 1 zł dla każdej metody, a 99% od
+najtańszego produktu w sklepie daje 20 groszy. Płatność odbija się od limitu
+i pół rozmowy schodzi na szukanie przyczyny nie tam, gdzie trzeba.
+
+Na `wp.`:
 
 - [ ] koszyk prowadzi do kasy na `wp.` i formularz się pokazuje
 - [ ] Paynow jest pierwszą i zaznaczoną metodą
@@ -104,8 +116,6 @@ Na `wp.`, kod `test-domeny-2026`:
 - [ ] zamówienie w wp-admin ma status opłacone. To jedyny dowód, że powiadomienie
       z Paynow dochodzi.
 - [ ] link do biletu otwiera prawdziwy PDF
-
-Jeśli kod zbija do zera i Paynow przy zerowej kwocie znika, kup za złotówkę.
 
 ## 3. Vercel
 

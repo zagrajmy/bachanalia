@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { print } from "graphql/language/printer";
 import gql from "graphql-tag";
 
-import { parseFeedItems } from "../src/components/News/facebookFeed";
+import { FEED_PAGE_URI, parseFeedItems } from "../src/components/News/facebookFeed";
 import { NewsQuery } from "../src/components/News/NewsQuery";
 import { AllContentQuery } from "../src/queries/general/AllContentQuery";
 import { ContentQuery } from "../src/queries/general/ContentQuery";
@@ -201,7 +201,7 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
         }
       }
     `),
-    { uri: "/" },
+    { uri: FEED_PAGE_URI },
   );
 
   for (const entry of parseFeedItems(nodeByUri?.content ?? "")) {

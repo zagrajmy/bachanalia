@@ -1,7 +1,15 @@
 import { decodeEntities, NewsEntry, newsExcerpt, toNewsDate } from "./newsFormat";
 
+/**
+ * An unlinked page holding `[custom-facebook-feed feed=2]` — a clone of the
+ * homepage feed with a 50-post window, so the site and the archiver see far
+ * more history than the homepage widget's 9.
+ */
+export const FEED_PAGE_URI = "/index.php/feed-archiwum/";
+
 const ITEM = /<div class="cff-item[\s\S]*?(?=<div class="cff-item|<div class="cff-clear|$)/g;
-const POST_ID = /id="cff_(\d+)_(\d+)"/;
+/** Recent posts render as `cff_<pageId>_<postId>`, older ones as `cff_<postId>`. */
+const POST_ID = /id="cff_(?:(\d+)_)?(\d+)"/;
 const TIMESTAMP = /data-cff-timestamp="(\d+)"/;
 const TEXT = /<span class="cff-text"[^>]*>([\s\S]*?)<\/span>/;
 const SRC_SET = /data-img-src-set="([^"]*)"/;
@@ -48,7 +56,9 @@ export function parseFeedItems(html: string): NewsEntry[] {
     return [
       {
         id: postId,
-        href: `https://www.facebook.com/${pageId}/posts/${postId}`,
+        href: pageId
+          ? `https://www.facebook.com/${pageId}/posts/${postId}`
+          : `https://www.facebook.com/${postId}`,
         external: true,
         ...toNewsDate(seconds ? new Date(seconds * 1000) : undefined),
         category: "Facebook",

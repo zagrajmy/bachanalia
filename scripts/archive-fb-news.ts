@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { print } from "graphql/language/printer";
 import gql from "graphql-tag";
 
-import { parseFeedItems } from "../src/components/News/facebookFeed";
+import { FEED_PAGE_URI, parseFeedItems } from "../src/components/News/facebookFeed";
 import type { ArchivedFbPost } from "../src/components/News/fbArchive";
 import { encodeLqipWebp } from "../src/utils/lqipEncode";
 import { fbPostKey, lqipMetaRelPath, lqipRelPath } from "../src/utils/lqipPath";
@@ -64,7 +64,7 @@ async function mirrorImage(id: string, src: string) {
 async function main() {
   const { nodeByUri } = await graphql<{ nodeByUri: { content?: string | null } | null }>(
     print(FeedQuery),
-    { uri: "/" },
+    { uri: FEED_PAGE_URI },
   );
 
   const feed = parseFeedItems(nodeByUri?.content ?? "");

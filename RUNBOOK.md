@@ -11,8 +11,9 @@ odpowiada cały czas, od kroku 2 pod adresem `wp.`.
 ## Przed startem
 
 - [ ] Apeks i `www` dodane do projektu na Vercelu, certyfikaty wystawione
-- [ ] `HEADLESS_SECRET` na Vercelu zgadza się z sekretem w Ustawienia →
-      Rewalidacja strony
+- [ ] Ustawienia → Rewalidacja strony, „Wyślij testowy sygnał" świeci na zielono
+      na dzisiejszym adresie. W kroku 4 zostaje tylko podmienić adres, zamiast
+      zgadywać przez telefon, czy sekret w ogóle kiedykolwiek był ustawiony.
 - [ ] Jest dostęp do panelu Paynow, czyli do mBanku firmowego (krok 2d)
 - [ ] Przekierowania `/wp-content`, `/wp-includes`, `/wp-admin`, `/wp-login.php`
       wdrożone na Vercelu

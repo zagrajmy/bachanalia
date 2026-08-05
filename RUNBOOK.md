@@ -12,7 +12,7 @@ odpowiada cały czas, od kroku 2 pod adresem `wp.`.
 - [ ] Ustawienia → Rewalidacja strony, „Wyślij testowy sygnał" świeci na zielono
       na dzisiejszym adresie. W kroku 4 zostaje wtedy tylko podmienić adres.
 - [ ] Jest dostęp do panelu Paynow, czyli do mBanku firmowego (krok 2d)
-- [ ] Kupon testowy założony według opisu w kroku 2e
+- [x] Kupon testowy założony według opisu w kroku 2e
 - [x] Przekierowania `/wp-content`, `/wp-includes`, `/wp-admin`, `/wp-login.php`
       wdrożone na Vercelu
 - [ ] Proxy powiadomień Paynow odpowiada. POST na
@@ -120,8 +120,8 @@ Na `wp.`:
 ./scripts/cutover-env.sh
 ```
 
-Trzy zmienne i build bez cache. Najpierw pyta WordPressa na `wp.`, o jakim
-adresie sam myśli, i odmawia startu, jeśli `siteurl` to nadal apeks.
+Trzy zmienne i build bez cache. Najpierw sprawdza, czy `siteurl` wskazuje już na
+`wp.`, i odmawia startu, jeśli nie.
 
 Ręcznie: `NEXT_PUBLIC_WORDPRESS_API_URL` na
 `https://wp.bachanaliafantastyczne.pl`, `NEXT_PUBLIC_WORDPRESS_API_HOSTNAME` na
@@ -162,16 +162,16 @@ poleciałby w tę samą maszynę.
 
 ## Linki absolutne
 
-Adresy stron przeżywają przepięcie, bo Next.js odtwarza te same ścieżki i
-przekierowuje `/index.php/*`. Nie przeżywa `/wp-content/uploads/*`, bo tej
-ścieżki na Vercelu nie ma.
+Adresy stron przechodzą przepięcie bez zmian: Next.js odtwarza te same ścieżki
+i przekierowuje `/index.php/*`.
 
-Zdjęcia i załączniki w treści wpisów mają w bazie adres absolutny, więc po kroku
-4 każde z nich to 404. Stąd dwie rzeczy naraz:
+Zdjęcia i załączniki mają w treści wpisów zapisany adres absolutny, a
+`/wp-content/uploads/*` na Vercelu nie istnieje. Łapie je przekierowanie na
+`wp.`, które obejmuje też linki spoza naszego zasięgu: stare maile z biletami,
+posty na Facebooku, wyniki w Google.
 
-- search-replace (krok 2b) naprawia treść, którą kontrolujemy,
-- przekierowanie `/wp-content/:path*` na `wp.` ratuje resztę: stare maile z
-  biletami, posty na Facebooku, wyniki w Google.
+Search-replace z kroku 2b zmienia te adresy w bazie, żeby świeża treść szła
+prosto na `wp.`, bez dodatkowego skoku.
 
 Warianty zdjęć w `/_img` i placeholdery są kluczowane ścieżką bez domeny, więc
 przepięcie ich nie rusza.

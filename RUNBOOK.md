@@ -1,33 +1,36 @@
 # Przepięcie domeny
 
-WordPress przenosi się na `wp.bachanaliafantastyczne.pl`. Apeks i `www` idą na
+tldr: WordPress przenosi się na `wp.bachanaliafantastyczne.pl`. Apeks i `www` idą na
 Vercela.
 
-Między krokiem 2 a 3 `bachanalia.vercel.app` nie działa. Tak ma być. Stara strona
-odpowiada cały czas, od kroku 2 pod adresem `wp.`.
+Między krokiem 2 a 3 `bachanalia.vercel.app` nie działa. Tak ma być.
+`bachanaliafantastyczne.pl` odpowiada cały czas, najpierw jako stara, potem jako
+nowa strona.
 
 ## Przed startem
 
 - [x] Apeks i `www` dodane do projektu na Vercelu, `www` z przekierowaniem 308 na
       apeks. Certyfikatów jeszcze nie ma i mieć nie może — Vercel wystawia je
       dopiero, gdy domena zaczyna do niego prowadzić. Stąd kolejność w kroku 4.
-- [ ] Ustawienia → Rewalidacja strony, „Wyślij testowy sygnał" świeci na zielono
+- [x] Ustawienia → Rewalidacja strony, „Wyślij testowy sygnał" świeci na zielono
       na dzisiejszym adresie. W kroku 4 zostaje wtedy tylko podmienić adres.
 - [x] Kupon testowy założony według opisu w kroku 2d
 - [x] Przekierowania `/wp-content`, `/wp-includes`, `/wp-admin`, `/wp-login.php`
       wdrożone na Vercelu
-- [ ] Proxy powiadomień Paynow odpowiada. POST na
-      `bachanalia.vercel.app/?wc-api=WC_Gateway_Pay_By_Paynow_PL` ma wrócić
-      z WordPressa, a nie z Next.js. Podpis się nie zgodzi i tak ma być, chodzi
-      o to, że żądanie w ogóle dochodzi.
+- [x] Proxy powiadomień Paynow odpowiada. POST na
+      `bachanalia.vercel.app/?wc-api=WC_Gateway_Pay_By_Paynow_PL` wraca
+      z WordPressa, z nagłówkiem `x-turbo-charged-by: LiteSpeed` i kodem 400,
+      czyli wtyczka odrzuca podrobiony podpis. O to chodziło: żądanie dochodzi
+      w całości.
 
 ## Cloudflare
 
-- [ ] Upewnić się że Tryb SSL/TLS to nie Flexible. Full i Full (strict) działają oba, Flexible
-      łączy się z originem po HTTP, Vercel odbija to na HTTPS i wychodzi pętla
-      przekierowań.
+- [ ] Upewnić się, że tryb SSL/TLS to nie Flexible. Full i Full (strict) działają
+      oba. Flexible łączy się z originem po HTTP, Vercel odbija to na HTTPS
+      i wychodzi pętla przekierowań.
 - [ ] Żadna reguła nie cache'uje HTML-a. Domyślnie Cloudflare tego nie robi i tak
-      ma zostać, bo inaczej rewalidacja działa, a ludzie widzą starą stronę.
+      ma zostać, bo inaczej rewalidacja odświeży stronę, a ludzie i tak dostaną
+      starą wersję z cache'u.
 
 ## 1. `wp.bachanaliafantastyczne.pl` na dhosting
 
@@ -100,8 +103,8 @@ Na `wp.`:
       z Paynow dochodzi.
 - [ ] link do biletu otwiera prawdziwy PDF
 
-Powiadomienie idzie tu prosto do WordPressa, bo apeks to nadal on. Ścieżki przez
-Vercela ten test nie dotyka — sprawdza ją dopiero zakup po przepięciu.
+Powiadomienie idzie tu prosto do WordPressa, bo apeks to nadal on. Ten test nie
+dotyka drogi przez Vercela. Sprawdza ją dopiero zakup po przepięciu.
 
 ## 3. Vercel
 
@@ -132,7 +135,7 @@ zacznie do niego docierać. Dlatego najpierw szara chmurka, potem pomarańczowa:
 
 1. Przepiąć apeks i `www` na Vercela **bez proxy**, szara chmurka.
 2. Poczekać, aż `https://bachanaliafantastyczne.pl` otworzy się bez ostrzeżenia
-   o certyfikacie. Zwykle chwilę, ale to jest brama do następnego punktu.
+   o certyfikacie. Zwykle trwa to chwilę. Bez tego nie ma po co iść dalej.
 3. Włączyć proxy z powrotem, pomarańczowa chmurka.
 
 Od tego momentu zmiana originu wchodzi od razu i tak samo szybko się cofa, bez
@@ -153,8 +156,8 @@ poleciałby w tę samą maszynę.
 ## Po wszystkim
 
 - [ ] drugi zakup, tym razem przez `bachanaliafantastyczne.pl`, i znowu status
-      opłacone w wp-admin. To pierwszy moment, w którym powiadomienie naprawdę
-      idzie przez Vercela. Stąd limit dwóch użyć na kuponie.
+      opłacone w wp-admin. Dopiero tędy powiadomienie idzie przez Vercela. Stąd
+      limit dwóch użyć na kuponie.
 - [ ] `X-Robots-Tag: noindex` albo `Disallow: /` w `robots.txt` na `wp.`, inaczej
       Google zaindeksuje starą stronę jako duplikat
 - [ ] mapa strony Yoasta na `wp.` wyłączona, jeśli Yoast działa

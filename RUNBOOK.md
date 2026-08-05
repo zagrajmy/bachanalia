@@ -11,8 +11,7 @@ odpowiada cały czas, od kroku 2 pod adresem `wp.`.
 - [ ] Apeks i `www` dodane do projektu na Vercelu, certyfikaty wystawione
 - [ ] Ustawienia → Rewalidacja strony, „Wyślij testowy sygnał" świeci na zielono
       na dzisiejszym adresie. W kroku 4 zostaje wtedy tylko podmienić adres.
-- [ ] Jest dostęp do panelu Paynow, czyli do mBanku firmowego (krok 2d)
-- [x] Kupon testowy założony według opisu w kroku 2e
+- [x] Kupon testowy założony według opisu w kroku 2d
 - [x] Przekierowania `/wp-content`, `/wp-includes`, `/wp-admin`, `/wp-login.php`
       wdrożone na Vercelu
 - [ ] Proxy powiadomień Paynow odpowiada. POST na
@@ -74,24 +73,7 @@ Serwer trzyma wygenerowane strony tydzień
 (`x-litespeed-cache-control: public,max-age=604800`). Bez purge'a serwuje dalej
 HTML z adresami apeksu i test w punkcie (e) pokaże bzdury.
 
-### d) Paynow: adres powiadomień
-
-Panel Paynow przez mBank, Ustawienia → Sklepy i punkty płatności → Adres
-powiadomień:
-
-```
-https://wp.bachanaliafantastyczne.pl/?wc-api=WC_Gateway_Pay_By_Paynow_PL
-```
-
-To jedno pole na cały sklep i wskazuje na apeks.
-
-Vercel przepuszcza takie żądanie do WordPressa (proxy na `/` z parametrem
-`wc-api`), więc zapomniane pole nie kosztuje nikogo biletu. To siatka, nie
-rozwiązanie: każda płatność przechodzi wtedy przez jedno ogniwo więcej.
-
-Adresu powrotu nie ruszamy, wtyczka ustawia go sama przy każdym zamówieniu.
-
-### e) Test kasy
+### d) Test kasy
 
 Kupon mamy.
 
@@ -113,6 +95,9 @@ Na `wp.`:
 - [ ] zamówienie w wp-admin ma status opłacone. To jedyny dowód, że powiadomienie
       z Paynow dochodzi.
 - [ ] link do biletu otwiera prawdziwy PDF
+
+Powiadomienie idzie tu prosto do WordPressa, bo apeks to nadal on. Ścieżki przez
+Vercela ten test nie dotyka — sprawdza ją dopiero zakup po przepięciu.
 
 ## 3. Vercel
 
@@ -154,11 +139,35 @@ poleciałby w tę samą maszynę.
 
 ## Po wszystkim
 
+- [ ] drugi zakup, tym razem przez `bachanaliafantastyczne.pl`, i znowu status
+      opłacone w wp-admin. To pierwszy moment, w którym powiadomienie naprawdę
+      idzie przez Vercela. Stąd limit dwóch użyć na kuponie.
 - [ ] `X-Robots-Tag: noindex` albo `Disallow: /` w `robots.txt` na `wp.`, inaczej
       Google zaindeksuje starą stronę jako duplikat
 - [ ] mapa strony Yoasta na `wp.` wyłączona, jeśli Yoast działa
 - [ ] stary wpis: zdjęcia w treści i link do PDF-a otwierają się
 - [ ] `bachanaliafantastyczne.pl/wp-admin` przerzuca na `wp.`
+
+## Do posprzątania później
+
+Nie na rozmowę, ale i nie na nigdy.
+
+Panel Paynow przez mBank, Ustawienia → Sklepy i punkty płatności → Adres
+powiadomień:
+
+```
+https://wp.bachanaliafantastyczne.pl/?wc-api=WC_Gateway_Pay_By_Paynow_PL
+```
+
+To jedno pole na cały sklep i wskazuje na apeks. Dopóki tak zostaje, każde
+powiadomienie o płatności idzie przez Vercela i proxy na `/` z parametrem
+`wc-api`, zamiast prosto do WordPressa. Działa, tylko po co.
+
+Adresu powrotu nie ruszamy, wtyczka ustawia go sama przy każdym zamówieniu.
+
+Przeniesienie tego kroku na później stoi na tym, że proxy odpowiada. Punkt w
+„przed startem" to sprawdza. Jeśli tam się nie zaświeci na zielono, adres
+w Paynow trzeba zmienić jeszcze przed przepięciem apeksu.
 
 ## Linki absolutne
 

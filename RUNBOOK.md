@@ -17,6 +17,10 @@ odpowiada cały czas, od kroku 2 pod adresem `wp.`.
 - [ ] Jest dostęp do panelu Paynow, czyli do mBanku firmowego (krok 2d)
 - [ ] Przekierowania `/wp-content`, `/wp-includes`, `/wp-admin`, `/wp-login.php`
       wdrożone na Vercelu
+- [ ] Proxy powiadomień Paynow odpowiada. POST na
+      `bachanalia.vercel.app/?wc-api=WC_Gateway_Pay_By_Paynow_PL` ma wrócić
+      z WordPressa, a nie z Next.js. Podpis się nie zgodzi i tak ma być, chodzi
+      o to, że żądanie w ogóle dochodzi.
 
 ## Cloudflare
 
@@ -81,9 +85,12 @@ powiadomień:
 https://wp.bachanaliafantastyczne.pl/?wc-api=WC_Gateway_Pay_By_Paynow_PL
 ```
 
-To jedno pole na cały sklep i wskazuje na apeks. Zostawione tak, po kroku 4
-przyjmuje je Vercel, który nie ma pojęcia, co z tym zrobić: kupujący płaci,
-zamówienie zostaje nieopłacone, bilet się nie wystawia, i nic o tym nie krzyknie.
+To jedno pole na cały sklep i wskazuje na apeks.
+
+Vercel przepuszcza takie żądanie do WordPressa (proxy na `/` z parametrem
+`wc-api`), więc zapomniane pole nie kosztuje nikogo biletu. Ale to jest siatka,
+nie rozwiązanie: dopóki wskazuje na apeks, każda płatność zależy od jednego
+przekierowania więcej, niż musi.
 
 Adresu powrotu nie ruszamy, wtyczka ustawia go sama przy każdym zamówieniu.
 

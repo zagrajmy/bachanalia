@@ -33,6 +33,33 @@ const nextConfig = {
   experimental: {
     cpus: 2,
   },
+  /**
+   * Paynow posts its payment notification to whatever single address is typed
+   * into the merchant panel, and that address is the apex. Left behind at
+   * cutover it arrives here, and this app has nothing to answer it with: the
+   * buyer pays, the order never leaves pending, no ticket is issued, and
+   * nothing anywhere reports an error.
+   *
+   * Proxied rather than redirected, because a redirect is not something the
+   * notification survives. Paynow wants `200 OK` or `202 Accepted` back and
+   * documents nothing about following a 3xx, and the plugin authenticates the
+   * message by HMAC over the raw body with no IP check at all — so what has to
+   * arrive intact is the POST, the byte-exact body, the `Signature` header and
+   * the `wc-api` parameter. A proxy carries all four and hands Paynow whatever
+   * WordPress answered; a redirect hands it a 307 and hopes.
+   *
+   * Changing the panel field is still the fix. This only means a forgotten
+   * field costs nobody their ticket.
+   */
+  async rewrites() {
+    return [
+      {
+        source: "/",
+        has: [{ type: "query", key: "wc-api" }],
+        destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/`,
+      },
+    ];
+  },
   async redirects() {
     return [
       /**
@@ -64,23 +91,6 @@ const nextConfig = {
         destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/${prefix}/:path*`,
         permanent: false,
       })),
-      /**
-       * Paynow posts its payment notification to whatever single address is
-       * typed into the merchant panel, and that address is the apex. Left
-       * behind at cutover it would reach this app, which has no idea what to
-       * do with it: the buyer pays, the order never leaves pending, and no
-       * ticket is issued. Nothing anywhere reports an error.
-       *
-       * The panel field is the real fix — this is the net under it. 307 rather
-       * than 308 because the notification is a POST and only a 307 carries the
-       * body across.
-       */
-      {
-        source: "/",
-        has: [{ type: "query", key: "wc-api" }],
-        destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/`,
-        permanent: false,
-      },
       /** Bookmarked directly often enough to be worth its own rule. */
       {
         source: "/wp-login.php",

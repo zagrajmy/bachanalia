@@ -79,17 +79,28 @@ test("the order confirmation stays with WordPress, which issues the ticket", asy
 });
 
 test("a Paynow notification aimed at the apex still reaches WordPress", async () => {
-  const rule = await find("/");
+  assert.ok(nextConfig.rewrites, "next.config.js must declare rewrites()");
+  const rules = await nextConfig.rewrites();
+  assert.ok(
+    Array.isArray(rules),
+    "the phased beforeFiles/afterFiles form would change when this runs",
+  );
+  const rule = rules.find((r) => r.source === "/");
 
+  assert.ok(rule, "the notification lands on / with a wc-api query");
   assert.deepEqual(
     rule.has,
     [{ type: "query", key: "wc-api" }],
-    "only the notification carries wc-api; the home page must not redirect for anyone else",
+    "only the notification carries wc-api; the home page must stay the home page for everyone else",
   );
-  assert.equal(
-    rule.permanent,
-    false,
-    "the notification is a POST and a 308 is the only other option that keeps the body, but WordPress moves again if the subdomain ever changes",
+});
+
+test("the notification is proxied, never redirected", async () => {
+  const sources = (await redirects()).map((rule) => rule.source);
+
+  assert.ok(
+    !sources.includes("/"),
+    "Paynow wants 200 or 202 back and documents nothing about following a 3xx, and the plugin checks an HMAC over the raw body — the request has to arrive whole, not be pointed somewhere else",
   );
 });
 

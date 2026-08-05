@@ -10,8 +10,7 @@ odpowiada cały czas, od kroku 2 pod adresem `wp.`.
 
 - [ ] Apeks i `www` dodane do projektu na Vercelu, certyfikaty wystawione
 - [ ] Ustawienia → Rewalidacja strony, „Wyślij testowy sygnał" świeci na zielono
-      na dzisiejszym adresie. W kroku 4 zostaje tylko podmienić adres, zamiast
-      zgadywać przez telefon, czy sekret w ogóle kiedykolwiek był ustawiony.
+      na dzisiejszym adresie. W kroku 4 zostaje wtedy tylko podmienić adres.
 - [ ] Jest dostęp do panelu Paynow, czyli do mBanku firmowego (krok 2d)
 - [ ] Kupon testowy założony według opisu w kroku 2e
 - [ ] Przekierowania `/wp-content`, `/wp-includes`, `/wp-admin`, `/wp-login.php`
@@ -87,26 +86,24 @@ https://wp.bachanaliafantastyczne.pl/?wc-api=WC_Gateway_Pay_By_Paynow_PL
 To jedno pole na cały sklep i wskazuje na apeks.
 
 Vercel przepuszcza takie żądanie do WordPressa (proxy na `/` z parametrem
-`wc-api`), więc zapomniane pole nie kosztuje nikogo biletu. Ale to jest siatka,
-nie rozwiązanie: dopóki wskazuje na apeks, każda płatność zależy od jednego
-przekierowania więcej, niż musi.
+`wc-api`), więc zapomniane pole nie kosztuje nikogo biletu. To siatka, nie
+rozwiązanie: każda płatność przechodzi wtedy przez jedno ogniwo więcej.
 
 Adresu powrotu nie ruszamy, wtyczka ustawia go sama przy każdym zamówieniu.
 
 ### e) Test kasy
 
-Kupon zakładamy przed rozmową, a kodu nie zapisujemy w repo, bo jest publiczne:
+Kupon mamy.
 
-- zniżka procentowa 90%, nie 100%. Przy zerowej kwocie WooCommerce uznaje
-  zamówienie za darmowe, chowa wszystkie bramki i powiadomienie z Paynow nigdy
-  nie leci, czyli test omija dokładnie to, co ma sprawdzić.
+- zniżka procentowa 90%. Przy zerowej kwocie WooCommerce uznaje zamówienie za
+  darmowe, chowa wszystkie bramki i powiadomienie z Paynow nigdy nie leci, czyli
+  test omija dokładnie to, co ma sprawdzić.
 - ograniczony do produktu Wsparcie Klubu 20 zł, więc test kosztuje 2 zł
   niezależnie od tego, kto go klika
 - limit użyć 2, ważny do dnia po migracji
 
-Dlaczego nie 99%: minimum transakcji w Paynow to 1 zł dla każdej metody, a 99% od
-najtańszego produktu w sklepie daje 20 groszy. Płatność odbija się od limitu
-i pół rozmowy schodzi na szukanie przyczyny nie tam, gdzie trzeba.
+Minimum transakcji w Paynow to 1 zł dla każdej metody, więc rabat musi zostawić
+na koszyku co najmniej tyle.
 
 Na `wp.`:
 

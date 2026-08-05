@@ -21,7 +21,10 @@ odpowiada cały czas, od kroku 2 pod adresem `wp.`.
 
 ## Cloudflare
 
-- [ ] SSL/TLS na Full (strict)
+- [ ] Tryb SSL/TLS to nie Flexible. Full i Full (strict) działają oba, Flexible
+      łączy się z originem po HTTP, Vercel odbija to na HTTPS i wychodzi pętla
+      przekierowań. To, że dziś strona działa, niczego nie dowodzi: dhosting
+      Flexible toleruje.
 - [ ] Żadna reguła nie cache'uje HTML-a. Domyślnie Cloudflare tego nie robi i tak
       ma zostać, bo inaczej rewalidacja działa, a ludzie widzą starą stronę.
 
@@ -71,7 +74,7 @@ momencie są w bazie.
 
 Serwer trzyma wygenerowane strony tydzień
 (`x-litespeed-cache-control: public,max-age=604800`). Bez purge'a serwuje dalej
-HTML z adresami apeksu i test w punkcie (e) pokaże bzdury.
+HTML z adresami apeksu i test w punkcie (d) pokaże bzdury.
 
 ### d) Test kasy
 
@@ -150,8 +153,6 @@ poleciałby w tę samą maszynę.
 
 ## Do posprzątania później
 
-Nie na rozmowę, ale i nie na nigdy.
-
 Panel Paynow przez mBank, Ustawienia → Sklepy i punkty płatności → Adres
 powiadomień:
 
@@ -160,14 +161,14 @@ https://wp.bachanaliafantastyczne.pl/?wc-api=WC_Gateway_Pay_By_Paynow_PL
 ```
 
 To jedno pole na cały sklep i wskazuje na apeks. Dopóki tak zostaje, każde
-powiadomienie o płatności idzie przez Vercela i proxy na `/` z parametrem
-`wc-api`, zamiast prosto do WordPressa. Działa, tylko po co.
+powiadomienie o płatności nadkłada drogi przez Vercela i proxy na `/`, zamiast
+trafiać prosto do WordPressa.
 
 Adresu powrotu nie ruszamy, wtyczka ustawia go sama przy każdym zamówieniu.
 
-Przeniesienie tego kroku na później stoi na tym, że proxy odpowiada. Punkt w
-„przed startem" to sprawdza. Jeśli tam się nie zaświeci na zielono, adres
-w Paynow trzeba zmienić jeszcze przed przepięciem apeksu.
+Odłożenie tego kroku ma sens tylko wtedy, gdy proxy odpowiada, a to sprawdza
+punkt w „przed startem". Jeśli jest tam czerwono, adres w Paynow zmieniamy
+jeszcze przed przepięciem apeksu.
 
 ## Linki absolutne
 

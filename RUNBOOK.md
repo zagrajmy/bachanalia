@@ -13,7 +13,7 @@ odpowiada cały czas, od kroku 2 pod adresem `wp.`.
       na dzisiejszym adresie. W kroku 4 zostaje wtedy tylko podmienić adres.
 - [ ] Jest dostęp do panelu Paynow, czyli do mBanku firmowego (krok 2d)
 - [ ] Kupon testowy założony według opisu w kroku 2e
-- [ ] Przekierowania `/wp-content`, `/wp-includes`, `/wp-admin`, `/wp-login.php`
+- [x] Przekierowania `/wp-content`, `/wp-includes`, `/wp-admin`, `/wp-login.php`
       wdrożone na Vercelu
 - [ ] Proxy powiadomień Paynow odpowiada. POST na
       `bachanalia.vercel.app/?wc-api=WC_Gateway_Pay_By_Paynow_PL` ma wrócić

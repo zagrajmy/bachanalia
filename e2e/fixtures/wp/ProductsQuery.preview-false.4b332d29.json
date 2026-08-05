@@ -483,16 +483,40 @@
           "stockStatus": "IN_STOCK"
         },
         {
+          "slug": "fantazje-zielonogorskie-xvi",
+          "name": "Fantazje Zielonogórskie XVI",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-xvi/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/08/0c380863-7a50-4ad8-9573-924e983141e9.jpeg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/08/0c380863-7a50-4ad8-9573-924e983141e9-150x150.jpeg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 1429,
+              "height": 2048
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "25,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
           "slug": "golden-ticket",
           "name": "Golden Ticket",
           "link": "https://bachanaliafantastyczne.pl/index.php/produkt/golden-ticket/",
           "image": {
-            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-2026.jpg",
-            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-2026-150x150.jpg",
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-ticket_1000x1000px_nowe.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-ticket_1000x1000px_nowe-150x150.jpg",
             "altText": "",
             "mediaDetails": {
-              "width": 819,
-              "height": 1024
+              "width": 1000,
+              "height": 1000
             }
           },
           "productCategories": {
@@ -507,12 +531,36 @@
           "stockStatus": "IN_STOCK"
         },
         {
-          "slug": "wsparcie-klubu-1-zl",
-          "name": "Wsparcie Klubu 1 zł",
-          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/wsparcie-klubu-1-zl/",
+          "slug": "koszulka",
+          "name": "Koszulka",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/koszulka/",
           "image": {
-            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/wsparcie-1-zl.jpg",
-            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/wsparcie-1-zl-150x150.jpg",
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/mockup-koszulka_1000x1000px.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/mockup-koszulka_1000x1000px-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 1000,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "koszulki",
+                "name": "koszulki"
+              }
+            ]
+          },
+          "price": "65,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "wsparcie-klubu-100-zl",
+          "name": "Wsparcie Klubu 100 zł",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/wsparcie-klubu-100-zl/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/01/8944c73c-38ae-41cc-8c4b-963e80679499.jpeg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/01/8944c73c-38ae-41cc-8c4b-963e80679499-150x150.jpeg",
             "altText": "",
             "mediaDetails": {
               "width": 500,
@@ -527,7 +575,55 @@
               }
             ]
           },
-          "price": "1,00&nbsp;zł",
+          "price": "100,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "wsparcie-klubu-20-zl",
+          "name": "Wsparcie Klubu 20 zł",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/wsparcie-klubu-20-zl/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/01/40c26750-db7d-40e2-8272-7f928287ad31.jpeg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/01/40c26750-db7d-40e2-8272-7f928287ad31-150x150.jpeg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 500,
+              "height": 500
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "wsparcie",
+                "name": "wsparcie"
+              }
+            ]
+          },
+          "price": "20,00&nbsp;zł",
+          "stockStatus": "IN_STOCK"
+        },
+        {
+          "slug": "wsparcie-klubu-50-zl",
+          "name": "Wsparcie Klubu 50 zł",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/wsparcie-klubu-50-zl/",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/08/39a3ea9c-a0c7-4da6-ac03-feb3bd5854cf.jpeg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/08/39a3ea9c-a0c7-4da6-ac03-feb3bd5854cf-150x150.jpeg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 500,
+              "height": 500
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "wsparcie",
+                "name": "wsparcie"
+              }
+            ]
+          },
+          "price": "50,00&nbsp;zł",
           "stockStatus": "IN_STOCK"
         }
       ]

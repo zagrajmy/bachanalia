@@ -4,10 +4,9 @@ import { print } from "graphql/language/printer";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
 import { fbPostKey, lqipAsset } from "@/utils/lqip";
 
-import { parseFeedItems } from "./facebookFeed";
+import { FEED_PAGE_URI, parseFeedItems } from "./facebookFeed";
+import { archivedFacebookNews } from "./fbArchive";
 import { NewsEntry } from "./newsFormat";
-
-const FRONT_PAGE_URI = "/";
 
 const FeedQuery = gql`
   query FeedQuery($uri: String!) {
@@ -51,8 +50,14 @@ async function withLiveImages(entries: NewsEntry[]) {
 export async function fetchFacebookNews(limit: number): Promise<NewsEntry[]> {
   const { nodeByUri } = await fetchGraphQL<{ nodeByUri: { content?: string | null } | null }>(
     print(FeedQuery),
-    { uri: FRONT_PAGE_URI },
+    { uri: FEED_PAGE_URI },
   );
 
-  return withLiveImages(parseFeedItems(nodeByUri?.content ?? "").slice(0, limit));
+  const archived = archivedFacebookNews();
+  const known = new Set(archived.map((entry) => entry.id));
+  const live = parseFeedItems(nodeByUri?.content ?? "").filter((entry) => !known.has(entry.id));
+
+  return [...(await withLiveImages(live)), ...archived]
+    .sort((a, b) => b.dateTime.localeCompare(a.dateTime))
+    .slice(0, limit);
 }

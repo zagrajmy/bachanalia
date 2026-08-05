@@ -39,8 +39,8 @@ const NEWS_PAGE = 12;
 
 export async function fetchNews(limit = NEWS_PAGE): Promise<NewsEntry[]> {
   const [wordpress, facebook] = await Promise.all([
-    fetchGraphQL<{ posts: { nodes: Post[] } }>(print(NewsQuery), { first: NEWS_PAGE }),
-    fetchFacebookNews(NEWS_PAGE),
+    fetchGraphQL<{ posts: { nodes: Post[] } }>(print(NewsQuery), { first: limit }),
+    fetchFacebookNews(limit),
   ]);
 
   return [...(wordpress.posts?.nodes ?? []).map(toNewsEntry), ...facebook]

@@ -1,0 +1,237 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 2148,
+          "slug": "koszulka",
+          "name": "Koszulka",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/koszulka/",
+          "description": "<p>Koszulka BF 26</p>\n",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/mockup-koszulka_1000x1000px.jpg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/08/mockup-koszulka_1000x1000px-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 1000,
+              "height": 1000
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "koszulki",
+                "name": "koszulki"
+              }
+            ]
+          },
+          "price": "65,00&nbsp;zł",
+          "stockStatus": "IN_STOCK",
+          "soldIndividually": false,
+          "attributes": {
+            "nodes": [
+              {
+                "name": "rozmiar",
+                "label": "Rozmiar"
+              }
+            ]
+          },
+          "variations": {
+            "nodes": [
+              {
+                "databaseId": 2162,
+                "name": "Koszulka - damska xxxl",
+                "price": "65,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmiar",
+                      "value": "damska xxxl"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2161,
+                "name": "Koszulka - damska xxl",
+                "price": "65,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmiar",
+                      "value": "damska xxl"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2160,
+                "name": "Koszulka - damska xl",
+                "price": "65,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmiar",
+                      "value": "damska xl"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2159,
+                "name": "Koszulka - damska l",
+                "price": "65,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmiar",
+                      "value": "damska l"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2158,
+                "name": "Koszulka - damska m",
+                "price": "65,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmiar",
+                      "value": "damska m"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2157,
+                "name": "Koszulka - damska s",
+                "price": "65,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmiar",
+                      "value": "damska s"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2156,
+                "name": "Koszulka - damska xs",
+                "price": "65,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmiar",
+                      "value": "damska xs"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2155,
+                "name": "Koszulka - męska xxxl",
+                "price": "65,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmiar",
+                      "value": "męska xxxl"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2154,
+                "name": "Koszulka - męska xxl",
+                "price": "65,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmiar",
+                      "value": "męska xxl"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2153,
+                "name": "Koszulka - męska xl",
+                "price": "65,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmiar",
+                      "value": "męska xl"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2152,
+                "name": "Koszulka - męska l",
+                "price": "65,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmiar",
+                      "value": "męska l"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2151,
+                "name": "Koszulka - męska m",
+                "price": "65,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmiar",
+                      "value": "męska m"
+                    }
+                  ]
+                }
+              },
+              {
+                "databaseId": 2150,
+                "name": "Koszulka - męska s",
+                "price": "65,00&nbsp;zł",
+                "stockStatus": "IN_STOCK",
+                "attributes": {
+                  "nodes": [
+                    {
+                      "name": "rozmiar",
+                      "value": "męska s"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

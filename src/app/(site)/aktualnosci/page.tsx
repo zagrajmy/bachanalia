@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export const revalidate = 10_800;
 
 export default async function AktualnosciPage() {
-  const items = await fetchNews();
+  const items = await fetchNews(50);
 
   return (
     <div className="gutter mx-auto max-w-6xl pt-12 pb-4 sm:pt-16 lg:px-0">

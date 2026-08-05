@@ -1,0 +1,43 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 3539,
+          "slug": "fantazje-zielonogorskie-xvi",
+          "name": "Fantazje Zielonogórskie XVI",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/fantazje-zielonogorskie-xvi/",
+          "description": "<div class=\"xdj266r x14z9mp xat24cr x1lziwak x1vvkbs x126k92a\">\n<div dir=\"auto\">Znamy laureatów XVI edycji konkursu literackiego Fantazje Zielonogórskie!</div>\n</div>\n<div class=\"x14z9mp xat24cr x1lziwak x1vvkbs xtlvy1s x126k92a\">\n<div dir=\"auto\">Po nieco burzliwych obradach jury wyłoniło zwycięzcę tegorocznej edycji. Został nim Maciej Proksa z opowiadaniem „Bachaliusz” – mroczną, znakomicie skonstruowaną historią, która w oryginalny sposób splata dzieje dawnego Grünbergu z fantastyką. Serdecznie gratulujemy!</div>\n</div>\n<div class=\"x14z9mp xat24cr x1lziwak x1vvkbs xtlvy1s x126k92a\">\n<div dir=\"auto\">Kapituła przyznała również trzy wyróżnienia pracom, które zachwyciły jury swoim poziomem literackim i do samego końca walczyły o główną nagrodę:</div>\n<div dir=\"auto\">„Moszcz” – Krzysztof Pawluczuk</div>\n<div dir=\"auto\">„Powrót Gagarina” – Marek Adamkowicz</div>\n<div dir=\"auto\">„Nowe, wspaniałe… Potem” – Lena Graczyk</div>\n</div>\n<div class=\"x14z9mp xat24cr x1lziwak x1vvkbs xtlvy1s x126k92a\">\n<div dir=\"auto\">Do tegorocznej antologii Fantazje Zielonogórskie tom XVI trafią również:</div>\n</div>\n<div class=\"x14z9mp xat24cr x1lziwak x1vvkbs xtlvy1s x126k92a\">\n<div dir=\"auto\">„Dolina” – Zbigniew Witosławski</div>\n<div dir=\"auto\">„Girlfriend Experience” – Aniela Sobuś</div>\n<div dir=\"auto\">„Ostatni monolog” – Katarzyna Satława</div>\n<div dir=\"auto\">„Żelazny Tomasz” – Krystian Koszołko</div>\n<div dir=\"auto\">„Bez tytułu” – Olimpia Smoleńska</div>\n<div dir=\"auto\">„Studium jeżyków obcych” – Michał Taraska</div>\n<div dir=\"auto\">„Skazani na zgodę” – Barbara Sarbian</div>\n<div dir=\"auto\">„Mojry nad miastem” – Marcin Opolski</div>\n<div dir=\"auto\">„Upadek” – Adrian Grygiel</div>\n</div>\n<div class=\"x14z9mp xat24cr x1lziwak x1vvkbs xtlvy1s x126k92a\">\n<div dir=\"auto\">Serdecznie gratulujemy wszystkim nagrodzonym i wyróżnionym autorom! Dziękujemy również każdej osobie, która zdecydowała się wziąć udział w konkursie. Wiemy, że się napracowaliście &#8211; poziom tegorocznej edycji sprawił, że wybór laureatów nie należał do łatwych.</div>\n</div>\n<div class=\"x14z9mp xat24cr x1lziwak x1vvkbs xtlvy1s x126k92a\">\n<div dir=\"auto\">Premiera antologii Fantazje Zielonogórskie tom XVI odbędzie się podczas tegorocznych tegorocznego Polconu w Zielonej Górze, który odbędą się 25–27 września. W trakcie uroczystej gali wręczone zostaną nagrody, wyróżnienia oraz statuetka Zielonogórskiej Wiedźmy dla zwycięzcy konkursu.</div>\n</div>\n<div class=\"x14z9mp xat24cr x1lziwak x1vvkbs xtlvy1s x126k92a\">\n<div dir=\"auto\">\n<p>Do zobaczenia na żywo!</p>\n<p>UWAGA!!!</p>\n<p>W PRZYPADKU WYBRANIA WYSYŁKI NADANIE PACZKI NASTĄPI PO BACHANALIACH FANTASTYCZNYCH 26</p>\n</div>\n</div>\n",
+          "image": {
+            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/08/0c380863-7a50-4ad8-9573-924e983141e9.jpeg",
+            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/08/0c380863-7a50-4ad8-9573-924e983141e9-150x150.jpeg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 1429,
+              "height": 2048
+            }
+          },
+          "productCategories": {
+            "nodes": [
+              {
+                "slug": "antologie",
+                "name": "antologie"
+              }
+            ]
+          },
+          "price": "25,00&nbsp;zł",
+          "stockStatus": "IN_STOCK",
+          "soldIndividually": false
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

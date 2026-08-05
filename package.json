@@ -10,6 +10,7 @@
     "codegen": "graphql-codegen --config codegen.ts && node ./add-ts-nocheck.js",
     "codegen:refresh": "WP_SCHEMA_REFRESH=1 bun run codegen",
     "lqip": "bun scripts/lqip-cache.ts",
+    "archive-news": "bun scripts/archive-fb-news.ts",
     "e2e": "playwright test",
     "e2e:server": "MOCK_WP=replay NEXT_DIST_DIR=.next-mock next dev",
     "e2e:record": "bun scripts/record-wp.ts",

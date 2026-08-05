@@ -5,6 +5,7 @@ import { fetchGraphQL } from "@/utils/fetchGraphQL";
 import { fbPostKey, lqipAsset } from "@/utils/lqip";
 
 import { parseFeedItems } from "./facebookFeed";
+import { archivedFacebookNews } from "./fbArchive";
 import { NewsEntry } from "./newsFormat";
 
 const FRONT_PAGE_URI = "/";
@@ -54,5 +55,11 @@ export async function fetchFacebookNews(limit: number): Promise<NewsEntry[]> {
     { uri: FRONT_PAGE_URI },
   );
 
-  return withLiveImages(parseFeedItems(nodeByUri?.content ?? "").slice(0, limit));
+  const archived = archivedFacebookNews();
+  const known = new Set(archived.map((entry) => entry.id));
+  const live = parseFeedItems(nodeByUri?.content ?? "").filter((entry) => !known.has(entry.id));
+
+  return [...(await withLiveImages(live)), ...archived]
+    .sort((a, b) => b.dateTime.localeCompare(a.dateTime))
+    .slice(0, limit);
 }

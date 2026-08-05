@@ -8,7 +8,9 @@ odpowiada cały czas, od kroku 2 pod adresem `wp.`.
 
 ## Przed startem
 
-- [ ] Apeks i `www` dodane do projektu na Vercelu, certyfikaty wystawione
+- [x] Apeks i `www` dodane do projektu na Vercelu, `www` z przekierowaniem 308 na
+      apeks. Certyfikatów jeszcze nie ma i mieć nie może — Vercel wystawia je
+      dopiero, gdy domena zaczyna do niego prowadzić. Stąd kolejność w kroku 4.
 - [ ] Ustawienia → Rewalidacja strony, „Wyślij testowy sygnał" świeci na zielono
       na dzisiejszym adresie. W kroku 4 zostaje wtedy tylko podmienić adres.
 - [x] Kupon testowy założony według opisu w kroku 2d
@@ -21,10 +23,9 @@ odpowiada cały czas, od kroku 2 pod adresem `wp.`.
 
 ## Cloudflare
 
-- [ ] Tryb SSL/TLS to nie Flexible. Full i Full (strict) działają oba, Flexible
+- [ ] Upewnić się że Tryb SSL/TLS to nie Flexible. Full i Full (strict) działają oba, Flexible
       łączy się z originem po HTTP, Vercel odbija to na HTTPS i wychodzi pętla
-      przekierowań. To, że dziś strona działa, niczego nie dowodzi: dhosting
-      Flexible toleruje.
+      przekierowań.
 - [ ] Żadna reguła nie cache'uje HTML-a. Domyślnie Cloudflare tego nie robi i tak
       ma zostać, bo inaczej rewalidacja działa, a ludzie widzą starą stronę.
 
@@ -126,11 +127,20 @@ niezauważenie.
 
 ## 4. Apeks i `www` na Vercela
 
-Pomarańczowa chmurka zostaje. Za proxy zmiana originu wchodzi od razu i tak samo
-szybko się cofa, bez czekania na propagację DNS.
+Vercel nie ma jeszcze certyfikatu na te domeny i dostanie go dopiero, kiedy ruch
+zacznie do niego docierać. Dlatego najpierw szara chmurka, potem pomarańczowa:
 
-`www` na 308 do apeksu. Apeks jest kanoniczny, tak ustawia `NEXT_PUBLIC_BASE_URL`.
-Do tej pory przekierowanie robił WordPress, od teraz Vercel.
+1. Przepiąć apeks i `www` na Vercela **bez proxy**, szara chmurka.
+2. Poczekać, aż `https://bachanaliafantastyczne.pl` otworzy się bez ostrzeżenia
+   o certyfikacie. Zwykle chwilę, ale to jest brama do następnego punktu.
+3. Włączyć proxy z powrotem, pomarańczowa chmurka.
+
+Od tego momentu zmiana originu wchodzi od razu i tak samo szybko się cofa, bez
+czekania na propagację DNS. W punktach 1 i 2 tego udogodnienia nie ma, bo przy
+szarej chmurce liczy się TTL rekordu, czyli 300 sekund.
+
+Przekierowanie `www` na apeks jest już ustawione po stronie Vercela. Do tej pory
+robił to WordPress.
 
 Zaraz potem Ustawienia → Rewalidacja strony, adres strony Next.js na
 `https://bachanaliafantastyczne.pl`.

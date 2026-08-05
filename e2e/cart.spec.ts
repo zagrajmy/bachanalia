@@ -14,7 +14,7 @@ import { CHECKOUT_UNAVAILABLE } from "../src/components/Cart/paths";
 
 const SHIRT = "/produkt/golden-ticket/";
 const SIZE = "MĘSKA L";
-const TIP_JAR = "/produkt/wsparcie-klubu-1-zl/";
+const TIP_JAR = "/produkt/wsparcie-klubu-20-zl/";
 const CART = "/sklep/koszyk/";
 
 /**

@@ -47,6 +47,29 @@ const nextConfig = {
         destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/index.php/zamowienie/order-received/:path*`,
         permanent: false,
       },
+      /**
+       * The paths WordPress keeps serving after the apex becomes this app.
+       * Uploads are the reason: every image and PDF ever placed in a post body
+       * carries an absolute URL, and those URLs are also in ticket emails
+       * already sent, in Facebook posts, and in Google's index — none of which
+       * a database search-replace can reach.
+       *
+       * Never deploy these while NEXT_PUBLIC_WORDPRESS_API_URL still names the
+       * apex *and* the apex already resolves here: destination would equal
+       * source and every upload would redirect to itself. The cutover changes
+       * the variable first for that reason.
+       */
+      ...["wp-content", "wp-includes", "wp-admin"].map((prefix) => ({
+        source: `/${prefix}/:path*`,
+        destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/${prefix}/:path*`,
+        permanent: false,
+      })),
+      /** Bookmarked directly often enough to be worth its own rule. */
+      {
+        source: "/wp-login.php",
+        destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-login.php`,
+        permanent: false,
+      },
       {
         source: "/index.php/:path*",
         destination: "/:path*/",

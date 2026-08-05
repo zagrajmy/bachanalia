@@ -78,6 +78,24 @@ test("the order confirmation stays with WordPress, which issues the ticket", asy
   assert.match(rule.destination, /\/index\.php\/zamowienie\/order-received\/:path\*$/);
 });
 
+test("uploads keep resolving after the apex stops being WordPress", async () => {
+  const rule = await find("/wp-content/:path*");
+
+  assert.match(
+    rule.destination,
+    /\/wp-content\/:path\*$/,
+    "an absolute upload URL survives in ticket emails, Facebook posts and Google's index long after a search-replace fixes the database",
+  );
+});
+
+test("nothing WordPress still serves is left to 404 on the apex", async () => {
+  const sources = new Set((await redirects()).map((rule) => rule.source));
+
+  for (const prefix of ["wp-content", "wp-includes", "wp-admin"]) {
+    assert.ok(sources.has(`/${prefix}/:path*`), `/${prefix}/ has no redirect`);
+  }
+});
+
 test("the dropped WordPress news shells land on the news archive", async () => {
   const destinations = new Map((await redirects()).map((rule) => [rule.source, rule.destination]));
 

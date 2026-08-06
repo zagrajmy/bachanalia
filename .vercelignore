@@ -1,0 +1,13 @@
+.next
+.next-mock
+.next-build
+node_modules
+e2e
+playwright-report
+test-results
+blob-report
+coverage
+.git
+research
+tools/key-art
+*.tsbuildinfo

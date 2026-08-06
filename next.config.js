@@ -50,6 +50,14 @@ const nextConfig = {
    *
    * Changing the panel field is still the fix. This only means a forgotten
    * field costs nobody their ticket.
+   *
+   * InPost's shipment-status webhook is the same shape of problem: Manager
+   * Paczek holds one URL, today the apex
+   * (`/wp-json/inpost_pl/v1/order/update/`), and ShipX has no API to move it.
+   * Proxy it so a forgotten Manager Paczek update only costs live status
+   * colours until someone pastes the `wp.` URL — labels and checkout keep
+   * working either way. Geowidget's token is bound to a site URL and cannot
+   * be papered over here; that one needs Manager Paczek.
    */
   async rewrites() {
     return {
@@ -65,6 +73,10 @@ const nextConfig = {
           source: "/",
           has: [{ type: "query", key: "wc-api" }],
           destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/`,
+        },
+        {
+          source: "/wp-json/inpost_pl/:path*",
+          destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-json/inpost_pl/:path*`,
         },
       ],
     };

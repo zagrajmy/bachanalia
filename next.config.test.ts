@@ -110,6 +110,30 @@ test("the notification is proxied, never redirected", async () => {
   );
 });
 
+test("an InPost status webhook aimed at the apex still reaches WordPress", async () => {
+  assert.ok(nextConfig.rewrites, "next.config.js must declare rewrites()");
+  const rules = await nextConfig.rewrites();
+
+  assert.ok(!Array.isArray(rules) && rules.beforeFiles, "rewrites use the phased form");
+  const rule = rules.beforeFiles.find((r) => r.source === "/wp-json/inpost_pl/:path*");
+
+  assert.ok(rule, "Manager Paczek still holds the apex webhook URL");
+  assert.match(
+    rule.destination,
+    /\/wp-json\/inpost_pl\/:path\*$/,
+    "ShipX has no API to re-point the webhook; proxy until someone pastes the wp. URL",
+  );
+});
+
+test("the InPost webhook is proxied, never redirected", async () => {
+  const sources = (await redirects()).map((rule) => rule.source);
+
+  assert.ok(
+    !sources.some((source) => source.includes("inpost_pl")),
+    "a 3xx would drop the POST body InPost uses to update shipment status",
+  );
+});
+
 test("uploads keep resolving after the apex stops being WordPress", async () => {
   const rule = await find("/wp-content/:path*");
 

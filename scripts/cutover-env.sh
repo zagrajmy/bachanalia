@@ -30,8 +30,9 @@ settings=$(
     -d '{"query":"{generalSettings{url}}"}'
 ) || die "$WP/graphql nie odpowiada — krok 1 nieskończony"
 
+# WPGraphQL may escape slashes (https:\/\/…); match the host, not the raw URL.
 case "$settings" in
-  *"$WP"*) echo "✓ siteurl wskazuje na wp." ;;
+  *wp.bachanaliafantastyczne.pl*) echo "✓ siteurl wskazuje na wp." ;;
   *) die "siteurl to nadal nie wp. — zrób krok 2a. WordPress odpowiedział: $settings" ;;
 esac
 

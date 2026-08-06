@@ -15,6 +15,7 @@ bun run test                       # unit
 bunx playwright test --workers=2   # e2e, and the worker count is not optional
 ```
 
-**[`IN_PROGRESS.md`](./IN_PROGRESS.md) is the source of truth** — architecture,
-site map, design system, the traps this codebase has already fallen into, and
-what is still open. Read it before changing anything.
+**[`docs/architecture.md`](./docs/architecture.md) is the source of truth** —
+site map, design system, how the shop is wired, and the traps this codebase has
+already fallen into. Read it before changing anything.
+[`IN_PROGRESS.md`](./IN_PROGRESS.md) is what is still open.

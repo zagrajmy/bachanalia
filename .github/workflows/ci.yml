@@ -15,8 +15,9 @@ concurrency:
 
 env:
   NEXT_PUBLIC_BASE_URL: http://localhost:3100
-  NEXT_PUBLIC_WORDPRESS_API_URL: https://bachanaliafantastyczne.pl
-  NEXT_PUBLIC_WORDPRESS_API_HOSTNAME: bachanaliafantastyczne.pl
+  # The apex is this app since the cutover; WordPress answers on wp.
+  NEXT_PUBLIC_WORDPRESS_API_URL: https://wp.bachanaliafantastyczne.pl
+  NEXT_PUBLIC_WORDPRESS_API_HOSTNAME: wp.bachanaliafantastyczne.pl
 
 jobs:
   static:

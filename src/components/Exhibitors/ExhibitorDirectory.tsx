@@ -25,12 +25,10 @@ function Awning() {
 
 function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-card border border-navy bg-paper transition-colors duration-150 hover:bg-paper-shade">
+    <article className="flex h-full flex-col overflow-hidden rounded-card border border-navy bg-paper">
       <Awning />
       <div className="flex-1 p-5">
-        <h3 className="display wrap-break-word text-[1.9rem] text-ink transition-colors duration-150 group-hover:text-rose">
-          {exhibitor.name}
-        </h3>
+        <h3 className="display wrap-break-word text-[1.9rem] text-ink">{exhibitor.name}</h3>
         {exhibitor.description && (
           <p className="mt-3 text-sm/relaxed text-ink-muted">{exhibitor.description}</p>
         )}
@@ -42,7 +40,7 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
               alt=""
               className="max-h-9 w-auto max-w-full object-contain"
               height={320}
-              sizes="160px"
+              sizes="256px"
               src={exhibitor.logoUrl}
               width={640}
             />
@@ -143,7 +141,7 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
       </p>
 
       {results.length > 0 ? (
-        <ul className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-5 grid gap-5 sm:grid-cols-2">
           {results.map((exhibitor) => (
             <li key={exhibitor.name}>
               <ExhibitorCard exhibitor={exhibitor} />

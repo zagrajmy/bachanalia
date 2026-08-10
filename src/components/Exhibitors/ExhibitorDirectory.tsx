@@ -7,6 +7,7 @@ import Store01Icon from "@hugeicons/core-free-icons/Store01Icon";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import type { Exhibitor } from "@/content/exhibitors";
+import { counted } from "@/utils/plural";
 
 type SortOrder = "az" | "za";
 
@@ -123,13 +124,13 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
       </div>
 
       <p aria-live="polite" className="sr-only">
-        {results.length === 1 ? "1 wystawca" : `${results.length} wystawców`}
+        {counted(results.length, { one: "wystawca", few: "wystawcy", many: "wystawców" })}
       </p>
 
       {results.length > 0 ? (
         <ul className="mt-6 grid gap-5 sm:grid-cols-2">
           {results.map((exhibitor) => (
-            <li key={exhibitor.name}>
+            <li key={exhibitor.logoUrl ?? exhibitor.links[0]?.href ?? exhibitor.name}>
               <ExhibitorCard exhibitor={exhibitor} />
             </li>
           ))}

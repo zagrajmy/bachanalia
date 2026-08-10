@@ -13,7 +13,6 @@ test("a dark mark on transparency needs the plate", () => {
       [0, 0, 0, 0],
       [0, 0, 0, 0],
     ]),
-    4,
   );
 
   assert.equal(readsOnDark(measured), false);
@@ -27,7 +26,6 @@ test("a light mark on transparency is already dark-ready", () => {
       [0, 0, 0, 0],
       [0, 0, 0, 0],
     ]),
-    4,
   );
 
   assert.equal(readsOnDark(measured), true);
@@ -41,15 +39,7 @@ test("a dark mark that carries its own white ground keeps it", () => {
       [255, 255, 255, 255],
       [255, 255, 255, 255],
     ]),
-    4,
   );
-
-  assert.equal(measured.transparentShare, 0);
-  assert.equal(readsOnDark(measured), true);
-});
-
-test("an opaque image without an alpha channel is left alone", () => {
-  const measured = measureLogo(Uint8Array.from([12, 12, 12, 30, 30, 30]), 3);
 
   assert.equal(measured.transparentShare, 0);
   assert.equal(readsOnDark(measured), true);
@@ -61,7 +51,6 @@ test("fully transparent pixels do not drag the mean down", () => {
       [250, 250, 250, 255],
       [0, 0, 0, 0],
     ]),
-    4,
   );
 
   assert.equal(measured.meanLuminance > 200, true);

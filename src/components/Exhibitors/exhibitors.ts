@@ -2,9 +2,11 @@ import logosThatReadOnDark from "@/content/exhibitorLogosOnDark.json";
 import type { Exhibitor, ExhibitorLink } from "@/content/exhibitors";
 
 /**
- * Measured by `scripts/exhibitor-logos.ts`. A logo added to the sheet since the
- * last build is unmeasured, so it gets a plate: legibility beats an unnecessary
- * plate, which light mode cannot show anyway.
+ * Drive file ids measured by `scripts/exhibitor-logos.ts`, keyed by id rather
+ * than by thumbnail url so changing the requested size cannot silently
+ * invalidate every entry. A logo added to the sheet since the last build is
+ * unmeasured, so it gets a plate: legibility beats an unnecessary plate, which
+ * light mode cannot show anyway.
  */
 const READS_ON_DARK = new Set<string>(logosThatReadOnDark);
 
@@ -78,9 +80,13 @@ export function extractLinks(value?: string): ExhibitorLink[] {
   });
 }
 
-export function driveImageUrl(value?: string) {
+export function driveFileId(value?: string) {
   if (!value) return undefined;
-  const id = value.match(/\/d\/([^/]+)/)?.[1] ?? value.match(/[?&]id=([^&]+)/)?.[1];
+  return value.match(/\/d\/([^/]+)/)?.[1] ?? value.match(/[?&]id=([^&]+)/)?.[1];
+}
+
+export function driveImageUrl(value?: string) {
+  const id = driveFileId(value);
   return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w640` : undefined;
 }
 
@@ -102,14 +108,15 @@ export function exhibitorsFromCsv(source: string): Exhibitor[] {
     const name = clean(row[nameIndex]);
     if (!name) return [];
 
-    const logoUrl = logoIndex === undefined ? undefined : driveImageUrl(clean(row[logoIndex]));
+    const logo = logoIndex === undefined ? undefined : clean(row[logoIndex]);
+    const logoId = driveFileId(logo);
 
     return [
       {
         name,
         description: descriptionIndex === undefined ? undefined : clean(row[descriptionIndex]),
-        logoUrl,
-        logoNeedsPlate: logoUrl !== undefined && !READS_ON_DARK.has(logoUrl),
+        logoUrl: driveImageUrl(logo),
+        logoNeedsPlate: logoId !== undefined && !READS_ON_DARK.has(logoId),
         links: linksIndex === undefined ? [] : extractLinks(row[linksIndex]),
       },
     ];

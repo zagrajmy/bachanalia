@@ -15,7 +15,6 @@
   --color-slate: #4e5079;
 
   --color-surface: var(--color-paper);
-  --color-plate: var(--color-paper-shade);
   --color-ink: var(--color-navy);
   --color-ink-muted: var(--color-slate);
   --color-edge: var(--color-navy);
@@ -71,25 +70,24 @@
     background-color: var(--color-navy-deep);
     color: var(--color-paper);
     --color-surface: var(--color-navy-deep);
-    --color-plate: var(--color-navy);
     --color-ink: var(--color-paper);
     --color-ink-muted: color-mix(in oklab, var(--color-paper) 85%, transparent);
     --color-edge: color-mix(in oklab, var(--color-paper) 35%, transparent);
     --color-accent: var(--color-pink);
-    --color-mark: var(--color-pink);
+    /** Distinct from the accent, or a link's hover would change nothing here. */
+    --color-mark: var(--color-paper);
     --color-hairline: color-mix(in oklab, var(--color-paper) 25%, transparent);
-    position: relative;
+  }
+}
 
-    /** The footer sets its own gap above itself, and that band is page, not footer. */
-    &::after {
-      content: "";
-      position: absolute;
-      inset-inline: 0;
-      top: 100%;
-      z-index: -1;
-      height: 7rem;
-      background-color: var(--color-navy-deep);
-    }
+/**
+ * The footer sets its own margin above itself and the body shows through it.
+ * Painting the ground rather than a fixed-height band means the gap can change
+ * without leaving a strip of the wrong colour behind.
+ */
+@media (prefers-color-scheme: dark) {
+  body:has(.night-print) {
+    background-color: var(--color-navy-deep);
   }
 }
 

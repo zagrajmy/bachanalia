@@ -4,14 +4,19 @@
  * logo on the page. Reads the same sheet the directory does and writes the
  * verdict next to the other precomputed image data.
  *
- * Runs in the build, before `next build`, and keeps the committed list when
- * Drive or the sheet is unreachable — a failed fetch must not silently drop
- * plates from logos that need them.
+ * Runs before `next build`, and a deploy must never hinge on Google answering:
+ * anything short of a complete set of measurements leaves the committed list
+ * alone and exits 0. A partial write would be worse than a stale one — it would
+ * silently plate every logo whose fetch happened to fail.
  */
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { exhibitorsFromCsv, SHEET_CSV_URL } from "../src/components/Exhibitors/exhibitors";
+import {
+  driveFileId,
+  exhibitorsFromCsv,
+  SHEET_CSV_URL,
+} from "../src/components/Exhibitors/exhibitors";
 import { measureLogo, readsOnDark } from "../src/utils/logoContrast";
 
 const OUT = join(import.meta.dirname, "..", "src/content/exhibitorLogosOnDark.json");
@@ -19,44 +24,51 @@ const OUT = join(import.meta.dirname, "..", "src/content/exhibitorLogosOnDark.js
 /** Big enough for the mean to be stable, small enough to decode instantly. */
 const SAMPLE = 64;
 
+const keep = (why: string) => {
+  console.warn(`[exhibitor-logos] ${why}; keeping the committed list`);
+  process.exit(0);
+};
+
 async function measure(url: string) {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`${response.status} for ${url}`);
 
   const { default: sharp } = await import("sharp");
-  const { data, info } = await sharp(Buffer.from(await response.arrayBuffer()))
+  const { data } = await sharp(Buffer.from(await response.arrayBuffer()))
     .resize(SAMPLE, SAMPLE, { fit: "inside" })
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
 
-  return measureLogo(data, info.channels);
+  return measureLogo(data);
 }
 
-const response = await fetch(SHEET_CSV_URL, { headers: { accept: "text/csv" } });
-if (!response.ok) throw new Error(`Google Sheets returned ${response.status}`);
+const sheet = await fetch(SHEET_CSV_URL, { headers: { accept: "text/csv" } }).catch(() => null);
+if (!sheet?.ok) keep(`the sheet answered ${sheet?.status ?? "nothing"}`);
 
-const logos = exhibitorsFromCsv(await response.text())
+const logos = exhibitorsFromCsv(await sheet!.text())
   .map((exhibitor) => exhibitor.logoUrl)
   .filter((url) => url !== undefined);
 
-const safe: string[] = [];
-let plated = 0;
-
-for (const url of logos) {
-  try {
-    const measured = await measure(url);
-    if (readsOnDark(measured)) {
-      safe.push(url);
-    } else {
-      plated += 1;
+const measured = await Promise.all(
+  logos.map(async (url) => {
+    try {
+      return { id: driveFileId(url), reads: readsOnDark(await measure(url)) };
+    } catch (error) {
+      console.warn(`[exhibitor-logos] could not read ${url}: ${String(error)}`);
+      return undefined;
     }
-  } catch (error) {
-    console.warn(`[exhibitor-logos] could not read ${url}: ${String(error)}`);
-  }
-}
-
-await writeFile(OUT, `${JSON.stringify(safe.sort(), null, 2)}\n`);
-console.log(
-  `[exhibitor-logos] ${logos.length} logos: ${safe.length} read on dark, ${plated} plated`,
+  }),
 );
+
+if (measured.some((entry) => entry === undefined)) keep("some logos could not be read");
+
+const safe = measured
+  .filter((entry) => entry !== undefined)
+  .filter((entry) => entry.reads)
+  .map((entry) => entry.id)
+  .filter((id) => id !== undefined)
+  .sort();
+
+await writeFile(OUT, `${JSON.stringify(safe, null, 2)}\n`);
+console.log(`[exhibitor-logos] ${logos.length} logos: ${safe.length} read on dark`);

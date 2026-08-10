@@ -20,7 +20,6 @@ export const RETIRED_PATHS = [
   "/feed-test/",
   "/info/",
   "/poznaj-wystawcow/",
-  "/regulamin-wystawcow/",
   "/regulamin-wystawcow-2/",
   "/zgloszenia-wystawcow/",
   "/koszyk/",
@@ -28,6 +27,13 @@ export const RETIRED_PATHS = [
   "/moje-konto/",
   "/zwroty/",
 ];
+
+/**
+ * Published in WordPress and served here too, from our own route. The catch-all
+ * must not prerender WordPress's copy behind the page that already answers the
+ * path — unlike RETIRED_PATHS these are not 404s, they are ours.
+ */
+export const SHADOWED_PATHS = ["/regulamin-wystawcow/"];
 
 export type NavLink = { external?: boolean; href: string; label: string };
 

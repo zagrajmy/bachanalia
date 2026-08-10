@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { print } from "graphql/language/printer";
 
-import { RETIRED_PATHS } from "@/components/Globals/siteNav";
+import { RETIRED_PATHS, SHADOWED_PATHS } from "@/components/Globals/siteNav";
 import { PageTemplate } from "@/components/Templates/Page/PageTemplate";
 import { PostTemplate } from "@/components/Templates/Post/PostTemplate";
 import { AllContentQuery } from "@/queries/general/AllContentQuery";
@@ -62,7 +62,9 @@ export async function generateStaticParams() {
 
   return [...(pages?.nodes ?? []), ...(posts?.nodes ?? [])]
     .map((node) => wpUriToPath(node.uri))
-    .filter((path) => path !== "/" && !RETIRED_PATHS.includes(path))
+    .filter(
+      (path) => path !== "/" && !RETIRED_PATHS.includes(path) && !SHADOWED_PATHS.includes(path),
+    )
     .map((path) => ({ slug: path.split("/").filter(Boolean) }));
 }
 

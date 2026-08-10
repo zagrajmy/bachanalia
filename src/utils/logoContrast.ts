@@ -6,13 +6,13 @@
  */
 
 /** Below this the pixel counts as see-through rather than faintly drawn. */
-export const TRANSPARENT_ALPHA = 32;
+const TRANSPARENT_ALPHA = 32;
 
 /** Under this share of see-through pixels the image supplies its own ground. */
-export const OPAQUE_SHARE = 0.15;
+const OPAQUE_SHARE = 0.15;
 
 /** Mean luminance, 0–255, under which the ink is too dark for navy stock. */
-export const DARK_INK = 110;
+const DARK_INK = 110;
 
 export type LogoPixels = {
   /** Mean luminance of the pixels that are actually drawn, 0–255. */
@@ -27,16 +27,16 @@ export function readsOnDark({ meanLuminance, transparentShare }: LogoPixels) {
 }
 
 /** Rec. 709 luma, which is what "how light does this look" means here. */
-export const luminance = (r: number, g: number, b: number) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+const luminance = (r: number, g: number, b: number) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
-export function measureLogo(pixels: Buffer | Uint8Array, channels: number): LogoPixels {
+/** Always RGBA: the caller runs `ensureAlpha()` before handing pixels over. */
+export function measureLogo(pixels: Buffer | Uint8Array): LogoPixels {
   let drawnLuminance = 0;
   let drawn = 0;
   let transparent = 0;
 
-  for (let i = 0; i + channels <= pixels.length; i += channels) {
-    const alpha = channels === 4 ? pixels[i + 3] : 255;
-    if (alpha < TRANSPARENT_ALPHA) {
+  for (let i = 0; i + 4 <= pixels.length; i += 4) {
+    if (pixels[i + 3] < TRANSPARENT_ALPHA) {
       transparent += 1;
       continue;
     }

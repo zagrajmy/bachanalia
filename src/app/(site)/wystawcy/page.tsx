@@ -9,6 +9,7 @@ import { fetchExhibitors } from "@/components/Exhibitors/exhibitors";
 import { fetchExhibitorRulesPdf } from "@/components/Exhibitors/rules";
 import { EventDetails } from "@/components/Home/EventDetails";
 import { SectionHeading } from "@/components/SectionHeading";
+import { counted } from "@/utils/plural";
 
 export const metadata: Metadata = {
   title: "Wystawcy",
@@ -78,7 +79,7 @@ export default async function WystawcyPage() {
           size="page"
           aside={
             <p className="text-sm text-ink-muted tabular-nums">
-              {directoryCount === 1 ? "1 stoisko" : `${directoryCount} stoisk`}
+              {counted(directoryCount, { one: "stoisko", few: "stoiska", many: "stoisk" })}
             </p>
           }
         >

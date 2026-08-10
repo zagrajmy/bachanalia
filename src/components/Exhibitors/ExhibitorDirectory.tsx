@@ -105,7 +105,7 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
         </label>
         <button
           aria-label={sort === "az" ? "Zmień kolejność na Z–A" : "Zmień kolejność na A–Z"}
-          className="flex h-11 items-center justify-center gap-2 rounded-card px-3.5 text-sm text-ink-muted transition-colors hover:text-ink hover:duration-0"
+          className="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-card px-3.5 text-sm text-ink-muted transition-colors hover:text-ink hover:duration-0"
           onClick={() => setSort((current) => (current === "az" ? "za" : "az"))}
           type="button"
         >
@@ -136,7 +136,7 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
           <p className="display text-2xl">Nic tu nie znaleźliśmy</p>
           <p className="mt-2 text-ink-muted">Spróbuj innej nazwy lub kategorii.</p>
           <button
-            className="mt-5 text-sm font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-mark hover:duration-0"
+            className="mt-5 cursor-pointer text-sm font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-mark hover:duration-0"
             onClick={() => setQuery("")}
             type="button"
           >

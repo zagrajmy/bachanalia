@@ -49,7 +49,7 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
               </span>
             )}
             {exhibitor.links.length > 0 && (
-              <ul className="mt-5 flex flex-col items-end gap-2 text-end first:mt-0">
+              <ul className="mt-5 flex flex-col items-end gap-0.5 text-end first:mt-0">
                 {exhibitor.links.map((link) => (
                   <li key={link.href}>
                     <a

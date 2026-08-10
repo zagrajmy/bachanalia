@@ -60,7 +60,7 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
             {exhibitor.links.map((link) => (
               <li key={link.href}>
                 <a
-                  className="text-sm font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-mark hover:duration-0"
+                  className="text-sm font-semibold text-ink underline decoration-accent/50 decoration-dashed decoration-2 underline-offset-[0.25em] transition-colors hover:text-mark hover:decoration-mark hover:duration-0"
                   href={link.href}
                   rel="noreferrer"
                   target="_blank"
@@ -97,43 +97,31 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
 
   return (
     <div className="mt-7">
-      <div className="grid gap-4 bg-plate p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:p-5">
+      <div className="grid gap-3 bg-plate p-3.5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
         <label className="block">
-          <span className="mb-2 block text-sm font-semibold text-ink">Wyszukaj</span>
-          <span className="relative block">
-            <HugeiconsIcon
-              aria-hidden="true"
-              className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-ink-muted"
-              icon={Search01Icon}
-              strokeWidth={2}
-            />
-            <input
-              className="h-12 w-full rounded-card border border-hairline bg-surface pr-4 pl-12 text-base text-ink outline-none placeholder:text-ink-muted focus:border-edge"
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Nazwa, produkt…"
-              type="search"
-              value={query}
-            />
-          </span>
+          <span className="sr-only">Wyszukaj</span>
+          <input
+            className="h-11 w-full rounded-card border border-hairline bg-surface px-3.5 text-base text-ink outline-none placeholder:text-ink-muted focus:border-edge"
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Szukaj wystawcy…"
+            type="search"
+            value={query}
+          />
         </label>
-
-        <div>
-          <span className="mb-2 block text-sm font-semibold text-ink">Sortowanie</span>
-          <button
-            aria-label={sort === "az" ? "Zmień kolejność na Z–A" : "Zmień kolejność na A–Z"}
-            className="flex h-12 min-w-28 items-center justify-center gap-3 rounded-card border border-edge bg-surface px-4 font-semibold text-ink transition-colors hover:bg-ink hover:text-surface hover:duration-0"
-            onClick={() => setSort((current) => (current === "az" ? "za" : "az"))}
-            type="button"
-          >
-            <span>{sort === "az" ? "A–Z" : "Z–A"}</span>
-            <HugeiconsIcon
-              aria-hidden="true"
-              className="size-5"
-              icon={ArrowUpDownIcon}
-              strokeWidth={2}
-            />
-          </button>
-        </div>
+        <button
+          aria-label={sort === "az" ? "Zmień kolejność na Z–A" : "Zmień kolejność na A–Z"}
+          className="flex h-11 items-center justify-center gap-2 rounded-card px-3.5 text-sm text-ink-muted transition-colors hover:text-ink hover:duration-0"
+          onClick={() => setSort((current) => (current === "az" ? "za" : "az"))}
+          type="button"
+        >
+          <span>{sort === "az" ? "A–Z" : "Z–A"}</span>
+          <HugeiconsIcon
+            aria-hidden="true"
+            className="size-4"
+            icon={ArrowUpDownIcon}
+            strokeWidth={1.75}
+          />
+        </button>
       </div>
 
       <p aria-live="polite" className="sr-only">

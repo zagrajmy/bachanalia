@@ -15,9 +15,12 @@
   --color-slate: #4e5079;
 
   --color-surface: var(--color-paper);
+  --color-plate: var(--color-paper-shade);
   --color-ink: var(--color-navy);
   --color-ink-muted: var(--color-slate);
+  --color-edge: var(--color-navy);
   --color-accent: var(--color-coral);
+  --color-mark: var(--color-rose);
   --color-on-accent: var(--color-navy);
   --color-hairline: color-mix(in oklab, var(--color-navy) 25%, transparent);
 
@@ -54,6 +57,40 @@
 
 :root {
   color-scheme: light;
+}
+
+/**
+ * The same sheet printed on dark stock: ink and paper trade places, the
+ * registration mark moves from coral to pink, and every relationship holds.
+ * Scoped to the route that opts in rather than to :root, because the header
+ * and the footer around it are still white paper.
+ */
+@media (prefers-color-scheme: dark) {
+  .night-print {
+    color-scheme: dark;
+    background-color: var(--color-navy-deep);
+    color: var(--color-paper);
+    --color-surface: var(--color-navy-deep);
+    --color-plate: var(--color-navy);
+    --color-ink: var(--color-paper);
+    --color-ink-muted: color-mix(in oklab, var(--color-paper) 85%, transparent);
+    --color-edge: color-mix(in oklab, var(--color-paper) 35%, transparent);
+    --color-accent: var(--color-pink);
+    --color-mark: var(--color-pink);
+    --color-hairline: color-mix(in oklab, var(--color-paper) 25%, transparent);
+    position: relative;
+  }
+
+  /** The footer sets its own gap above itself, and that band is page, not footer. */
+  .night-print::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    z-index: -1;
+    height: 7rem;
+    background-color: var(--color-navy-deep);
+  }
 }
 
 body {

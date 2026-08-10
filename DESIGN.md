@@ -112,6 +112,7 @@ A 2px solid navy rule closes major headings. A 1px solid rule divides compact gr
 - **Cards:** use only for genuinely repeated entities such as guests, products, partners, or exhibitors. Logos use `object-contain`; names use display type; metadata uses slate; hover may move the name to rose. Full descriptions remain readable text.
 - **Buttons:** the existing framed Cinzel button is reserved for one consequential action. Secondary actions remain underlined text links with coral decoration.
 - **Motion:** colour and small physical movement use the shipped `--ease-out`; spring easing is reserved for authored tactile moments. Reduced-motion removes nonessential animation globally.
+- **Hover:** the colour lands the instant the pointer arrives and fades back out on release — `transition-colors hover:duration-0`. A hover that ramps in feels like lag on a link, and the asymmetry is what makes the pointer feel connected to the page. Nothing that is not a control gets a hover state at all.
 
 ## Do's and Don'ts
 

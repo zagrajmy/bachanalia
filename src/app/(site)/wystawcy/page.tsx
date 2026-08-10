@@ -26,7 +26,7 @@ export default async function WystawcyPage() {
   const directoryCount = exhibitors.length;
 
   return (
-    <>
+    <div className="night-print">
       <section className="ink-inverted relative overflow-hidden bg-navy">
         <span aria-hidden="true" className="screened pointer-events-none absolute inset-0" />
         <div className="gutter relative mx-auto max-w-6xl py-12 sm:py-16 lg:py-20">
@@ -44,17 +44,26 @@ export default async function WystawcyPage() {
           <nav aria-label="Na tej stronie" className="mt-10">
             <ul className="flex flex-wrap gap-x-7 gap-y-3 text-sm font-semibold">
               <li>
-                <Link className="text-ink no-underline hover:text-accent" href="#lista">
+                <Link
+                  className="text-ink no-underline transition-colors hover:text-accent hover:duration-0"
+                  href="#lista"
+                >
                   Lista wystawców ↓
                 </Link>
               </li>
               <li>
-                <Link className="text-ink no-underline hover:text-accent" href="#regulamin">
+                <Link
+                  className="text-ink no-underline transition-colors hover:text-accent hover:duration-0"
+                  href="#regulamin"
+                >
                   Regulamin ↓
                 </Link>
               </li>
               <li>
-                <Link className="text-ink no-underline hover:text-accent" href="#zgloszenia">
+                <Link
+                  className="text-ink no-underline transition-colors hover:text-accent hover:duration-0"
+                  href="#zgloszenia"
+                >
                   Zgłoszenia ↓
                 </Link>
               </li>
@@ -80,11 +89,11 @@ export default async function WystawcyPage() {
 
       <section className="gutter mx-auto max-w-6xl pt-16 sm:pt-24">
         <div
-          className="scroll-mt-24 border-t border-navy/30 py-8 sm:flex sm:items-start sm:justify-between sm:gap-12 sm:py-10"
+          className="scroll-mt-24 border-t border-hairline py-8 sm:flex sm:items-start sm:justify-between sm:gap-12 sm:py-10"
           id="regulamin"
         >
           <div>
-            <p className="eyebrow text-rose">Regulamin wystawców</p>
+            <p className="eyebrow text-mark">Regulamin wystawców</p>
             <h2 className="display mt-2 text-[clamp(1.55rem,3.4vw,2rem)]">
               Zasady obowiązujące każde stoisko
             </h2>
@@ -94,7 +103,7 @@ export default async function WystawcyPage() {
           </div>
           {rulesPdfUrl ? (
             <a
-              className="mt-5 flex max-w-full shrink-0 items-start gap-2 font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 hover:text-rose sm:mt-7"
+              className="mt-5 flex max-w-full shrink-0 items-start gap-2 font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-mark hover:duration-0 sm:mt-7"
               href={rulesPdfUrl}
               rel="noreferrer"
               target="_blank"
@@ -112,7 +121,7 @@ export default async function WystawcyPage() {
             </a>
           ) : (
             <Link
-              className="mt-5 flex max-w-full shrink-0 items-start gap-2 font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 hover:text-rose sm:mt-7"
+              className="mt-5 flex max-w-full shrink-0 items-start gap-2 font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-mark hover:duration-0 sm:mt-7"
               href="/regulamin-wystawcow/"
             >
               <span>Otwórz regulamin</span>
@@ -121,11 +130,11 @@ export default async function WystawcyPage() {
         </div>
 
         <div
-          className="scroll-mt-24 border-t border-navy/30 py-8 sm:flex sm:items-start sm:justify-between sm:gap-12 sm:py-10"
+          className="scroll-mt-24 border-t border-hairline py-8 sm:flex sm:items-start sm:justify-between sm:gap-12 sm:py-10"
           id="zgloszenia"
         >
           <div>
-            <p className="eyebrow text-rose">Zgłoszenia wystawców</p>
+            <p className="eyebrow text-mark">Zgłoszenia wystawców</p>
             <h2 className="display mt-2 text-[clamp(1.55rem,3.4vw,2rem)]">
               Dziękujemy za zgłoszenia!
             </h2>
@@ -135,7 +144,7 @@ export default async function WystawcyPage() {
             </p>
           </div>
           <Link
-            className="mt-5 flex max-w-full shrink-0 items-start gap-2 font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 hover:text-rose sm:mt-7"
+            className="mt-5 flex max-w-full shrink-0 items-start gap-2 font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-mark hover:duration-0 sm:mt-7"
             href="mailto:wystawcy@bachanaliafantastyczne.pl"
           >
             <HugeiconsIcon
@@ -148,6 +157,6 @@ export default async function WystawcyPage() {
           </Link>
         </div>
       </section>
-    </>
+    </div>
   );
 }

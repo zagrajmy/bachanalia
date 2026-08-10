@@ -66,14 +66,7 @@ export const primaryNav: NavGroup[] = [
       { href: "/goscie/", label: "Goście" },
     ],
   },
-  {
-    href: "/wystawcy/",
-    label: "Wystawcy",
-    children: [
-      { href: "/wystawcy/", label: "Lista wystawców" },
-      { href: "/regulamin-wystawcow/", label: "Regulamin wystawców" },
-    ],
-  },
+  { href: "/wystawcy/", label: "Wystawcy" },
   {
     href: "/zgloszenia-programu/",
     label: "Dołącz do nas",

@@ -15,9 +15,9 @@ const collator = new Intl.Collator("pl", { sensitivity: "base" });
 
 function Awning() {
   return (
-    <span aria-hidden="true" className="flex h-1 overflow-hidden border-b border-navy">
+    <span aria-hidden="true" className="flex h-1 overflow-hidden border-b border-edge">
       {Array.from({ length: 10 }, (_, index) => (
-        <span className={`flex-1 ${index % 2 === 0 ? "bg-coral/50" : "bg-paper"}`} key={index} />
+        <span className={`flex-1 ${index % 2 === 0 ? "bg-coral/50" : "bg-surface"}`} key={index} />
       ))}
     </span>
   );
@@ -25,7 +25,7 @@ function Awning() {
 
 function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-card border border-navy bg-paper">
+    <article className="flex h-full flex-col overflow-hidden rounded-card border border-edge bg-surface">
       <Awning />
       <div className="flex-1 p-5">
         <h3 className="display wrap-break-word text-[1.9rem] text-ink">{exhibitor.name}</h3>
@@ -33,9 +33,9 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
           <p className="mt-3 text-sm/relaxed text-ink-muted">{exhibitor.description}</p>
         )}
       </div>
-      <div className="flex items-center justify-between gap-4 border-t border-dashed border-navy/40 px-5 py-3.5">
+      <div className="flex items-center justify-between gap-4 border-t border-dashed border-hairline px-5 py-3.5">
         {exhibitor.logoUrl ? (
-          <span className="flex h-9 max-w-[45%] items-center">
+          <span className="flex h-9 max-w-[45%] items-center rounded-[2px] bg-paper px-2">
             <Image
               alt=""
               className="max-h-9 w-auto max-w-full object-contain"
@@ -46,7 +46,7 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
             />
           </span>
         ) : (
-          <span className="flex h-9 items-center text-navy/55">
+          <span className="flex h-9 items-center text-ink-muted">
             <HugeiconsIcon
               aria-hidden="true"
               className="size-6"
@@ -60,7 +60,7 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
             {exhibitor.links.map((link) => (
               <li key={link.href}>
                 <a
-                  className="text-sm font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-rose"
+                  className="text-sm font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-mark hover:duration-0"
                   href={link.href}
                   rel="noreferrer"
                   target="_blank"
@@ -97,7 +97,7 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
 
   return (
     <div className="mt-7">
-      <div className="grid gap-4 bg-paper-shade p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:p-5">
+      <div className="grid gap-4 bg-plate p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:p-5">
         <label className="block">
           <span className="mb-2 block text-sm font-semibold text-ink">Wyszukaj</span>
           <span className="relative block">
@@ -108,7 +108,7 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
               strokeWidth={2}
             />
             <input
-              className="h-12 w-full rounded-card border border-navy/35 bg-paper pr-4 pl-12 text-base text-ink outline-none placeholder:text-slate focus:border-navy"
+              className="h-12 w-full rounded-card border border-hairline bg-surface pr-4 pl-12 text-base text-ink outline-none placeholder:text-ink-muted focus:border-edge"
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Nazwa, produkt…"
               type="search"
@@ -121,7 +121,7 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
           <span className="mb-2 block text-sm font-semibold text-ink">Sortowanie</span>
           <button
             aria-label={sort === "az" ? "Zmień kolejność na Z–A" : "Zmień kolejność na A–Z"}
-            className="flex h-12 min-w-28 items-center justify-center gap-3 rounded-card border border-navy bg-paper px-4 font-semibold text-ink transition-colors hover:bg-navy hover:text-paper"
+            className="flex h-12 min-w-28 items-center justify-center gap-3 rounded-card border border-edge bg-surface px-4 font-semibold text-ink transition-colors hover:bg-ink hover:text-surface hover:duration-0"
             onClick={() => setSort((current) => (current === "az" ? "za" : "az"))}
             type="button"
           >
@@ -149,11 +149,11 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
           ))}
         </ul>
       ) : hasFilters ? (
-        <div className="mt-5 border-y border-dashed border-navy/30 py-12 text-center">
+        <div className="mt-5 border-y border-dashed border-hairline py-12 text-center">
           <p className="display text-2xl">Nic tu nie znaleźliśmy</p>
           <p className="mt-2 text-ink-muted">Spróbuj innej nazwy lub kategorii.</p>
           <button
-            className="mt-5 text-sm font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 hover:text-rose"
+            className="mt-5 text-sm font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-mark hover:duration-0"
             onClick={() => setQuery("")}
             type="button"
           >
@@ -161,7 +161,7 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
           </button>
         </div>
       ) : (
-        <div className="mt-5 overflow-hidden rounded-card border border-navy bg-paper">
+        <div className="mt-5 overflow-hidden rounded-card border border-edge bg-surface">
           <Awning />
           <div className="flex flex-col items-center px-6 py-12 text-center sm:py-16">
             <span className="flex size-14 items-center justify-center rounded-full bg-coral text-navy">

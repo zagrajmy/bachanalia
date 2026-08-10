@@ -26,7 +26,7 @@ export function SectionHeading({
   children: ReactNode;
 }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-b-2 border-navy pb-3">
+    <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-b-2 border-edge pb-3">
       <Tag className={`display ml-[-0.04em] ${SIZES[size]}`} id={id}>
         {children}
       </Tag>

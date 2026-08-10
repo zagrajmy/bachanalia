@@ -30,40 +30,42 @@ function Awning() {
 
 function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-card border border-navy bg-paper transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[3px_5px_0_var(--color-coral)]">
+    <article className="flex h-full flex-col overflow-hidden rounded-card border border-navy bg-paper transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[3px_5px_0_var(--color-coral)]">
       <Awning />
-      {exhibitor.logoUrl ? (
-        <span className="flex h-36 items-center justify-center border-b border-navy/20 bg-paper-shade p-5">
-          <Image
-            alt=""
-            className="max-h-full w-auto object-contain"
-            height={320}
-            sizes="(min-width: 1024px) 320px, (min-width: 640px) 42vw, 82vw"
-            src={exhibitor.logoUrl}
-            width={640}
-          />
-        </span>
-      ) : (
-        <span className="flex h-24 items-center justify-center border-b border-navy/20 bg-paper-shade text-navy/45">
-          <HugeiconsIcon
-            aria-hidden="true"
-            className="size-8"
-            icon={Store01Icon}
-            strokeWidth={1.6}
-          />
-        </span>
-      )}
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <h3 className="display text-[clamp(1.35rem,3vw,1.8rem)] text-ink">{exhibitor.name}</h3>
+      <div className="flex-1 p-5">
+        <h3 className="display text-[1.9rem] break-words text-ink">{exhibitor.name}</h3>
         {exhibitor.description && (
-          <p className="mt-4 text-sm/relaxed text-ink-muted">{exhibitor.description}</p>
+          <p className="mt-3 text-sm/relaxed text-ink-muted">{exhibitor.description}</p>
+        )}
+      </div>
+      <div className="flex items-center justify-between gap-4 border-t border-dashed border-navy/40 px-5 py-3.5">
+        {exhibitor.logoUrl ? (
+          <span className="flex h-9 max-w-[45%] items-center">
+            <Image
+              alt=""
+              className="max-h-9 w-auto max-w-full object-contain"
+              height={320}
+              sizes="160px"
+              src={exhibitor.logoUrl}
+              width={640}
+            />
+          </span>
+        ) : (
+          <span className="flex h-9 items-center text-navy/55">
+            <HugeiconsIcon
+              aria-hidden="true"
+              className="size-6"
+              icon={Store01Icon}
+              strokeWidth={1.6}
+            />
+          </span>
         )}
         {exhibitor.links.length > 0 && (
-          <ul className="mt-auto flex flex-wrap gap-x-4 gap-y-2 pt-6">
+          <ul className="flex flex-wrap justify-end gap-x-4 gap-y-2">
             {exhibitor.links.map((link) => (
               <li key={link.href}>
                 <a
-                  className="text-sm font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 hover:text-rose"
+                  className="text-sm font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-rose"
                   href={link.href}
                   rel="noreferrer"
                   target="_blank"

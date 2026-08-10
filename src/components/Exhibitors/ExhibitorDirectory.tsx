@@ -15,9 +15,9 @@ const collator = new Intl.Collator("pl", { sensitivity: "base" });
 
 function Awning() {
   return (
-    <span aria-hidden="true" className="flex h-1.5 overflow-hidden border-b border-navy">
+    <span aria-hidden="true" className="flex h-1 overflow-hidden border-b border-navy">
       {Array.from({ length: 10 }, (_, index) => (
-        <span className={`flex-1 ${index % 2 === 0 ? "bg-coral" : "bg-paper"}`} key={index} />
+        <span className={`flex-1 ${index % 2 === 0 ? "bg-coral/50" : "bg-paper"}`} key={index} />
       ))}
     </span>
   );
@@ -136,12 +136,12 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
         </div>
       </div>
 
-      <p aria-live="polite" className="mt-4 text-sm text-ink-muted">
+      <p aria-live="polite" className="sr-only">
         {results.length === 1 ? "1 wystawca" : `${results.length} wystawców`}
       </p>
 
       {results.length > 0 ? (
-        <ul className="mt-5 grid gap-5 sm:grid-cols-2">
+        <ul className="mt-6 grid gap-5 sm:grid-cols-2">
           {results.map((exhibitor) => (
             <li key={exhibitor.name}>
               <ExhibitorCard exhibitor={exhibitor} />

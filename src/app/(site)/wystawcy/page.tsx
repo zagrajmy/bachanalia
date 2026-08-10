@@ -68,7 +68,7 @@ export default async function WystawcyPage() {
           as="h2"
           size="page"
           aside={
-            <p className="eyebrow text-ink-muted tabular-nums">
+            <p className="text-sm text-ink-muted tabular-nums">
               {directoryCount === 1 ? "1 stoisko" : `${directoryCount} stoisk`}
             </p>
           }

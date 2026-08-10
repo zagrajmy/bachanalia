@@ -97,11 +97,11 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
 
   return (
     <div className="mt-7">
-      <div className="grid gap-3 bg-plate p-3.5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+      <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
         <label className="block">
           <span className="sr-only">Wyszukaj</span>
           <input
-            className="h-11 w-full rounded-card border border-hairline bg-surface px-3.5 text-base text-ink outline-none placeholder:text-ink-muted focus:border-edge"
+            className="h-11 w-full rounded-card border border-hairline bg-plate px-3.5 text-base text-ink outline-none placeholder:text-ink-muted focus:border-edge"
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Szukaj wystawcy…"
             type="search"

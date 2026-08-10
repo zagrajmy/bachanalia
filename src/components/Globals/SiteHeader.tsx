@@ -143,7 +143,7 @@ export function SiteHeader() {
                       href={group.href}
                       {...externalProps(group)}
                       onClick={closeMenu}
-                      className="block rounded-card p-2  text-[0.9375rem] font-semibold text-ink no-underline transition-colors duration-150 hover:bg-paper-shade"
+                      className="block rounded-card p-2  text-[0.9375rem] font-semibold text-ink no-underline transition-colors duration-150 hover:bg-paper-shade hover:duration-0"
                     >
                       {group.label}
                     </Link>
@@ -156,7 +156,7 @@ export function SiteHeader() {
                               href={link.href}
                               {...externalProps(link)}
                               onClick={closeMenu}
-                              className="block rounded-card px-2 py-1.5 text-sm text-ink-muted no-underline transition-colors duration-150 hover:bg-paper-shade hover:text-ink"
+                              className="block rounded-card px-2 py-1.5 text-sm text-ink-muted no-underline transition-colors duration-150 hover:bg-paper-shade hover:text-ink hover:duration-0"
                             >
                               {link.label}
                             </Link>

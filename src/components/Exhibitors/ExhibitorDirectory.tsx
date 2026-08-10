@@ -27,51 +27,53 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-card border border-edge bg-surface">
       <Awning />
-      <div className="flex-1 p-5">
-        <h3 className="display wrap-break-word text-[1.9rem] text-ink">{exhibitor.name}</h3>
-        {exhibitor.description && (
-          <p className="mt-3 text-sm/relaxed text-ink-muted">{exhibitor.description}</p>
-        )}
-      </div>
-      <div className="flex items-center justify-between gap-4 border-t border-dashed border-hairline px-5 py-3.5">
-        {exhibitor.logoUrl ? (
-          <span className="flex h-9 max-w-[45%] items-center rounded-[2px] bg-paper px-2">
-            <Image
-              alt=""
-              className="max-h-9 w-auto max-w-full object-contain"
-              height={320}
-              sizes="256px"
-              src={exhibitor.logoUrl}
-              width={640}
-            />
-          </span>
-        ) : (
-          <span className="flex h-9 items-center text-ink-muted">
-            <HugeiconsIcon
-              aria-hidden="true"
-              className="size-6"
-              icon={Store01Icon}
-              strokeWidth={1.6}
-            />
-          </span>
-        )}
-        {exhibitor.links.length > 0 && (
-          <ul className="flex flex-wrap justify-end gap-x-4 gap-y-2">
-            {exhibitor.links.map((link) => (
-              <li key={link.href}>
-                <a
-                  className="text-sm font-semibold text-ink underline decoration-accent decoration-dashed decoration-2 underline-offset-[0.25em] transition-colors hover:text-mark hover:decoration-mark hover:duration-0"
-                  href={link.href}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  {link.label}
-                  <span className="sr-only"> — otwiera się w nowej karcie</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
+      <div className="flex flex-1 flex-col sm:flex-row sm:items-stretch">
+        <div className="flex flex-1 flex-col p-5">
+          <h3 className="display wrap-break-word text-[1.6rem] text-ink">{exhibitor.name}</h3>
+          {exhibitor.description && (
+            <p className="mt-2.5 text-sm/relaxed text-ink-muted">{exhibitor.description}</p>
+          )}
+        </div>
+        <div className="flex flex-col border-t border-hairline p-5 sm:w-[28%] sm:shrink-0 sm:border-t-0 sm:border-l">
+          {exhibitor.logoUrl ? (
+            <span className="flex min-h-28 flex-1 items-start justify-center sm:min-h-0">
+              <Image
+                alt=""
+                className="max-h-full w-auto max-w-full object-contain"
+                height={320}
+                sizes="(min-width: 640px) 200px, 82vw"
+                src={exhibitor.logoUrl}
+                width={640}
+              />
+            </span>
+          ) : (
+            <span className="flex min-h-28 flex-1 items-start justify-center text-ink-muted sm:min-h-0">
+              <HugeiconsIcon
+                aria-hidden="true"
+                className="size-10"
+                icon={Store01Icon}
+                strokeWidth={1.4}
+              />
+            </span>
+          )}
+          {exhibitor.links.length > 0 && (
+            <ul className="mt-5 flex flex-col items-end gap-2 text-end">
+              {exhibitor.links.map((link) => (
+                <li key={link.href}>
+                  <a
+                    className="text-sm font-semibold text-ink underline decoration-accent decoration-dashed decoration-2 underline-offset-[0.25em] transition-colors hover:text-mark hover:decoration-mark hover:duration-0"
+                    href={link.href}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    {link.label}
+                    <span className="sr-only"> — otwiera się w nowej karcie</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </article>
   );
@@ -101,7 +103,7 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
         <label className="block">
           <span className="sr-only">Wyszukaj</span>
           <input
-            className="h-11 w-full rounded-card border border-hairline bg-plate px-3.5 text-base text-ink outline-none placeholder:text-ink-muted focus:border-edge"
+            className="h-11 w-full rounded-none border-0 border-b-2 border-hairline bg-transparent px-0.5 text-base text-ink outline-none transition-colors placeholder:text-ink-muted focus:border-accent focus:duration-0"
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Szukaj wystawcy…"
             type="search"

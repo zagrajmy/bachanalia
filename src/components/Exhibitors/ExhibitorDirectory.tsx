@@ -35,7 +35,7 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
           )}
         </div>
         {(exhibitor.logoUrl || exhibitor.links.length > 0) && (
-          <div className="flex flex-col border-t border-hairline p-5 sm:w-[28%] sm:shrink-0 sm:border-t-0 sm:border-l">
+          <div className="flex flex-col border-t border-hairline p-5 sm:w-[28%] sm:shrink-0 sm:border-t-0 sm:pl-0">
             {exhibitor.logoUrl && (
               <span className="flex min-h-28 flex-1 items-start sm:min-h-0">
                 <Image

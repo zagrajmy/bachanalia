@@ -15,7 +15,7 @@ export const revalidate = 10_800;
  * listings we assemble here. `goscie` and `sklep` exist as WP pages but their
  * `uri` is null, so they never come out of AllContentQuery.
  */
-const ownRoutes = ["/", SHOP_PATH, NEWS_PATH, "/goscie/"];
+const ownRoutes = ["/", SHOP_PATH, NEWS_PATH, "/goscie/", "/wystawcy/"];
 
 /**
  * On top of the pages we do not serve at all — which already covers the four

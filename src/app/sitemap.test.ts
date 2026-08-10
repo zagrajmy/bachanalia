@@ -22,5 +22,12 @@ test("never advertises a page WordPress keeps", () => {
 test("collapses the null-uri pages onto the routes we serve ourselves", () => {
   const paths = sitemapPaths([null, undefined], ["golden-ticket"]);
 
-  assert.deepEqual(paths, ["/", "/sklep/", "/aktualnosci/", "/goscie/", "/produkt/golden-ticket/"]);
+  assert.deepEqual(paths, [
+    "/",
+    "/sklep/",
+    "/aktualnosci/",
+    "/goscie/",
+    "/wystawcy/",
+    "/produkt/golden-ticket/",
+  ]);
 });

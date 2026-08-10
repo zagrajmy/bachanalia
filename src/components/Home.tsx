@@ -4,7 +4,7 @@ import Link from "next/link";
 import { blocks, con, KEY_ART, marks } from "@/content/con";
 import { Ticket } from "@/content/shop";
 import { primaryCta } from "@/components/Globals/siteNav";
-import { AddToCalendar } from "@/components/Home/AddToCalendar";
+import { EventDetails } from "@/components/Home/EventDetails";
 import { GoldPrice } from "@/components/Home/GoldPrice";
 import { NewsEntry } from "@/components/News/news";
 import { NewsSection } from "@/components/News/NewsSection";
@@ -76,23 +76,7 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
                   </span>
                 </h1>
 
-                <dl className="relative mt-7 grid max-w-136 gap-x-7 text-sm sm:grid-cols-[auto_1fr] sm:gap-y-3 sm:text-base">
-                  <dt className="text-sm text-accent pt-0.75 max-sm:mb-1">Termin</dt>
-                  <dd className="flex flex-col items-start sm:gap-1 sm:flex-row sm:items-center sm:flex-wrap sm:gap-x-5">
-                    {con.dates}
-                    <AddToCalendar />
-                  </dd>
-                  <dt className="text-sm text-accent pt-0.75 max-sm:mb-1 max-sm:mt-4">Miejsce</dt>
-                  <dd>
-                    {con.venue},<br />
-                    <Link
-                      className="underline decoration-2 decoration-accent/50 underline-offset-[0.2em] transition-colors duration-150 decoration-dashed hover:text-ink hover:decoration-ink hover:duration-0"
-                      href="/czas-i-miejsce/"
-                    >
-                      {con.address}
-                    </Link>
-                  </dd>
-                </dl>
+                <EventDetails className="relative mt-7" />
               </div>
             </div>
           </div>

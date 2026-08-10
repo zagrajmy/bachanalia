@@ -126,16 +126,22 @@ const nextConfig = {
       /** The former exhibitor pages are one directory now, including indexed PATHINFO URLs. */
       ...[
         "/poznaj-wystawcow",
-        "/regulamin-wystawcow",
-        "/regulamin-wystawcow-2",
         "/zgloszenia-wystawcow",
         "/index.php/poznaj-wystawcow",
-        "/index.php/regulamin-wystawcow",
-        "/index.php/regulamin-wystawcow-2",
         "/index.php/zgloszenia-wystawcow",
       ].map((source) => ({
         source,
         destination: "/wystawcy/",
+        permanent: true,
+      })),
+      /**
+       * WordPress numbered the second exhibitor-rules page rather than replace
+       * the first, and the numbered one is the one it kept updating. The rules
+       * live under the unsuffixed slug here, where the links already point.
+       */
+      ...["/regulamin-wystawcow-2", "/index.php/regulamin-wystawcow-2"].map((source) => ({
+        source,
+        destination: "/regulamin-wystawcow/",
         permanent: true,
       })),
       {

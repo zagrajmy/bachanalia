@@ -34,21 +34,34 @@ test("destination keeps the trailing slash so the hop is not doubled", async () 
   );
 });
 
-test("all former exhibitor pages collapse onto the directory in one permanent hop", async () => {
+test("the former exhibitor pages collapse onto the directory in one permanent hop", async () => {
   for (const source of [
     "/poznaj-wystawcow",
-    "/regulamin-wystawcow",
-    "/regulamin-wystawcow-2",
     "/zgloszenia-wystawcow",
     "/index.php/poznaj-wystawcow",
-    "/index.php/regulamin-wystawcow",
-    "/index.php/regulamin-wystawcow-2",
     "/index.php/zgloszenia-wystawcow",
   ]) {
     const rule = await find(source);
     assert.equal(rule.destination, "/wystawcy/");
     assert.equal(rule.permanent, true);
   }
+});
+
+test("WordPress's numbered rules page lands on the rules we serve", async () => {
+  for (const source of ["/regulamin-wystawcow-2", "/index.php/regulamin-wystawcow-2"]) {
+    const rule = await find(source);
+    assert.equal(rule.destination, "/regulamin-wystawcow/");
+    assert.equal(rule.permanent, true);
+  }
+});
+
+test("the unsuffixed exhibitor rules url is ours to serve, not to redirect", async () => {
+  const sources = (await redirects()).map((rule) => rule.source);
+
+  assert.ok(
+    !sources.includes("/regulamin-wystawcow"),
+    "every printed and indexed link points here; the page answers them",
+  );
 });
 
 test("product urls need no redirect at all", async () => {

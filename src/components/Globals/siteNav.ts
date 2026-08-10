@@ -66,7 +66,14 @@ export const primaryNav: NavGroup[] = [
       { href: "/goscie/", label: "Goście" },
     ],
   },
-  { href: "/wystawcy/", label: "Wystawcy" },
+  {
+    href: "/wystawcy/",
+    label: "Wystawcy",
+    children: [
+      { href: "/wystawcy/", label: "Lista wystawców" },
+      { href: "/regulamin-wystawcow/", label: "Regulamin wystawców" },
+    ],
+  },
   {
     href: "/zgloszenia-programu/",
     label: "Dołącz do nas",
@@ -122,6 +129,7 @@ export const footerNav = [
     title: "Wystawcy i wsparcie",
     links: [
       { href: "/wystawcy/", label: "Wystawcy" },
+      { href: "/regulamin-wystawcow/", label: "Regulamin wystawców" },
       { href: "/wspieraja-nas/", label: "Wspierają nas" },
       { href: "/noclegi/", label: "Noclegi" },
       { href: SHOP_PATH, label: "Sklep" },

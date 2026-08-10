@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Download04Icon from "@hugeicons/core-free-icons/Download04Icon";
 import Mail02Icon from "@hugeicons/core-free-icons/Mail02Icon";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import { ExhibitorDirectory } from "@/components/Exhibitors/ExhibitorDirectory";
 import { fetchExhibitors } from "@/components/Exhibitors/exhibitors";
+import { fetchExhibitorRulesPdf } from "@/components/Exhibitors/rules";
 import { EventDetails } from "@/components/Home/EventDetails";
 import { SectionHeading } from "@/components/SectionHeading";
 
@@ -17,7 +19,10 @@ export const metadata: Metadata = {
 export const revalidate = 10_800;
 
 export default async function WystawcyPage() {
-  const exhibitors = await fetchExhibitors();
+  const [exhibitors, rulesPdfUrl] = await Promise.all([
+    fetchExhibitors(),
+    fetchExhibitorRulesPdf(),
+  ]);
   const directoryCount = exhibitors.length;
 
   return (
@@ -41,6 +46,11 @@ export default async function WystawcyPage() {
               <li>
                 <Link className="text-ink no-underline hover:text-accent" href="#lista">
                   Lista wystawców ↓
+                </Link>
+              </li>
+              <li>
+                <Link className="text-ink no-underline hover:text-accent" href="#regulamin">
+                  Regulamin ↓
                 </Link>
               </li>
               <li>
@@ -68,8 +78,52 @@ export default async function WystawcyPage() {
         <ExhibitorDirectory exhibitors={exhibitors} />
       </section>
 
-      <section className="gutter mx-auto max-w-6xl scroll-mt-24 pt-16 sm:pt-24" id="zgloszenia">
-        <div className="border-t border-navy/30 py-8 sm:flex sm:items-start sm:justify-between sm:gap-12 sm:py-10">
+      <section className="gutter mx-auto max-w-6xl pt-16 sm:pt-24">
+        <div
+          className="scroll-mt-24 border-t border-navy/30 py-8 sm:flex sm:items-start sm:justify-between sm:gap-12 sm:py-10"
+          id="regulamin"
+        >
+          <div>
+            <p className="eyebrow text-rose">Regulamin wystawców</p>
+            <h2 className="display mt-2 text-[clamp(1.55rem,3.4vw,2rem)]">
+              Zasady obowiązujące każde stoisko
+            </h2>
+            <p className="mt-3 max-w-[58ch] text-sm/relaxed text-ink-muted">
+              Pełna treść regulaminu XL edycji, do pobrania i wydrukowania.
+            </p>
+          </div>
+          {rulesPdfUrl ? (
+            <a
+              className="mt-5 flex max-w-full shrink-0 items-start gap-2 font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 hover:text-rose sm:mt-7"
+              href={rulesPdfUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <HugeiconsIcon
+                aria-hidden="true"
+                className="mt-0.5 size-5 shrink-0"
+                icon={Download04Icon}
+                strokeWidth={2}
+              />
+              <span>
+                Pobierz regulamin (PDF)
+                <span className="sr-only"> — otwiera się w nowej karcie</span>
+              </span>
+            </a>
+          ) : (
+            <Link
+              className="mt-5 flex max-w-full shrink-0 items-start gap-2 font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 hover:text-rose sm:mt-7"
+              href="/regulamin-wystawcow/"
+            >
+              <span>Otwórz regulamin</span>
+            </Link>
+          )}
+        </div>
+
+        <div
+          className="scroll-mt-24 border-t border-navy/30 py-8 sm:flex sm:items-start sm:justify-between sm:gap-12 sm:py-10"
+          id="zgloszenia"
+        >
           <div>
             <p className="eyebrow text-rose">Zgłoszenia wystawców</p>
             <h2 className="display mt-2 text-[clamp(1.55rem,3.4vw,2rem)]">

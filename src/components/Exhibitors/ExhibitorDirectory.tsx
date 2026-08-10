@@ -40,7 +40,7 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
                 {exhibitor.links.map((link) => (
                   <li key={link.href}>
                     <a
-                      className="marked-link decoration-dashed text-sm"
+                      className="marked-link text-sm"
                       href={link.href}
                       rel="noreferrer"
                       target="_blank"

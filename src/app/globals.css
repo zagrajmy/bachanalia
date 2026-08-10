@@ -65,8 +65,8 @@
  * Scoped to the route that opts in rather than to :root, because the header
  * and the footer around it are still white paper.
  */
-@media (prefers-color-scheme: dark) {
-  .night-print {
+@utility night-print {
+  @media (prefers-color-scheme: dark) {
     color-scheme: dark;
     background-color: var(--color-navy-deep);
     color: var(--color-paper);
@@ -79,17 +79,17 @@
     --color-mark: var(--color-pink);
     --color-hairline: color-mix(in oklab, var(--color-paper) 25%, transparent);
     position: relative;
-  }
 
-  /** The footer sets its own gap above itself, and that band is page, not footer. */
-  .night-print::after {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-    top: 100%;
-    z-index: -1;
-    height: 7rem;
-    background-color: var(--color-navy-deep);
+    /** The footer sets its own gap above itself, and that band is page, not footer. */
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      top: 100%;
+      z-index: -1;
+      height: 7rem;
+      background-color: var(--color-navy-deep);
+    }
   }
 }
 
@@ -122,6 +122,29 @@ body {
 @utility punched {
   background: radial-gradient(circle at 50% 50%, var(--color-paper) 0 3.5px, transparent 3.5px) 0
     0 / 16px 16px repeat-x;
+}
+
+/**
+ * The secondary action. One consequential action per surface gets the framed
+ * button; everything else is a text link the accent underlines, which is why
+ * this is a utility rather than eleven copies of the same six declarations.
+ */
+@utility marked-link {
+  color: var(--color-ink);
+  font-weight: 600;
+  text-decoration-line: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+  transition:
+    color 150ms var(--ease-out),
+    text-decoration-color 150ms var(--ease-out);
+
+  &:hover {
+    color: var(--color-mark);
+    text-decoration-color: var(--color-mark);
+    transition-duration: 0s;
+  }
 }
 
 /**

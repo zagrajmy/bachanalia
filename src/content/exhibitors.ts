@@ -6,6 +6,8 @@ export type ExhibitorLink = {
 export type Exhibitor = {
   description?: string;
   links: ExhibitorLink[];
+  /** Whether the logo needs paper behind it to survive the dark card. */
+  logoNeedsPlate: boolean;
   logoUrl?: string;
   name: string;
 };

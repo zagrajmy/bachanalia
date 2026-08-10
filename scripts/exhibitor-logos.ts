@@ -38,7 +38,7 @@ if (!response.ok) throw new Error(`Google Sheets returned ${response.status}`);
 
 const logos = exhibitorsFromCsv(await response.text())
   .map((exhibitor) => exhibitor.logoUrl)
-  .filter((url): url is string => Boolean(url));
+  .filter((url) => url !== undefined);
 
 const safe: string[] = [];
 let plated = 0;

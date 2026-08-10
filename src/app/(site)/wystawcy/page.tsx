@@ -103,7 +103,7 @@ export default async function WystawcyPage() {
           </div>
           {rulesPdfUrl ? (
             <a
-              className="mt-5 flex max-w-full shrink-0 items-start gap-2 font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-mark hover:duration-0 sm:mt-7"
+              className="marked-link mt-5 flex max-w-full shrink-0 items-start gap-2 sm:mt-7"
               href={rulesPdfUrl}
               rel="noreferrer"
               target="_blank"
@@ -121,7 +121,7 @@ export default async function WystawcyPage() {
             </a>
           ) : (
             <Link
-              className="mt-5 flex max-w-full shrink-0 items-start gap-2 font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-mark hover:duration-0 sm:mt-7"
+              className="marked-link mt-5 flex max-w-full shrink-0 items-start gap-2 sm:mt-7"
               href="/regulamin-wystawcow/"
             >
               <span>Otwórz regulamin</span>
@@ -144,7 +144,7 @@ export default async function WystawcyPage() {
             </p>
           </div>
           <Link
-            className="mt-5 flex max-w-full shrink-0 items-start gap-2 font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-mark hover:duration-0 sm:mt-7"
+            className="marked-link mt-5 flex max-w-full shrink-0 items-start gap-2 sm:mt-7"
             href="mailto:wystawcy@bachanaliafantastyczne.pl"
           >
             <HugeiconsIcon

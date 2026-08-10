@@ -3,20 +3,10 @@
 import { useDeferredValue, useMemo, useState } from "react";
 import Image from "next/image";
 import ArrowUpDownIcon from "@hugeicons/core-free-icons/ArrowUpDownIcon";
-import Search01Icon from "@hugeicons/core-free-icons/Search01Icon";
 import Store01Icon from "@hugeicons/core-free-icons/Store01Icon";
 import { HugeiconsIcon } from "@hugeicons/react";
 
-import logosThatReadOnDark from "@/content/exhibitorLogosOnDark.json";
 import type { Exhibitor } from "@/content/exhibitors";
-
-/**
- * Everything else gets a paper plate behind it: a logo added to the sheet after
- * the last build has not been measured, and an unnecessary plate is a worse
- * outcome than an invisible logo only in light mode, where the plate cannot be
- * seen anyway.
- */
-const READS_ON_DARK = new Set<string>(logosThatReadOnDark);
 
 type SortOrder = "az" | "za";
 
@@ -50,7 +40,7 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
                 {exhibitor.links.map((link) => (
                   <li key={link.href}>
                     <a
-                      className="text-sm font-semibold text-ink underline decoration-accent decoration-dashed decoration-2 underline-offset-[0.25em] transition-colors hover:text-mark hover:decoration-mark hover:duration-0"
+                      className="marked-link decoration-dashed text-sm"
                       href={link.href}
                       rel="noreferrer"
                       target="_blank"
@@ -65,7 +55,7 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
             {exhibitor.logoUrl && (
               <span
                 className={`block sm:mt-auto ${
-                  READS_ON_DARK.has(exhibitor.logoUrl) ? "" : "rounded-[2px] bg-paper p-1.5"
+                  exhibitor.logoNeedsPlate ? "rounded-[2px] bg-paper p-1.5" : ""
                 }`}
               >
                 <Image
@@ -149,7 +139,7 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
           <p className="display text-2xl">Nic tu nie znaleźliśmy</p>
           <p className="mt-2 text-ink-muted">Spróbuj innej nazwy lub kategorii.</p>
           <button
-            className="mt-5 cursor-pointer text-sm font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-mark hover:duration-0"
+            className="marked-link mt-5 cursor-pointer text-sm"
             onClick={() => setQuery("")}
             type="button"
           >

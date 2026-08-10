@@ -32,7 +32,7 @@ export default async function RegulaminWystawcowPage() {
 
         {pdfUrl ? (
           <a
-            className="mt-7 inline-flex items-center gap-2.5 font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 transition-colors hover:text-rose"
+            className="marked-link mt-7 inline-flex items-center gap-2.5"
             href={pdfUrl}
             rel="noreferrer"
             target="_blank"
@@ -49,23 +49,17 @@ export default async function RegulaminWystawcowPage() {
             </span>
           </a>
         ) : (
-          <p className="mt-7 border-y border-dashed border-navy/30 py-5 text-ink-muted">
+          <p className="mt-7 border-y border-dashed border-hairline py-5 text-ink-muted">
             Plik regulaminu jest chwilowo niedostępny. Napisz na{" "}
-            <a
-              className="font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 hover:text-rose"
-              href="mailto:wystawcy@bachanaliafantastyczne.pl"
-            >
+            <a className="marked-link" href="mailto:wystawcy@bachanaliafantastyczne.pl">
               wystawcy@bachanaliafantastyczne.pl
             </a>
             , wyślemy go w odpowiedzi.
           </p>
         )}
 
-        <p className="mt-10 border-t border-navy/30 pt-6 text-sm">
-          <Link
-            className="font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4 hover:text-rose"
-            href="/wystawcy/"
-          >
+        <p className="mt-10 border-t border-hairline pt-6 text-sm">
+          <Link className="marked-link" href="/wystawcy/">
             Lista wystawców i zgłoszenia
           </Link>
         </p>

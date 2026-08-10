@@ -29,7 +29,7 @@ export function readsOnDark({ meanLuminance, transparentShare }: LogoPixels) {
 /** Rec. 709 luma, which is what "how light does this look" means here. */
 export const luminance = (r: number, g: number, b: number) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
-export function measureLogo(pixels: Uint8Array | Buffer, channels: number): LogoPixels {
+export function measureLogo(pixels: Buffer | Uint8Array, channels: number): LogoPixels {
   let drawnLuminance = 0;
   let drawn = 0;
   let transparent = 0;

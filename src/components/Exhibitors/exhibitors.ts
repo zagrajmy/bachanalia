@@ -1,4 +1,12 @@
+import logosThatReadOnDark from "@/content/exhibitorLogosOnDark.json";
 import type { Exhibitor, ExhibitorLink } from "@/content/exhibitors";
+
+/**
+ * Measured by `scripts/exhibitor-logos.ts`. A logo added to the sheet since the
+ * last build is unmeasured, so it gets a plate: legibility beats an unnecessary
+ * plate, which light mode cannot show anyway.
+ */
+const READS_ON_DARK = new Set<string>(logosThatReadOnDark);
 
 const SHEET_ID = "12Hg1BnP1b4yU1zCf6LUEbfPyD-zIHShAVwGT7N5mSp0";
 export const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
@@ -94,11 +102,14 @@ export function exhibitorsFromCsv(source: string): Exhibitor[] {
     const name = clean(row[nameIndex]);
     if (!name) return [];
 
+    const logoUrl = logoIndex === undefined ? undefined : driveImageUrl(clean(row[logoIndex]));
+
     return [
       {
         name,
         description: descriptionIndex === undefined ? undefined : clean(row[descriptionIndex]),
-        logoUrl: logoIndex === undefined ? undefined : driveImageUrl(clean(row[logoIndex])),
+        logoUrl,
+        logoNeedsPlate: logoUrl !== undefined && !READS_ON_DARK.has(logoUrl),
         links: linksIndex === undefined ? [] : extractLinks(row[linksIndex]),
       },
     ];

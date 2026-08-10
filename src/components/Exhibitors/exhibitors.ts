@@ -1,7 +1,7 @@
 import type { Exhibitor, ExhibitorLink } from "@/content/exhibitors";
 
 const SHEET_ID = "12Hg1BnP1b4yU1zCf6LUEbfPyD-zIHShAVwGT7N5mSp0";
-const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
+export const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
 const REVALIDATE_SECONDS = 10_800;
 
 /** A small RFC 4180 reader: Sheets descriptions contain both newlines and quoted commas. */

@@ -7,7 +7,16 @@ import Search01Icon from "@hugeicons/core-free-icons/Search01Icon";
 import Store01Icon from "@hugeicons/core-free-icons/Store01Icon";
 import { HugeiconsIcon } from "@hugeicons/react";
 
+import logosThatReadOnDark from "@/content/exhibitorLogosOnDark.json";
 import type { Exhibitor } from "@/content/exhibitors";
+
+/**
+ * Everything else gets a paper plate behind it: a logo added to the sheet after
+ * the last build has not been measured, and an unnecessary plate is a worse
+ * outcome than an invisible logo only in light mode, where the plate cannot be
+ * seen anyway.
+ */
+const READS_ON_DARK = new Set<string>(logosThatReadOnDark);
 
 type SortOrder = "az" | "za";
 
@@ -54,7 +63,11 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
               </ul>
             )}
             {exhibitor.logoUrl && (
-              <span className="block sm:mt-auto">
+              <span
+                className={`block sm:mt-auto ${
+                  READS_ON_DARK.has(exhibitor.logoUrl) ? "" : "rounded-[2px] bg-paper p-1.5"
+                }`}
+              >
                 <Image
                   alt=""
                   className="h-auto w-full object-contain"

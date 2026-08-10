@@ -15,14 +15,9 @@ const collator = new Intl.Collator("pl", { sensitivity: "base" });
 
 function Awning() {
   return (
-    <span aria-hidden="true" className="flex h-5 overflow-hidden border-b border-navy">
+    <span aria-hidden="true" className="flex h-1.5 overflow-hidden border-b border-navy">
       {Array.from({ length: 10 }, (_, index) => (
-        <span
-          className={`relative flex-1 border-r border-navy last:border-r-0 ${
-            index % 2 === 0 ? "bg-coral" : "bg-paper"
-          } after:absolute after:top-full after:left-1/2 after:size-2 after:-translate-1/2 after:rounded-full after:border after:border-navy after:bg-inherit`}
-          key={index}
-        />
+        <span className={`flex-1 ${index % 2 === 0 ? "bg-coral" : "bg-paper"}`} key={index} />
       ))}
     </span>
   );
@@ -30,10 +25,12 @@ function Awning() {
 
 function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-card border border-navy bg-paper transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[3px_5px_0_var(--color-coral)]">
+    <article className="group flex h-full flex-col overflow-hidden rounded-card border border-navy bg-paper transition-colors duration-150 hover:bg-paper-shade">
       <Awning />
       <div className="flex-1 p-5">
-        <h3 className="display text-[1.9rem] break-words text-ink">{exhibitor.name}</h3>
+        <h3 className="display wrap-break-word text-[1.9rem] text-ink transition-colors duration-150 group-hover:text-rose">
+          {exhibitor.name}
+        </h3>
         {exhibitor.description && (
           <p className="mt-3 text-sm/relaxed text-ink-muted">{exhibitor.description}</p>
         )}

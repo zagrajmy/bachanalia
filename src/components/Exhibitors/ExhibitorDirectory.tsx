@@ -36,20 +36,8 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
         </div>
         {(exhibitor.logoUrl || exhibitor.links.length > 0) && (
           <div className="flex flex-col border-t border-hairline p-5 sm:w-[28%] sm:shrink-0 sm:border-t-0 sm:pl-0">
-            {exhibitor.logoUrl && (
-              <span className="flex min-h-28 flex-1 items-start sm:min-h-0">
-                <Image
-                  alt=""
-                  className="h-auto w-full object-contain"
-                  height={320}
-                  sizes="(min-width: 640px) 200px, 82vw"
-                  src={exhibitor.logoUrl}
-                  width={640}
-                />
-              </span>
-            )}
             {exhibitor.links.length > 0 && (
-              <ul className="mt-5 flex flex-col items-end gap-0.5 text-end first:mt-0">
+              <ul className="flex flex-col items-end gap-0.5 text-end">
                 {exhibitor.links.map((link) => (
                   <li key={link.href}>
                     <a
@@ -64,6 +52,18 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
                   </li>
                 ))}
               </ul>
+            )}
+            {exhibitor.logoUrl && (
+              <span className="mt-5 block first:mt-0 sm:mt-auto">
+                <Image
+                  alt=""
+                  className="h-auto w-full object-contain"
+                  height={320}
+                  sizes="(min-width: 640px) 200px, 82vw"
+                  src={exhibitor.logoUrl}
+                  width={640}
+                />
+              </span>
             )}
           </div>
         )}

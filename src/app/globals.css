@@ -124,6 +124,29 @@ body {
     0 / 16px 16px repeat-x;
 }
 
+/**
+ * A perforation with a longer mark than `border-style: dashed` can express,
+ * which stops at roughly three times the border width. Drawn as a gradient so
+ * the 14px mark and 8px gap are ours to set.
+ */
+@utility perforated-top {
+  background: repeating-linear-gradient(
+      to right,
+      var(--color-hairline) 0 14px,
+      transparent 14px 22px
+    )
+    top left / 22px 1px repeat-x;
+}
+
+@utility perforated-start {
+  background: repeating-linear-gradient(
+      to bottom,
+      var(--color-hairline) 0 14px,
+      transparent 14px 22px
+    )
+    top left / 1px 22px repeat-y;
+}
+
 @utility screened {
   background-image: radial-gradient(
     color-mix(in oklab, var(--color-paper) 6%, transparent) 1px,

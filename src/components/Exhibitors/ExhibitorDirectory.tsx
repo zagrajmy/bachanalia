@@ -34,46 +34,39 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
             <p className="mt-2.5 text-sm/relaxed text-ink-muted">{exhibitor.description}</p>
           )}
         </div>
-        <div className="flex flex-col border-t border-hairline p-5 sm:w-[28%] sm:shrink-0 sm:border-t-0 sm:border-l">
-          {exhibitor.logoUrl ? (
-            <span className="flex min-h-28 flex-1 items-start justify-center sm:min-h-0">
-              <Image
-                alt=""
-                className="max-h-full w-auto max-w-full object-contain"
-                height={320}
-                sizes="(min-width: 640px) 200px, 82vw"
-                src={exhibitor.logoUrl}
-                width={640}
-              />
-            </span>
-          ) : (
-            <span className="flex min-h-28 flex-1 items-start justify-center text-ink-muted sm:min-h-0">
-              <HugeiconsIcon
-                aria-hidden="true"
-                className="size-10"
-                icon={Store01Icon}
-                strokeWidth={1.4}
-              />
-            </span>
-          )}
-          {exhibitor.links.length > 0 && (
-            <ul className="mt-5 flex flex-col items-end gap-2 text-end">
-              {exhibitor.links.map((link) => (
-                <li key={link.href}>
-                  <a
-                    className="text-sm font-semibold text-ink underline decoration-accent decoration-dashed decoration-2 underline-offset-[0.25em] transition-colors hover:text-mark hover:decoration-mark hover:duration-0"
-                    href={link.href}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    {link.label}
-                    <span className="sr-only"> — otwiera się w nowej karcie</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        {(exhibitor.logoUrl || exhibitor.links.length > 0) && (
+          <div className="flex flex-col border-t border-hairline p-5 sm:w-[28%] sm:shrink-0 sm:border-t-0 sm:border-l">
+            {exhibitor.logoUrl && (
+              <span className="flex min-h-28 flex-1 items-start justify-end sm:min-h-0">
+                <Image
+                  alt=""
+                  className="max-h-full w-auto max-w-full object-contain"
+                  height={320}
+                  sizes="(min-width: 640px) 200px, 82vw"
+                  src={exhibitor.logoUrl}
+                  width={640}
+                />
+              </span>
+            )}
+            {exhibitor.links.length > 0 && (
+              <ul className="mt-5 flex flex-col items-end gap-2 text-end first:mt-0">
+                {exhibitor.links.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      className="text-sm font-semibold text-ink underline decoration-accent decoration-dashed decoration-2 underline-offset-[0.25em] transition-colors hover:text-mark hover:decoration-mark hover:duration-0"
+                      href={link.href}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      {link.label}
+                      <span className="sr-only"> — otwiera się w nowej karcie</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
       </div>
     </article>
   );

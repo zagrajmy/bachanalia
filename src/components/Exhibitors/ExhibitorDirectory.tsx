@@ -60,7 +60,7 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
             {exhibitor.links.map((link) => (
               <li key={link.href}>
                 <a
-                  className="text-sm font-semibold text-ink underline decoration-accent/50 decoration-dashed decoration-2 underline-offset-[0.25em] transition-colors hover:text-mark hover:decoration-mark hover:duration-0"
+                  className="text-sm font-semibold text-ink underline decoration-accent decoration-dashed decoration-2 underline-offset-[0.25em] transition-colors hover:text-mark hover:decoration-mark hover:duration-0"
                   href={link.href}
                   rel="noreferrer"
                   target="_blank"

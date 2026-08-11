@@ -165,6 +165,9 @@ export function Lightbox({
     };
 
     const move = moves[event.key];
+
+    /** Every key that is not an arrow reads back undefined, whatever the index signature says. */
+    // oxlint-disable-next-line typescript/no-unnecessary-condition
     if (!move || zoomed) return;
 
     event.preventDefault();
@@ -215,6 +218,8 @@ export function Lightbox({
             const from = touchStart.current;
             const touch = event.changedTouches[0];
             touchStart.current = null;
+            /** A touch list can be empty; TouchList's index signature says otherwise. */
+            // oxlint-disable-next-line typescript/no-unnecessary-condition
             if (!from || !touch || zoomed) return;
 
             const dx = touch.clientX - from.x;

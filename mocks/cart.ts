@@ -34,11 +34,11 @@ function snapshotFor(lines: Line[]): CartNode {
   const snapshots = readSnapshots();
 
   if (lines.length === 0) {
-    return snapshots.empty ? (clone(snapshots.empty) as CartNode) : noSnapshots("an empty cart");
+    return snapshots.empty ? clone(snapshots.empty) : noSnapshots("an empty cart");
   }
 
   const exact = snapshots.carts[signature(lines)];
-  if (exact) return clone(exact) as CartNode;
+  if (exact) return clone(exact);
 
   /**
    * Nothing recorded at this quantity. Quantities and counts are integers, not

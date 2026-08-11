@@ -14,6 +14,8 @@ const loadLightbox = () => import("./Lightbox").then((module) => module.Lightbox
 function withMorph(run: () => void, ms = 260) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /** lib.dom declares this unconditionally; Safari below 18 does not ship it. */
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
   if (reduced || !document.startViewTransition) {
     run();
     return;

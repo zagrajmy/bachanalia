@@ -2,6 +2,7 @@ import { strict as assert } from "node:assert";
 import { test } from "node:test";
 
 import nextConfig from "./next.config.js";
+import { NOCLEGI_PATH } from "@/components/Globals/siteNav";
 
 const redirects = async () => {
   assert.ok(nextConfig.redirects, "next.config.js must declare redirects()");
@@ -81,12 +82,31 @@ test("accreditation lands on our own shop, not back on WordPress", async () => {
   assert.equal(rule.permanent, true);
 });
 
-test("redirects within the site are permanent, so link equity is not parked on a 302", async () => {
-  const internal = (await redirects()).filter((rule) => rule.destination.startsWith("/"));
+test("the dorm page lands on the product that sells the beds, temporarily", async () => {
+  const rule = await find("/noclegi");
+
+  assert.equal(
+    rule.destination,
+    NOCLEGI_PATH,
+    "the nav and the redirect name the same product, and the slug changes every edition",
+  );
+  assert.equal(
+    rule.permanent,
+    false,
+    "the destination is one edition's product — a cached 308 would outlive it",
+  );
+});
+
+test("redirects within the site are permanent, so link equity is not parked on a 307", async () => {
+  const internal = (await redirects())
+    .filter((rule) => rule.destination.startsWith("/"))
+    /** Except the one per-edition alias, whose destination moves every year. */
+    .filter((rule) => rule.source !== "/noclegi");
 
   assert.ok(internal.length > 1, "expected several same-site redirects");
   for (const rule of internal) {
-    assert.equal(rule.permanent, true, `${rule.source} must 301`);
+    /** `permanent: true` is a 308 in Next — permanent to crawlers, like a 301. */
+    assert.equal(rule.permanent, true, `${rule.source} must redirect permanently`);
   }
 });
 
@@ -97,7 +117,7 @@ test("an outbound hop is temporary, because WordPress is about to move", async (
     assert.equal(
       rule.permanent,
       false,
-      `${rule.source} must 307 — WordPress moves to a subdomain at cutover and a browser caches a 301 indefinitely`,
+      `${rule.source} must 307 — WordPress moves to a subdomain at cutover and a browser caches a 308 indefinitely`,
     );
   }
 });

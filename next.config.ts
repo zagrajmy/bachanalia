@@ -161,6 +161,18 @@ const nextConfig: NextConfig = {
         destination: "/sklep/",
         permanent: true,
       },
+      /**
+       * The dorm page only ever promised details; the shop sells the beds.
+       * Destination mirrors NOCLEGI_PATH in siteNav.ts — and names one
+       * edition's product, so this stays temporary: a cached 308 would strand
+       * whoever follows an old link on a sold-out BF 26 page for years after
+       * the destination moves to the next edition.
+       */
+      {
+        source: "/noclegi",
+        destination: "/produkt/nocleg-w-akademiku-bf-26/",
+        permanent: false,
+      },
       {
         source: "/blog",
         destination: "/aktualnosci/",

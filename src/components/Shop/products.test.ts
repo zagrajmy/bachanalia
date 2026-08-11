@@ -2,7 +2,13 @@ import { describe, expect, it } from "bun:test";
 
 import { accreditation } from "@/content/con";
 
-import { type ShopProduct, sortShopProducts, variantLabel } from "./products";
+import {
+  type ShopCategory,
+  type ShopProduct,
+  sortShopCategories,
+  sortShopProducts,
+  variantLabel,
+} from "./products";
 
 const product = (slug: string, name: string): ShopProduct => ({
   slug,
@@ -11,6 +17,24 @@ const product = (slug: string, name: string): ShopProduct => ({
   href: `/sklep/${slug}/`,
   wpHref: "",
   soldOut: false,
+});
+
+const category = (slug: string): ShopCategory => ({ slug, label: slug, products: [] });
+
+describe("sortShopCategories", () => {
+  it("sells the bed with the accreditation, not behind the tip jar", () => {
+    const sorted = sortShopCategories(
+      ["wsparcie", "antologie", "noclegi", "akredytacje"].map(category),
+    );
+
+    expect(sorted.map((c) => c.slug)).toEqual(["akredytacje", "noclegi", "antologie", "wsparcie"]);
+  });
+
+  it("files a category nobody ordered last", () => {
+    const sorted = sortShopCategories(["koszulki", "akredytacje"].map(category));
+
+    expect(sorted.map((c) => c.slug)).toEqual(["akredytacje", "koszulki"]);
+  });
 });
 
 describe("sortShopProducts", () => {

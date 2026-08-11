@@ -8,6 +8,15 @@ export const SHOP_PATH = "/sklep/";
 export const productPath = (slug: string) => `/produkt/${slug}/`;
 
 /**
+ * The dorm beds are a WooCommerce product; the WordPress /noclegi/ page only
+ * ever promised details "wkrótce". The nav sells the bed instead of describing
+ * it — the same move /akredytacja/ made toward the shop. The slug names one
+ * edition's product, so it changes with the edition — /noclegi/ stays the
+ * stable shortcut, kept temporary in next.config.ts for that reason.
+ */
+export const NOCLEGI_PATH = productPath("nocleg-w-akademiku-bf-26");
+
+/**
  * Published in WordPress, not part of this site: a 2023 stub, a probe for the
  * Facebook feed, and WordPress's own duplicate of the exhibitor rules. The
  * catch-all would otherwise render all three.
@@ -26,6 +35,12 @@ export const RETIRED_PATHS = [
   "/zamowienie/",
   "/moje-konto/",
   "/zwroty/",
+  /**
+   * Redirected to the Nocleg product in `next.config.ts`, so the page itself
+   * is unreachable; retiring it keeps the catch-all from prerendering the
+   * stale "szczegóły wkrótce" body behind the redirect.
+   */
+  "/noclegi/",
 ];
 
 /**
@@ -82,7 +97,7 @@ export const primaryNav: NavGroup[] = [
     ],
   },
   { href: "/wspieraja-nas/", label: "Wspierają nas" },
-  { href: "/noclegi/", label: "Noclegi" },
+  { href: NOCLEGI_PATH, label: "Noclegi" },
   { href: SHOP_PATH, label: "Sklep" },
 ];
 
@@ -130,7 +145,7 @@ export const footerNav = [
       { href: "/wystawcy/", label: "Wystawcy" },
       { href: "/regulamin-wystawcow/", label: "Regulamin wystawców" },
       { href: "/wspieraja-nas/", label: "Wspierają nas" },
-      { href: "/noclegi/", label: "Noclegi" },
+      { href: NOCLEGI_PATH, label: "Noclegi" },
       { href: SHOP_PATH, label: "Sklep" },
     ],
   },

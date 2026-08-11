@@ -47,21 +47,24 @@ run `bun run codegen:refresh`, turn it back off.
 
 ## Site map
 
-| Path                                                                                                                                | Source                       | Status                                |
-| ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | ------------------------------------- |
-| `/`                                                                                                                                 | hand-built + WooCommerce     | ours                                  |
-| `/aktualnosci/`                                                                                                                     | Facebook — see [News](#news) | ours                                  |
-| `/goscie/`                                                                                                                          | WP posts                     | ours                                  |
-| `/sklep/`, `/produkt/<slug>/`                                                                                                       | WooGraphQL                   | ours                                  |
-| `/co-to-sa-bachanalia`, `/organizator`, `/sztab-bachanaliowy`, `/czas-i-miejsce`, `/regulamin`, `/polityka-prywatnosci`, `/noclegi` | WP pages                     | ours                                  |
-| `/blok-prelekcyjny`, `/blok-konkursowy`, `/blok-naukowy`, `/blok-komiksowy`, `/rpg`, `/gamesroom`, `/retro-gaming`, `/cosplay`      | WP pages                     | ours                                  |
-| `/poznaj-wystawcow`, `/regulamin-wystawcow`, `/zgloszenia-*`, `/wspieraja-nas`                                                      | WP pages                     | ours                                  |
-| `/2025/…/<slug>`                                                                                                                    | WP posts                     | ours — 25 dated guest announcements   |
-| `/program`                                                                                                                          | ludamus feed                 | not built                             |
-| `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty`                                                                                  | WooCommerce                  | still WordPress                       |
-| `/zamowienie/order-received/<id>/`                                                                                                  | WooCommerce                  | ours at cutover — delivers the ticket |
+| Path                                                                                                                           | Source                       | Status                                |
+| ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------- | ------------------------------------- |
+| `/`                                                                                                                            | hand-built + WooCommerce     | ours                                  |
+| `/aktualnosci/`                                                                                                                | Facebook — see [News](#news) | ours                                  |
+| `/goscie/`                                                                                                                     | WP posts                     | ours                                  |
+| `/sklep/`, `/produkt/<slug>/`                                                                                                  | WooGraphQL                   | ours                                  |
+| `/co-to-sa-bachanalia`, `/organizator`, `/sztab-bachanaliowy`, `/czas-i-miejsce`, `/regulamin`, `/polityka-prywatnosci`        | WP pages                     | ours                                  |
+| `/blok-prelekcyjny`, `/blok-konkursowy`, `/blok-naukowy`, `/blok-komiksowy`, `/rpg`, `/gamesroom`, `/retro-gaming`, `/cosplay` | WP pages                     | ours                                  |
+| `/poznaj-wystawcow`, `/regulamin-wystawcow`, `/zgloszenia-*`, `/wspieraja-nas`                                                 | WP pages                     | ours                                  |
+| `/2025/…/<slug>`                                                                                                               | WP posts                     | ours — 25 dated guest announcements   |
+| `/program`                                                                                                                     | ludamus feed                 | not built                             |
+| `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty`                                                                             | WooCommerce                  | still WordPress                       |
+| `/zamowienie/order-received/<id>/`                                                                                             | WooCommerce                  | ours at cutover — delivers the ticket |
 
-`/akredytacja` 301s to `/sklep/`. `/info`, `/blog` and `/feed-test` are gone.
+`/akredytacja` 308s to `/sklep/`. `/noclegi` is a shortcut to the current
+edition's dorm product (`/produkt/nocleg-w-akademiku-bf-26/` today) — a 307,
+because the destination moves with each edition. `/info`, `/blog` and
+`/feed-test` are gone.
 
 `sitemap.ts` builds from the same sources the routes do — `AllContentQuery`
 plus the product slugs, with the four WooCommerce paths, the redirect sources
@@ -77,11 +80,13 @@ publishes, so every indexed link works with no redirect.
 Pretty permalinks 404 on WordPress — the server rewrite is broken — so every
 indexed URL is the `/index.php/…` form, and that is where the link equity is.
 
-- Canonical is the clean path. `/index.php/<anything>` → 301 → `/<anything>/`.
+- Canonical is the clean path. `/index.php/<anything>` → 308 → `/<anything>/`.
 - `trailingSlash: true`, so redirect destinations must keep the slash or every
   indexed URL costs a second hop. `next.config.test.ts` enforces that, plus:
-  same-site redirects permanent, outbound ones not — a browser caches a 301
-  indefinitely and WordPress is about to move.
+  same-site redirects permanent, outbound ones not — a browser caches a 308
+  indefinitely and WordPress is about to move. `/noclegi` is the one same-site
+  exception, and temporary for the same reason: it aliases a per-edition
+  product.
 - **Do not fix WP permalinks before cutover.** Switching to "Post name" while
   WordPress is still the public frontend rewrites every live URL and could
   take the shop down mid-sales. Until then `src/utils/nextSlugToWpSlug.ts`

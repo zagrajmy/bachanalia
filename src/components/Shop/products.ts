@@ -63,8 +63,8 @@ type ProductDetailNode = Selected<NonNullable<ProductQueryQuery["products"]>["no
 /** Editors type category names lowercase in wp-admin; the shop is not a slug. */
 const capitalise = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
 
-/** Accreditation first — it is why the shop exists — then the books, then the tip jar. */
-const CATEGORY_ORDER = ["akredytacje", "antologie", "wsparcie"];
+/** Accreditation first — it is why the shop exists — then the bed, the books, the tip jar. */
+const CATEGORY_ORDER = ["akredytacje", "noclegi", "antologie", "wsparcie"];
 
 const ACCREDITATION_ORDER = new Map(accreditation.map(({ slug }, i) => [slug, i]));
 
@@ -101,6 +101,15 @@ export function sortShopProducts(categorySlug: string, products: ShopProduct[]) 
   }
 
   return [...products].sort((a, b) => volume(b.name) - volume(a.name));
+}
+
+export function sortShopCategories(categories: ShopCategory[]) {
+  const rank = ({ slug }: ShopCategory) => {
+    const i = CATEGORY_ORDER.indexOf(slug);
+    return i === -1 ? CATEGORY_ORDER.length : i;
+  };
+
+  return [...categories].sort((a, b) => rank(a) - rank(b));
 }
 
 function toImage(node: ProductNode["image"], blurDataURL?: string) {
@@ -156,17 +165,10 @@ export async function fetchShop(): Promise<ShopCategory[]> {
     category.products.push(product);
   }
 
-  const rank = ({ slug }: ShopCategory) => {
-    const i = CATEGORY_ORDER.indexOf(slug);
-    return i === -1 ? CATEGORY_ORDER.length : i;
-  };
-
-  return categories
-    .sort((a, b) => rank(a) - rank(b))
-    .map((category) => ({
-      ...category,
-      products: sortShopProducts(category.slug, category.products),
-    }));
+  return sortShopCategories(categories).map((category) => ({
+    ...category,
+    products: sortShopProducts(category.slug, category.products),
+  }));
 }
 
 /**

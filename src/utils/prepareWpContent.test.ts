@@ -91,6 +91,7 @@ test("carries every slide's source and alt across", () => {
   const gallery = splitWpContent(PAGE)[1]!;
 
   assert.equal(gallery.type, "gallery");
+  // oxlint-disable-next-line typescript/no-unnecessary-condition -- asserting the discriminant is the point of the line above
   assert.deepEqual(gallery.type === "gallery" ? gallery.images : [], [
     { src: "https://wp.example/a.jpg", alt: "IMG_1" },
     { src: "https://wp.example/b.jpg", alt: "IMG_2" },
@@ -106,17 +107,17 @@ test("no carousel markup survives into the HTML segments", () => {
   }
 });
 
-test("both halves stay balanced across the cut", () => {
-  const counts = (html: string) => ({
-    open: (html.match(/<(?!\/)[a-z]/g) ?? []).length - (html.match(/<img\b/g) ?? []).length,
-    close: (html.match(/<\//g) ?? []).length,
-  });
+const tagCounts = (html: string) => ({
+  opened: (html.match(/<(?!\/)[a-z]/g) ?? []).length - (html.match(/<img\b/g) ?? []).length,
+  closed: (html.match(/<\//g) ?? []).length,
+});
 
+test("both halves stay balanced across the cut", () => {
   for (const segment of splitWpContent(PAGE)) {
     if (segment.type !== "html") continue;
 
-    const { open, close } = counts(segment.html);
-    assert.equal(open, close, `unbalanced chunk: ${segment.html}`);
+    const { opened, closed } = tagCounts(segment.html);
+    assert.equal(opened, closed, `unbalanced chunk: ${segment.html}`);
   }
 });
 
@@ -130,6 +131,7 @@ test("splitting still drops the carousel semantics prepareWpContent removes", ()
   const gallery = splitWpContent(CAROUSEL)[0]!;
 
   assert.equal(gallery.type, "gallery");
+  // oxlint-disable-next-line typescript/no-unnecessary-condition -- asserting the discriminant is the point of the line above
   assert.equal(gallery.type === "gallery" ? gallery.images.length : 0, 1);
 });
 

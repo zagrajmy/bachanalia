@@ -21,10 +21,10 @@ function text(formData: FormData, name: string, fallback = "") {
 function readAttributes(formData: FormData) {
   const pairs: { attributeName: string; attributeValue: string }[] = [];
 
-  formData.forEach((value, name) => {
-    if (!name.startsWith(ATTRIBUTE_PREFIX) || typeof value !== "string" || !value) return;
+  for (const [name, value] of formData) {
+    if (!name.startsWith(ATTRIBUTE_PREFIX) || typeof value !== "string" || !value) continue;
     pairs.push({ attributeName: name.slice(ATTRIBUTE_PREFIX.length), attributeValue: value });
-  });
+  }
 
   return pairs;
 }
@@ -41,10 +41,12 @@ async function resolveVariationId(slug: string, selection: Record<string, string
   if (!result.ok) return undefined;
 
   /** Only a VARIABLE product carries variations; anything else has none to resolve. */
+  // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
   const product = result.data.products?.nodes?.[0];
   const nodes = product && "variations" in product ? (product.variations?.nodes ?? []) : [];
 
   const variations: ProductVariation[] = nodes.flatMap((node) =>
+    // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
     node?.databaseId
       ? [
           {
@@ -52,6 +54,7 @@ async function resolveVariationId(slug: string, selection: Record<string, string
             price: "",
             soldOut: node.stockStatus === "OUT_OF_STOCK",
             attributes: (node.attributes?.nodes ?? []).flatMap((attribute) =>
+              // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
               attribute?.name ? [{ name: attribute.name, value: attribute.value ?? "" }] : [],
             ),
           },

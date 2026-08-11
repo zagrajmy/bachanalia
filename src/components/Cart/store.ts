@@ -109,6 +109,7 @@ export async function loadCart(force = false) {
       return;
     }
 
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- our own route handler, and this is the shape it answers with
     const body = (await response.json()) as { cart: CartView; checkoutUrl?: string };
 
     loaded = true;

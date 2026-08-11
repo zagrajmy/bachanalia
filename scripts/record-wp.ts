@@ -117,15 +117,16 @@ async function visit(route: string) {
 }
 
 async function recordReads() {
-  const seeds = EXTRA_ROUTES.concat(navRoutes).filter(
+  const seeds = [...EXTRA_ROUTES, ...navRoutes].filter(
     (route, index, all) => all.indexOf(route) === index,
   );
 
   for (const route of seeds) await visit(route);
 
-  const followed = (await linksFrom("/goscie/", /^\/\d{4}\/\d{2}\/\d{2}\//)).concat(
-    await linksFrom("/sklep/", /^\/produkt\//),
-  );
+  const followed = [
+    ...(await linksFrom("/goscie/", /^\/\d{4}\/\d{2}\/\d{2}\//)),
+    ...(await linksFrom("/sklep/", /^\/produkt\//)),
+  ];
 
   for (const route of followed) await visit(route);
 }
@@ -151,6 +152,7 @@ async function wooRaw<TResult, TVariables>(
   const refreshed = response.headers.get("woocommerce-session");
   if (refreshed) session = refreshed;
 
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the payload's shape is the document's to promise
   return (await response.json()) as GraphQLResponse<TResult>;
 }
 
@@ -183,10 +185,12 @@ async function variationToBuy() {
   const { ProductQuery } = await import("../src/queries/general/ProductQuery");
 
   const product = await woo(ProductQuery, { preview: false, slugs: [CART_PRODUCT.slug] });
+  // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
   const node = product.data?.products?.nodes?.[0];
 
   const slugs = { slugs: [CART_PRODUCT.slug] };
   const variations = await woo(ProductVariationsQuery, slugs);
+  // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
   const variationsNode = variations.data?.products?.nodes?.[0];
   const all =
     variationsNode && "variations" in variationsNode
@@ -310,10 +314,10 @@ async function main() {
   console.log("done — review `git diff e2e/fixtures/wp` before committing");
 }
 
-void main().then(
-  () => process.exit(0),
-  (error: unknown) => {
-    console.error(error);
-    process.exit(1);
-  },
-);
+try {
+  await main();
+  process.exit(0);
+} catch (error) {
+  console.error(error);
+  process.exit(1);
+}

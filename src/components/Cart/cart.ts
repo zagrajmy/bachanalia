@@ -48,6 +48,7 @@ function toLine(node: CartItemNode): CartLine | undefined {
   const labels = product.attributes?.nodes ?? [];
   const labelFor = (name: string) => {
     for (const attribute of labels) {
+      // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
       if (attribute?.name === name && attribute.label) return attribute.label;
     }
 
@@ -71,6 +72,7 @@ function toLine(node: CartItemNode): CartLine | undefined {
         ? [{ label: labelFor(attribute.name), value: attribute.value }]
         : [],
     ),
+    // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
     ...(node.variation?.node?.databaseId && { variationId: node.variation.node.databaseId }),
   };
 }

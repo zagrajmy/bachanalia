@@ -61,6 +61,7 @@ const useConsent = () =>
  * has no business knowing which of our pages the visitor was reading.
  */
 function reveal(node: Element) {
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the selector above is what makes this the element it says
   const { embedSrc, embedTitle } = (node as HTMLElement).dataset;
   if (!embedSrc) return;
 
@@ -164,7 +165,8 @@ export function Consent() {
    */
   useEffect(() => {
     const onClick = (event: MouseEvent) => {
-      if ((event.target as Element | null)?.closest?.("[data-embed-accept]")) decide("granted");
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a listener on this document only ever sees its elements
+      if ((event.target as Element | null)?.closest("[data-embed-accept]")) decide("granted");
     };
 
     document.addEventListener("click", onClick);

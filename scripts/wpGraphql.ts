@@ -51,6 +51,7 @@ export async function wpQuery<TResult, TVariables>(
     let body: GraphQLResponse<TResult>;
 
     try {
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the payload's shape is the document's to promise
       body = (await response.json()) as GraphQLResponse<TResult>;
     } catch {
       lastError = new Error(`GraphQL: unparseable response from ${url.pathname}`);

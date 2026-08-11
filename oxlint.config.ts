@@ -24,6 +24,8 @@ export default defineConfig({
      * for each one is a line and a noun that say nothing.
      */
     "unicorn/no-await-expression-member": "off",
+    /** oxfmt lowercases hex literals and this rule wants them uppercase. The formatter runs last. */
+    "unicorn/number-literal-case": "off",
     "perfectionist/sort-jsx-props": "off",
     /**
      * Alphabetical order buries the discriminant, and the discriminant is what

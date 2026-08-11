@@ -14,8 +14,7 @@ const loadLightbox = async () => import("./Lightbox").then((module) => module.Li
 function withMorph(run: () => void, ms = 260) {
   const reduced = globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /** lib.dom declares this unconditionally; Safari below 18 does not ship it. */
-  // oxlint-disable-next-line typescript/no-unnecessary-condition
+  // oxlint-disable-next-line typescript/no-unnecessary-condition -- lib.dom declares this unconditionally; Safari below 18 does not ship it
   if (reduced || !document.startViewTransition) {
     run();
     return;
@@ -39,6 +38,7 @@ function withMorph(run: () => void, ms = 260) {
 export function Gallery({ images }: { images: WpGalleryImage[] }) {
   const [index, setIndex] = useState<number | null>(null);
   const [morphIndex, setMorphIndex] = useState(0);
+  // oxlint-disable-next-line react/hook-use-state -- the state is a component, so it is PascalCase
   const [LoadedLightbox, setLoadedLightbox] = useState<typeof import("./Lightbox").Lightbox>();
   const thumbnails = useRef<(HTMLButtonElement | null)[]>([]);
   const finalFocus = useRef<HTMLButtonElement | null>(null);

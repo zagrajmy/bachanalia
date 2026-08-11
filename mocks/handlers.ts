@@ -60,10 +60,10 @@ function operationNameOf(query: string) {
  * expires, so recording it would save something dead.
  */
 const CART_OPERATIONS = new Set([
-  "CartQuery",
   "AddToCartMutation",
-  "UpdateItemQuantitiesMutation",
+  "CartQuery",
   "RemoveItemsFromCartMutation",
+  "UpdateItemQuantitiesMutation",
 ]);
 
 /**
@@ -90,7 +90,7 @@ function tokenOf(request: Request) {
   return header ? header.replace(/^Session\s+/, "") : "";
 }
 
-type Operation = { name: string; query: string; variables: Record<string, any> };
+type Operation = { name: string; query: string; variables: Record<string, unknown> };
 
 async function readOperation(request: Request): Promise<Operation> {
   const url = new URL(request.url);
@@ -102,24 +102,28 @@ async function readOperation(request: Request): Promise<Operation> {
     return {
       name: operationNameOf(query),
       query,
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
       variables: raw ? (JSON.parse(raw) as Record<string, unknown>) : {},
     };
   }
 
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
   const body = (await request.clone().json()) as { query?: string; variables?: unknown };
   const query = body.query ?? "";
 
   return {
     name: operationNameOf(query),
     query,
-    variables: (body.variables as Record<string, any>) ?? {},
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
+    variables: (body.variables as Record<string, unknown> | undefined) ?? {},
   };
 }
 
 function cartReply(request: Request, operation: Operation) {
   const existing = tokenOf(request);
   const token = existing || mintToken();
-  const input = (operation.variables.input ?? {}) as Record<string, any>;
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
+  const input = (operation.variables.input ?? {}) as Record<string, unknown>;
 
   switch (operation.name) {
     case "AddToCartMutation":
@@ -133,6 +137,7 @@ function cartReply(request: Request, operation: Operation) {
       return { headers: token, body: { data: { addToCart: { cart: cartResponse(token) } } } };
 
     case "RemoveItemsFromCartMutation":
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
       removeLines(token, (input.keys ?? []) as string[]);
 
       return {
@@ -142,6 +147,7 @@ function cartReply(request: Request, operation: Operation) {
 
     case "UpdateItemQuantitiesMutation":
       /** Whatever the client sent — the quantity is not a number until it is made one. */
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
       for (const item of (input.items ?? []) as { key: string; quantity: unknown }[]) {
         setLineQuantity(token, item.key, Number(item.quantity));
       }

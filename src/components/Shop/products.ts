@@ -78,12 +78,16 @@ function volume(name: string) {
   const numeral = /\s([IVXLCDM]+)$/.exec(name.trim())?.[1];
   if (!numeral) return 0;
 
-  return [...numeral].reduce((total, letter, i, all) => {
-    const value = ROMAN[letter] ?? 0;
-    const next = ROMAN[all[i + 1] ?? ""] ?? 0;
+  let total = 0;
 
-    return total + (value < next ? -value : value);
-  }, 0);
+  for (let i = 0; i < numeral.length; i++) {
+    const value = ROMAN[numeral[i] ?? ""] ?? 0;
+    const next = ROMAN[numeral[i + 1] ?? ""] ?? 0;
+
+    total += value < next ? -value : value;
+  }
+
+  return total;
 }
 
 /**
@@ -140,6 +144,7 @@ export async function fetchShop(): Promise<ShopCategory[]> {
     const product = toProduct(node, blurs.get(node.image?.thumbnail ?? ""));
     if (!product) continue;
 
+    // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
     const term = node.productCategories?.nodes?.[0];
     const slug = term?.slug ?? "inne";
     let category = categories.find((existing) => existing.slug === slug);
@@ -185,6 +190,7 @@ export const variantLabel = (productName: string, variationName: string) =>
 export async function fetchProduct(slug: string): Promise<ShopProductDetail | undefined> {
   const { products } = await fetchGraphQL(ProductQuery, { slugs: [slug] });
 
+  // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
   const product: ProductDetailNode | undefined = products?.nodes?.[0];
 
   if (!product) return undefined;
@@ -192,6 +198,7 @@ export async function fetchProduct(slug: string): Promise<ShopProductDetail | un
   const base = toProduct(product, await blurDataUrl(product.image?.thumbnail));
   if (!base) return undefined;
 
+  // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
   const term = product.productCategories?.nodes?.[0];
   const variationNodes = product.variations?.nodes ?? [];
 
@@ -220,6 +227,7 @@ export async function fetchProduct(slug: string): Promise<ShopProductDetail | un
               price: formatPrice(variation.price),
               soldOut: variation.stockStatus === "OUT_OF_STOCK",
               attributes: (variation.attributes?.nodes ?? []).flatMap((attribute) =>
+                // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
                 attribute?.name ? [{ name: attribute.name, value: attribute.value ?? "" }] : [],
               ),
             },
@@ -227,6 +235,7 @@ export async function fetchProduct(slug: string): Promise<ShopProductDetail | un
         : [],
     ),
     attributeLabels: (product.attributes?.nodes ?? []).flatMap((attribute) =>
+      // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
       attribute?.name ? [{ name: attribute.name, label: attribute.label || attribute.name }] : [],
     ),
   };

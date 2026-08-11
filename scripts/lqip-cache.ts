@@ -137,6 +137,7 @@ async function migrateTextLqips() {
 
 async function loadManifest() {
   try {
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a cache file this repo wrote, read back in the shape it was written
     return JSON.parse(await readFile(MANIFEST_PATH, "utf8")) as Record<string, number[]>;
   } catch {
     return {};
@@ -145,6 +146,7 @@ async function loadManifest() {
 
 async function loadCrawl(): Promise<Record<string, string>> {
   try {
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a cache file this repo wrote, read back in the shape it was written
     return JSON.parse(await readFile(CRAWL_PATH, "utf8")) as Record<string, string>;
   } catch {
     return {};
@@ -394,7 +396,9 @@ async function main() {
   );
 }
 
-main().catch((error: unknown) => {
+try {
+  await main();
+} catch (error) {
   console.error(error);
   process.exit(1);
-});
+}

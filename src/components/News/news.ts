@@ -23,6 +23,7 @@ function toNewsEntry(post: NewsPost): NewsEntry {
     href: wpUriToPath(post.uri),
     ...toNewsDate(post.dateGmt ? new Date(`${post.dateGmt}Z`) : undefined),
     excerpt: newsExcerpt(post.excerpt),
+    // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
     category: post.categories?.nodes?.[0]?.name ?? undefined,
     ...(image?.sourceUrl && {
       image: {

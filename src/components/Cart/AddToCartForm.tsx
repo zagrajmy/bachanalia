@@ -139,7 +139,7 @@ export function AddToCartForm({
               return (
                 <label
                   key={option}
-                  className={`rounded-card border px-3.5 py-3 text-sm transition-colors duration-150 has-focus-visible:outline has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent ${
+                  className={`rounded-card border px-3.5 py-3 text-sm transition-colors duration-150 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent ${
                     unbuyable
                       ? "cursor-not-allowed border-hairline text-ink-muted line-through"
                       : active

@@ -69,6 +69,7 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
       },
       {
         name: "zagrajmy.net",
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- Next types `*.svg` as `any` so svgr can redefine it
         src: zagrajmySvg as StaticImageData,
         href: "https://zagrajmy.net/",
       },

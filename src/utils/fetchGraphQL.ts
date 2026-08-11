@@ -89,6 +89,7 @@ async function request<T>(
     throw new Error(`WordPress responded ${response.status} ${response.statusText}`);
   }
 
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the payload's shape is the document's to promise
   const body = (await response.json()) as GraphQLResponse<T>;
 
   if (body.errors?.length) {

@@ -106,7 +106,9 @@ async function main() {
   console.log(`archive: ${fresh.length} new, ${archive.length} total`);
 }
 
-main().catch((error: unknown) => {
+try {
+  await main();
+} catch (error) {
   console.error(error);
   process.exit(1);
-});
+}

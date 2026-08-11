@@ -81,6 +81,13 @@ test("accreditation lands on our own shop, not back on WordPress", async () => {
   assert.equal(rule.permanent, true);
 });
 
+test("the dorm page lands on the product that sells the beds", async () => {
+  const rule = await find("/noclegi");
+
+  assert.equal(rule.destination, "/produkt/nocleg/");
+  assert.equal(rule.permanent, true);
+});
+
 test("redirects within the site are permanent, so link equity is not parked on a 302", async () => {
   const internal = (await redirects()).filter((rule) => rule.destination.startsWith("/"));
 

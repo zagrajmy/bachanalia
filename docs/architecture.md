@@ -47,21 +47,23 @@ run `bun run codegen:refresh`, turn it back off.
 
 ## Site map
 
-| Path                                                                                                                                | Source                       | Status                                |
-| ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | ------------------------------------- |
-| `/`                                                                                                                                 | hand-built + WooCommerce     | ours                                  |
-| `/aktualnosci/`                                                                                                                     | Facebook — see [News](#news) | ours                                  |
-| `/goscie/`                                                                                                                          | WP posts                     | ours                                  |
-| `/sklep/`, `/produkt/<slug>/`                                                                                                       | WooGraphQL                   | ours                                  |
-| `/co-to-sa-bachanalia`, `/organizator`, `/sztab-bachanaliowy`, `/czas-i-miejsce`, `/regulamin`, `/polityka-prywatnosci`, `/noclegi` | WP pages                     | ours                                  |
-| `/blok-prelekcyjny`, `/blok-konkursowy`, `/blok-naukowy`, `/blok-komiksowy`, `/rpg`, `/gamesroom`, `/retro-gaming`, `/cosplay`      | WP pages                     | ours                                  |
-| `/poznaj-wystawcow`, `/regulamin-wystawcow`, `/zgloszenia-*`, `/wspieraja-nas`                                                      | WP pages                     | ours                                  |
-| `/2025/…/<slug>`                                                                                                                    | WP posts                     | ours — 25 dated guest announcements   |
-| `/program`                                                                                                                          | ludamus feed                 | not built                             |
-| `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty`                                                                                  | WooCommerce                  | still WordPress                       |
-| `/zamowienie/order-received/<id>/`                                                                                                  | WooCommerce                  | ours at cutover — delivers the ticket |
+| Path                                                                                                                           | Source                       | Status                                |
+| ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------- | ------------------------------------- |
+| `/`                                                                                                                            | hand-built + WooCommerce     | ours                                  |
+| `/aktualnosci/`                                                                                                                | Facebook — see [News](#news) | ours                                  |
+| `/goscie/`                                                                                                                     | WP posts                     | ours                                  |
+| `/sklep/`, `/produkt/<slug>/`                                                                                                  | WooGraphQL                   | ours                                  |
+| `/co-to-sa-bachanalia`, `/organizator`, `/sztab-bachanaliowy`, `/czas-i-miejsce`, `/regulamin`, `/polityka-prywatnosci`        | WP pages                     | ours                                  |
+| `/blok-prelekcyjny`, `/blok-konkursowy`, `/blok-naukowy`, `/blok-komiksowy`, `/rpg`, `/gamesroom`, `/retro-gaming`, `/cosplay` | WP pages                     | ours                                  |
+| `/poznaj-wystawcow`, `/regulamin-wystawcow`, `/zgloszenia-*`, `/wspieraja-nas`                                                 | WP pages                     | ours                                  |
+| `/2025/…/<slug>`                                                                                                               | WP posts                     | ours — 25 dated guest announcements   |
+| `/program`                                                                                                                     | ludamus feed                 | not built                             |
+| `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty`                                                                             | WooCommerce                  | still WordPress                       |
+| `/zamowienie/order-received/<id>/`                                                                                             | WooCommerce                  | ours at cutover — delivers the ticket |
 
-`/akredytacja` 301s to `/sklep/`. `/info`, `/blog` and `/feed-test` are gone.
+`/akredytacja` 301s to `/sklep/` and `/noclegi` to `/produkt/nocleg/` — the
+dorm beds are a WooCommerce product. `/info`, `/blog` and `/feed-test` are
+gone.
 
 `sitemap.ts` builds from the same sources the routes do — `AllContentQuery`
 plus the product slugs, with the four WooCommerce paths, the redirect sources

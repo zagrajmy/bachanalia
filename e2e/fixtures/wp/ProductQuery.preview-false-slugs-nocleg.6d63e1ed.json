@@ -1,0 +1,22 @@
+{
+  "data": {
+    "products": {
+      "nodes": [
+        {
+          "databaseId": 9999,
+          "slug": "nocleg",
+          "name": "Nocleg",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/nocleg/",
+          "description": "<p>Zastępczy fixture: nagraj ponownie przez <code>bun scripts/record-wp.ts</code>, gdy produkt Nocleg będzie opublikowany.</p>\n",
+          "image": null,
+          "productCategories": {
+            "nodes": []
+          },
+          "price": null,
+          "stockStatus": "IN_STOCK",
+          "soldIndividually": false
+        }
+      ]
+    }
+  }
+}

@@ -161,6 +161,15 @@ const nextConfig: NextConfig = {
         destination: "/sklep/",
         permanent: true,
       },
+      /**
+       * The dorm page only ever promised details; the shop sells the beds.
+       * Destination mirrors NOCLEGI_PATH in siteNav.ts.
+       */
+      {
+        source: "/noclegi",
+        destination: "/produkt/nocleg/",
+        permanent: true,
+      },
       {
         source: "/blog",
         destination: "/aktualnosci/",

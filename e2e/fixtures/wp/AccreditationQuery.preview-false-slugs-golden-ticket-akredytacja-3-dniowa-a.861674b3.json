@@ -4,31 +4,31 @@
       "nodes": [
         {
           "slug": "golden-ticket",
-          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/golden-ticket/",
+          "link": "https://wp.bachanaliafantastyczne.pl/index.php/produkt/golden-ticket/",
           "price": "250,00&nbsp;zł",
           "stockStatus": "IN_STOCK"
         },
         {
           "slug": "akredytacja-sobota",
-          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/akredytacja-sobota/",
+          "link": "https://wp.bachanaliafantastyczne.pl/index.php/produkt/akredytacja-sobota/",
           "price": "60,00&nbsp;zł",
           "stockStatus": "IN_STOCK"
         },
         {
           "slug": "akredytacja-piatek",
-          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/akredytacja-piatek/",
+          "link": "https://wp.bachanaliafantastyczne.pl/index.php/produkt/akredytacja-piatek/",
           "price": "50,00&nbsp;zł",
           "stockStatus": "IN_STOCK"
         },
         {
           "slug": "akredytacja-niedziela",
-          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/akredytacja-niedziela/",
+          "link": "https://wp.bachanaliafantastyczne.pl/index.php/produkt/akredytacja-niedziela/",
           "price": "50,00&nbsp;zł",
           "stockStatus": "IN_STOCK"
         },
         {
           "slug": "akredytacja-3-dniowa",
-          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/akredytacja-3-dniowa/",
+          "link": "https://wp.bachanaliafantastyczne.pl/index.php/produkt/akredytacja-3-dniowa/",
           "price": "100,00&nbsp;zł",
           "stockStatus": "IN_STOCK"
         }

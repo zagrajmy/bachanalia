@@ -6,11 +6,11 @@
           "databaseId": 1991,
           "slug": "akredytacja-sobota",
           "name": "Akredytacja Sobota",
-          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/akredytacja-sobota/",
+          "link": "https://wp.bachanaliafantastyczne.pl/index.php/produkt/akredytacja-sobota/",
           "description": "<p>Akredytacja uprawniająca do udziału w BF26 w sobotę. Upoważnia do głosowania na kandydatów do nagrody Janusza A. Zajdla.</p>\n<p>Na adres e-mail podany w zamówieniu będzie wysłany zostanie kod QR który jest biletem wstępu. Prosimy o okazanie go na akredytacji w formie cyfrowej lub na wydruku.</p>\n",
           "image": {
-            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/sobota.png",
-            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/sobota-150x150.png",
+            "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2026/03/sobota.png",
+            "thumbnail": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2026/03/sobota-150x150.png",
             "altText": "",
             "mediaDetails": {
               "width": 1000,

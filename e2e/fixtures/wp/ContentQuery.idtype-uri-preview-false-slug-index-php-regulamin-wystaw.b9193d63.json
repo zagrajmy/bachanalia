@@ -1,0 +1,20 @@
+{
+  "data": {
+    "contentNode": {
+      "contentTypeName": "page",
+      "databaseId": 2040,
+      "date": "2024-07-31T08:57:36",
+      "title": "Regulamin Wystawców",
+      "content": "\t\t<div data-elementor-type=\"wp-page\" data-elementor-id=\"2040\" class=\"elementor elementor-2040\">\n\t\t\t\t\t\t<section class=\"elementor-section elementor-top-section elementor-element elementor-element-42995fee elementor-section-boxed elementor-section-height-default elementor-section-height-default wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no wpr-column-slider-no wpr-equal-height-no\" data-id=\"42995fee\" data-element_type=\"section\" data-e-type=\"section\">\n\t\t\t\t\t\t<div class=\"elementor-container elementor-column-gap-default\">\n\t\t\t\t\t<div class=\"elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-31738d2e\" data-id=\"31738d2e\" data-element_type=\"column\" data-e-type=\"column\">\n\t\t\t<div class=\"elementor-widget-wrap elementor-element-populated\">\n\t\t\t\t\t\t<div class=\"elementor-element elementor-element-3e3bfb8 elementor-widget elementor-widget-embedpress_pdf\" data-id=\"3e3bfb8\" data-element_type=\"widget\" data-e-type=\"widget\" data-widget_type=\"embedpress_pdf.default\">\n\t\t\t\t<div class=\"elementor-widget-container\">\n\t\t\t\t\t    <div class=\"embedpress-document-embed ep-doc-ad5c2217329ba6a3783fde47c9a5bbd7 ose-document emebedpress-unit-percent \" data-thememode=\"default\" data-customcolor=\"\" data-toolbar=\"yes\" data-toolbar-position=\"top\" data-open=\"no\" data-presentation-mode=\"yes\" data-download=\"yes\" data-copy=\"yes\" data-add-image=\"yes\" data-rotate=\"yes\" data-details=\"yes\" data-id=\"embedpress-pdf-3e3bfb8\" data-selection-tool=\"0\" data-scrolling=\"0\" data-spreads=\"-1\" style=\" max-width:100%; display: inline-block\">\n\n        \n                <div >\n\n                    <div id=\"ep-elementor-content-3e3bfb8\" class=\"ep-elementor-content   ep-percentage-width   ep-content-protection-disabled\">\n                        <div id=\"3e3bfb8\" class=\"ep-embed-content-wraper\">\n                            <div><iframe title=\"Regulamin Wystawców\" class=\"embedpress-embed-document-pdf embedpress-pdf-3e3bfb8\" allowfullscreen=\"true\" mozallowfullscreen=\"true\" webkitallowfullscreen=\"true\" style=\"width: 600%!important;height: 600px;; max-width:100%;\" src=\"https://bachanaliafantastyczne.pl/wp-content/uploads/2026/06/Regulamin-Wystawcow-Bachanaliafantastyczne.pdf\" class=\"embedpress-embed-document-pdf embedpress-pdf-3e3bfb8\" data-emid=\"embedpress-pdf-3e3bfb8\" data-embed-type=\"PDF\" data-ep-views=\"off\" data-ep-downloads=\"off\"></iframe><p class=\"embedpress-el-powered\">Powered By EmbedPress</p></div>                        </div>\n\n                    </div>\n\n\n                   \n                </div>\n            \n    </div>\n\n\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t</div>\n\t\t\t\t\t</div>\n\t\t</section>\n\t\t\t\t</div>\n\t\t",
+      "featuredImage": null
+    }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
+  }
+}

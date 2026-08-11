@@ -82,26 +82,17 @@ test("accreditation lands on our own shop, not back on WordPress", async () => {
   assert.equal(rule.permanent, true);
 });
 
-test("the dorm page lands on the product that sells the beds, temporarily", async () => {
-  const rule = await find("/noclegi");
+test("the dorm shortcut is a route, not a rule — the product behind it moves", async () => {
+  const sources = (await redirects()).map((rule) => rule.source);
 
-  assert.equal(
-    rule.destination,
-    NOCLEGI_PATH,
-    "the nav and the redirect name the same product, and the slug changes every edition",
-  );
-  assert.equal(
-    rule.permanent,
-    false,
-    "the destination is one edition's product — a cached 308 would outlive it",
+  assert.ok(
+    !sources.some((source) => source.includes("noclegi")),
+    `${NOCLEGI_PATH} reads the catalogue at request time; a config rule would freeze one edition's slug into the deployment`,
   );
 });
 
 test("redirects within the site are permanent, so link equity is not parked on a 307", async () => {
-  const internal = (await redirects())
-    .filter((rule) => rule.destination.startsWith("/"))
-    /** Except the one per-edition alias, whose destination moves every year. */
-    .filter((rule) => rule.source !== "/noclegi");
+  const internal = (await redirects()).filter((rule) => rule.destination.startsWith("/"));
 
   assert.ok(internal.length > 1, "expected several same-site redirects");
   for (const rule of internal) {

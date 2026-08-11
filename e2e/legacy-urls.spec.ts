@@ -1,7 +1,5 @@
 import { expect, test } from "@playwright/test";
 
-import { NOCLEGI_PATH } from "../src/components/Globals/siteNav";
-
 const INDEXED_URLS = [
   { legacy: "/index.php/czas-i-miejsce/", clean: "/czas-i-miejsce/" },
   { legacy: "/index.php/regulamin/", clean: "/regulamin/" },
@@ -22,27 +20,6 @@ test.describe("legacy WordPress urls", () => {
       ).toBe(clean);
     });
   }
-
-  /**
-   * Its own test rather than a row in INDEXED_URLS: the destination is one
-   * edition's product, so this hop is temporary where the legacy ones are
-   * permanent.
-   */
-  test("/noclegi/ redirects temporarily to the product that sells the beds", async ({
-    request,
-  }) => {
-    const response = await request.get("/noclegi/", { maxRedirects: 0 });
-
-    expect(response.status(), "a cached 308 would outlive this edition's product").toBe(307);
-    expect(response.headers().location).toBe(NOCLEGI_PATH);
-  });
-
-  test("a reader following the noclegi shortcut lands on the product", async ({ page }) => {
-    await page.goto("/noclegi/");
-
-    await expect(page).toHaveURL(new RegExp(`${NOCLEGI_PATH}$`));
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  });
 
   test("a reader following an indexed link lands on the real page", async ({ page }) => {
     await page.goto("/index.php/czas-i-miejsce/");

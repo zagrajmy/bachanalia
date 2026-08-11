@@ -1,5 +1,10 @@
 import { expect, test } from "@playwright/test";
 
+import { NOCLEGI_PATH, SHOP_PATH } from "../src/components/Globals/siteNav";
+
+/** Spelled out rather than imported: products.ts pulls in the server stack. */
+const NOCLEGI_CATEGORY = "noclegi";
+
 const PRODUCT = "/produkt/akredytacja-3-dniowa/";
 
 test.describe("shop", () => {
@@ -75,5 +80,24 @@ test.describe("shop", () => {
     const response = await page.goto("/produkt/nie-ma-takiego-produktu/");
 
     expect(response?.status()).toBe(404);
+  });
+
+  /**
+   * One bed is on sale, so the shortcut resolves to it. With a second one it
+   * would resolve to the shop instead — `noclegiDestination` is unit-tested on
+   * both, because a fixture can only hold one of them at a time.
+   */
+  test("the noclegi shortcut carries a reader to the bed on sale", async ({ page }) => {
+    await page.goto(NOCLEGI_PATH);
+
+    await expect(page).toHaveURL(/\/produkt\/[^/]+\//);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Dodaj do koszyka" })).toBeVisible();
+  });
+
+  test("the shop names its sections so the shortcut can point at one", async ({ page }) => {
+    await page.goto(SHOP_PATH);
+
+    await expect(page.locator(`#${NOCLEGI_CATEGORY}`)).toBeVisible();
   });
 });

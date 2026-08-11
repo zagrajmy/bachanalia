@@ -84,7 +84,7 @@ test("accreditation lands on our own shop, not back on WordPress", async () => {
 test("the dorm page lands on the product that sells the beds", async () => {
   const rule = await find("/noclegi");
 
-  assert.equal(rule.destination, "/produkt/nocleg/");
+  assert.equal(rule.destination, "/produkt/nocleg-w-akademiku-bf-26/");
   assert.equal(rule.permanent, true);
 });
 

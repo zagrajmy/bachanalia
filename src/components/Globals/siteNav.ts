@@ -12,7 +12,7 @@ export const productPath = (slug: string) => `/produkt/${slug}/`;
  * ever promised details "wkrótce". The nav sells the bed instead of describing
  * it — the same move /akredytacja/ made toward the shop.
  */
-export const NOCLEGI_PATH = productPath("nocleg");
+export const NOCLEGI_PATH = productPath("nocleg-w-akademiku-bf-26");
 
 /**
  * Published in WordPress, not part of this site: a 2023 stub, a probe for the

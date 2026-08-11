@@ -4,10 +4,10 @@
       "nodes": [
         {
           "databaseId": 9999,
-          "slug": "nocleg",
-          "name": "Nocleg",
-          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/nocleg/",
-          "description": "<p>Zastępczy fixture: nagraj ponownie przez <code>bun scripts/record-wp.ts</code>, gdy produkt Nocleg będzie opublikowany.</p>\n",
+          "slug": "nocleg-w-akademiku-bf-26",
+          "name": "Nocleg w akademiku BF 26",
+          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/nocleg-w-akademiku-bf-26/",
+          "description": "<p>Zastępczy fixture: nagraj ponownie przez <code>bun scripts/record-wp.ts</code>.</p>\n",
           "image": null,
           "productCategories": {
             "nodes": []

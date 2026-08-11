@@ -61,7 +61,7 @@ run `bun run codegen:refresh`, turn it back off.
 | `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty`                                                                             | WooCommerce                  | still WordPress                       |
 | `/zamowienie/order-received/<id>/`                                                                                             | WooCommerce                  | ours at cutover — delivers the ticket |
 
-`/akredytacja` 301s to `/sklep/` and `/noclegi` to `/produkt/nocleg/` — the
+`/akredytacja` 301s to `/sklep/` and `/noclegi` to `/produkt/nocleg-w-akademiku-bf-26/` — the
 dorm beds are a WooCommerce product. `/info`, `/blog` and `/feed-test` are
 gone.
 

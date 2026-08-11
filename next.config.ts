@@ -167,7 +167,7 @@ const nextConfig: NextConfig = {
        */
       {
         source: "/noclegi",
-        destination: "/produkt/nocleg/",
+        destination: "/produkt/nocleg-w-akademiku-bf-26/",
         permanent: true,
       },
       {

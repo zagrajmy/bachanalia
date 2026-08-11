@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/` },
 };
 
-export const revalidate = 10800;
+export const revalidate = 10_800;
 
 export default async function HomePage() {
   const [news, tickets] = await Promise.all([fetchNews(6), fetchAccreditation()]);

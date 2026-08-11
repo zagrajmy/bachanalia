@@ -268,7 +268,9 @@ async function encodeWidths(bytes: Buffer) {
 async function main() {
   await mkdir(LQIP_DIR, { recursive: true });
   await mkdir(IMG_DIR, { recursive: true });
-  await cp(IMG_CACHE_DIR, IMG_DIR, { recursive: true, force: false }).catch(() => {});
+  await cp(IMG_CACHE_DIR, IMG_DIR, { recursive: true, force: false }).catch(() => {
+    /* empty */
+  });
 
   const migrated = await migrateTextLqips();
   if (migrated > 0) console.log(`media: recompressed ${migrated} .lqip → .webp`);
@@ -376,7 +378,9 @@ async function main() {
 
   await writeFile(MANIFEST_PATH, `{\n${lines.join(",\n")}\n}\n`);
 
-  await cp(IMG_DIR, IMG_CACHE_DIR, { recursive: true }).catch(() => {});
+  await cp(IMG_DIR, IMG_CACHE_DIR, { recursive: true }).catch(() => {
+    /* empty */
+  });
 
   if (failed) {
     console.log("media: fetches failed, crawl snapshot withheld");
@@ -390,7 +394,7 @@ async function main() {
   );
 }
 
-main().catch((error) => {
+main().catch((error: unknown) => {
   console.error(error);
   process.exit(1);
 });

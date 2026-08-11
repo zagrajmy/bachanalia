@@ -35,7 +35,7 @@ async function loadArchive(): Promise<ArchivedFbPost[]> {
   const parsed = ArchivedFbPosts(JSON.parse(await readFile(ARCHIVE_PATH, "utf8")));
 
   if (parsed instanceof type.errors) {
-    throw new Error(`archive: ${ARCHIVE_PATH} is not a post archive — ${parsed.summary}`);
+    throw new TypeError(`archive: ${ARCHIVE_PATH} is not a post archive — ${parsed.summary}`);
   }
 
   return parsed;
@@ -106,7 +106,7 @@ async function main() {
   console.log(`archive: ${fresh.length} new, ${archive.length} total`);
 }
 
-main().catch((error) => {
+main().catch((error: unknown) => {
   console.error(error);
   process.exit(1);
 });

@@ -312,7 +312,7 @@ async function main() {
 
 void main().then(
   () => process.exit(0),
-  (error) => {
+  (error: unknown) => {
     console.error(error);
     process.exit(1);
   },

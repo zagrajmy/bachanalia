@@ -3,7 +3,7 @@ import { test } from "bun:test";
 
 import { GET } from "./route";
 
-const body = async () => await GET().text();
+const body = async () => GET().text();
 
 test("the last day is inside the event", async () => {
   const ics = await body();

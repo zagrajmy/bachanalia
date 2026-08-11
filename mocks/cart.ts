@@ -77,9 +77,9 @@ export function cartOf(token: string) {
 
 export function addLine(token: string, productId: number, variationId: number, quantity: number) {
   const lines = [...cartOf(token)];
-  const found = lines.filter(
+  const found = lines.find(
     (line) => line.productId === productId && line.variationId === variationId,
-  )[0];
+  );
 
   if (found) found.quantity += quantity;
   else lines.push({ productId, variationId, quantity, key: recordedKey(productId, variationId) });

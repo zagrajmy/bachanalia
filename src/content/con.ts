@@ -1,8 +1,6 @@
 import adAstra from "./logo/ad-astra.png";
 import polcon from "./logo/polcon.png";
-import keyArt from "./key-art.png";
-
-export const KEY_ART = keyArt;
+export { default as KEY_ART } from "./key-art.png";
 
 /**
  * Both marks were lifted from the key art, so they carry its lilac and only

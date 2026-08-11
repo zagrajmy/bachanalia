@@ -22,7 +22,7 @@ function readAttributes(formData: FormData) {
   const pairs: { attributeName: string; attributeValue: string }[] = [];
 
   formData.forEach((value, name) => {
-    if (name.indexOf(ATTRIBUTE_PREFIX) !== 0 || typeof value !== "string" || !value) return;
+    if (!name.startsWith(ATTRIBUTE_PREFIX) || typeof value !== "string" || !value) return;
     pairs.push({ attributeName: name.slice(ATTRIBUTE_PREFIX.length), attributeValue: value });
   });
 

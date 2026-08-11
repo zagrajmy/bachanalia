@@ -76,7 +76,7 @@ if (!sheet?.ok) keep(`the sheet answered ${sheet?.status ?? "nothing"}`);
 const exhibitors = await sheet!
   .text()
   .then(exhibitorsFromCsv)
-  .catch((error) => keep(`the sheet could not be read: ${String(error)}`));
+  .catch((error: unknown) => keep(`the sheet could not be read: ${String(error)}`));
 
 const logos = exhibitors.map((exhibitor) => exhibitor.logoUrl).filter((url) => url !== undefined);
 

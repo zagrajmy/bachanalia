@@ -39,6 +39,7 @@ const KINDS: { host: RegExp; it: string; noun: string }[] = [
 const FORMS = /docs\.google\.com\/forms/;
 
 function describe(url: URL) {
+  // oxlint-disable-next-line typescript/prefer-includes -- the fix inlines the pattern source, escapes and all
   if (FORMS.test(url.host + url.pathname)) return { noun: "formularz Google", it: "go" };
 
   for (const kind of KINDS) if (kind.host.test(url.host)) return kind;

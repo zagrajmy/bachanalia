@@ -8,7 +8,7 @@ import { NewsEntry } from "./newsFormat";
 
 async function withLiveImages(entries: NewsEntry[]) {
   const alive = await Promise.all(
-    entries.map((entry) =>
+    entries.map(async (entry) =>
       entry.image
         ? fetch(entry.image.src, { method: "HEAD" }).then(
             (response) => response.ok,

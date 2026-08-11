@@ -12,11 +12,11 @@ async function render(url: string) {
   }
 }
 
-export function blurDataUrl(url?: string | null): Promise<string | undefined> {
-  if (!url) return Promise.resolve(undefined);
+export async function blurDataUrl(url?: string | null): Promise<string | undefined> {
+  if (!url) return undefined;
 
   const cached = lqipForWpUrl(url);
-  if (cached) return Promise.resolve(cached);
+  if (cached) return cached;
 
   let pending = placeholders.get(url);
 
@@ -29,7 +29,7 @@ export function blurDataUrl(url?: string | null): Promise<string | undefined> {
 }
 
 export async function blurDataUrls(urls: (string | null | undefined)[]) {
-  const unique = [...new Set(urls.filter((url): url is string => Boolean(url)))];
+  const unique = [...new Set(urls.flatMap((url) => (url ? [url] : [])))];
 
   const entries = await Promise.all(
     unique.map(async (url) => [url, await blurDataUrl(url)] as const),

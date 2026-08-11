@@ -72,7 +72,7 @@ test.describe("WordPress content rendering", () => {
     const box = (await frame.boundingBox())!;
     expect(box.width).toBeLessThanOrEqual(page.viewportSize()!.width);
     await expect
-      .poll(() => page.evaluate(() => localStorage.getItem("bf-consent:v1")))
+      .poll(async () => page.evaluate(() => localStorage.getItem("bf-consent:v1")))
       .toBe("granted");
   });
 
@@ -84,7 +84,9 @@ test.describe("WordPress content rendering", () => {
     await page.goto("/czas-i-miejsce/");
 
     await expect(page.getByTitle("Wojska Polskiego 69, Zielona Góra, Poland")).toBeVisible();
-    await expect.poll(() => page.evaluate(() => localStorage.getItem("bf-consent"))).toBeNull();
+    await expect
+      .poll(async () => page.evaluate(() => localStorage.getItem("bf-consent")))
+      .toBeNull();
   });
 
   test("a gallery shows its photos as a grid, not one image per row", async ({ page }) => {

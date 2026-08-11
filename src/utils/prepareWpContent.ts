@@ -125,11 +125,7 @@ export const splitWpContent = (html?: string | null): WpContentSegment[] => {
   while ((match = TAG.exec(source)) !== null) {
     const [raw, closing, rawName, rawAttrs] = match;
     const attrs = rawAttrs ?? "";
-    /**
-     * The comment branch of TAG matches without its capture groups, so these
-     * are undefined even though RegExpExecArray types them as strings.
-     */
-    // oxlint-disable-next-line typescript/no-unnecessary-condition
+    /** The comment branch of TAG matches without its capture groups. */
     if (rawName === undefined) continue;
 
     const name = rawName.toLowerCase();

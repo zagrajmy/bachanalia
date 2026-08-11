@@ -77,7 +77,7 @@ function reveal(node: Element) {
 const parked = () => document.querySelectorAll("[data-embed-src]");
 
 function revealAll() {
-  for (const node of [...parked()]) reveal(node);
+  for (const node of parked()) reveal(node);
 }
 
 function parseChoice(value: string | null): Choice | undefined {

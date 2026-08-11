@@ -103,7 +103,7 @@ export function exhibitorsFromCsv(source: string): Exhibitor[] {
   const logoIndex = column("logo", "logotyp");
 
   if (nameIndex === undefined) {
-    throw new Error(`No "nazwa" column in the exhibitor sheet; got [${headers}]`);
+    throw new Error(`No "nazwa" column in the exhibitor sheet; got [${headers.join(", ")}]`);
   }
 
   return rows.flatMap((row) => {

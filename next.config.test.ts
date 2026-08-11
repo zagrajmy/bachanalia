@@ -15,7 +15,8 @@ const find = async (source: string) => {
 };
 
 /** Next takes the first rule that matches, so order is behaviour. */
-const indexOf = async (source: string) => (await redirects()).findIndex((r) => r.source === source);
+const _indexOf = async (source: string) =>
+  (await redirects()).findIndex((r) => r.source === source);
 
 test("legacy PATHINFO urls redirect permanently to clean paths", async () => {
   const rule = await find("/index.php/:path*");

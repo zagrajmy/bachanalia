@@ -51,7 +51,7 @@ export function buildAxes(
   for (const variation of variations) {
     for (const attribute of variation.attributes) {
       push(names, attribute.name);
-      const options = optionsByName[attribute.name] || (optionsByName[attribute.name] = []);
+      const options = (optionsByName[attribute.name] ??= []);
       if (attribute.value !== "") push(options, attribute.value);
     }
   }
@@ -62,7 +62,7 @@ export function buildAxes(
   };
 
   return names
-    .filter((name) => (optionsByName[name] || []).length > 0)
+    .filter((name) => (optionsByName[name] ?? []).length > 0)
     .map((name) => ({ name, label: labelFor(name), options: optionsByName[name] ?? [] }));
 }
 

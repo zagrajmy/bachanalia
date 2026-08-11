@@ -15,7 +15,7 @@ test.describe("legacy WordPress urls", () => {
 
       expect(response.status()).toBe(308);
       expect(
-        response.headers()["location"],
+        response.headers().location,
         "a destination without the trailing slash costs a second redirect",
       ).toBe(clean);
     });

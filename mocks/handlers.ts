@@ -59,12 +59,12 @@ function operationNameOf(query: string) {
  * nonce in that fixture is a stand-in — a real one is bound to one session and
  * expires, so recording it would save something dead.
  */
-const CART_OPERATIONS = [
+const CART_OPERATIONS = new Set([
   "CartQuery",
   "AddToCartMutation",
   "UpdateItemQuantitiesMutation",
   "RemoveItemsFromCartMutation",
-];
+]);
 
 /**
  * WooCommerce's session is a JWT and `session.ts` reads its `exp` to decide how
@@ -141,7 +141,8 @@ function cartReply(request: Request, operation: Operation) {
       };
 
     case "UpdateItemQuantitiesMutation":
-      for (const item of (input.items ?? []) as { key: string; quantity: number }[]) {
+      /** Whatever the client sent — the quantity is not a number until it is made one. */
+      for (const item of (input.items ?? []) as { key: string; quantity: unknown }[]) {
         setLineQuantity(token, item.key, Number(item.quantity));
       }
 
@@ -175,7 +176,7 @@ async function record(request: Request, operation: Operation) {
 }
 
 function replay(request: Request, operation: Operation) {
-  if (CART_OPERATIONS.includes(operation.name)) {
+  if (CART_OPERATIONS.has(operation.name)) {
     const { headers, body } = cartReply(request, operation);
 
     return HttpResponse.json(body, { headers: { [SESSION_HEADER]: headers } });

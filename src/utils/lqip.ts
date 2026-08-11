@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { fbPostKey, lqipMetaRelPath, lqipRelPath, wpMediaKey } from "./lqipPath";
+import { lqipMetaRelPath, lqipRelPath, wpMediaKey } from "./lqipPath";
 
 export { fbPostKey, wpMediaKey } from "./lqipPath";
 

@@ -66,9 +66,10 @@ run `bun run codegen:refresh`, turn it back off.
 
 `/noclegi/` is a route rather than a rule, because its destination is not
 knowable when the config is written: it reads the catalogue and sends the
-reader to the one bed on sale, or to `/sklep/#noclegi` when there are several.
-The slug names an edition, so anything that wrote it down would need editing
-every September.
+reader to the one bed on sale, or to `/sklep/#noclegi` when there are several
+— and when there are none yet, which is where the beds appear once they are.
+The slug names an edition, so a copy of it in the config or the nav needs
+editing every September.
 
 `sitemap.ts` builds from the same sources the routes do — `AllContentQuery`
 plus the product slugs, with the four WooCommerce paths, the redirect sources

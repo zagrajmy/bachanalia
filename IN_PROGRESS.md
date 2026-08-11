@@ -13,7 +13,7 @@ the `siteurl` half are done. What still points the old way:
 1. **Repoint `bachanalia-revalidate`** at the apex. It is installed and active
    but still aimed at the Vercel deployment URL.
 2. **Check `HEADLESS_SECRET` and `NEXT_PUBLIC_BASE_URL`** in all three Vercel
-   environments. `NEXT_PUBLIC_WORDPRESS_API_URL` names `wp.` now, so the
+   environments. `NEXT_PUBLIC_WORDPRESS_API_URL` names `wp.`, so the
    order-received and `/wp-content/` rules reach WordPress rather than
    themselves.
 3. Vercel's GitHub app still needs access to the `zagrajmy` org before pushes

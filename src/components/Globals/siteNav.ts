@@ -8,11 +8,10 @@ export const SHOP_PATH = "/sklep/";
 export const productPath = (slug: string) => `/produkt/${slug}/`;
 
 /**
- * The dorm beds are a WooCommerce product; the WordPress /noclegi/ page only
- * ever promised details "wkrótce". The nav sells the bed instead of describing
- * it — the same move /akredytacja/ made toward the shop. This path stays put
- * while the product behind it changes: the route reads the catalogue and sends
- * the reader to the one bed on sale, or to the shop when there are several.
+ * The dorm beds are a WooCommerce product whose slug names the edition, so the
+ * nav cannot point at one and stay right. This path can: the route behind it
+ * reads the catalogue and sends the reader to the one bed on sale, or to the
+ * shop when there are several of them, or none yet.
  */
 export const NOCLEGI_PATH = "/noclegi/";
 

@@ -91,7 +91,8 @@ test.describe("shop", () => {
     await page.goto(NOCLEGI_PATH);
 
     await expect(page).toHaveURL(/\/produkt\/[^/]+\//);
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    /** Named, not just any product: a miscategorised bed would still be a URL. */
+    await expect(page.getByRole("heading", { level: 1, name: /nocleg/i })).toBeVisible();
     await expect(page.getByRole("button", { name: "Dodaj do koszyka" })).toBeVisible();
   });
 

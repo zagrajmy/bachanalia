@@ -19,11 +19,10 @@ const PIXEL = Buffer.from(
 );
 
 /**
- * WordPress served the apex until the cutover, and every image an editor
- * placed in a page body before then still carries that hostname — no env var
- * names it any more, so without this those uploads would be fetched for real.
+ * Editors' page bodies point their uploads at the apex, which no environment
+ * variable names, so the suite would fetch those images for real.
  */
-const LEGACY_HOST = "bachanaliafantastyczne.pl";
+const APEX_HOST = "bachanaliafantastyczne.pl";
 
 /**
  * All of them, because the uploads a fixture points at keep the real hostname
@@ -31,7 +30,7 @@ const LEGACY_HOST = "bachanaliafantastyczne.pl";
  * never opens a socket.
  */
 function wordpressHosts() {
-  const hosts: string[] = [LEGACY_HOST];
+  const hosts: string[] = [APEX_HOST];
 
   try {
     hosts.push(new URL(String(process.env.NEXT_PUBLIC_WORDPRESS_API_URL)).host);

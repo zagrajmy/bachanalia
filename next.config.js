@@ -23,6 +23,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "bachanaliafantastyczne.pl",
+        port: "",
+      },
+      {
+        protocol: "https",
         hostname: process.env.NEXT_PUBLIC_WORDPRESS_API_HOSTNAME,
         port: "",
       },

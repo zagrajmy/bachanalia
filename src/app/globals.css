@@ -59,6 +59,7 @@
 
   --header-h: 4rem;
   --below-header: calc(var(--header-h) + 1.5rem);
+  scroll-padding-top: var(--below-header);
 
   @media (width >= 40rem) {
     --header-h: 4.5rem;

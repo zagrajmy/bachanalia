@@ -21,7 +21,7 @@ const signature = (lines: Line[]) =>
     .sort()
     .join("|");
 
-const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value));
+const clone = <T>(value: T): T => structuredClone(value);
 
 /** Only reached when the fixtures are missing entirely, and it says so. */
 function noSnapshots(what: string): CartNode {

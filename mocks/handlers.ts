@@ -99,7 +99,11 @@ async function readOperation(request: Request): Promise<Operation> {
     const query = url.searchParams.get("query") ?? "";
     const raw = url.searchParams.get("variables");
 
-    return { name: operationNameOf(query), query, variables: raw ? JSON.parse(raw) : {} };
+    return {
+      name: operationNameOf(query),
+      query,
+      variables: raw ? (JSON.parse(raw) as Record<string, unknown>) : {},
+    };
   }
 
   const body = (await request.clone().json()) as { query?: string; variables?: unknown };

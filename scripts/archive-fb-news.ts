@@ -1,3 +1,4 @@
+import { type } from "arktype";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -14,12 +15,30 @@ const ARCHIVE_PATH = join(ROOT, "src/content/fb-news.json");
 const IMG_DIR = join(ROOT, "public/fb-news");
 const LQIP_DIR = join(ROOT, "src/content/lqip");
 
+const ArchivedFbPosts = type({
+  dateTime: "string",
+  excerpt: "string",
+  href: "string",
+  id: "string",
+  "image?": { height: "number", src: "string", width: "number" },
+  title: "string",
+}).array();
+
+/**
+ * No archive yet is a first run. An archive that will not parse is a file
+ * someone has to look at — answering with an empty list would rewrite it from
+ * the current feed and drop every post Facebook has since aged out.
+ */
 async function loadArchive(): Promise<ArchivedFbPost[]> {
-  try {
-    return JSON.parse(await readFile(ARCHIVE_PATH, "utf8"));
-  } catch {
-    return [];
+  if (!existsSync(ARCHIVE_PATH)) return [];
+
+  const parsed = ArchivedFbPosts(JSON.parse(await readFile(ARCHIVE_PATH, "utf8")));
+
+  if (parsed instanceof type.errors) {
+    throw new Error(`archive: ${ARCHIVE_PATH} is not a post archive — ${parsed.summary}`);
   }
+
+  return parsed;
 }
 
 async function mirrorImage(id: string, src: string) {

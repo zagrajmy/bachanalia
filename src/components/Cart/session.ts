@@ -1,6 +1,8 @@
+import { type } from "arktype";
 import { cookies } from "next/headers";
 
 import type { TypedDocumentString } from "@/gql/graphql";
+import type { GraphQLResponse } from "@/utils/fetchGraphQL";
 
 import { wooMessage } from "./message";
 
@@ -17,6 +19,9 @@ const SESSION_HEADER = "woocommerce-session";
 
 const FALLBACK_MAX_AGE = 2 * 24 * 60 * 60;
 
+/** Whatever else WooCommerce stamps into the token, the expiry is the part read here. */
+const JwtClaims = type({ "exp?": "number" });
+
 /**
  * WooCommerce stamps its own expiry into the token — currently 48 hours — so
  * the cookie is dropped exactly when the cart behind it dies rather than
@@ -27,8 +32,10 @@ function maxAgeOf(token: string) {
 
   if (payload) {
     try {
-      const claims = JSON.parse(Buffer.from(payload, "base64").toString("utf8"));
-      const seconds = Math.floor(Number(claims.exp) - Date.now() / 1000);
+      const claims = JwtClaims(JSON.parse(Buffer.from(payload, "base64").toString("utf8")));
+      if (claims instanceof type.errors || claims.exp === undefined) return FALLBACK_MAX_AGE;
+
+      const seconds = Math.floor(claims.exp - Date.now() / 1000);
       if (seconds > 60) return seconds;
     } catch {
       return FALLBACK_MAX_AGE;
@@ -164,10 +171,10 @@ export async function wooRequest<TResult, TVariables>(
      * and a parse error thrown from here reaches the buyer as an error
      * boundary instead of the deliberate "do not submit twice" message.
      */
-    let body: { data?: unknown; errors?: { message?: string }[] };
+    let body: GraphQLResponse<TResult>;
 
     try {
-      body = await response.json();
+      body = (await response.json()) as GraphQLResponse<TResult>;
     } catch {
       return { ok: false, message: GENERIC_FAILURE, indeterminate: policy !== "read" };
     }
@@ -180,7 +187,11 @@ export async function wooRequest<TResult, TVariables>(
       };
     }
 
-    return { ok: true, data: body.data as TResult };
+    if (body.data === undefined) {
+      return { ok: false, message: GENERIC_FAILURE, indeterminate: policy !== "read" };
+    }
+
+    return { ok: true, data: body.data };
   }
 
   /**

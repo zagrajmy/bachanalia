@@ -33,9 +33,9 @@ const VOCABULARY = [
   ...accreditation.map((tier) => tier.label),
 ];
 
-/** Prototype-free, so a page titled "CONSTRUCTOR" cannot look up a function. */
-const CANONICAL: Record<string, string> = Object.create(null);
-for (const label of VOCABULARY) CANONICAL[normalise(label)] = label;
+/** A Map, so a page titled "CONSTRUCTOR" cannot look up a function. */
+const CANONICAL = new Map<string, string>();
+for (const label of VOCABULARY) CANONICAL.set(normalise(label), label);
 
 const ALL_CAPS = new RegExp(`^[${UPPER}]{2,}$`);
 
@@ -134,7 +134,7 @@ const unshout = (title: string | null | undefined, recase: (lowered: string) => 
   if (!title) return "";
   if (!isShouted(title)) return title;
 
-  return CANONICAL[normalise(title)] ?? restore(recase(title.toLocaleLowerCase("pl")));
+  return CANONICAL.get(normalise(title)) ?? restore(recase(title.toLocaleLowerCase("pl")));
 };
 
 /**

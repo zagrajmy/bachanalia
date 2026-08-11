@@ -2,7 +2,17 @@ import { cookies, draftMode } from "next/headers";
 
 import type { TypedDocumentString } from "@/gql/graphql";
 
-type Variables = Record<string, any>;
+type Variables = Record<string, unknown>;
+
+/**
+ * What the endpoint answers with. The payload's shape is the document's to
+ * promise — codegen wrote the query against the schema WordPress serves — so
+ * it is named here rather than checked again on every request.
+ */
+export type GraphQLResponse<TResult> = {
+  data?: TResult;
+  errors?: { message?: string }[];
+};
 
 /** Queries that take none are generated as `Exact<{ [key: string]: never }>`. */
 export type VariablesArg<TVariables> =
@@ -80,13 +90,17 @@ async function request<T>(
     throw new Error(`WordPress responded ${response.status} ${response.statusText}`);
   }
 
-  const data = await response.json();
+  const body = (await response.json()) as GraphQLResponse<T>;
 
-  if (data.errors) {
-    throw new Error(`GraphQL error: ${data.errors.map((e: any) => e.message).join("; ")}`);
+  if (body.errors?.length) {
+    throw new Error(`GraphQL error: ${body.errors.map((error) => error.message).join("; ")}`);
   }
 
-  return data.data;
+  if (body.data === undefined) {
+    throw new Error("WordPress answered with neither data nor errors");
+  }
+
+  return body.data;
 }
 
 export async function fetchGraphQL<TResult, TVariables>(

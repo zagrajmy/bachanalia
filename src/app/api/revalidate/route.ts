@@ -1,5 +1,15 @@
+import { type } from "arktype";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
+
+/**
+ * WordPress posts this on every publish, and both fields reach Next's cache
+ * API as strings. A number in the list used to travel all the way there.
+ */
+const RevalidateBody = type({
+  "paths?": "string[]",
+  "tags?": "string[]",
+});
 
 export async function PUT(request: NextRequest) {
   /**
@@ -11,25 +21,31 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ message: "Invalid secret" }, { status: 401 });
   }
 
-  let paths: unknown;
-  let tags: unknown;
+  let parsed: unknown;
 
   try {
     const body = await request.text();
-    ({ paths = [], tags = [] } = body ? JSON.parse(body) : {});
+    parsed = body ? JSON.parse(body) : {};
   } catch {
     return NextResponse.json({ message: "Malformed body" }, { status: 400 });
   }
 
+  const validated = RevalidateBody(parsed);
+
+  if (validated instanceof type.errors) {
+    return NextResponse.json({ message: validated.summary }, { status: 400 });
+  }
+
+  const { paths = [], tags = [] } = validated;
   let revalidated = false;
 
   try {
-    if (Array.isArray(paths) && paths.length > 0) {
+    if (paths.length > 0) {
       for (const path of paths) revalidatePath(path);
       revalidated = true;
     }
 
-    if (Array.isArray(tags) && tags.length > 0) {
+    if (tags.length > 0) {
       for (const tag of tags) revalidateTag(tag, "max");
       revalidated = true;
     }

@@ -1,5 +1,5 @@
 import type { TypedDocumentString } from "../src/gql/graphql";
-import type { VariablesArg } from "../src/utils/fetchGraphQL";
+import type { GraphQLResponse, VariablesArg } from "../src/utils/fetchGraphQL";
 
 const WP = process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://bachanaliafantastyczne.pl";
 
@@ -49,20 +49,25 @@ export async function wpQuery<TResult, TVariables>(
      * The firewall answers an automated client's burst with an HTML challenge
      * under a 200. Every query here is a read, so replaying is safe.
      */
-    let body: { data?: unknown; errors?: { message: string }[] };
+    let body: GraphQLResponse<TResult>;
 
     try {
-      body = await response.json();
+      body = (await response.json()) as GraphQLResponse<TResult>;
     } catch {
       lastError = new Error(`GraphQL: unparseable response from ${url.pathname}`);
       continue;
     }
 
-    if (body.errors) {
+    if (body.errors?.length) {
       throw new Error(body.errors.map((error) => error.message).join("; "));
     }
 
-    return body.data as TResult;
+    if (body.data === undefined) {
+      lastError = new Error(`GraphQL: no data in the response from ${url.pathname}`);
+      continue;
+    }
+
+    return body.data;
   }
 
   throw lastError;

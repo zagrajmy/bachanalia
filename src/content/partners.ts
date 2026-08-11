@@ -5,7 +5,8 @@ import konwentyPoludniowe from "./partners/konwenty-poludniowe.png";
 import miastoZielonaGora from "./partners/miasto-zielona-gora.png";
 import planetariumWenus from "./partners/planetarium-wenus.png";
 import uniwersytetZielonogorski from "./partners/uniwersytet-zielonogorski.jpg";
-import zagrajmy from "./partners/zagrajmy.svg";
+/** Next types `*.svg` as `any` so `@svgr/webpack` can redefine it; this one is an image. */
+import zagrajmySvg from "./partners/zagrajmy.svg";
 import zok from "./partners/zok.jpg";
 
 /**
@@ -68,7 +69,7 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
       },
       {
         name: "zagrajmy.net",
-        src: zagrajmy,
+        src: zagrajmySvg as StaticImageData,
         href: "https://zagrajmy.net/",
       },
     ],

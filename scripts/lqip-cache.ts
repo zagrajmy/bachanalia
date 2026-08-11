@@ -246,7 +246,7 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
 }
 
 async function fetchBytes(url: string) {
-  const response = await fetch(url, { cache: "force-cache" });
+  const response = await fetch(url, { cache: "force-cache", signal: AbortSignal.timeout(15_000) });
   if (!response.ok) return undefined;
   return Buffer.from(await response.arrayBuffer());
 }

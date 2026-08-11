@@ -5,7 +5,7 @@ import type { TypedDocumentString } from "@/gql/graphql";
 type Variables = Record<string, any>;
 
 /** Queries that take none are generated as `Exact<{ [key: string]: never }>`. */
-type VariablesArg<TVariables> =
+export type VariablesArg<TVariables> =
   Record<string, never> extends TVariables ? [variables?: TVariables] : [variables: TVariables];
 
 type CacheInit = RequestInit & { next?: { revalidate?: number; tags?: string[] } };

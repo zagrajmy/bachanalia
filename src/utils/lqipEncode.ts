@@ -23,7 +23,7 @@ export async function encodeLqipWebp(bytes: ArrayBuffer | Uint8Array): Promise<E
 }
 
 export async function fetchLqipWebp(url: string) {
-  const response = await fetch(url, { cache: "force-cache" });
+  const response = await fetch(url, { cache: "force-cache", signal: AbortSignal.timeout(15_000) });
   if (!response.ok) return undefined;
   return encodeLqipWebp(await response.arrayBuffer());
 }

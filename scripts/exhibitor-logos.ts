@@ -29,8 +29,30 @@ const keep = (why: string) => {
   process.exit(0);
 };
 
+/** Google can accept a connection and then never answer; a build must not wait on it. */
+const TIMEOUT_MS = 15_000;
+
+/** Drive throttles a burst of downloads, and 22 logos are no slower a few at a time. */
+const CONCURRENCY = 6;
+
+async function mapPool<T, R>(items: T[], run: (item: T) => Promise<R>): Promise<R[]> {
+  const out: R[] = Array.from({ length: items.length });
+  let next = 0;
+
+  await Promise.all(
+    Array.from({ length: Math.min(CONCURRENCY, items.length) }, async () => {
+      while (next < items.length) {
+        const index = next++;
+        out[index] = await run(items[index]);
+      }
+    }),
+  );
+
+  return out;
+}
+
 async function measure(url: string) {
-  const response = await fetch(url);
+  const response = await fetch(url, { signal: AbortSignal.timeout(TIMEOUT_MS) });
   if (!response.ok) throw new Error(`${response.status} for ${url}`);
 
   const { default: sharp } = await import("sharp");
@@ -43,7 +65,10 @@ async function measure(url: string) {
   return measureLogo(data);
 }
 
-const sheet = await fetch(SHEET_CSV_URL, { headers: { accept: "text/csv" } }).catch(() => null);
+const sheet = await fetch(SHEET_CSV_URL, {
+  headers: { accept: "text/csv" },
+  signal: AbortSignal.timeout(TIMEOUT_MS),
+}).catch(() => null);
 if (!sheet?.ok) keep(`the sheet answered ${sheet?.status ?? "nothing"}`);
 
 const exhibitors = await sheet!
@@ -53,16 +78,14 @@ const exhibitors = await sheet!
 
 const logos = exhibitors.map((exhibitor) => exhibitor.logoUrl).filter((url) => url !== undefined);
 
-const measured = await Promise.all(
-  logos.map(async (url) => {
-    try {
-      return { id: driveFileId(url), reads: readsOnDark(await measure(url)) };
-    } catch (error) {
-      console.warn(`[exhibitor-logos] could not read ${url}: ${String(error)}`);
-      return undefined;
-    }
-  }),
-);
+const measured = await mapPool(logos, async (url) => {
+  try {
+    return { id: driveFileId(url), reads: readsOnDark(await measure(url)) };
+  } catch (error) {
+    console.warn(`[exhibitor-logos] could not read ${url}: ${String(error)}`);
+    return undefined;
+  }
+});
 
 if (measured.some((entry) => entry === undefined)) keep("some logos could not be read");
 

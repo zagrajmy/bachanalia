@@ -157,7 +157,7 @@ body {
       var(--color-hairline) 0 16px,
       transparent 16px 24px
     )
-    top left / 22px 1px repeat-x;
+    top left / 24px 1px repeat-x;
 }
 
 @utility perforated-start {

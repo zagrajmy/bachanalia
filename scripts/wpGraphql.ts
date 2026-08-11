@@ -1,4 +1,5 @@
 import type { TypedDocumentString } from "../src/gql/graphql";
+import type { VariablesArg } from "../src/utils/fetchGraphQL";
 
 const WP = process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://bachanaliafantastyczne.pl";
 
@@ -14,12 +15,13 @@ const isTransient = (status: number) => status === 403 || status === 429 || stat
 
 export async function wpQuery<TResult, TVariables>(
   document: TypedDocumentString<TResult, TVariables>,
-  variables: Record<string, unknown> = {},
+  ...[variables]: VariablesArg<TVariables>
 ): Promise<TResult> {
+  const params = variables ?? {};
   const url = new URL(`${WP}/graphql`);
   url.searchParams.set("query", String(document));
-  if (Object.keys(variables).length > 0) {
-    url.searchParams.set("variables", JSON.stringify(variables));
+  if (Object.keys(params).length > 0) {
+    url.searchParams.set("variables", JSON.stringify(params));
   }
 
   let lastError: unknown;

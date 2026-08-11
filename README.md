@@ -8,11 +8,11 @@ Next.js on Vercel, with the existing WordPress kept as a headless CMS behind
 WPGraphQL and WooGraphQL.
 
 ```sh
-vercel env pull .env.local   # dev and build both need it
+vercel env pull .env.local
 bun install
 bun run dev
-bun run test                       # unit
-bunx playwright test --workers=2   # e2e, and the worker count is not optional
+bun run test
+bunx playwright test --workers=2
 ```
 
 **[`docs/architecture.md`](./docs/architecture.md) is the source of truth** —

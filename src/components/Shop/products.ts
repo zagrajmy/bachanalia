@@ -110,6 +110,9 @@ export function sortShopProducts(categorySlug: string, products: ShopProduct[]) 
  * Where "Noclegi" in the nav should land. One bed on sale is a product; more
  * than one is a choice, and a choice belongs in the shop beside the others.
  * Reading it from the catalogue is what keeps the link off an edition's slug.
+ *
+ * With none on sale the shop has no such section and the fragment simply does
+ * nothing, which is the right landing for "not yet": the rest of the shop.
  */
 export function noclegiDestination(categories: ShopCategory[]) {
   const beds = categories.find(({ slug }) => slug === NOCLEGI_CATEGORY)?.products ?? [];

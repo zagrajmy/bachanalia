@@ -88,6 +88,10 @@ test.describe("shop", () => {
    * both, because a fixture can only hold one of them at a time.
    */
   test("the noclegi shortcut carries a reader to the bed on sale", async ({ page }) => {
+    const response = await page.request.get(NOCLEGI_PATH, { maxRedirects: 0 });
+
+    expect(response.status(), "a cached 308 would outlive this edition's product").toBe(307);
+
     await page.goto(NOCLEGI_PATH);
 
     await expect(page).toHaveURL(/\/produkt\/[^/]+\//);

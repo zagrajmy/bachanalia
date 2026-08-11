@@ -2,7 +2,6 @@ import { strict as assert } from "node:assert";
 import { test } from "node:test";
 
 import nextConfig from "./next.config.js";
-import { NOCLEGI_PATH } from "@/components/Globals/siteNav";
 
 const redirects = async () => {
   assert.ok(nextConfig.redirects, "next.config.js must declare redirects()");
@@ -87,7 +86,7 @@ test("the dorm shortcut is a route, not a rule — the product behind it moves",
 
   assert.ok(
     !sources.some((source) => source.includes("noclegi")),
-    `${NOCLEGI_PATH} reads the catalogue at request time; a config rule would freeze one edition's slug into the deployment`,
+    "/noclegi/ reads the catalogue at request time; a config rule would freeze one edition's slug into the deployment",
   );
 });
 

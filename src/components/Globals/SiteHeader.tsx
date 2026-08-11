@@ -45,7 +45,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-hairline bg-paper">
-      <div className="gutter mx-auto flex h-16 max-w-6xl items-center gap-4 sm:h-18 min-[72rem]:px-0">
+      <div className="gutter mx-auto flex h-(--header-h) max-w-6xl items-center gap-4 min-[72rem]:px-0">
         <Link
           href="/"
           aria-label={`${con.name} ${con.edition}, strona główna`}
@@ -129,7 +129,7 @@ export function SiteHeader() {
           </SheetTrigger>
 
           <SheetContent side="right" className="data-[side=right]:w-[min(21rem,88vw)]">
-            <SheetHeader className="h-16 flex-row items-center border-b border-dashed border-hairline py-0 sm:h-18">
+            <SheetHeader className="h-(--header-h) flex-row items-center border-b border-dashed border-hairline py-0">
               <SheetTitle className="sr-only">Menu</SheetTitle>
             </SheetHeader>
 

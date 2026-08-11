@@ -73,7 +73,10 @@ export default async function WystawcyPage() {
         </div>
       </section>
 
-      <section className="gutter mx-auto max-w-6xl scroll-mt-24 pt-12 sm:pt-16" id="lista">
+      <section
+        className="gutter mx-auto max-w-6xl scroll-mt-(--below-header) pt-12 sm:pt-16"
+        id="lista"
+      >
         <SectionHeading
           as="h2"
           size="page"
@@ -90,7 +93,7 @@ export default async function WystawcyPage() {
 
       <section className="gutter mx-auto max-w-6xl pt-16 sm:pt-24">
         <div
-          className="scroll-mt-24 border-t border-hairline py-8 sm:flex sm:items-start sm:justify-between sm:gap-12 sm:py-10"
+          className="scroll-mt-(--below-header) border-t border-hairline py-8 sm:flex sm:items-start sm:justify-between sm:gap-12 sm:py-10"
           id="regulamin"
         >
           <div>
@@ -131,7 +134,7 @@ export default async function WystawcyPage() {
         </div>
 
         <div
-          className="scroll-mt-24 border-t border-hairline py-8 sm:flex sm:items-start sm:justify-between sm:gap-12 sm:py-10"
+          className="scroll-mt-(--below-header) border-t border-hairline py-8 sm:flex sm:items-start sm:justify-between sm:gap-12 sm:py-10"
           id="zgloszenia"
         >
           <div>

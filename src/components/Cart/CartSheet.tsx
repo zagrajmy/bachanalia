@@ -76,7 +76,7 @@ export function CartSheet({ animateEntrance }: { animateEntrance: boolean }) {
       </SheetTrigger>
 
       <SheetContent side="right" className="data-[side=right]:w-[min(24rem,88vw)]">
-        <SheetHeader className="h-16 flex-row items-center border-b border-dashed border-hairline py-0 sm:h-18">
+        <SheetHeader className="h-(--header-h) flex-row items-center border-b border-dashed border-hairline py-0">
           <SheetTitle>Koszyk</SheetTitle>
         </SheetHeader>
 

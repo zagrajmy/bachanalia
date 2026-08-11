@@ -56,6 +56,13 @@
 
 :root {
   color-scheme: light;
+
+  --header-h: 4rem;
+  --below-header: calc(var(--header-h) + 1.5rem);
+
+  @variant sm {
+    --header-h: 4.5rem;
+  }
 }
 
 /**

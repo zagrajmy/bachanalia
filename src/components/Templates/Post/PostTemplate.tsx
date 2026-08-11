@@ -30,7 +30,7 @@ export function PostTemplate({ node }: TemplateProps) {
           height={image.mediaDetails?.height ?? 1000}
           sizes="(min-width: 1024px) 20rem, 100vw"
           priority
-          className="w-full rounded-card bg-paper-shade object-cover lg:sticky lg:top-28"
+          className="w-full rounded-card bg-paper-shade object-cover lg:sticky lg:top-(--below-header)"
         />
       )}
 

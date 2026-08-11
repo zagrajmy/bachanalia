@@ -49,7 +49,7 @@ export default async function ProduktPage({ params }: Props) {
       </Link>
 
       <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
-        <div className="overflow-hidden rounded-card lg:sticky lg:top-6 lg:self-start">
+        <div className="overflow-hidden rounded-card lg:sticky lg:top-(--below-header) lg:self-start">
           {image ? (
             <Image
               src={image.src}

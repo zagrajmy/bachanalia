@@ -1,6 +1,6 @@
-import gql from "graphql-tag";
+import { graphql } from "@/gql";
 
-export const AllContentQuery = gql`
+export const AllContentQuery = graphql(`
   query AllContentQuery {
     pages(first: 100, where: { status: PUBLISH }) {
       nodes {
@@ -15,4 +15,4 @@ export const AllContentQuery = gql`
       }
     }
   }
-`;
+`);

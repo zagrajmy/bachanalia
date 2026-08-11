@@ -16,7 +16,6 @@
 import { spawn } from "node:child_process";
 import { rmSync } from "node:fs";
 import { join } from "node:path";
-import { print } from "graphql/language/printer";
 
 import { AddToCartMutation } from "../src/queries/cart/AddToCartMutation";
 import { CartQuery } from "../src/queries/cart/CartQuery";
@@ -25,6 +24,9 @@ import { RemoveItemsFromCartMutation } from "../src/queries/cart/RemoveItemsFrom
 import { UpdateItemQuantitiesMutation } from "../src/queries/cart/UpdateItemQuantitiesMutation";
 import { type CartSnapshots, writeFixture, writeSnapshots } from "../mocks/fixtures";
 import { footerNav, primaryNav } from "../src/components/Globals/siteNav";
+import type { TypedDocumentString } from "../src/gql/graphql";
+import type { GraphQLResponse } from "../src/utils/graphqlRequest";
+import { sleep } from "../src/utils/sleep";
 
 /** Its own output directory, so a `bun run dev` in this repo keeps working. */
 const DIST_DIR = ".next-mock";
@@ -64,8 +66,6 @@ const navRoutes = [
   .filter((link) => !("external" in link && link.external))
   .map((link) => link.href);
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 async function waitForServer() {
   for (let attempt = 0; attempt < 120; attempt++) {
     try {
@@ -93,7 +93,8 @@ async function linksFrom(path: string, pattern: RegExp) {
   let match = anchors.exec(html);
 
   while (match) {
-    if (pattern.test(match[1]) && hrefs.indexOf(match[1]) === -1) hrefs.push(match[1]);
+    const href = match[1];
+    if (href && pattern.test(href) && !hrefs.includes(href)) hrefs.push(href);
     match = anchors.exec(html);
   }
 
@@ -116,25 +117,29 @@ async function visit(route: string) {
 }
 
 async function recordReads() {
-  const seeds = EXTRA_ROUTES.concat(navRoutes).filter(
+  const seeds = [...EXTRA_ROUTES, ...navRoutes].filter(
     (route, index, all) => all.indexOf(route) === index,
   );
 
   for (const route of seeds) await visit(route);
 
-  const followed = (await linksFrom("/goscie/", /^\/\d{4}\/\d{2}\/\d{2}\//)).concat(
-    await linksFrom("/sklep/", /^\/produkt\//),
-  );
+  const followed = [
+    ...(await linksFrom("/goscie/", /^\/\d{4}\/\d{2}\/\d{2}\//)),
+    ...(await linksFrom("/sklep/", /^\/produkt\//)),
+  ];
 
   for (const route of followed) await visit(route);
 }
 
-type WooReply = { data?: any; errors?: { message: string }[] };
-
 let session = "";
 
 /** The reply exactly as WooCommerce sent it, `errors` array and all. */
-async function wooRaw(query: string, variables: Record<string, unknown> = {}) {
+async function wooRaw<TResult, TVariables>(
+  document: TypedDocumentString<TResult, TVariables>,
+  variables: Record<string, unknown> = {},
+) {
+  const query = String(document);
+
   const response = await fetch(GRAPHQL, {
     method: "POST",
     headers: {
@@ -147,11 +152,24 @@ async function wooRaw(query: string, variables: Record<string, unknown> = {}) {
   const refreshed = response.headers.get("woocommerce-session");
   if (refreshed) session = refreshed;
 
-  return (await response.json()) as WooReply;
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the payload's shape is the document's to promise
+  return (await response.json()) as GraphQLResponse<TResult>;
 }
 
-async function woo(query: string, variables: Record<string, unknown>): Promise<WooReply> {
-  const body = await wooRaw(query, variables);
+/** A fixture recorded from half an answer is worse than no fixture, so this stops the run. */
+function required<T>(value: T | null | undefined, what: string): T {
+  if (value === null || value === undefined) {
+    throw new Error(`record-wp: WooCommerce answered without ${what}`);
+  }
+
+  return value;
+}
+
+async function woo<TResult, TVariables>(
+  document: TypedDocumentString<TResult, TVariables>,
+  variables: Record<string, unknown> = {},
+): Promise<GraphQLResponse<TResult>> {
+  const body = await wooRaw(document, variables);
 
   if (body.errors?.length) throw new Error(body.errors.map((e) => e.message).join("; "));
 
@@ -166,12 +184,16 @@ async function variationToBuy() {
   const { ProductVariationsQuery } = await import("../src/queries/cart/ProductVariationsQuery");
   const { ProductQuery } = await import("../src/queries/general/ProductQuery");
 
-  const product = await woo(print(ProductQuery), { preview: false, slugs: [CART_PRODUCT.slug] });
-  const node = product.data?.products?.nodes?.[0];
+  const product = await woo(ProductQuery, { preview: false, slugs: [CART_PRODUCT.slug] });
+  const node = product.data?.products?.nodes[0];
 
   const slugs = { slugs: [CART_PRODUCT.slug] };
-  const variations = await woo(print(ProductVariationsQuery), slugs);
-  const all = variations.data?.products?.nodes?.[0]?.variations?.nodes ?? [];
+  const variations = await woo(ProductVariationsQuery, slugs);
+  const variationsNode = variations.data?.products?.nodes[0];
+  const all =
+    variationsNode && "variations" in variationsNode
+      ? (variationsNode.variations?.nodes ?? [])
+      : [];
 
   /**
    * No page renders this. The add-to-cart action asks for it, and only when the
@@ -181,18 +203,18 @@ async function variationToBuy() {
    */
   writeFixture("ProductVariationsQuery", slugs, variations);
 
-  const chosen = all.filter((variation: any) =>
+  const chosen = all.find((variation) =>
     (variation.attributes?.nodes ?? []).some(
-      (attribute: any) =>
+      (attribute) =>
         attribute.name === CART_PRODUCT.attribute && attribute.value === CART_PRODUCT.option,
     ),
-  )[0];
+  );
 
   if (!node?.databaseId || !chosen?.databaseId) {
     throw new Error(`${CART_PRODUCT.slug} no longer offers ${CART_PRODUCT.option}`);
   }
 
-  return { productId: node.databaseId as number, variationId: chosen.databaseId as number };
+  return { productId: node.databaseId, variationId: chosen.databaseId };
 }
 
 async function recordCart() {
@@ -200,7 +222,7 @@ async function recordCart() {
   const snapshots: CartSnapshots = { empty: undefined, carts: {} };
   const key = (quantity: number) => `${productId}:${variationId}:${quantity}`;
 
-  const added = await woo(print(AddToCartMutation), {
+  const added = await woo(AddToCartMutation, {
     input: {
       productId,
       variationId,
@@ -209,37 +231,44 @@ async function recordCart() {
     },
   });
 
-  snapshots.carts[key(1)] = added.data.addToCart.cart;
+  const addedCart = required(added.data?.addToCart?.cart, "a cart after addToCart");
+  snapshots.carts[key(1)] = addedCart;
 
-  const itemKey = added.data.addToCart.cart.contents.nodes[0].key as string;
+  const itemKey = required(addedCart.contents?.nodes[0]?.key, "a line in the cart it just filled");
 
   for (const quantity of [2, 3]) {
-    const updated = await woo(print(UpdateItemQuantitiesMutation), {
+    const updated = await woo(UpdateItemQuantitiesMutation, {
       input: { items: [{ key: itemKey, quantity }] },
     });
 
-    snapshots.carts[key(quantity)] = updated.data.updateItemQuantities.cart;
+    snapshots.carts[key(quantity)] = required(
+      updated.data?.updateItemQuantities?.cart,
+      "a cart after updateItemQuantities",
+    );
   }
 
   /**
    * Asked with something in the cart, which is the only state it matters in,
    * and saved over whatever the empty-cart crawl recorded.
    */
-  const checkout = await wooRaw(print(CheckoutUrlQuery));
+  const checkout = await wooRaw(CheckoutUrlQuery);
   writeFixture("CheckoutUrlQuery", {}, checkout);
 
-  const emptied = await woo(print(RemoveItemsFromCartMutation), { input: { keys: [itemKey] } });
-  snapshots.empty = emptied.data.removeItemsFromCart.cart;
+  const emptied = await woo(RemoveItemsFromCartMutation, { input: { keys: [itemKey] } });
+  snapshots.empty = required(
+    emptied.data?.removeItemsFromCart?.cart,
+    "a cart after removeItemsFromCart",
+  );
 
   /** Prove the session really is empty before walking away from it. */
-  const confirmed = await woo(print(CartQuery), {});
-  snapshots.empty = confirmed.data.cart;
+  const confirmed = await woo(CartQuery, {});
+  snapshots.empty = required(confirmed.data?.cart, "a cart when asked to confirm it is empty");
 
   writeSnapshots(snapshots);
 
   console.log(`  cart snapshots for product ${productId}, variation ${variationId}`);
   console.log(
-    `  checkoutUrl: ${(checkout as WooReply).data?.customer?.checkoutUrl ?? "absent — the till is closed"}`,
+    `  checkoutUrl: ${checkout.data?.customer?.checkoutUrl ?? "absent — the till is closed"}`,
   );
 }
 
@@ -268,7 +297,7 @@ async function main() {
     server.kill("SIGTERM");
   }
 
-  if (process.argv.indexOf("--cart") !== -1) {
+  if (process.argv.includes("--cart")) {
     console.log("opening one guest cart on the live shop — no order is created");
     await recordCart();
   }
@@ -283,10 +312,10 @@ async function main() {
   console.log("done — review `git diff e2e/fixtures/wp` before committing");
 }
 
-void main().then(
-  () => process.exit(0),
-  (error) => {
-    console.error(error);
-    process.exit(1);
-  },
-);
+try {
+  await main();
+  process.exit(0);
+} catch (error) {
+  console.error(error);
+  process.exit(1);
+}

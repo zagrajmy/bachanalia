@@ -17,7 +17,9 @@
   --color-surface: var(--color-paper);
   --color-ink: var(--color-navy);
   --color-ink-muted: var(--color-slate);
+  --color-edge: var(--color-navy);
   --color-accent: var(--color-coral);
+  --color-mark: var(--color-rose);
   --color-on-accent: var(--color-navy);
   --color-hairline: color-mix(in oklab, var(--color-navy) 25%, transparent);
 
@@ -56,6 +58,39 @@
   color-scheme: light;
 }
 
+/**
+ * The same sheet printed on dark stock: ink and paper trade places, the
+ * registration mark moves from coral to pink, and every relationship holds.
+ * Scoped to the route that opts in rather than to :root, because the header
+ * and the footer around it are still white paper.
+ */
+@utility night-print {
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+    background-color: var(--color-navy-deep);
+    color: var(--color-paper);
+    --color-surface: var(--color-navy-deep);
+    --color-ink: var(--color-paper);
+    --color-ink-muted: color-mix(in oklab, var(--color-paper) 85%, transparent);
+    --color-edge: color-mix(in oklab, var(--color-paper) 35%, transparent);
+    --color-accent: var(--color-pink);
+    /** Distinct from the accent, or a link's hover would change nothing here. */
+    --color-mark: var(--color-paper);
+    --color-hairline: color-mix(in oklab, var(--color-paper) 25%, transparent);
+  }
+}
+
+/**
+ * The footer sets its own margin above itself and the body shows through it.
+ * Painting the ground rather than a fixed-height band means the gap can change
+ * without leaving a strip of the wrong colour behind.
+ */
+@media (prefers-color-scheme: dark) {
+  body:has(.night-print) {
+    background-color: var(--color-navy-deep);
+  }
+}
+
 body {
   background-color: var(--color-surface);
   color: var(--color-ink);
@@ -85,6 +120,53 @@ body {
 @utility punched {
   background: radial-gradient(circle at 50% 50%, var(--color-paper) 0 3.5px, transparent 3.5px) 0
     0 / 16px 16px repeat-x;
+}
+
+/**
+ * The secondary action. One consequential action per surface gets the framed
+ * button; everything else is a text link the accent underlines, which is why
+ * this is a utility rather than eleven copies of the same six declarations.
+ */
+@utility marked-link {
+  color: var(--color-ink);
+  font-weight: 600;
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+  transition:
+    color 150ms var(--ease-out),
+    text-decoration-color 150ms var(--ease-out);
+
+  &:hover {
+    color: var(--color-mark);
+    text-decoration-color: var(--color-mark);
+    transition-duration: 0s;
+  }
+}
+
+/**
+ * A perforation with a longer mark than `border-style: dashed` can express,
+ * which stops at roughly three times the border width. Drawn as a gradient so
+ * the 14px mark and 8px gap are ours to set.
+ */
+@utility perforated-top {
+  background: repeating-linear-gradient(
+      to right,
+      var(--color-hairline) 0 16px,
+      transparent 16px 24px
+    )
+    top left / 24px 1px repeat-x;
+}
+
+@utility perforated-start {
+  background: repeating-linear-gradient(
+      to bottom,
+      var(--color-hairline) 0 16px,
+      transparent 16px 24px
+    )
+    top left / 1px 24px repeat-y;
 }
 
 @utility screened {

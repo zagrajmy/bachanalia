@@ -1,8 +1,6 @@
-import gql from "graphql-tag";
+import { graphql } from "@/gql";
 
-import { CartFields } from "./CartFields";
-
-export const RemoveItemsFromCartMutation = gql`
+export const RemoveItemsFromCartMutation = graphql(`
   mutation RemoveItemsFromCartMutation($input: RemoveItemsFromCartInput!) {
     removeItemsFromCart(input: $input) {
       cart {
@@ -10,5 +8,4 @@ export const RemoveItemsFromCartMutation = gql`
       }
     }
   }
-  ${CartFields}
-`;
+`);

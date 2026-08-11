@@ -3,7 +3,7 @@ import { test } from "bun:test";
 
 import { GET } from "./route";
 
-const body = async () => await (GET() as Response).text();
+const body = async () => GET().text();
 
 test("the last day is inside the event", async () => {
   const ics = await body();
@@ -47,7 +47,7 @@ test("a folded line continues with a space rather than starting a property", asy
 });
 
 test("it downloads as a calendar", async () => {
-  const response = GET() as Response;
+  const response = GET();
 
   assert.match(response.headers.get("content-type") ?? "", /text\/calendar/);
   assert.match(response.headers.get("content-disposition") ?? "", /attachment/);

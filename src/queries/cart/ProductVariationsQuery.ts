@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { graphql } from "@/gql";
 
 /**
  * The authoritative variation table for one product, used to turn the
@@ -9,7 +9,7 @@ import gql from "graphql-tag";
  * Filters a connection rather than calling `product(idType: SLUG)`, which
  * answers an unknown slug with a GraphQL error instead of an empty list.
  */
-export const ProductVariationsQuery = gql`
+export const ProductVariationsQuery = graphql(`
   query ProductVariationsQuery($slugs: [String]) {
     products(first: 1, where: { slugIn: $slugs, status: "publish" }) {
       nodes {
@@ -31,4 +31,4 @@ export const ProductVariationsQuery = gql`
       }
     }
   }
-`;
+`);

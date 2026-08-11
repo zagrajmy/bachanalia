@@ -1,36 +1,44 @@
+import { type } from "arktype";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { print } from "graphql/language/printer";
-import gql from "graphql-tag";
 
 import { FEED_PAGE_URI, parseFeedItems } from "../src/components/News/facebookFeed";
 import type { ArchivedFbPost } from "../src/components/News/fbArchive";
 import { encodeLqipWebp } from "../src/utils/lqipEncode";
 import { fbPostKey, lqipMetaRelPath, lqipRelPath } from "../src/utils/lqipPath";
-import { graphql } from "./wpGraphql";
+import { feedContent, FeedQuery } from "../src/queries/general/FeedQuery";
+import { wpQuery } from "./wpGraphql";
 
 const ROOT = join(import.meta.dirname, "..");
 const ARCHIVE_PATH = join(ROOT, "src/content/fb-news.json");
 const IMG_DIR = join(ROOT, "public/fb-news");
 const LQIP_DIR = join(ROOT, "src/content/lqip");
 
-const FeedQuery = gql`
-  query FeedQuery($uri: String!) {
-    nodeByUri(uri: $uri) {
-      ... on Page {
-        content
-      }
-    }
-  }
-`;
+const ArchivedFbPosts = type({
+  dateTime: "string",
+  excerpt: "string",
+  href: "string",
+  id: "string",
+  "image?": { height: "number", src: "string", width: "number" },
+  title: "string",
+}).array();
 
+/**
+ * No archive yet is a first run. An archive that will not parse is a file
+ * someone has to look at — answering with an empty list would rewrite it from
+ * the current feed and drop every post Facebook has since aged out.
+ */
 async function loadArchive(): Promise<ArchivedFbPost[]> {
-  try {
-    return JSON.parse(await readFile(ARCHIVE_PATH, "utf8"));
-  } catch {
-    return [];
+  if (!existsSync(ARCHIVE_PATH)) return [];
+
+  const parsed = ArchivedFbPosts(JSON.parse(await readFile(ARCHIVE_PATH, "utf8")));
+
+  if (parsed instanceof type.errors) {
+    throw new TypeError(`archive: ${ARCHIVE_PATH} is not a post archive — ${parsed.summary}`);
   }
+
+  return parsed;
 }
 
 async function mirrorImage(id: string, src: string) {
@@ -62,12 +70,9 @@ async function mirrorImage(id: string, src: string) {
 }
 
 async function main() {
-  const { nodeByUri } = await graphql<{ nodeByUri: { content?: string | null } | null }>(
-    print(FeedQuery),
-    { uri: FEED_PAGE_URI },
-  );
+  const feedPage = await wpQuery(FeedQuery, { uri: FEED_PAGE_URI });
 
-  const feed = parseFeedItems(nodeByUri?.content ?? "");
+  const feed = parseFeedItems(feedContent(feedPage));
   if (feed.length === 0) throw new Error("archive: feed parsed to zero posts, refusing to run");
 
   const archive = await loadArchive();
@@ -101,7 +106,9 @@ async function main() {
   console.log(`archive: ${fresh.length} new, ${archive.length} total`);
 }
 
-main().catch((error) => {
+try {
+  await main();
+} catch (error) {
   console.error(error);
   process.exit(1);
-});
+}

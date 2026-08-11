@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { fbPostKey, lqipMetaRelPath, lqipRelPath, wpMediaKey } from "./lqipPath";
+import { lqipMetaRelPath, lqipRelPath, wpMediaKey } from "./lqipPath";
 
 export { fbPostKey, wpMediaKey } from "./lqipPath";
 
@@ -62,6 +62,7 @@ export function webpSize(bytes: Uint8Array): { height: number; width: number } |
 function readDims(key: string, webp: Buffer) {
   const metaPath = join(DIR, lqipMetaRelPath(key));
   if (existsSync(metaPath)) {
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a cache file this repo wrote, read back in the shape it was written
     const meta = JSON.parse(readFileSync(metaPath, "utf8")) as { height?: number; width?: number };
     if (meta.width && meta.height) return { width: meta.width, height: meta.height };
   }

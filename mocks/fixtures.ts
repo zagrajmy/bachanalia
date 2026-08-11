@@ -1,4 +1,6 @@
 import { createHash } from "node:crypto";
+import type { JsonBodyType } from "msw";
+
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -61,10 +63,10 @@ export function fixtureName(operation: string, variables: unknown) {
  * restarting the server, and caching a *miss* is how a fixture that was just
  * written keeps looking absent.
  */
-export function readFixture(operation: string, variables: unknown) {
+export function readFixture(operation: string, variables: unknown): JsonBodyType | undefined {
   const path = join(FIXTURE_DIR, fixtureName(operation, variables));
 
-  return existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : undefined;
+  return existsSync(path) ? (JSON.parse(readFileSync(path, "utf8")) as JsonBodyType) : undefined;
 }
 
 export function writeFixture(operation: string, variables: unknown, body: unknown) {
@@ -78,16 +80,16 @@ export function writeFixture(operation: string, variables: unknown, body: unknow
 }
 
 export type CartSnapshots = {
-  /** WooCommerce's own answer for a cart with nothing in it. */
-  empty: unknown;
   /** `<productId>:<variationId>:<quantity>` lines, sorted and joined by `|`. */
   carts: Record<string, unknown>;
+  /** WooCommerce's own answer for a cart with nothing in it. */
+  empty: unknown;
 };
 
 export function readSnapshots(): CartSnapshots {
   if (!existsSync(SNAPSHOT_FILE)) return { empty: undefined, carts: {} };
 
-  return JSON.parse(readFileSync(SNAPSHOT_FILE, "utf8"));
+  return JSON.parse(readFileSync(SNAPSHOT_FILE, "utf8")) as CartSnapshots;
 }
 
 export function writeSnapshots(snapshots: CartSnapshots) {

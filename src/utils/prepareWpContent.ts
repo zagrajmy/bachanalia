@@ -10,10 +10,13 @@ const DROPPED_ATTRIBUTES = [
   /(?<=<div class="swiper-slide") role="group"/g,
 ];
 
-export const prepareWpContent = (html?: string | null) =>
-  blockThirdPartyEmbeds(
-    DROPPED_ATTRIBUTES.reduce<string>((acc, pattern) => acc.replace(pattern, ""), html ?? ""),
-  );
+export const prepareWpContent = (html: string | null = "") => {
+  let stripped = html ?? "";
+
+  for (const pattern of DROPPED_ATTRIBUTES) stripped = stripped.replace(pattern, "");
+
+  return blockThirdPartyEmbeds(stripped);
+};
 
 const MEDIA = /<(?:img|iframe|video|audio|picture|svg)\b/i;
 
@@ -123,7 +126,9 @@ export const splitWpContent = (html?: string | null): WpContentSegment[] => {
   let match: RegExpExecArray | null;
 
   while ((match = TAG.exec(source)) !== null) {
-    const [raw, closing, rawName, attrs] = match;
+    const [raw, closing, rawName, rawAttrs] = match;
+    const attrs = rawAttrs ?? "";
+    /** The comment branch of TAG matches without its capture groups. */
     if (rawName === undefined) continue;
 
     const name = rawName.toLowerCase();

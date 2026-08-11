@@ -37,7 +37,7 @@ export function blurPlaceholderStyle(
     objectFit = "cover",
   }: {
     height?: number;
-    objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
+    objectFit?: "contain" | "cover" | "fill" | "none" | "scale-down";
     width?: number;
   } = {},
 ) {

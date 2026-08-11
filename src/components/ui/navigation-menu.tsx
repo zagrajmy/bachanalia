@@ -55,7 +55,7 @@ function NavigationMenuItem({ className, ...props }: NavigationMenuPrimitive.Ite
 }
 
 const navigationMenuTriggerStyle = cva(
-  "group/navigation-menu-trigger inline-flex h-9 w-max items-center justify-center rounded-card bg-transparent p-2  text-sm whitespace-nowrap text-ink no-underline underline-offset-[0.35em] outline-none select-none hover:underline focus-visible:underline data-popup-open:underline disabled:pointer-events-none xl:px-3",
+  "group/navigation-menu-trigger inline-flex h-9 w-max items-center justify-center rounded-card bg-transparent p-2 text-sm whitespace-nowrap text-ink no-underline underline-offset-[0.35em] outline-none select-none hover:underline focus-visible:underline data-popup-open:underline disabled:pointer-events-none xl:px-3",
 );
 
 /**
@@ -134,7 +134,7 @@ function NavigationMenuLink({ className, ...props }: NavigationMenuPrimitive.Lin
     <NavigationMenuPrimitive.Link
       data-slot="navigation-menu-link"
       className={cn(
-        "flex flex-col gap-1 rounded-sm p-2 text-sm whitespace-nowrap text-ink no-underline transition-colors outline-none hover:bg-paper-shade focus-visible:bg-paper-shade data-active:bg-paper-shade [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-ink-muted",
+        "flex flex-col gap-1 rounded-sm p-2 text-sm whitespace-nowrap text-ink no-underline transition-colors outline-none hover:bg-linear-to-t hover:from-paper-shade hover:to-paper-shade/60 hover:duration-0 focus-visible:bg-linear-to-t focus-visible:from-paper-shade focus-visible:to-paper-shade/60 focus-visible:duration-0 data-active:bg-linear-to-t data-active:from-paper-shade data-active:to-paper-shade/60 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-ink-muted",
         className,
       )}
       {...props}

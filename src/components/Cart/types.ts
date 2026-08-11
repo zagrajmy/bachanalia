@@ -12,18 +12,18 @@ export type CartLineOption = { label: string; value: string };
 export type CartLine = {
   /** WooCommerce's cart item hash — the handle for update and remove. */
   href: string;
-  image?: { src: string; alt: string };
+  image?: { alt: string; src: string };
   key: string;
   name: string;
-  quantity: number;
-  slug: string;
-  subtotal: string;
-  total: string;
   /** The chosen variation, spelled out. A shirt size has to be visible here. */
   options: CartLineOption[];
-  variationId?: number;
+  quantity: number;
+  slug: string;
   /** WooCommerce refuses a second unit, so the stepper stops at one. */
   soldIndividually: boolean;
+  subtotal: string;
+  total: string;
+  variationId?: number;
 };
 
 export type ShippingRate = { cost: string; id: string; label: string };
@@ -44,16 +44,19 @@ export type CartView = {
 /** What a cart form hands back to its `useActionState`. */
 export type CartActionState = {
   ok: boolean;
-  /** Announced in a live region, so it is written for a screen reader too. */
-  message: string;
   /**
    * WooCommerce answers every cart mutation with the whole cart, so the sheet
    * and the header count redraw from the reply instead of asking again.
    */
   cart?: CartView;
+  /** Announced in a live region, so it is written for a screen reader too. */
+  message: string;
   /**
    * A refusal that is about what is already in the cart — "you cannot add
    * another of these" — so the cart is what should come up alongside it.
    */
   showCart?: boolean;
 };
+
+/** What `GET /api/cart/` answers with, and what the store reads back. */
+export type CartRouteBody = { cart: CartView; checkoutUrl?: string };

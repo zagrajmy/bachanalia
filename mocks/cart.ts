@@ -21,7 +21,7 @@ const signature = (lines: Line[]) =>
     .sort()
     .join("|");
 
-const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value));
+const clone = <T>(value: T): T => structuredClone(value);
 
 /** Only reached when the fixtures are missing entirely, and it says so. */
 function noSnapshots(what: string): CartNode {
@@ -34,11 +34,11 @@ function snapshotFor(lines: Line[]): CartNode {
   const snapshots = readSnapshots();
 
   if (lines.length === 0) {
-    return snapshots.empty ? (clone(snapshots.empty) as CartNode) : noSnapshots("an empty cart");
+    return snapshots.empty ? clone(snapshots.empty) : noSnapshots("an empty cart");
   }
 
   const exact = snapshots.carts[signature(lines)];
-  if (exact) return clone(exact) as CartNode;
+  if (exact) return clone(exact);
 
   /**
    * Nothing recorded at this quantity. Quantities and counts are integers, not
@@ -46,15 +46,16 @@ function snapshotFor(lines: Line[]): CartNode {
    * stay exactly as WooCommerce printed them, which is why the recorder walks
    * the quantities the specs actually use.
    */
-  const base = snapshots.carts[`${lines[0].productId}:${lines[0].variationId}:1`];
+  const first = lines[0];
+  const base = first && snapshots.carts[`${first.productId}:${first.variationId}:1`];
 
-  if (!base) return noSnapshots(signature(lines));
+  if (!first || !base) return noSnapshots(signature(lines));
 
   const cart = clone(base) as CartNode;
   const node = cart.contents?.nodes?.[0];
 
-  if (node) node.quantity = lines[0].quantity;
-  if (cart.contents) cart.contents.itemCount = lines[0].quantity;
+  if (node) node.quantity = first.quantity;
+  if (cart.contents) cart.contents.itemCount = first.quantity;
 
   return cart;
 }
@@ -76,9 +77,9 @@ export function cartOf(token: string) {
 
 export function addLine(token: string, productId: number, variationId: number, quantity: number) {
   const lines = [...cartOf(token)];
-  const found = lines.filter(
+  const found = lines.find(
     (line) => line.productId === productId && line.variationId === variationId,
-  )[0];
+  );
 
   if (found) found.quantity += quantity;
   else lines.push({ productId, variationId, quantity, key: recordedKey(productId, variationId) });
@@ -93,7 +94,7 @@ export function setLineQuantity(token: string, key: string, quantity: number) {
 }
 
 export function removeLines(token: string, keys: string[]) {
-  carts[token] = cartOf(token).filter((line) => keys.indexOf(line.key) === -1);
+  carts[token] = cartOf(token).filter((line) => !keys.includes(line.key));
 }
 
 export function cartResponse(token: string) {

@@ -5,7 +5,8 @@ import konwentyPoludniowe from "./partners/konwenty-poludniowe.png";
 import miastoZielonaGora from "./partners/miasto-zielona-gora.png";
 import planetariumWenus from "./partners/planetarium-wenus.png";
 import uniwersytetZielonogorski from "./partners/uniwersytet-zielonogorski.jpg";
-import zagrajmy from "./partners/zagrajmy.svg";
+/** Next types `*.svg` as `any` so `@svgr/webpack` can redefine it; this one is an image. */
+import zagrajmySvg from "./partners/zagrajmy.svg";
 import zok from "./partners/zok.jpg";
 
 /**
@@ -20,21 +21,21 @@ import zok from "./partners/zok.jpg";
  * edit rather than three.
  */
 export type PartnerLogo = {
-  name: string;
-  src: StaticImageData;
   /** Every mark is somebody's front door; a logo that goes nowhere wastes it. */
   href: string;
-  /**
-   * The artwork ships baked onto an opaque white rectangle, so it needs
-   * multiplying into the page instead of sitting in a visible box.
-   */
-  whiteBox?: boolean;
+  name: string;
   /**
    * A narrow or padded mark reads lighter than a wordmark of the same height,
    * so it takes a taller box to carry the same weight in the row. Ratio alone
    * cannot tell one from a logo that is simply wide, so the mark says so.
    */
   narrow?: boolean;
+  src: StaticImageData;
+  /**
+   * The artwork ships baked onto an opaque white rectangle, so it needs
+   * multiplying into the page instead of sitting in a visible box.
+   */
+  whiteBox?: boolean;
 };
 
 export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
@@ -68,7 +69,8 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
       },
       {
         name: "zagrajmy.net",
-        src: zagrajmy,
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- Next types `*.svg` as `any` so svgr can redefine it
+        src: zagrajmySvg as StaticImageData,
         href: "https://zagrajmy.net/",
       },
     ],

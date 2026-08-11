@@ -1,40 +1,18 @@
 import { cookies, draftMode } from "next/headers";
 
-type Variables = Record<string, any>;
+import type { TypedDocumentString } from "@/gql/graphql";
+import {
+  type GraphQLResponse,
+  graphqlUrl,
+  isTransient,
+  RETRY_DELAYS_MS,
+  type VariablesArg,
+} from "@/utils/graphqlRequest";
+import { sleep } from "@/utils/sleep";
+
+type Variables = Record<string, unknown>;
 
 type CacheInit = RequestInit & { next?: { revalidate?: number; tags?: string[] } };
-
-/**
- * Queries go over GET. Wordfence's firewall inspects POST bodies and rejects
- * GraphQL connection syntax ("a potentially unsafe operation"), which silently
- * breaks list queries, and POST is never cacheable anyway.
- */
-function endpoint(query: string, variables: Variables) {
-  const url = new URL(`${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/graphql`);
-  url.searchParams.set("query", query);
-
-  if (Object.keys(variables).length > 0) {
-    url.searchParams.set("variables", JSON.stringify(variables));
-  }
-
-  return url.toString();
-}
-
-/**
- * Wordfence does not throttle a request, it throttles the client: once a
- * prerender's burst trips it, everything hangs for tens of seconds and then
- * recovers on its own. Backing off well past that is the difference between
- * a slow build and a failed one, so the tail is deliberately long.
- */
-const RETRY_DELAYS_MS = [500, 2000, 6000, 15_000, 30_000];
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-/**
- * Wordfence rate-limits bursts, and a prerender walks every page at once, so a
- * single refusal would otherwise fail the whole build.
- */
-const isTransient = (status: number) => status === 403 || status === 429 || status >= 500;
 
 /**
  * Deliberately no per-attempt timeout. Under a prerender's concurrency this
@@ -48,7 +26,7 @@ async function fetchWithRetry(url: string, init: RequestInit): Promise<Response>
   let lastError: unknown;
 
   for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
-    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1]);
+    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1] ?? 0);
 
     try {
       const response = await fetch(url, init);
@@ -62,46 +40,53 @@ async function fetchWithRetry(url: string, init: RequestInit): Promise<Response>
   throw lastError;
 }
 
-async function request<T>(
-  query: string,
+async function request<TResult, TVariables>(
+  query: TypedDocumentString<TResult, TVariables>,
   variables: Variables,
   headers: Record<string, string>,
   init: CacheInit,
-): Promise<T> {
-  const response = await fetchWithRetry(endpoint(query, variables), { headers, ...init });
+): Promise<TResult> {
+  const response = await fetchWithRetry(
+    graphqlUrl(process.env.NEXT_PUBLIC_WORDPRESS_API_URL, query, variables),
+    { headers, ...init },
+  );
 
   if (!response.ok) {
     throw new Error(`WordPress responded ${response.status} ${response.statusText}`);
   }
 
-  const data = await response.json();
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the payload's shape is the document's to promise
+  const body = (await response.json()) as GraphQLResponse<TResult>;
 
-  if (data.errors) {
-    throw new Error(`GraphQL error: ${data.errors.map((e: any) => e.message).join("; ")}`);
+  if (body.errors?.length) {
+    throw new Error(`GraphQL error: ${body.errors.map((error) => error.message).join("; ")}`);
   }
 
-  return data.data;
+  if (body.data === undefined) {
+    throw new Error("WordPress answered with neither data nor errors");
+  }
+
+  return body.data;
 }
 
-export async function fetchGraphQL<T = any>(
-  query: string,
-  variables?: Variables,
-  headers?: Record<string, string>,
-): Promise<T> {
+export async function fetchGraphQL<TResult, TVariables>(
+  query: TypedDocumentString<TResult, TVariables>,
+  ...[variables]: VariablesArg<TVariables>
+): Promise<TResult> {
   const { isEnabled: preview } = await draftMode();
   const auth = preview ? (await cookies()).get("wp_jwt")?.value : undefined;
 
-  return request<T>(
+  return request(
     query,
     { preview, ...variables },
-    { ...(auth && { Authorization: `Bearer ${auth}` }), ...headers },
+    auth ? { Authorization: `Bearer ${auth}` } : {},
     preview ? { cache: "no-store" } : { next: { tags: ["wordpress"], revalidate: 10_800 } },
   );
 }
 
-export async function fetchGraphQLAtBuild<T = any>(
-  query: string,
-  variables?: Variables,
-): Promise<T> {
-  return request<T>(query, { preview: false, ...variables }, {}, { cache: "no-store" });
+export async function fetchGraphQLAtBuild<TResult, TVariables>(
+  query: TypedDocumentString<TResult, TVariables>,
+  ...[variables]: VariablesArg<TVariables>
+): Promise<TResult> {
+  return request(query, { preview: false, ...variables }, {}, { cache: "no-store" });
 }

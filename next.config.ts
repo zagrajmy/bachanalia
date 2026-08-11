@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   trailingSlash: true,
   /**
    * Next allows one dev server per output directory, and the e2e server runs
@@ -23,8 +24,18 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: process.env.NEXT_PUBLIC_WORDPRESS_API_HOSTNAME,
+        hostname: "bachanaliafantastyczne.pl",
         port: "",
+      },
+      {
+        protocol: "https",
+        hostname: process.env.NEXT_PUBLIC_WORDPRESS_API_HOSTNAME!,
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "drive.google.com",
+        pathname: "/thumbnail",
       },
     ],
   },
@@ -118,6 +129,27 @@ const nextConfig = {
         destination: `${process.env.NEXT_PUBLIC_WORDPRESS_API_URL}/wp-login.php`,
         permanent: false,
       },
+      /** The former exhibitor pages are one directory now, including indexed PATHINFO URLs. */
+      ...[
+        "/poznaj-wystawcow",
+        "/zgloszenia-wystawcow",
+        "/index.php/poznaj-wystawcow",
+        "/index.php/zgloszenia-wystawcow",
+      ].map((source) => ({
+        source,
+        destination: "/wystawcy/",
+        permanent: true,
+      })),
+      /**
+       * WordPress numbered the second exhibitor-rules page rather than replace
+       * the first, and the numbered one is the one it kept updating. The rules
+       * live under the unsuffixed slug here, where the links already point.
+       */
+      ...["/regulamin-wystawcow-2", "/index.php/regulamin-wystawcow-2"].map((source) => ({
+        source,
+        destination: "/regulamin-wystawcow/",
+        permanent: true,
+      })),
       {
         source: "/index.php/:path*",
         destination: "/:path*/",
@@ -143,4 +175,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

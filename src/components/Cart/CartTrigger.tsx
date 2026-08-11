@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { CART_PATH } from "./paths";
 import { loadCart, useCart } from "./store";
 
-const CartSheet = dynamic(() => import("./CartSheet").then((module) => module.CartSheet));
+const CartSheet = dynamic(async () => import("./CartSheet").then((module) => module.CartSheet));
 
 /**
  * The static layout only pays for the cart itself once there is a cart to show.

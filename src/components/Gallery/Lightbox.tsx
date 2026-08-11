@@ -63,7 +63,9 @@ function LightboxPhoto({
         sizes={thumbSizes}
         blurDataURL={blurDataURL}
         className="size-full bg-transparent"
-        onReady={(image) => onAspect(image.naturalWidth / image.naturalHeight)}
+        onReady={(image) => {
+          onAspect(image.naturalWidth / image.naturalHeight);
+        }}
       />
 
       <div
@@ -79,7 +81,9 @@ function LightboxPhoto({
           sizes="100vw"
           blurDataURL={blurDataURL}
           className="size-full bg-transparent"
-          onReady={() => setFullShown(true)}
+          onReady={() => {
+            setFullShown(true);
+          }}
         />
       </div>
 
@@ -97,7 +101,9 @@ function LightboxPhoto({
             sizes="250vw"
             blurDataURL={blurDataURL}
             className="size-full bg-transparent"
-            onReady={() => setZoomShown(true)}
+            onReady={() => {
+              setZoomShown(true);
+            }}
           />
         </div>
       )}
@@ -138,17 +144,28 @@ export function Lightbox({
   const total = images.length;
   const shown = index ?? lastIndex.current;
   const current = images[shown];
-  const step = (delta: number) => onIndexChange((shown + delta + total) % total);
+  const step = (delta: number) => {
+    onIndexChange((shown + delta + total) % total);
+  };
 
   const onKeyDown = (event: KeyboardEvent) => {
     const moves: Record<string, () => void> = {
-      ArrowLeft: () => step(-1),
-      ArrowRight: () => step(1),
-      Home: () => onIndexChange(0),
-      End: () => onIndexChange(total - 1),
+      ArrowLeft: () => {
+        step(-1);
+      },
+      ArrowRight: () => {
+        step(1);
+      },
+      Home: () => {
+        onIndexChange(0);
+      },
+      End: () => {
+        onIndexChange(total - 1);
+      },
     };
 
     const move = moves[event.key];
+
     if (!move || zoomed) return;
 
     event.preventDefault();
@@ -270,7 +287,9 @@ export function Lightbox({
             <button
               type="button"
               aria-label="Poprzednie zdjęcie"
-              onClick={() => step(-1)}
+              onClick={() => {
+                step(-1);
+              }}
               disabled={total < 2}
               className={CONTROL}
             >
@@ -285,7 +304,9 @@ export function Lightbox({
             <button
               type="button"
               aria-label="Następne zdjęcie"
-              onClick={() => step(1)}
+              onClick={() => {
+                step(1);
+              }}
               disabled={total < 2}
               className={CONTROL}
             >

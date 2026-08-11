@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { graphql } from "@/gql";
 
 /**
  * One product page, one query — `generateMetadata` and the page itself share
@@ -13,7 +13,7 @@ import gql from "graphql-tag";
  * WooCommerce: a t-shirt size for the Golden Ticket, an anthology for the
  * supporting accreditation.
  */
-export const ProductQuery = gql`
+export const ProductQuery = graphql(`
   query ProductQuery($slugs: [String]) {
     products(first: 1, where: { slugIn: $slugs, status: "publish" }) {
       nodes {
@@ -71,4 +71,4 @@ export const ProductQuery = gql`
       }
     }
   }
-`;
+`);

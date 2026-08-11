@@ -127,7 +127,9 @@ export function CartLines({ lines, dense = false }: { dense?: boolean; lines: Ca
     const { submitter } = event.nativeEvent;
     const formData = new FormData(event.currentTarget, submitter);
 
-    const key = String(formData.get("key") ?? "");
+    /** A File would stringify to "[object File]" and match no line. */
+    const rawKey = formData.get("key");
+    const key = typeof rawKey === "string" ? rawKey : "";
     const typed = Number(formData.get("quantity")) || 0;
     const step = Number(formData.get("step")) || 0;
 

@@ -29,7 +29,7 @@ describe("sortShopProducts", () => {
       product("golden-ticket", "Golden Ticket"),
     ]);
 
-    expect(sorted[0].slug).toBe("golden-ticket");
+    expect(sorted[0]!.slug).toBe("golden-ticket");
   });
 
   it("orders anthologies by volume, so IX does not land between IV and V", () => {

@@ -9,22 +9,36 @@ import { GalleryImage } from "./GalleryImage";
 
 const DENSE_FROM = 13;
 const MORPH = "gallery-photo";
-const loadLightbox = () => import("./Lightbox").then((module) => module.Lightbox);
+const loadLightbox = async () => import("./Lightbox").then((module) => module.Lightbox);
 
 function withMorph(run: () => void, ms = 260) {
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduced = globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (reduced || !document.startViewTransition) return run();
+  // oxlint-disable-next-line typescript/no-unnecessary-condition -- lib.dom declares this unconditionally; Safari below 18 does not ship it
+  if (reduced || !document.startViewTransition) {
+    run();
+    return;
+  }
 
   const root = document.documentElement;
   root.style.setProperty("--gallery-morph-ms", `${ms}ms`);
-  const transition = document.startViewTransition(() => flushSync(run));
-  transition.finished.finally(() => root.style.removeProperty("--gallery-morph-ms"));
+  const transition = document.startViewTransition(() => {
+    flushSync(run);
+  });
+
+  transition.finished
+    .finally(() => {
+      root.style.removeProperty("--gallery-morph-ms");
+    })
+    .catch(() => {
+      /** A render that threw is already reported; the custom property is cleared above. */
+    });
 }
 
 export function Gallery({ images }: { images: WpGalleryImage[] }) {
   const [index, setIndex] = useState<number | null>(null);
   const [morphIndex, setMorphIndex] = useState(0);
+  // oxlint-disable-next-line react/hook-use-state -- the state is a component, so it is PascalCase
   const [LoadedLightbox, setLoadedLightbox] = useState<typeof import("./Lightbox").Lightbox>();
   const thumbnails = useRef<(HTMLButtonElement | null)[]>([]);
   const finalFocus = useRef<HTMLButtonElement | null>(null);
@@ -47,7 +61,9 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
         setLoadedLightbox(() => Lightbox);
         setMorphIndex(nextIndex);
       });
-      withMorph(() => setIndex(nextIndex));
+      withMorph(() => {
+        setIndex(nextIndex);
+      });
     } catch (error) {
       reportError(error);
     }
@@ -100,7 +116,11 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
             setMorphIndex(next);
             setIndex(next);
           }}
-          onClose={() => withMorph(() => setIndex(null))}
+          onClose={() => {
+            withMorph(() => {
+              setIndex(null);
+            });
+          }}
           morphName={MORPH}
           thumbSizes={thumbSizes}
           finalFocus={finalFocus}

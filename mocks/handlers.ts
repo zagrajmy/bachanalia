@@ -39,7 +39,7 @@ function wordpressHosts() {
   return hosts;
 }
 
-const isWordPress = (url: URL) => wordpressHosts().indexOf(url.host) !== -1;
+const isWordPress = (url: URL) => wordpressHosts().includes(url.host);
 
 /** Facebook's signed CDN URLs, which `fetchFacebookNews` HEADs before rendering. */
 const isFacebookCdn = (url: URL) => /(^|\.)fbcdn\.net$/.test(url.hostname);
@@ -50,7 +50,7 @@ const isGraphQL = (url: URL) => /\/graphql\/?$/.test(url.pathname);
 function operationNameOf(query: string) {
   const match = /\b(?:query|mutation)\s+([A-Za-z0-9_]+)/.exec(query);
 
-  return match ? match[1] : "";
+  return match?.[1] ?? "";
 }
 
 /**
@@ -59,12 +59,12 @@ function operationNameOf(query: string) {
  * nonce in that fixture is a stand-in — a real one is bound to one session and
  * expires, so recording it would save something dead.
  */
-const CART_OPERATIONS = [
-  "CartQuery",
+const CART_OPERATIONS = new Set([
   "AddToCartMutation",
-  "UpdateItemQuantitiesMutation",
+  "CartQuery",
   "RemoveItemsFromCartMutation",
-];
+  "UpdateItemQuantitiesMutation",
+]);
 
 /**
  * WooCommerce's session is a JWT and `session.ts` reads its `exp` to decide how
@@ -90,7 +90,7 @@ function tokenOf(request: Request) {
   return header ? header.replace(/^Session\s+/, "") : "";
 }
 
-type Operation = { name: string; query: string; variables: Record<string, any> };
+type Operation = { name: string; query: string; variables: Record<string, unknown> };
 
 async function readOperation(request: Request): Promise<Operation> {
   const url = new URL(request.url);
@@ -99,7 +99,11 @@ async function readOperation(request: Request): Promise<Operation> {
     const query = url.searchParams.get("query") ?? "";
     const raw = url.searchParams.get("variables");
 
-    return { name: operationNameOf(query), query, variables: raw ? JSON.parse(raw) : {} };
+    return {
+      name: operationNameOf(query),
+      query,
+      variables: raw ? (JSON.parse(raw) as Record<string, unknown>) : {},
+    };
   }
 
   const body = (await request.clone().json()) as { query?: string; variables?: unknown };
@@ -108,14 +112,14 @@ async function readOperation(request: Request): Promise<Operation> {
   return {
     name: operationNameOf(query),
     query,
-    variables: (body.variables as Record<string, any>) ?? {},
+    variables: (body.variables as Record<string, unknown> | undefined) ?? {},
   };
 }
 
 function cartReply(request: Request, operation: Operation) {
   const existing = tokenOf(request);
   const token = existing || mintToken();
-  const input = (operation.variables.input ?? {}) as Record<string, any>;
+  const input = (operation.variables.input ?? {}) as Record<string, unknown>;
 
   switch (operation.name) {
     case "AddToCartMutation":
@@ -137,7 +141,8 @@ function cartReply(request: Request, operation: Operation) {
       };
 
     case "UpdateItemQuantitiesMutation":
-      for (const item of (input.items ?? []) as { key: string; quantity: number }[]) {
+      /** Whatever the client sent — the quantity is not a number until it is made one. */
+      for (const item of (input.items ?? []) as { key: string; quantity: unknown }[]) {
         setLineQuantity(token, item.key, Number(item.quantity));
       }
 
@@ -171,7 +176,7 @@ async function record(request: Request, operation: Operation) {
 }
 
 function replay(request: Request, operation: Operation) {
-  if (CART_OPERATIONS.indexOf(operation.name) !== -1) {
+  if (CART_OPERATIONS.has(operation.name)) {
     const { headers, body } = cartReply(request, operation);
 
     return HttpResponse.json(body, { headers: { [SESSION_HEADER]: headers } });

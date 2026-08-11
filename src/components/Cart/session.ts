@@ -1,6 +1,11 @@
+import { type } from "arktype";
 import { cookies } from "next/headers";
 
+import type { TypedDocumentString } from "@/gql/graphql";
+import type { GraphQLResponse } from "@/utils/graphqlRequest";
+
 import { wooMessage } from "./message";
+import { sleep } from "@/utils/sleep";
 
 /**
  * The WooCommerce session is a JWT, and a JWT is a bearer credential: whoever
@@ -15,6 +20,9 @@ const SESSION_HEADER = "woocommerce-session";
 
 const FALLBACK_MAX_AGE = 2 * 24 * 60 * 60;
 
+/** Whatever else WooCommerce stamps into the token, the expiry is the part read here. */
+const JwtClaims = type({ "exp?": "number" });
+
 /**
  * WooCommerce stamps its own expiry into the token — currently 48 hours — so
  * the cookie is dropped exactly when the cart behind it dies rather than
@@ -25,8 +33,10 @@ function maxAgeOf(token: string) {
 
   if (payload) {
     try {
-      const claims = JSON.parse(Buffer.from(payload, "base64").toString("utf8"));
-      const seconds = Math.floor(Number(claims.exp) - Date.now() / 1000);
+      const claims = JwtClaims(JSON.parse(Buffer.from(payload, "base64").toString("utf8")));
+      if (claims instanceof type.errors || claims.exp === undefined) return FALLBACK_MAX_AGE;
+
+      const seconds = Math.floor(claims.exp - Date.now() / 1000);
       if (seconds > 60) return seconds;
     } catch {
       return FALLBACK_MAX_AGE;
@@ -65,7 +75,7 @@ export async function writeSession(token: string) {
 }
 
 export type WooResult<T> =
-  | { ok: false; message: string; indeterminate: boolean }
+  | { ok: false; indeterminate: boolean; message: string }
   | { ok: true; data: T };
 
 /**
@@ -87,8 +97,6 @@ export type RetryPolicy = "once" | "read" | "replayable";
  */
 const RETRY_DELAYS_MS = [400, 1200, 3000];
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const isFirewallRefusal = (status: number) => status === 403 || status === 429;
 
 function retriesFor(policy: RetryPolicy) {
@@ -109,16 +117,17 @@ const GENERIC_FAILURE = "Nie udało się połączyć ze sklepem. Spróbuj ponown
  * POST bodies but does not block these — proven by order 3502 — and POST is
  * the only shape a mutation has anyway.
  */
-export async function wooRequest<T>(
-  query: string,
-  variables: Record<string, unknown>,
+export async function wooRequest<TResult, TVariables>(
+  document: TypedDocumentString<TResult, TVariables>,
+  variables: TVariables,
   policy: RetryPolicy,
-): Promise<WooResult<T>> {
+): Promise<WooResult<TResult>> {
+  const query = String(document);
   const token = await readSession();
   const retries = retriesFor(policy);
 
   for (let attempt = 0; attempt <= retries; attempt++) {
-    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1]);
+    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1] ?? 0);
 
     let response: Response;
 
@@ -161,10 +170,11 @@ export async function wooRequest<T>(
      * and a parse error thrown from here reaches the buyer as an error
      * boundary instead of the deliberate "do not submit twice" message.
      */
-    let body: { data?: unknown; errors?: { message?: string }[] };
+    let body: GraphQLResponse<TResult>;
 
     try {
-      body = await response.json();
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the payload's shape is the document's to promise
+      body = (await response.json()) as GraphQLResponse<TResult>;
     } catch {
       return { ok: false, message: GENERIC_FAILURE, indeterminate: policy !== "read" };
     }
@@ -172,12 +182,16 @@ export async function wooRequest<T>(
     if (body.errors?.length) {
       return {
         ok: false,
-        message: wooMessage(String(body.errors[0].message)),
+        message: wooMessage(String(body.errors[0]?.message)),
         indeterminate: false,
       };
     }
 
-    return { ok: true, data: body.data as T };
+    if (body.data === undefined) {
+      return { ok: false, message: GENERIC_FAILURE, indeterminate: policy !== "read" };
+    }
+
+    return { ok: true, data: body.data };
   }
 
   /**

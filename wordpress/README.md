@@ -58,3 +58,29 @@ field is enabled, and a disabled input is not submitted. Until they exist,
 never looks for `_wc_checkout`, and every transfer redirects to the homepage
 with no error anyone can see. Open **GraphQL → Settings → WooCommerce** and
 press **Save Changes** a second time.
+
+## PHP checks without local PHP
+
+Use the repository's PHP-WASM wrapper when the host has no PHP interpreter:
+
+```sh
+wordpress/tools/php-wasm-lint.sh wordpress/private/vollstart-license-domain
+wordpress/tools/php-wasm-lint.sh path/to/plugin.php
+```
+
+It recursively runs `php -l` through `@php-wasm/cli` and skips `vendor/` by
+default. Pass `--include-vendor` when third-party PHP must be checked too. The
+first run may download the npm package.
+
+For a runtime smoke harness, keep the harness and files it includes under the
+same repository working tree, run the CLI from that tree, and use `__DIR__`
+relative includes:
+
+```sh
+cd path/to/review-root
+bunx @php-wasm/cli runtime-harness.php
+```
+
+Do not bake macOS `/var/...` or other absolute host paths into a harness. The
+WASM CLI mounts the working tree into its virtual filesystem, where those paths
+may have a different spelling (for example `/private/var/...`) or be absent.

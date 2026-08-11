@@ -19,12 +19,21 @@ export const productPath = (slug: string) => `/produkt/${slug}/`;
 export const RETIRED_PATHS = [
   "/feed-test/",
   "/info/",
+  "/poznaj-wystawcow/",
   "/regulamin-wystawcow-2/",
+  "/zgloszenia-wystawcow/",
   "/koszyk/",
   "/zamowienie/",
   "/moje-konto/",
   "/zwroty/",
 ];
+
+/**
+ * Published in WordPress and served here too, from our own route. The catch-all
+ * must not prerender WordPress's copy behind the page that already answers the
+ * path — unlike RETIRED_PATHS these are not 404s, they are ours.
+ */
+export const SHADOWED_PATHS = ["/regulamin-wystawcow/"];
 
 export type NavLink = { external?: boolean; href: string; label: string };
 
@@ -63,15 +72,7 @@ export const primaryNav: NavGroup[] = [
       { href: "/goscie/", label: "Goście" },
     ],
   },
-  {
-    href: "/poznaj-wystawcow/",
-    label: "Wystawcy",
-    children: [
-      { href: "/poznaj-wystawcow/", label: "Poznaj wystawców" },
-      { href: "/regulamin-wystawcow/", label: "Regulamin wystawców" },
-      { href: "/zgloszenia-wystawcow/", label: "Zgłoszenia wystawców" },
-    ],
-  },
+  { href: "/wystawcy/", label: "Wystawcy" },
   {
     href: "/zgloszenia-programu/",
     label: "Dołącz do nas",
@@ -121,13 +122,12 @@ export const footerNav = [
     links: [
       { href: "/zgloszenia-programu/", label: "Zgłoszenia programu" },
       { href: "/zgloszenia-obslugi/", label: "Zgłoszenia obsługi" },
-      { href: "/zgloszenia-wystawcow/", label: "Zgłoszenia wystawców" },
     ],
   },
   {
     title: "Wystawcy i wsparcie",
     links: [
-      { href: "/poznaj-wystawcow/", label: "Poznaj wystawców" },
+      { href: "/wystawcy/", label: "Wystawcy" },
       { href: "/regulamin-wystawcow/", label: "Regulamin wystawców" },
       { href: "/wspieraja-nas/", label: "Wspierają nas" },
       { href: "/noclegi/", label: "Noclegi" },

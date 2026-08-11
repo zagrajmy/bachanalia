@@ -1,6 +1,4 @@
-import gql from "graphql-tag";
-import { print } from "graphql/language/printer";
-
+import { feedContent, FeedQuery } from "@/queries/general/FeedQuery";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
 import { fbPostKey, lqipAsset } from "@/utils/lqip";
 
@@ -8,19 +6,9 @@ import { FEED_PAGE_URI, parseFeedItems } from "./facebookFeed";
 import { archivedFacebookNews } from "./fbArchive";
 import { NewsEntry } from "./newsFormat";
 
-const FeedQuery = gql`
-  query FeedQuery($uri: String!) {
-    nodeByUri(uri: $uri) {
-      ... on Page {
-        content
-      }
-    }
-  }
-`;
-
 async function withLiveImages(entries: NewsEntry[]) {
   const alive = await Promise.all(
-    entries.map((entry) =>
+    entries.map(async (entry) =>
       entry.image
         ? fetch(entry.image.src, { method: "HEAD" }).then(
             (response) => response.ok,
@@ -48,14 +36,11 @@ async function withLiveImages(entries: NewsEntry[]) {
 }
 
 export async function fetchFacebookNews(limit: number): Promise<NewsEntry[]> {
-  const { nodeByUri } = await fetchGraphQL<{ nodeByUri: { content?: string | null } | null }>(
-    print(FeedQuery),
-    { uri: FEED_PAGE_URI },
-  );
+  const feed = await fetchGraphQL(FeedQuery, { uri: FEED_PAGE_URI });
 
   const archived = archivedFacebookNews();
   const known = new Set(archived.map((entry) => entry.id));
-  const live = parseFeedItems(nodeByUri?.content ?? "").filter((entry) => !known.has(entry.id));
+  const live = parseFeedItems(feedContent(feed)).filter((entry) => !known.has(entry.id));
 
   return [...(await withLiveImages(live)), ...archived]
     .sort((a, b) => b.dateTime.localeCompare(a.dateTime))

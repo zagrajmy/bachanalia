@@ -40,8 +40,8 @@ function split(text: string) {
 
 export function parseFeedItems(html: string): NewsEntry[] {
   return (html.match(ITEM) ?? []).flatMap((item) => {
-    const ids = item.match(POST_ID);
-    const text = newsExcerpt(item.match(TEXT)?.[1], Number.POSITIVE_INFINITY).replace(
+    const ids = POST_ID.exec(item);
+    const text = newsExcerpt(TEXT.exec(item)?.[1], Number.POSITIVE_INFINITY).replace(
       TRAILING_HASHTAGS,
       "",
     );
@@ -49,9 +49,11 @@ export function parseFeedItems(html: string): NewsEntry[] {
     if (!ids || !text) return [];
 
     const [, pageId, postId] = ids;
-    const seconds = Number(item.match(TIMESTAMP)?.[1]);
-    const srcSet = decodeEntities(item.match(SRC_SET)?.[1] ?? "").replaceAll(/\\\//g, "/");
-    const src = srcSet.match(SRC_720)?.[1];
+    if (!postId) return [];
+
+    const seconds = Number(TIMESTAMP.exec(item)?.[1]);
+    const srcSet = decodeEntities(SRC_SET.exec(item)?.[1] ?? "").replaceAll(String.raw`\/`, "/");
+    const src = SRC_720.exec(srcSet)?.[1];
 
     return [
       {

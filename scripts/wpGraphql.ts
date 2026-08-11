@@ -1,29 +1,25 @@
+import type { TypedDocumentString } from "../src/gql/graphql";
+import {
+  type GraphQLResponse,
+  graphqlUrl,
+  isTransient,
+  RETRY_DELAYS_MS,
+  type VariablesArg,
+} from "../src/utils/graphqlRequest";
+import { sleep } from "../src/utils/sleep";
+
 const WP = process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://bachanaliafantastyczne.pl";
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-/**
- * `fetchGraphQL`'s ladder, and the same reason: Wordfence throttles the
- * client, not the request, and recovers on its own if the backoff outlasts it.
- */
-const RETRY_DELAYS_MS = [500, 2000, 6000, 15_000, 30_000];
-
-const isTransient = (status: number) => status === 403 || status === 429 || status >= 500;
-
-export async function graphql<T>(
-  query: string,
-  variables: Record<string, unknown> = {},
-): Promise<T> {
-  const url = new URL(`${WP}/graphql`);
-  url.searchParams.set("query", query);
-  if (Object.keys(variables).length > 0) {
-    url.searchParams.set("variables", JSON.stringify(variables));
-  }
+export async function wpQuery<TResult, TVariables>(
+  document: TypedDocumentString<TResult, TVariables>,
+  ...[variables]: VariablesArg<TVariables>
+): Promise<TResult> {
+  const url = graphqlUrl(WP, document, variables ?? {});
 
   let lastError: unknown;
 
   for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
-    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1]);
+    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1] ?? 0);
 
     let response: Response;
 
@@ -45,20 +41,26 @@ export async function graphql<T>(
      * The firewall answers an automated client's burst with an HTML challenge
      * under a 200. Every query here is a read, so replaying is safe.
      */
-    let body: { data?: unknown; errors?: { message: string }[] };
+    let body: GraphQLResponse<TResult>;
 
     try {
-      body = await response.json();
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the payload's shape is the document's to promise
+      body = (await response.json()) as GraphQLResponse<TResult>;
     } catch {
-      lastError = new Error(`GraphQL: unparseable response from ${url.pathname}`);
+      lastError = new Error(`GraphQL: unparseable response from ${WP}`);
       continue;
     }
 
-    if (body.errors) {
+    if (body.errors?.length) {
       throw new Error(body.errors.map((error) => error.message).join("; "));
     }
 
-    return body.data as T;
+    if (body.data === undefined) {
+      lastError = new Error(`GraphQL: no data in the response from ${WP}`);
+      continue;
+    }
+
+    return body.data;
   }
 
   throw lastError;

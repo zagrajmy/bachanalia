@@ -1,6 +1,6 @@
-import gql from "graphql-tag";
+import { graphql } from "@/gql";
 
-export const NewsQuery = gql`
+export const NewsQuery = graphql(`
   query NewsQuery($first: Int = 12) {
     posts(first: $first, where: { orderby: { field: DATE, order: DESC } }) {
       nodes {
@@ -29,4 +29,4 @@ export const NewsQuery = gql`
       }
     }
   }
-`;
+`);

@@ -6869,6 +6869,24 @@ enum CurrencyEnum {
 
 """A customer object"""
 type Customer implements Node {
+  """A nonce for the account page. By default, it expires in 1 hour."""
+  accountNonce: String
+
+  """
+  A nonce link to the account page for session user. Expires in 24 hours.
+  """
+  accountUrl: String
+
+  """
+  A nonce for the add payment method page. By default, it expires in 1 hour.
+  """
+  addPaymentMethodNonce: String
+
+  """
+  A nonce link to the add payment method page for the authenticated user. Expires in 24 hours.
+  """
+  addPaymentMethodUrl: String
+
   """Customer&#039;s stored payment tokens."""
   availablePaymentMethods: [PaymentTokenInterface]
 
@@ -6883,6 +6901,20 @@ type Customer implements Node {
 
   """Has customer calculated shipping?"""
   calculatedShipping: Boolean
+
+  """A nonce for the cart page. By default, it expires in 1 hour."""
+  cartNonce: String
+
+  """A nonced link to the cart page. By default, it expires in 1 hour."""
+  cartUrl: String
+
+  """A nonce for the checkout page. By default, it expires in 1 hour."""
+  checkoutNonce: String
+
+  """
+  A nonce link to the checkout page for session user. Expires in 24 hours.
+  """
+  checkoutUrl: String
 
   """The ID of the customer in the database"""
   databaseId: Int

@@ -1,5 +1,3 @@
-import { print } from "graphql/language/printer";
-
 import type { AttributeLabel, ProductVariation } from "@/components/Cart/variations";
 import { accreditation } from "@/content/con";
 import { formatPrice } from "@/content/shop";
@@ -8,24 +6,26 @@ import { ProductsQuery } from "@/queries/general/ProductsQuery";
 import { blurDataUrl, blurDataUrls } from "@/utils/blurDataUrl";
 import { fetchGraphQL, fetchGraphQLAtBuild } from "@/utils/fetchGraphQL";
 import { productPath } from "@/components/Globals/siteNav";
+import type { ProductQueryQuery, ProductsQueryQuery } from "@/gql/graphql";
+import type { Selected } from "@/utils/graphqlSelection";
 
 export type ShopImage = {
   alt: string;
+  /** A 12px WebP of the same upload, inlined so the card never opens empty. */
+  blurDataURL?: string;
   height: number;
   src: string;
   width: number;
-  /** A 12px WebP of the same upload, inlined so the card never opens empty. */
-  blurDataURL?: string;
 };
 
 export type ShopProduct = {
-  name: string;
-  slug: string;
   /** WooCommerce's display string, e.g. "100 zł" or "25 zł – 45 zł". */
   href: string;
-  price: string;
   /** Where the sale happens. Cart, checkout and Paynow stay on WooCommerce. */
   image?: ShopImage;
+  name: string;
+  price: string;
+  slug: string;
   soldOut: boolean;
   wpHref: string;
 };
@@ -35,61 +35,30 @@ export type ShopCategory = { label: string; products: ShopProduct[]; slug: strin
 export type ShopVariant = { label: string; price: string; soldOut: boolean };
 
 export type ShopProductDetail = {
-  /** WooCommerce's post ID — what `addToCart` takes, not the slug. */
-  productId: number;
+  /** Editor-typed captions for the axes, e.g. "Rozmar Koszulki". */
+  attributeLabels: AttributeLabel[];
   /**
    * "Sprzedawane pojedynczo" in wp-admin. WooCommerce rejects a second unit
    * with an error, so the picker never offers a quantity for these.
    */
-  soldIndividually: boolean;
-  category?: { slug: string; label: string };
+  category?: { label: string; slug: string };
   description: string;
+  /** WooCommerce's post ID — what `addToCart` takes, not the slug. */
+  productId: number;
+  soldIndividually: boolean;
   variants: ShopVariant[];
   /** The picker's raw material: one entry per buyable combination. */
   variations: ProductVariation[];
-  /** Editor-typed captions for the axes, e.g. "Rozmar Koszulki". */
-  attributeLabels: AttributeLabel[];
 } & ShopProduct;
 
-type ImageNode = {
-  sourceUrl?: string | null;
-  /** WordPress's 150px copy — the placeholder source, never rendered as-is. */
-  altText?: string | null;
-  mediaDetails?: { width?: number | null; height?: number | null } | null;
-  thumbnail?: string | null;
-};
+/**
+ * Products come back as a union — WooCommerce has a concrete type per product
+ * kind, and price, stock and variations are selected through the interfaces
+ * only some of them implement.
+ */
+type ProductNode = Selected<NonNullable<ProductsQueryQuery["products"]>["nodes"][number]>;
 
-type TermNode = { name?: string | null; slug?: string | null };
-
-type ProductNode = {
-  databaseId?: number | null;
-  image?: ImageNode | null;
-  link?: string | null;
-  name?: string | null;
-  price?: string | null;
-  productCategories?: { nodes?: TermNode[] | null } | null;
-  slug?: string | null;
-  stockStatus?: string | null;
-};
-
-type AttributeNode = { label?: string | null; name?: string | null; value?: string | null };
-
-type ProductDetailNode = ProductNode & {
-  attributes?: { nodes?: AttributeNode[] | null } | null;
-  description?: string | null;
-  soldIndividually?: boolean | null;
-  variations?: {
-    nodes?:
-      | {
-          attributes?: { nodes?: AttributeNode[] | null } | null;
-          databaseId?: number | null;
-          name?: string | null;
-          price?: string | null;
-          stockStatus?: string | null;
-        }[]
-      | null;
-  } | null;
-};
+type ProductDetailNode = Selected<NonNullable<ProductQueryQuery["products"]>["nodes"][number]>;
 
 /** Editors type category names lowercase in wp-admin; the shop is not a slug. */
 const capitalise = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
@@ -109,11 +78,16 @@ function volume(name: string) {
   const numeral = /\s([IVXLCDM]+)$/.exec(name.trim())?.[1];
   if (!numeral) return 0;
 
-  return [...numeral].reduce(
-    (total, letter, i, all) =>
-      total + (ROMAN[letter] < (ROMAN[all[i + 1]] ?? 0) ? -ROMAN[letter] : ROMAN[letter]),
-    0,
-  );
+  let total = 0;
+
+  for (let i = 0; i < numeral.length; i++) {
+    const value = ROMAN[numeral[i] ?? ""] ?? 0;
+    const next = ROMAN[numeral[i + 1] ?? ""] ?? 0;
+
+    total += value < next ? -value : value;
+  }
+
+  return total;
 }
 
 /**
@@ -129,7 +103,7 @@ export function sortShopProducts(categorySlug: string, products: ShopProduct[]) 
   return [...products].sort((a, b) => volume(b.name) - volume(a.name));
 }
 
-function toImage(node: ImageNode | null | undefined, blurDataURL?: string) {
+function toImage(node: ProductNode["image"], blurDataURL?: string) {
   if (!node?.sourceUrl) return undefined;
 
   return {
@@ -155,10 +129,8 @@ function toProduct(node: ProductNode, blurDataURL?: string): ShopProduct | undef
   };
 }
 
-async function fetchCatalogue() {
-  const { products } = await fetchGraphQL<{ products: { nodes: ProductNode[] } }>(
-    print(ProductsQuery),
-  );
+async function fetchCatalogue(): Promise<ProductNode[]> {
+  const { products } = await fetchGraphQL(ProductsQuery);
 
   return products?.nodes ?? [];
 }
@@ -172,7 +144,7 @@ export async function fetchShop(): Promise<ShopCategory[]> {
     const product = toProduct(node, blurs.get(node.image?.thumbnail ?? ""));
     if (!product) continue;
 
-    const term = node.productCategories?.nodes?.[0];
+    const term = node.productCategories?.nodes[0];
     const slug = term?.slug ?? "inne";
     let category = categories.find((existing) => existing.slug === slug);
 
@@ -203,9 +175,7 @@ export async function fetchShop(): Promise<ShopCategory[]> {
  * index page then serves from cache.
  */
 export async function fetchProductSlugs(): Promise<string[]> {
-  const { products } = await fetchGraphQLAtBuild<{ products: { nodes: ProductNode[] } }>(
-    print(ProductsQuery),
-  );
+  const { products } = await fetchGraphQLAtBuild(ProductsQuery);
 
   return (products?.nodes ?? []).flatMap((node) => (node.slug ? [node.slug] : []));
 }
@@ -217,19 +187,16 @@ export const variantLabel = (productName: string, variationName: string) =>
     : variationName;
 
 export async function fetchProduct(slug: string): Promise<ShopProductDetail | undefined> {
-  const { products } = await fetchGraphQL<{ products: { nodes: ProductDetailNode[] } }>(
-    print(ProductQuery),
-    { slugs: [slug] },
-  );
+  const { products } = await fetchGraphQL(ProductQuery, { slugs: [slug] });
 
-  const product = products?.nodes?.[0];
+  const product: ProductDetailNode | undefined = products?.nodes[0];
 
   if (!product) return undefined;
 
   const base = toProduct(product, await blurDataUrl(product.image?.thumbnail));
   if (!base) return undefined;
 
-  const term = product.productCategories?.nodes?.[0];
+  const term = product.productCategories?.nodes[0];
   const variationNodes = product.variations?.nodes ?? [];
 
   return {
@@ -257,14 +224,14 @@ export async function fetchProduct(slug: string): Promise<ShopProductDetail | un
               price: formatPrice(variation.price),
               soldOut: variation.stockStatus === "OUT_OF_STOCK",
               attributes: (variation.attributes?.nodes ?? []).flatMap((attribute) =>
-                attribute?.name ? [{ name: attribute.name, value: attribute.value ?? "" }] : [],
+                attribute.name ? [{ name: attribute.name, value: attribute.value ?? "" }] : [],
               ),
             },
           ]
         : [],
     ),
     attributeLabels: (product.attributes?.nodes ?? []).flatMap((attribute) =>
-      attribute?.name ? [{ name: attribute.name, label: attribute.label || attribute.name }] : [],
+      attribute.name ? [{ name: attribute.name, label: attribute.label || attribute.name }] : [],
     ),
   };
 }

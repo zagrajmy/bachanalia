@@ -21,7 +21,7 @@ export function GalleryImage({
   alt: string;
   blurDataURL?: string;
   className?: string;
-  fit?: "cover" | "contain";
+  fit?: "contain" | "cover";
   onReady?: (image: HTMLImageElement) => void;
   priority?: boolean;
   reveal?: "fade" | "instant";
@@ -59,7 +59,9 @@ export function GalleryImage({
         ref={(node) => {
           if (node?.complete && node.naturalWidth > 0) markReady(node);
         }}
-        onLoad={(event) => markReady(event.currentTarget)}
+        onLoad={(event) => {
+          markReady(event.currentTarget);
+        }}
         className={cn(
           fit === "cover" ? "object-cover" : "object-contain",
           reveal === "fade" && !blurDataURL && "transition-opacity duration-200 ease-out",

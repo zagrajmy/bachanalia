@@ -1,18 +1,18 @@
 import { cp, mkdir, readdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { print } from "graphql/language/printer";
-import gql from "graphql-tag";
 
 import { FEED_PAGE_URI, parseFeedItems } from "../src/components/News/facebookFeed";
 import { NewsQuery } from "../src/components/News/NewsQuery";
 import { AllContentQuery } from "../src/queries/general/AllContentQuery";
-import { ContentQuery } from "../src/queries/general/ContentQuery";
+import { type ContentNodeResult, ContentQuery } from "../src/queries/general/ContentQuery";
 import { ProductsQuery } from "../src/queries/general/ProductsQuery";
 import { encodeLqipWebp, fetchLqipWebp } from "../src/utils/lqipEncode";
 import { fbPostKey, lqipMetaRelPath, lqipRelPath, wpMediaKey } from "../src/utils/lqipPath";
 import { MEDIA_WIDTHS, mediaStem } from "../src/utils/mediaPaths";
 import { splitWpContent } from "../src/utils/prepareWpContent";
-import { graphql } from "./wpGraphql";
+import { feedContent, FeedQuery } from "../src/queries/general/FeedQuery";
+import { wpQuery } from "./wpGraphql";
+import { sleep } from "../src/utils/sleep";
 
 const ROOT = join(import.meta.dirname, "..");
 const LQIP_DIR = join(ROOT, "src/content/lqip");
@@ -27,13 +27,7 @@ const MANIFEST_PATH = join(ROOT, "src/content/img-manifest.json");
 const CRAWL_PATH = join(ROOT, ".next/cache/lqip-crawl.json");
 const DELAY_MS = 350;
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 type Job = {
-  fullUrl: string;
-  key: string;
-  thumbUrl: string;
-  variants: boolean;
   /**
    * Only the Facebook feed needs its size written down — `lqipAsset` reads
    * that file for nothing else. Every WordPress image already carries
@@ -41,6 +35,10 @@ type Job = {
    * upload per build to produce a number no component reads.
    */
   dimensions: boolean;
+  fullUrl: string;
+  key: string;
+  thumbUrl: string;
+  variants: boolean;
 };
 
 function thumbUrl(src: string) {
@@ -139,6 +137,7 @@ async function migrateTextLqips() {
 
 async function loadManifest() {
   try {
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a cache file this repo wrote, read back in the shape it was written
     return JSON.parse(await readFile(MANIFEST_PATH, "utf8")) as Record<string, number[]>;
   } catch {
     return {};
@@ -147,6 +146,7 @@ async function loadManifest() {
 
 async function loadCrawl(): Promise<Record<string, string>> {
   try {
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a cache file this repo wrote, read back in the shape it was written
     return JSON.parse(await readFile(CRAWL_PATH, "utf8")) as Record<string, string>;
   } catch {
     return {};
@@ -173,15 +173,7 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
     });
   };
 
-  const news = await graphql<{
-    posts: {
-      nodes: {
-        featuredImage?: {
-          node?: { sourceUrl?: string | null; thumbnail?: string | null } | null;
-        } | null;
-      }[];
-    };
-  }>(print(NewsQuery), { first: 50 });
+  const news = await wpQuery(NewsQuery, { first: 50 });
 
   for (const post of news.posts?.nodes ?? []) {
     const image = post.featuredImage?.node;
@@ -189,22 +181,9 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
     addWp(image.sourceUrl, image.thumbnail);
   }
 
-  const { nodeByUri } = await graphql<{
-    nodeByUri: { content?: string | null } | null;
-  }>(
-    print(gql`
-      query FeedQuery($uri: String!) {
-        nodeByUri(uri: $uri) {
-          ... on Page {
-            content
-          }
-        }
-      }
-    `),
-    { uri: FEED_PAGE_URI },
-  );
+  const feed = await wpQuery(FeedQuery, { uri: FEED_PAGE_URI });
 
-  for (const entry of parseFeedItems(nodeByUri?.content ?? "")) {
+  for (const entry of parseFeedItems(feedContent(feed))) {
     if (!entry.image?.src) continue;
     add({
       key: fbPostKey(entry.id),
@@ -215,11 +194,7 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
     });
   }
 
-  const shop = await graphql<{
-    products: {
-      nodes: { image?: { sourceUrl?: string | null; thumbnail?: string | null } | null }[];
-    };
-  }>(print(ProductsQuery));
+  const shop = await wpQuery(ProductsQuery);
 
   for (const product of shop.products?.nodes ?? []) {
     const { image } = product;
@@ -227,10 +202,7 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
     addWp(image.sourceUrl, image.thumbnail);
   }
 
-  const { pages, posts } = await graphql<{
-    pages: { nodes: { modifiedGmt?: string | null; uri?: string | null }[] };
-    posts: { nodes: { modifiedGmt?: string | null; uri?: string | null }[] };
-  }>(print(AllContentQuery));
+  const { pages, posts } = await wpQuery(AllContentQuery);
 
   const previous = await loadCrawl();
   const crawl: Record<string, string> = {};
@@ -256,9 +228,10 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
     }
 
     await sleep(DELAY_MS);
-    const { contentNode } = await graphql<{
-      contentNode: { content?: string | null } | null;
-    }>(print(ContentQuery), { slug: uri, idType: "URI", preview: false });
+    const { contentNode }: { contentNode?: ContentNodeResult | null } = await wpQuery(
+      ContentQuery,
+      { slug: uri, idType: "URI", preview: false },
+    );
 
     for (const segment of splitWpContent(contentNode?.content)) {
       if (segment.type !== "gallery") continue;
@@ -274,7 +247,7 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
 }
 
 async function fetchBytes(url: string) {
-  const response = await fetch(url, { cache: "force-cache" });
+  const response = await fetch(url, { cache: "force-cache", signal: AbortSignal.timeout(15_000) });
   if (!response.ok) return undefined;
   return Buffer.from(await response.arrayBuffer());
 }
@@ -297,7 +270,9 @@ async function encodeWidths(bytes: Buffer) {
 async function main() {
   await mkdir(LQIP_DIR, { recursive: true });
   await mkdir(IMG_DIR, { recursive: true });
-  await cp(IMG_CACHE_DIR, IMG_DIR, { recursive: true, force: false }).catch(() => {});
+  await cp(IMG_CACHE_DIR, IMG_DIR, { recursive: true, force: false }).catch(() => {
+    /* empty */
+  });
 
   const migrated = await migrateTextLqips();
   if (migrated > 0) console.log(`media: recompressed ${migrated} .lqip → .webp`);
@@ -405,7 +380,9 @@ async function main() {
 
   await writeFile(MANIFEST_PATH, `{\n${lines.join(",\n")}\n}\n`);
 
-  await cp(IMG_DIR, IMG_CACHE_DIR, { recursive: true }).catch(() => {});
+  await cp(IMG_DIR, IMG_CACHE_DIR, { recursive: true }).catch(() => {
+    /* empty */
+  });
 
   if (failed) {
     console.log("media: fetches failed, crawl snapshot withheld");
@@ -419,7 +396,9 @@ async function main() {
   );
 }
 
-main().catch((error) => {
+try {
+  await main();
+} catch (error) {
   console.error(error);
   process.exit(1);
-});
+}

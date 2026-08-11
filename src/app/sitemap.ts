@@ -1,6 +1,4 @@
 import { MetadataRoute } from "next";
-import { print } from "graphql/language/printer";
-
 import { NEWS_PATH } from "@/components/News/news";
 import { productPath, RETIRED_PATHS, SHOP_PATH } from "@/components/Globals/siteNav";
 import { fetchProductSlugs } from "@/components/Shop/products";
@@ -15,7 +13,7 @@ export const revalidate = 10_800;
  * listings we assemble here. `goscie` and `sklep` exist as WP pages but their
  * `uri` is null, so they never come out of AllContentQuery.
  */
-const ownRoutes = ["/", SHOP_PATH, NEWS_PATH, "/goscie/"];
+const ownRoutes = ["/", SHOP_PATH, NEWS_PATH, "/goscie/", "/wystawcy/", "/regulamin-wystawcow/"];
 
 /**
  * On top of the pages we do not serve at all — which already covers the four
@@ -31,10 +29,7 @@ export function sitemapPaths(uris: (string | null | undefined)[], productSlugs: 
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [content, productSlugs] = await Promise.all([
-    fetchGraphQL<{
-      pages: { nodes: { uri?: string | null }[] };
-      posts: { nodes: { uri?: string | null }[] };
-    }>(print(AllContentQuery)),
+    fetchGraphQL(AllContentQuery),
     fetchProductSlugs(),
   ]);
 

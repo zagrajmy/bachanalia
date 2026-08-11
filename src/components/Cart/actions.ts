@@ -1,7 +1,5 @@
 "use server";
 
-import { print } from "graphql/language/printer";
-
 import { ProductVariationsQuery } from "@/queries/cart/ProductVariationsQuery";
 
 import { addToCart, fetchCart, removeLine, setQuantity } from "./cart";
@@ -13,13 +11,20 @@ import { buildAxes, findVariation, type ProductVariation } from "./variations";
 
 const ATTRIBUTE_PREFIX = "attr_";
 
+/** `get` answers with a File for a file input, and "[object File]" is nobody's slug. */
+function text(formData: FormData, name: string, fallback = "") {
+  const value = formData.get(name);
+
+  return typeof value === "string" ? value : fallback;
+}
+
 function readAttributes(formData: FormData) {
   const pairs: { attributeName: string; attributeValue: string }[] = [];
 
-  formData.forEach((value, name) => {
-    if (name.indexOf(ATTRIBUTE_PREFIX) !== 0 || typeof value !== "string" || !value) return;
+  for (const [name, value] of formData) {
+    if (!name.startsWith(ATTRIBUTE_PREFIX) || typeof value !== "string" || !value) continue;
     pairs.push({ attributeName: name.slice(ATTRIBUTE_PREFIX.length), attributeValue: value });
-  });
+  }
 
   return pairs;
 }
@@ -31,39 +36,23 @@ function readAttributes(formData: FormData) {
  * resolve one, ask WooCommerce.
  */
 async function resolveVariationId(slug: string, selection: Record<string, string>) {
-  const result = await wooRequest<{
-    products?: {
-      nodes?:
-        | {
-            variations?: {
-              nodes?:
-                | {
-                    attributes?: {
-                      nodes?: { name?: string | null; value?: string | null }[] | null;
-                    } | null;
-                    databaseId?: number | null;
-                    stockStatus?: string | null;
-                  }[]
-                | null;
-            } | null;
-          }[]
-        | null;
-    } | null;
-  }>(print(ProductVariationsQuery), { slugs: [slug] }, "read");
+  const result = await wooRequest(ProductVariationsQuery, { slugs: [slug] }, "read");
 
   if (!result.ok) return undefined;
 
-  const variations: ProductVariation[] = (
-    result.data.products?.nodes?.[0]?.variations?.nodes ?? []
-  ).flatMap((node) =>
-    node?.databaseId
+  /** Only a VARIABLE product carries variations; anything else has none to resolve. */
+  const product = result.data.products?.nodes[0];
+  const nodes = product && "variations" in product ? (product.variations?.nodes ?? []) : [];
+
+  const variations: ProductVariation[] = nodes.flatMap((node) =>
+    node.databaseId
       ? [
           {
             variationId: node.databaseId,
             price: "",
             soldOut: node.stockStatus === "OUT_OF_STOCK",
             attributes: (node.attributes?.nodes ?? []).flatMap((attribute) =>
-              attribute?.name ? [{ name: attribute.name, value: attribute.value ?? "" }] : [],
+              attribute.name ? [{ name: attribute.name, value: attribute.value ?? "" }] : [],
             ),
           },
         ]
@@ -78,7 +67,7 @@ export async function addToCartAction(
   formData: FormData,
 ): Promise<CartActionState> {
   const productId = Number(formData.get("productId"));
-  const slug = String(formData.get("slug") ?? "");
+  const slug = text(formData, "slug");
   const quantity = Math.min(Math.max(Number(formData.get("quantity")) || 1, 1), MAX_QUANTITY);
   const attributes = readAttributes(formData);
   const expectedAxes = Number(formData.get("axisCount")) || 0;
@@ -155,8 +144,8 @@ export async function cartLineAction(
   _state: CartActionState,
   formData: FormData,
 ): Promise<CartActionState> {
-  const key = String(formData.get("key") ?? "");
-  const name = String(formData.get("name") ?? "Pozycja");
+  const key = text(formData, "key");
+  const name = text(formData, "name", "Pozycja");
 
   if (!key) return { ok: false, message: "Nie znaleźliśmy tej pozycji." };
 

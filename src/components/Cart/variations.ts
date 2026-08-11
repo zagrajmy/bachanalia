@@ -28,7 +28,7 @@ export type VariationSelection = Record<string, string | undefined>;
 export type AttributeLabel = { label: string; name: string };
 
 function push(list: string[], value: string) {
-  if (list.indexOf(value) === -1) list.push(value);
+  if (!list.includes(value)) list.push(value);
 }
 
 /**
@@ -51,7 +51,7 @@ export function buildAxes(
   for (const variation of variations) {
     for (const attribute of variation.attributes) {
       push(names, attribute.name);
-      const options = optionsByName[attribute.name] || (optionsByName[attribute.name] = []);
+      const options = (optionsByName[attribute.name] ??= []);
       if (attribute.value !== "") push(options, attribute.value);
     }
   }
@@ -62,8 +62,8 @@ export function buildAxes(
   };
 
   return names
-    .filter((name) => (optionsByName[name] || []).length > 0)
-    .map((name) => ({ name, label: labelFor(name), options: optionsByName[name] }));
+    .filter((name) => (optionsByName[name] ?? []).length > 0)
+    .map((name) => ({ name, label: labelFor(name), options: optionsByName[name] ?? [] }));
 }
 
 export function matchesSelection(variation: ProductVariation, selection: VariationSelection) {

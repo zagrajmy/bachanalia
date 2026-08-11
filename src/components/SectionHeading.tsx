@@ -19,14 +19,14 @@ export function SectionHeading({
   children,
 }: {
   as?: "h1" | "h2";
-  id?: string;
-  size?: keyof typeof SIZES;
   /** A note or a link, set against the title on the same baseline. */
   aside?: ReactNode;
   children: ReactNode;
+  id?: string;
+  size?: keyof typeof SIZES;
 }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-b-2 border-navy pb-3">
+    <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-b-2 border-edge pb-3">
       <Tag className={`display ml-[-0.04em] ${SIZES[size]}`} id={id}>
         {children}
       </Tag>

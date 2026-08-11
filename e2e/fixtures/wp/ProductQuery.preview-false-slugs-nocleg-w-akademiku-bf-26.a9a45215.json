@@ -3,7 +3,7 @@
     "products": {
       "nodes": [
         {
-          "databaseId": 9999,
+          "databaseId": 3574,
           "slug": "nocleg-w-akademiku-bf-26",
           "name": "Nocleg w akademiku BF 26",
           "link": "https://bachanaliafantastyczne.pl/index.php/produkt/nocleg-w-akademiku-bf-26/",
@@ -12,7 +12,7 @@
           "productCategories": {
             "nodes": []
           },
-          "price": null,
+          "price": "200,00&nbsp;zł",
           "stockStatus": "IN_STOCK",
           "soldIndividually": false
         }

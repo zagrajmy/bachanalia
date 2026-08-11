@@ -27,7 +27,7 @@ the `siteurl` half are done. What still points the old way:
 
 1. `bun run build` once against the real WordPress — it is slow and hammers a
    rate-limiting server, so leave time.
-2. Old URLs 301 to the clean paths, and `/index.php/…` with them.
+2. Old URLs 308 to the clean paths, and `/index.php/…` with them.
 3. Buy something end to end: product → cart → handoff → BLIK → ticket in the
    inbox. Cancel the order afterwards.
 4. `sitemap.xml` lists the new routes and none of the WooCommerce four;

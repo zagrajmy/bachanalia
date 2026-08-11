@@ -88,12 +88,13 @@ test("the dorm page lands on the product that sells the beds", async () => {
   assert.equal(rule.permanent, true);
 });
 
-test("redirects within the site are permanent, so link equity is not parked on a 302", async () => {
+test("redirects within the site are permanent, so link equity is not parked on a 307", async () => {
   const internal = (await redirects()).filter((rule) => rule.destination.startsWith("/"));
 
   assert.ok(internal.length > 1, "expected several same-site redirects");
   for (const rule of internal) {
-    assert.equal(rule.permanent, true, `${rule.source} must 301`);
+    /** `permanent: true` is a 308 in Next — permanent to crawlers, like a 301. */
+    assert.equal(rule.permanent, true, `${rule.source} must redirect permanently`);
   }
 });
 
@@ -104,7 +105,7 @@ test("an outbound hop is temporary, because WordPress is about to move", async (
     assert.equal(
       rule.permanent,
       false,
-      `${rule.source} must 307 — WordPress moves to a subdomain at cutover and a browser caches a 301 indefinitely`,
+      `${rule.source} must 307 — WordPress moves to a subdomain at cutover and a browser caches a 308 indefinitely`,
     );
   }
 });

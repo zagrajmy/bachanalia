@@ -61,7 +61,7 @@ run `bun run codegen:refresh`, turn it back off.
 | `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty`                                                                             | WooCommerce                  | still WordPress                       |
 | `/zamowienie/order-received/<id>/`                                                                                             | WooCommerce                  | ours at cutover — delivers the ticket |
 
-`/akredytacja` 301s to `/sklep/` and `/noclegi` to `/produkt/nocleg-w-akademiku-bf-26/` — the
+`/akredytacja` 308s to `/sklep/` and `/noclegi` to `/produkt/nocleg-w-akademiku-bf-26/` — the
 dorm beds are a WooCommerce product. `/info`, `/blog` and `/feed-test` are
 gone.
 
@@ -79,10 +79,10 @@ publishes, so every indexed link works with no redirect.
 Pretty permalinks 404 on WordPress — the server rewrite is broken — so every
 indexed URL is the `/index.php/…` form, and that is where the link equity is.
 
-- Canonical is the clean path. `/index.php/<anything>` → 301 → `/<anything>/`.
+- Canonical is the clean path. `/index.php/<anything>` → 308 → `/<anything>/`.
 - `trailingSlash: true`, so redirect destinations must keep the slash or every
   indexed URL costs a second hop. `next.config.test.ts` enforces that, plus:
-  same-site redirects permanent, outbound ones not — a browser caches a 301
+  same-site redirects permanent, outbound ones not — a browser caches a 308
   indefinitely and WordPress is about to move.
 - **Do not fix WP permalinks before cutover.** Switching to "Post name" while
   WordPress is still the public frontend rewrites every live URL and could

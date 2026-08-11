@@ -83,12 +83,12 @@ test("lifts a carousel out as its own segment, in document order", () => {
     segments.map((segment) => segment.type),
     ["html", "gallery", "html"],
   );
-  assert.ok(segments[0].type === "html" && segments[0].html.includes("Bachanalia to konwent."));
-  assert.ok(segments[2].type === "html" && segments[2].html.includes("Do zobaczenia."));
+  assert.ok(segments[0]!.type === "html" && segments[0]!.html.includes("Bachanalia to konwent."));
+  assert.ok(segments[2]!.type === "html" && segments[2]!.html.includes("Do zobaczenia."));
 });
 
 test("carries every slide's source and alt across", () => {
-  const [, gallery] = splitWpContent(PAGE);
+  const gallery = splitWpContent(PAGE)[1]!;
 
   assert.equal(gallery.type, "gallery");
   assert.deepEqual(gallery.type === "gallery" ? gallery.images : [], [
@@ -127,7 +127,7 @@ test("a page without a carousel comes back as one chunk, byte for byte", () => {
 });
 
 test("splitting still drops the carousel semantics prepareWpContent removes", () => {
-  const [gallery] = splitWpContent(CAROUSEL);
+  const gallery = splitWpContent(CAROUSEL)[0]!;
 
   assert.equal(gallery.type, "gallery");
   assert.equal(gallery.type === "gallery" ? gallery.images.length : 0, 1);

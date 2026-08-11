@@ -36,11 +36,11 @@ export function measureLogo(pixels: Buffer | Uint8Array): LogoPixels {
   let transparent = 0;
 
   for (let i = 0; i + 4 <= pixels.length; i += 4) {
-    if (pixels[i + 3] < TRANSPARENT_ALPHA) {
+    if ((pixels[i + 3] ?? 0) < TRANSPARENT_ALPHA) {
       transparent += 1;
       continue;
     }
-    drawnLuminance += luminance(pixels[i], pixels[i + 1], pixels[i + 2]);
+    drawnLuminance += luminance(pixels[i] ?? 0, pixels[i + 1] ?? 0, pixels[i + 2] ?? 0);
     drawn += 1;
   }
 

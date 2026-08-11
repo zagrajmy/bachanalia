@@ -56,7 +56,7 @@ test.describe("site navigation", () => {
     await page.goto("/");
 
     const group = primaryNav.find((item) => item.children?.length);
-    const child = group!.children![group!.children!.length - 1];
+    const child = group!.children!.at(-1)!;
     const header = page.getByRole("banner");
 
     await header.getByRole("link", { name: group!.label, exact: true }).focus();
@@ -76,7 +76,7 @@ test.describe("site navigation", () => {
     await page.goto("/");
     await page.getByRole("banner").getByRole("button", { name: "Menu" }).click();
 
-    const target = primaryNav[0];
+    const target = primaryNav[0]!;
     const menu = page.getByRole("dialog");
     await expect(menu).toBeVisible();
     await menu.getByRole("link", { name: target.label, exact: true }).click();

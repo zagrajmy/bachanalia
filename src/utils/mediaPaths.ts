@@ -18,8 +18,8 @@ export function pickMediaWidth(requested: number, available: number[]) {
   for (const width of available) {
     if (width >= requested) return width;
   }
-  // eslint-disable-next-line unicorn/prefer-at -- at() is `number | undefined`, and every caller has already checked the list is not empty
-  return available[available.length - 1];
+  /** Every caller has already checked the list is not empty. */
+  return available.at(-1) ?? requested;
 }
 
 const widths = manifest as Record<string, number[]>;

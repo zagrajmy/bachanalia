@@ -26,6 +26,7 @@ import { type CartSnapshots, writeFixture, writeSnapshots } from "../mocks/fixtu
 import { footerNav, primaryNav } from "../src/components/Globals/siteNav";
 import type { TypedDocumentString } from "../src/gql/graphql";
 import type { GraphQLResponse } from "../src/utils/fetchGraphQL";
+import { sleep } from "../src/utils/sleep";
 
 /** Its own output directory, so a `bun run dev` in this repo keeps working. */
 const DIST_DIR = ".next-mock";
@@ -65,11 +66,6 @@ const navRoutes = [
   .filter((link) => !("external" in link && link.external))
   .map((link) => link.href);
 
-const sleep = (ms: number) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-
 async function waitForServer() {
   for (let attempt = 0; attempt < 120; attempt++) {
     try {
@@ -97,7 +93,8 @@ async function linksFrom(path: string, pattern: RegExp) {
   let match = anchors.exec(html);
 
   while (match) {
-    if (pattern.test(match[1]) && !hrefs.includes(match[1])) hrefs.push(match[1]);
+    const href = match[1];
+    if (href && pattern.test(href) && !hrefs.includes(href)) hrefs.push(href);
     match = anchors.exec(html);
   }
 

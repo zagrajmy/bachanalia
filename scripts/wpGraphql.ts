@@ -1,12 +1,8 @@
 import type { TypedDocumentString } from "../src/gql/graphql";
 import type { GraphQLResponse, VariablesArg } from "../src/utils/fetchGraphQL";
+import { sleep } from "../src/utils/sleep";
 
 const WP = process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://bachanaliafantastyczne.pl";
-
-const sleep = (ms: number) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
 
 /**
  * `fetchGraphQL`'s ladder, and the same reason: Wordfence throttles the
@@ -30,7 +26,7 @@ export async function wpQuery<TResult, TVariables>(
   let lastError: unknown;
 
   for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
-    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1]);
+    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1] ?? 0);
 
     let response: Response;
 

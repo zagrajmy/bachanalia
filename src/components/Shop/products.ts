@@ -78,11 +78,12 @@ function volume(name: string) {
   const numeral = /\s([IVXLCDM]+)$/.exec(name.trim())?.[1];
   if (!numeral) return 0;
 
-  return [...numeral].reduce(
-    (total, letter, i, all) =>
-      total + (ROMAN[letter] < (ROMAN[all[i + 1]] ?? 0) ? -ROMAN[letter] : ROMAN[letter]),
-    0,
-  );
+  return [...numeral].reduce((total, letter, i, all) => {
+    const value = ROMAN[letter] ?? 0;
+    const next = ROMAN[all[i + 1] ?? ""] ?? 0;
+
+    return total + (value < next ? -value : value);
+  }, 0);
 }
 
 /**

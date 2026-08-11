@@ -14,7 +14,9 @@ const FEED = `<div class="cff-posts-wrap"><div class="cff-item cff-photo-post cf
 </div><div class="cff-clear"></div></div>`;
 
 test("builds a permalink out of the page and post ids", () => {
-  const [first, second] = parseFeedItems(FEED);
+  const items = parseFeedItems(FEED);
+  const first = items[0]!;
+  const second = items[1]!;
 
   assert.equal(first.href, "https://www.facebook.com/347748351932621/posts/1440582534768997");
   assert.equal(second.href, "https://www.facebook.com/347748351932621/posts/1436499999999999");
@@ -22,21 +24,21 @@ test("builds a permalink out of the page and post ids", () => {
 });
 
 test("dates a post from the feed's own timestamp", () => {
-  const [first] = parseFeedItems(FEED);
+  const first = parseFeedItems(FEED)[0]!;
 
   assert.equal(first.dateTime, new Date(1_785_434_413 * 1000).toISOString());
   assert.match(first.date, /2026/);
 });
 
 test("titles a post with its opening sentence and keeps the rest as the excerpt", () => {
-  const [, second] = parseFeedItems(FEED);
+  const second = parseFeedItems(FEED)[1]!;
 
   assert.equal(second.title, "Zgłoszenia programowe zaktualizowane i ZAMKNIĘTE❗");
   assert.equal(second.excerpt, "Przyszły do nas dziesiątki propozycji.");
 });
 
 test("drops the hashtag pile and the markup Facebook wraps the text in", () => {
-  const [first] = parseFeedItems(FEED);
+  const first = parseFeedItems(FEED)[0]!;
 
   assert.ok(!first.excerpt.includes("#"));
   assert.ok(!first.excerpt.includes("<a"));
@@ -44,7 +46,9 @@ test("drops the hashtag pile and the markup Facebook wraps the text in", () => {
 });
 
 test("unescapes the 720px image out of the attribute's JSON", () => {
-  const [first, second] = parseFeedItems(FEED);
+  const items = parseFeedItems(FEED);
+  const first = items[0]!;
+  const second = items[1]!;
 
   assert.equal(
     first.image?.src,

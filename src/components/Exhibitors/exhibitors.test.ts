@@ -20,9 +20,9 @@ i "figurki"`,
 });
 
 test("maps the current Polish sheet columns", () => {
-  const [exhibitor] = exhibitorsFromCsv(
+  const exhibitor = exhibitorsFromCsv(
     'Nazwa,Opis,Media społecznościowe,logo,Kategoria\n"Pinku Tako","Moda i modele","https://pinkutako.pl/ https://instagram.com/pinku_tako","https://drive.google.com/file/d/abc123/view","Gadżety"',
-  );
+  )[0]!;
 
   assert.equal(exhibitor.name, "Pinku Tako");
   assert.equal(exhibitor.logoUrl, "https://drive.google.com/thumbnail?id=abc123&sz=w640");

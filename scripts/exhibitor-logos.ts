@@ -43,7 +43,9 @@ async function mapPool<T, R>(items: T[], run: (item: T) => Promise<R>): Promise<
     Array.from({ length: Math.min(CONCURRENCY, items.length) }, async () => {
       while (next < items.length) {
         const index = next++;
-        out[index] = await run(items[index]);
+        const item = items[index];
+
+        if (item !== undefined) out[index] = await run(item);
       }
     }),
   );

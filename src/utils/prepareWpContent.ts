@@ -123,7 +123,8 @@ export const splitWpContent = (html?: string | null): WpContentSegment[] => {
   let match: RegExpExecArray | null;
 
   while ((match = TAG.exec(source)) !== null) {
-    const [raw, closing, rawName, attrs] = match;
+    const [raw, closing, rawName, rawAttrs] = match;
+    const attrs = rawAttrs ?? "";
     /**
      * The comment branch of TAG matches without its capture groups, so these
      * are undefined even though RegExpExecArray types them as strings.

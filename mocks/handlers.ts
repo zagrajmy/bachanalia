@@ -50,7 +50,7 @@ const isGraphQL = (url: URL) => /\/graphql\/?$/.test(url.pathname);
 function operationNameOf(query: string) {
   const match = /\b(?:query|mutation)\s+([A-Za-z0-9_]+)/.exec(query);
 
-  return match ? match[1] : "";
+  return match?.[1] ?? "";
 }
 
 /**

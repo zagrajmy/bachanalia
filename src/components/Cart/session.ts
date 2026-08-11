@@ -5,6 +5,7 @@ import type { TypedDocumentString } from "@/gql/graphql";
 import type { GraphQLResponse } from "@/utils/fetchGraphQL";
 
 import { wooMessage } from "./message";
+import { sleep } from "@/utils/sleep";
 
 /**
  * The WooCommerce session is a JWT, and a JWT is a bearer credential: whoever
@@ -96,11 +97,6 @@ export type RetryPolicy = "once" | "read" | "replayable";
  */
 const RETRY_DELAYS_MS = [400, 1200, 3000];
 
-const sleep = (ms: number) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-
 const isFirewallRefusal = (status: number) => status === 403 || status === 429;
 
 function retriesFor(policy: RetryPolicy) {
@@ -131,7 +127,7 @@ export async function wooRequest<TResult, TVariables>(
   const retries = retriesFor(policy);
 
   for (let attempt = 0; attempt <= retries; attempt++) {
-    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1]);
+    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1] ?? 0);
 
     let response: Response;
 
@@ -185,7 +181,7 @@ export async function wooRequest<TResult, TVariables>(
     if (body.errors?.length) {
       return {
         ok: false,
-        message: wooMessage(String(body.errors[0].message)),
+        message: wooMessage(String(body.errors[0]?.message)),
         indeterminate: false,
       };
     }

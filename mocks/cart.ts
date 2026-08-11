@@ -46,15 +46,16 @@ function snapshotFor(lines: Line[]): CartNode {
    * stay exactly as WooCommerce printed them, which is why the recorder walks
    * the quantities the specs actually use.
    */
-  const base = snapshots.carts[`${lines[0].productId}:${lines[0].variationId}:1`];
+  const first = lines[0];
+  const base = first && snapshots.carts[`${first.productId}:${first.variationId}:1`];
 
-  if (!base) return noSnapshots(signature(lines));
+  if (!first || !base) return noSnapshots(signature(lines));
 
   const cart = clone(base) as CartNode;
   const node = cart.contents?.nodes?.[0];
 
-  if (node) node.quantity = lines[0].quantity;
-  if (cart.contents) cart.contents.itemCount = lines[0].quantity;
+  if (node) node.quantity = first.quantity;
+  if (cart.contents) cart.contents.itemCount = first.quantity;
 
   return cart;
 }

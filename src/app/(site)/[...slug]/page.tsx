@@ -22,7 +22,7 @@ const getContentNode = cache(async (slug: string): Promise<ContentNodeResult | n
   const isPreview = slug.includes("preview");
 
   const { contentNode } = await fetchGraphQL(ContentQuery, {
-    slug: isPreview ? slug.split("preview/")[1] : slug,
+    slug: (isPreview ? slug.split("preview/")[1] : slug) ?? slug,
     idType: isPreview ? "DATABASE_ID" : "URI",
   });
 

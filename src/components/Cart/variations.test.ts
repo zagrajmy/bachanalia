@@ -63,15 +63,20 @@ describe("buildAxes", () => {
     const axes = buildAxes(shirt, [{ name: "rozmar-koszulki", label: "Rozmar Koszulki" }]);
 
     expect(axes).toHaveLength(1);
-    expect(axes[0].label).toBe("Rozmar Koszulki");
+    expect(axes[0]!.label).toBe("Rozmar Koszulki");
   });
 
   it("falls back to the attribute name when the parent lists no label", () => {
-    expect(buildAxes(shirt)[0].label).toBe("rozmar-koszulki");
+    expect(buildAxes(shirt)[0]!.label).toBe("rozmar-koszulki");
   });
 
   it("keeps every option, sold out ones included, in the order WooCommerce gave them", () => {
-    expect(buildAxes(shirt)[0].options).toEqual(["MĘSKA XXXL", "MĘSKA XXL", "MĘSKA XL", "MĘSKA L"]);
+    expect(buildAxes(shirt)[0]!.options).toEqual([
+      "MĘSKA XXXL",
+      "MĘSKA XXL",
+      "MĘSKA XL",
+      "MĘSKA L",
+    ]);
   });
 
   it("takes a second axis from the data rather than a hardcoded shape", () => {

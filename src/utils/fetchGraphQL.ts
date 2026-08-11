@@ -1,6 +1,7 @@
 import { cookies, draftMode } from "next/headers";
 
 import type { TypedDocumentString } from "@/gql/graphql";
+import { sleep } from "@/utils/sleep";
 
 type Variables = Record<string, unknown>;
 
@@ -44,11 +45,6 @@ function endpoint(query: string, variables: Variables) {
  */
 const RETRY_DELAYS_MS = [500, 2000, 6000, 15_000, 30_000];
 
-const sleep = (ms: number) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-
 /**
  * Wordfence rate-limits bursts, and a prerender walks every page at once, so a
  * single refusal would otherwise fail the whole build.
@@ -67,7 +63,7 @@ async function fetchWithRetry(url: string, init: RequestInit): Promise<Response>
   let lastError: unknown;
 
   for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
-    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1]);
+    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1] ?? 0);
 
     try {
       const response = await fetch(url, init);

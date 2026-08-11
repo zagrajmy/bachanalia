@@ -63,7 +63,7 @@ export function buildAxes(
 
   return names
     .filter((name) => (optionsByName[name] || []).length > 0)
-    .map((name) => ({ name, label: labelFor(name), options: optionsByName[name] }));
+    .map((name) => ({ name, label: labelFor(name), options: optionsByName[name] ?? [] }));
 }
 
 export function matchesSelection(variation: ProductVariation, selection: VariationSelection) {

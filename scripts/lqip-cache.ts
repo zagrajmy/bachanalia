@@ -12,6 +12,7 @@ import { MEDIA_WIDTHS, mediaStem } from "../src/utils/mediaPaths";
 import { splitWpContent } from "../src/utils/prepareWpContent";
 import { feedContent, FeedQuery } from "../src/queries/general/FeedQuery";
 import { wpQuery } from "./wpGraphql";
+import { sleep } from "../src/utils/sleep";
 
 const ROOT = join(import.meta.dirname, "..");
 const LQIP_DIR = join(ROOT, "src/content/lqip");
@@ -25,11 +26,6 @@ const MANIFEST_PATH = join(ROOT, "src/content/img-manifest.json");
  */
 const CRAWL_PATH = join(ROOT, ".next/cache/lqip-crawl.json");
 const DELAY_MS = 350;
-
-const sleep = (ms: number) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
 
 type Job = {
   /**

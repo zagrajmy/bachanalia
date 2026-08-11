@@ -28,7 +28,7 @@ export type VariationSelection = Record<string, string | undefined>;
 export type AttributeLabel = { label: string; name: string };
 
 function push(list: string[], value: string) {
-  if (list.indexOf(value) === -1) list.push(value);
+  if (!list.includes(value)) list.push(value);
 }
 
 /**

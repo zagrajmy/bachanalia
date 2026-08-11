@@ -29,10 +29,6 @@ const DELAY_MS = 350;
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 type Job = {
-  fullUrl: string;
-  key: string;
-  thumbUrl: string;
-  variants: boolean;
   /**
    * Only the Facebook feed needs its size written down — `lqipAsset` reads
    * that file for nothing else. Every WordPress image already carries
@@ -40,6 +36,10 @@ type Job = {
    * upload per build to produce a number no component reads.
    */
   dimensions: boolean;
+  fullUrl: string;
+  key: string;
+  thumbUrl: string;
+  variants: boolean;
 };
 
 function thumbUrl(src: string) {

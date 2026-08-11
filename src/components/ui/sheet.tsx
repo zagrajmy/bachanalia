@@ -60,7 +60,7 @@ function SheetContent({
       <SheetPrimitive.Popup
         className={cn(
           "fixed z-50 flex flex-col bg-paper bg-clip-padding text-ink shadow-[0_18px_50px_-18px] shadow-navy/40",
-          "transition-[opacity,translate] duration-250 ease-out data-starting-style:opacity-0 data-ending-style:opacity-0 motion-reduce:translate-0! ",
+          "transition-[opacity,translate] duration-250 ease-out data-starting-style:opacity-0 data-ending-style:opacity-0 motion-reduce:translate-0!",
           "data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=top]:data-starting-style:-translate-y-4 data-[side=top]:data-ending-style:-translate-y-4",
           "data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=bottom]:data-starting-style:translate-y-4 data-[side=bottom]:data-ending-style:translate-y-4",
           "data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=left]:data-starting-style:-translate-x-4 data-[side=left]:data-ending-style:-translate-x-4 data-[side=left]:sm:max-w-sm",

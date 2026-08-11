@@ -80,10 +80,10 @@ export function writeFixture(operation: string, variables: unknown, body: unknow
 }
 
 export type CartSnapshots = {
-  /** WooCommerce's own answer for a cart with nothing in it. */
-  empty: unknown;
   /** `<productId>:<variationId>:<quantity>` lines, sorted and joined by `|`. */
   carts: Record<string, unknown>;
+  /** WooCommerce's own answer for a cart with nothing in it. */
+  empty: unknown;
 };
 
 export function readSnapshots(): CartSnapshots {

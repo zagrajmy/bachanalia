@@ -24,10 +24,10 @@ type Props = {
   attributeLabels: AttributeLabel[];
   productId: number;
   slug: string;
-  soldOut: boolean;
-  variations: ProductVariation[];
   /** WooCommerce refuses a second unit, so no quantity is offered at all. */
   soldIndividually: boolean;
+  soldOut: boolean;
+  variations: ProductVariation[];
 };
 
 const initial: CartActionState = { ok: true, message: "" };
@@ -53,7 +53,9 @@ export function AddToCartForm({
    */
   const [interactive, setInteractive] = useState(false);
 
-  useEffect(() => setInteractive(true), []);
+  useEffect(() => {
+    setInteractive(true);
+  }, []);
 
   /**
    * The cart opens beside the product rather than replacing it — a buyer who
@@ -151,7 +153,9 @@ export function AddToCartForm({
                     value={option}
                     checked={active}
                     disabled={unbuyable}
-                    onChange={() => setSelection({ ...selection, [axis.name]: option })}
+                    onChange={() => {
+                      setSelection({ ...selection, [axis.name]: option });
+                    }}
                     className="sr-only"
                   />
                   {option}
@@ -174,7 +178,9 @@ export function AddToCartForm({
         {alreadyInCart ? (
           <Button
             type="button"
-            onClick={() => openCart()}
+            onClick={() => {
+              openCart();
+            }}
             className="px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]"
           >
             Otwórz koszyk

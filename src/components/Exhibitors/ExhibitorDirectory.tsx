@@ -99,7 +99,9 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
           <span className="sr-only">Wyszukaj</span>
           <input
             className="h-11 w-full rounded-none border-b-2 border-hairline bg-transparent px-0.5 text-base text-ink transition-colors placeholder:text-ink-muted focus-visible:border-transparent focus-visible:duration-0 indent-2"
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => {
+              setQuery(event.target.value);
+            }}
             placeholder="Szukaj wystawcy…"
             type="search"
             value={query}
@@ -108,7 +110,9 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
         <button
           aria-label={sort === "az" ? "Zmień kolejność na Z–A" : "Zmień kolejność na A–Z"}
           className="flex h-11 cursor-pointer hover:bg-ink/5 items-center justify-center gap-2 rounded-card px-3.5 text-sm text-ink-muted transition-colors hover:text-ink hover:duration-0"
-          onClick={() => setSort((current) => (current === "az" ? "za" : "az"))}
+          onClick={() => {
+            setSort((current) => (current === "az" ? "za" : "az"));
+          }}
           type="button"
         >
           <span>{sort === "az" ? "A–Z" : "Z–A"}</span>
@@ -139,7 +143,9 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
           <p className="mt-2 text-ink-muted">Spróbuj innej nazwy lub kategorii.</p>
           <button
             className="marked-link mt-5 cursor-pointer text-sm"
-            onClick={() => setQuery("")}
+            onClick={() => {
+              setQuery("");
+            }}
             type="button"
           >
             Wyczyść filtry

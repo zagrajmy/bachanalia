@@ -32,7 +32,9 @@ const externalProps = ({ external }: NavLink) =>
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const closeMenu = () => setMenuOpen(false);
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
   /**
    * Base UI opens a navigation popup on hover or press, never on focus, which
    * leaves a keyboard user with no way to see a group's children. Opening it
@@ -74,7 +76,9 @@ export function SiteHeader() {
                        * heading is a real page, so it stays a link.
                        */
                       role="link"
-                      onFocus={() => setOpenGroup(group.label)}
+                      onFocus={() => {
+                        setOpenGroup(group.label);
+                      }}
                       render={<Link href={group.href} {...externalProps(group)} />}
                     >
                       {group.label}
@@ -143,7 +147,7 @@ export function SiteHeader() {
                       href={group.href}
                       {...externalProps(group)}
                       onClick={closeMenu}
-                      className="block rounded-card p-2  text-[0.9375rem] font-semibold text-ink no-underline transition-colors duration-150 hover:bg-paper-shade hover:duration-0"
+                      className="block rounded-card p-2 text-[0.9375rem] font-semibold text-ink no-underline transition-colors duration-150 hover:bg-paper-shade hover:duration-0"
                     >
                       {group.label}
                     </Link>

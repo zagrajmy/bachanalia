@@ -17,8 +17,6 @@ import type { CartView } from "./types";
  */
 export type CartSnapshot = {
   cart?: CartView;
-  /** WooCommerce's nonced handover URL, absent while the setting is off. */
-  checkoutUrl?: string;
   /**
    * Whether `/api/cart` has answered yet. Adding to the cart fills `cart` from
    * the action's own result without asking for a handover URL, so until this
@@ -26,6 +24,8 @@ export type CartSnapshot = {
    * two must not look the same to a buyer.
    */
   checkoutKnown: boolean;
+  /** WooCommerce's nonced handover URL, absent while the setting is off. */
+  checkoutUrl?: string;
   loading: boolean;
   open: boolean;
 };
@@ -104,15 +104,20 @@ export async function loadCart(force = false) {
     /** `trailingSlash` is on, and the slashless form costs a 308 first. */
     const response = await fetch("/api/cart/", { headers: { accept: "application/json" } });
 
-    if (!response.ok) return set({ loading: false });
+    if (!response.ok) {
+      set({ loading: false });
+      return;
+    }
 
     const body = (await response.json()) as { cart: CartView; checkoutUrl?: string };
 
     loaded = true;
 
     /** A stepper pressed while this was in flight already knows better. */
-    if (revision !== asked)
-      return set({ checkoutUrl: body.checkoutUrl, checkoutKnown: true, loading: false });
+    if (revision !== asked) {
+      set({ checkoutUrl: body.checkoutUrl, checkoutKnown: true, loading: false });
+      return;
+    }
 
     set({ cart: body.cart, checkoutUrl: body.checkoutUrl, checkoutKnown: true, loading: false });
   } catch {

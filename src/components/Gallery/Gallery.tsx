@@ -14,11 +14,16 @@ const loadLightbox = () => import("./Lightbox").then((module) => module.Lightbox
 function withMorph(run: () => void, ms = 260) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (reduced || !document.startViewTransition) return run();
+  if (reduced || !document.startViewTransition) {
+    run();
+    return;
+  }
 
   const root = document.documentElement;
   root.style.setProperty("--gallery-morph-ms", `${ms}ms`);
-  const transition = document.startViewTransition(() => flushSync(run));
+  const transition = document.startViewTransition(() => {
+    flushSync(run);
+  });
 
   transition.finished
     .finally(() => root.style.removeProperty("--gallery-morph-ms"))
@@ -52,7 +57,9 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
         setLoadedLightbox(() => Lightbox);
         setMorphIndex(nextIndex);
       });
-      withMorph(() => setIndex(nextIndex));
+      withMorph(() => {
+        setIndex(nextIndex);
+      });
     } catch (error) {
       reportError(error);
     }
@@ -105,7 +112,11 @@ export function Gallery({ images }: { images: WpGalleryImage[] }) {
             setMorphIndex(next);
             setIndex(next);
           }}
-          onClose={() => withMorph(() => setIndex(null))}
+          onClose={() => {
+            withMorph(() => {
+              setIndex(null);
+            });
+          }}
           morphName={MORPH}
           thumbSizes={thumbSizes}
           finalFocus={finalFocus}

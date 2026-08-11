@@ -74,7 +74,7 @@ export async function writeSession(token: string) {
 }
 
 export type WooResult<T> =
-  | { ok: false; message: string; indeterminate: boolean }
+  | { ok: false; indeterminate: boolean; message: string }
   | { ok: true; data: T };
 
 /**

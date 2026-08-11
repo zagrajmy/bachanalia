@@ -13,6 +13,17 @@ export default defineConfig({
      */
     "no-implicit-coercion": ["warn", { boolean: false, disallowTemplateShorthand: false }],
     "perfectionist/sort-jsx-props": "off",
+    /**
+     * Alphabetical order buries the discriminant, and the discriminant is what
+     * the reader switches on, so it keeps the front of the type.
+     */
+    "perfectionist/sort-object-types": [
+      "warn",
+      {
+        groups: ["discriminant", "unknown"],
+        customGroups: [{ groupName: "discriminant", elementNamePattern: "^(ok|type|kind)$" }],
+      },
+    ],
     "perfectionist/sort-objects": "off",
     "unicorn/no-useless-undefined": "off",
   },

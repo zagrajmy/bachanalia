@@ -23,7 +23,22 @@ export async function encodeLqipWebp(bytes: ArrayBuffer | Uint8Array): Promise<E
 }
 
 export async function fetchLqipWebp(url: string) {
-  const response = await fetch(url, { cache: "force-cache", signal: AbortSignal.timeout(15_000) });
-  if (!response.ok) return undefined;
-  return encodeLqipWebp(await response.arrayBuffer());
+  let bytes: ArrayBuffer;
+
+  try {
+    const response = await fetch(url, {
+      cache: "force-cache",
+      signal: AbortSignal.timeout(15_000),
+    });
+
+    if (!response.ok) return undefined;
+
+    bytes = await response.arrayBuffer();
+  } catch {
+    /** A thumbnail that times out or refuses is what the caller's fallback is for. */
+    return undefined;
+  }
+
+  /** Outside the catch: bytes that are not an image is a different problem, and it should show. */
+  return encodeLqipWebp(bytes);
 }

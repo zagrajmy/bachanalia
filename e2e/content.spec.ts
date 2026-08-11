@@ -59,7 +59,9 @@ test.describe("WordPress content rendering", () => {
   });
 
   test("consent loads the embed, and it stays inside the page", async ({ page }) => {
-    await page.addInitScript(() => localStorage.setItem("bf-consent", "granted"));
+    await page.addInitScript(() => {
+      localStorage.setItem("bf-consent", "granted");
+    });
     await page.goto("/czas-i-miejsce/");
 
     const frame = page.locator(".wp-content iframe").first();

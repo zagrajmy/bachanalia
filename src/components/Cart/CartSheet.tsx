@@ -87,7 +87,12 @@ export function CartSheet({ animateEntrance }: { animateEntrance: boolean }) {
                 <p className="text-ink-muted">Koszyk jest pusty.</p>
 
                 <Button asChild className="mt-5 w-full">
-                  <Link href={SHOP_PATH} onClick={() => setCartOpen(false)}>
+                  <Link
+                    href={SHOP_PATH}
+                    onClick={() => {
+                      setCartOpen(false);
+                    }}
+                  >
                     Wybierz akredytację
                   </Link>
                 </Button>

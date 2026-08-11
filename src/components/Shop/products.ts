@@ -11,21 +11,21 @@ import type { Selected } from "@/utils/graphqlSelection";
 
 export type ShopImage = {
   alt: string;
+  /** A 12px WebP of the same upload, inlined so the card never opens empty. */
+  blurDataURL?: string;
   height: number;
   src: string;
   width: number;
-  /** A 12px WebP of the same upload, inlined so the card never opens empty. */
-  blurDataURL?: string;
 };
 
 export type ShopProduct = {
-  name: string;
-  slug: string;
   /** WooCommerce's display string, e.g. "100 zł" or "25 zł – 45 zł". */
   href: string;
-  price: string;
   /** Where the sale happens. Cart, checkout and Paynow stay on WooCommerce. */
   image?: ShopImage;
+  name: string;
+  price: string;
+  slug: string;
   soldOut: boolean;
   wpHref: string;
 };
@@ -35,20 +35,20 @@ export type ShopCategory = { label: string; products: ShopProduct[]; slug: strin
 export type ShopVariant = { label: string; price: string; soldOut: boolean };
 
 export type ShopProductDetail = {
-  /** WooCommerce's post ID — what `addToCart` takes, not the slug. */
-  productId: number;
+  /** Editor-typed captions for the axes, e.g. "Rozmar Koszulki". */
+  attributeLabels: AttributeLabel[];
   /**
    * "Sprzedawane pojedynczo" in wp-admin. WooCommerce rejects a second unit
    * with an error, so the picker never offers a quantity for these.
    */
-  soldIndividually: boolean;
-  category?: { slug: string; label: string };
+  category?: { label: string; slug: string };
   description: string;
+  /** WooCommerce's post ID — what `addToCart` takes, not the slug. */
+  productId: number;
+  soldIndividually: boolean;
   variants: ShopVariant[];
   /** The picker's raw material: one entry per buyable combination. */
   variations: ProductVariation[];
-  /** Editor-typed captions for the axes, e.g. "Rozmar Koszulki". */
-  attributeLabels: AttributeLabel[];
 } & ShopProduct;
 
 /**

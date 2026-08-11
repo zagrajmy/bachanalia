@@ -93,7 +93,7 @@ export function setLineQuantity(token: string, key: string, quantity: number) {
 }
 
 export function removeLines(token: string, keys: string[]) {
-  carts[token] = cartOf(token).filter((line) => keys.indexOf(line.key) === -1);
+  carts[token] = cartOf(token).filter((line) => !keys.includes(line.key));
 }
 
 export function cartResponse(token: string) {

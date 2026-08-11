@@ -21,21 +21,21 @@ import zok from "./partners/zok.jpg";
  * edit rather than three.
  */
 export type PartnerLogo = {
-  name: string;
-  src: StaticImageData;
   /** Every mark is somebody's front door; a logo that goes nowhere wastes it. */
   href: string;
-  /**
-   * The artwork ships baked onto an opaque white rectangle, so it needs
-   * multiplying into the page instead of sitting in a visible box.
-   */
-  whiteBox?: boolean;
+  name: string;
   /**
    * A narrow or padded mark reads lighter than a wordmark of the same height,
    * so it takes a taller box to carry the same weight in the row. Ratio alone
    * cannot tell one from a logo that is simply wide, so the mark says so.
    */
   narrow?: boolean;
+  src: StaticImageData;
+  /**
+   * The artwork ships baked onto an opaque white rectangle, so it needs
+   * multiplying into the page instead of sitting in a visible box.
+   */
+  whiteBox?: boolean;
 };
 
 export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [

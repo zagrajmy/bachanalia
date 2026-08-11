@@ -39,7 +39,7 @@ function wordpressHosts() {
   return hosts;
 }
 
-const isWordPress = (url: URL) => wordpressHosts().indexOf(url.host) !== -1;
+const isWordPress = (url: URL) => wordpressHosts().includes(url.host);
 
 /** Facebook's signed CDN URLs, which `fetchFacebookNews` HEADs before rendering. */
 const isFacebookCdn = (url: URL) => /(^|\.)fbcdn\.net$/.test(url.hostname);
@@ -175,7 +175,7 @@ async function record(request: Request, operation: Operation) {
 }
 
 function replay(request: Request, operation: Operation) {
-  if (CART_OPERATIONS.indexOf(operation.name) !== -1) {
+  if (CART_OPERATIONS.includes(operation.name)) {
     const { headers, body } = cartReply(request, operation);
 
     return HttpResponse.json(body, { headers: { [SESSION_HEADER]: headers } });

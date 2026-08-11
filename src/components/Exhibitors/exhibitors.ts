@@ -82,7 +82,7 @@ export function extractLinks(value?: string): ExhibitorLink[] {
 
 export function driveFileId(value?: string) {
   if (!value) return undefined;
-  return value.match(/\/d\/([^/]+)/)?.[1] ?? value.match(/[?&]id=([^&]+)/)?.[1];
+  return /\/d\/([^/]+)/.exec(value)?.[1] ?? /[?&]id=([^&]+)/.exec(value)?.[1];
 }
 
 export function driveImageUrl(value?: string) {

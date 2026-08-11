@@ -94,7 +94,7 @@ async function linksFrom(path: string, pattern: RegExp) {
   let match = anchors.exec(html);
 
   while (match) {
-    if (pattern.test(match[1]) && hrefs.indexOf(match[1]) === -1) hrefs.push(match[1]);
+    if (pattern.test(match[1]) && !hrefs.includes(match[1])) hrefs.push(match[1]);
     match = anchors.exec(html);
   }
 
@@ -295,7 +295,7 @@ async function main() {
     server.kill("SIGTERM");
   }
 
-  if (process.argv.indexOf("--cart") !== -1) {
+  if (process.argv.includes("--cart")) {
     console.log("opening one guest cart on the live shop — no order is created");
     await recordCart();
   }

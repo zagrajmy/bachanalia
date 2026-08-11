@@ -23,11 +23,11 @@ const LEGACY_KEY = "bf-consent";
 type Choice = "denied" | "granted";
 
 type State = {
+  /** Embeds waiting on this page. Zero means nothing to ask about. */
+  blocked: number;
   choice?: Choice;
   /** Opened from the footer, so a decision can be taken back. */
   prompting: boolean;
-  /** Embeds waiting on this page. Zero means nothing to ask about. */
-  blocked: number;
 };
 
 const IDLE: State = { prompting: false, blocked: 0 };
@@ -123,7 +123,13 @@ export function decide(choice: Choice) {
 
 export function ConsentLink({ className }: { className?: string }) {
   return (
-    <button className={className} onClick={() => set({ prompting: true })} type="button">
+    <button
+      className={className}
+      onClick={() => {
+        set({ prompting: true });
+      }}
+      type="button"
+    >
       Ciasteczka
     </button>
   );
@@ -163,7 +169,9 @@ export function Consent() {
 
     document.addEventListener("click", onClick);
 
-    return () => document.removeEventListener("click", onClick);
+    return () => {
+      document.removeEventListener("click", onClick);
+    };
   }, []);
 
   if (!prompting && (choice !== undefined || blocked === 0)) return null;
@@ -188,10 +196,20 @@ export function Consent() {
         </p>
 
         <div className="mt-4 flex gap-2">
-          <Button className={ACTION} onClick={() => decide("granted")}>
+          <Button
+            className={ACTION}
+            onClick={() => {
+              decide("granted");
+            }}
+          >
             Okej
           </Button>
-          <Button className={ACTION} onClick={() => decide("denied")}>
+          <Button
+            className={ACTION}
+            onClick={() => {
+              decide("denied");
+            }}
+          >
             Nie, dziękuję
           </Button>
         </div>

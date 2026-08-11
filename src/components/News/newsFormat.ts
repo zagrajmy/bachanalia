@@ -11,11 +11,11 @@ export type NewsEntry = {
   href: string;
   id: string;
   image?: {
-    src: string;
     alt: string;
     blurDataURL?: string;
-    width?: number;
     height?: number;
+    src: string;
+    width?: number;
   };
   title: string;
 };

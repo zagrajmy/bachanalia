@@ -5,12 +5,25 @@
         {
           "databaseId": 3574,
           "slug": "nocleg-w-akademiku-bf-26",
-          "name": "Nocleg w akademiku BF 26",
-          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/nocleg-w-akademiku-bf-26/",
-          "description": "<p>Zastępczy fixture: nagraj ponownie przez <code>bun scripts/record-wp.ts</code>.</p>\n",
-          "image": null,
+          "name": "Nocleg w Akademiku BF 26",
+          "link": "https://wp.bachanaliafantastyczne.pl/index.php/produkt/nocleg-w-akademiku-bf-26/",
+          "description": "<p>Opłata za miejsce w pokoju w Akademiku podczas BF 26.&nbsp;</p>\n<p>W związku z dużym zainteresowaniem, proponujemy nocleg na czas całego konwentu t.j. 2 noce (25 i 26.09.2026).</p>\n<p>Nie gwarantujemy miejsca w pokoju jednoosobowym.</p>\n<p>Na maila przed konwentem przyjdą wszystkie informacja o noclegu takie jak nazwa akademika i nr pokoju.</p>\n",
+          "image": {
+            "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2026/08/nocleg-w-akademiku-bf-26.jpg",
+            "thumbnail": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2026/08/nocleg-w-akademiku-bf-26-150x150.jpg",
+            "altText": "",
+            "mediaDetails": {
+              "width": 1028,
+              "height": 1200
+            }
+          },
           "productCategories": {
-            "nodes": []
+            "nodes": [
+              {
+                "slug": "noclegi",
+                "name": "noclegi"
+              }
+            ]
           },
           "price": "200,00&nbsp;zł",
           "stockStatus": "IN_STOCK",
@@ -18,5 +31,13 @@
         }
       ]
     }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
   }
 }

@@ -63,8 +63,8 @@ type ProductDetailNode = Selected<NonNullable<ProductQueryQuery["products"]>["no
 /** Editors type category names lowercase in wp-admin; the shop is not a slug. */
 const capitalise = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
 
-/** Accreditation first — it is why the shop exists — then the books, then the tip jar. */
-const CATEGORY_ORDER = ["akredytacje", "antologie", "wsparcie"];
+/** Accreditation first — it is why the shop exists — then the bed, the books, the tip jar. */
+const CATEGORY_ORDER = ["akredytacje", "noclegi", "antologie", "wsparcie"];
 
 const ACCREDITATION_ORDER = new Map(accreditation.map(({ slug }, i) => [slug, i]));
 

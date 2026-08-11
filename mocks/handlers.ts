@@ -19,12 +19,19 @@ const PIXEL = Buffer.from(
 );
 
 /**
- * Both, because the uploads a fixture points at keep the real hostname even
- * when the API URL is aimed at somewhere unroutable to prove the suite never
- * opens a socket.
+ * WordPress served the apex until the cutover, and every image an editor
+ * placed in a page body before then still carries that hostname — no env var
+ * names it any more, so without this those uploads would be fetched for real.
+ */
+const LEGACY_HOST = "bachanaliafantastyczne.pl";
+
+/**
+ * All of them, because the uploads a fixture points at keep the real hostname
+ * even when the API URL is aimed at somewhere unroutable to prove the suite
+ * never opens a socket.
  */
 function wordpressHosts() {
-  const hosts: string[] = [];
+  const hosts: string[] = [LEGACY_HOST];
 
   try {
     hosts.push(new URL(String(process.env.NEXT_PUBLIC_WORDPRESS_API_URL)).host);

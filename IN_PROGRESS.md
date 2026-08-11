@@ -20,12 +20,6 @@ the `siteurl` half are done. What still points the old way:
    deploy themselves.
 4. Work through the rest of the quality review — the shipping-cost mismatch,
    the retry that can double a line, the unguarded `response.json()`.
-5. **Re-record the cart snapshots** with `bun scripts/record-wp.ts --cart`. The
-   read-only pass has been run, so every query fixture now answers on `wp.`;
-   `cart-snapshots.json` is the last one naming the apex, and `handlers.ts`
-   only mocks the hosts the env names, so its images leave the suite over the
-   network. The pass opens one guest session on the live shop, which is why it
-   is opt-in.
 
 ## Verify, in this order
 

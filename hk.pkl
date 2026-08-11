@@ -14,8 +14,8 @@ local linters = new Mapping<String, Step> {
     /// goes back on the day the count reaches zero.
     ["ox_lint"] = (Builtins.ox_lint) {
         prefix = "bun x"
-        check = "oxlint -c ./oxlint.config.ts {{files}}"
-        fix = "oxlint -c ./oxlint.config.ts --fix {{files}}"
+        check = "oxlint {{files}}"
+        fix = "oxlint --fix {{files}}"
     }
 }
 

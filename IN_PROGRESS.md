@@ -1,29 +1,9 @@
 # Open work
 
-Architecture, the site map, the design system and the traps this codebase has
-already fallen into live in [`docs/architecture.md`](./docs/architecture.md).
-This file is only what is left to do.
-
-## Blocking ticket sales
-
-1. **Event Tickets premium is dead.** What is installed on `wp.` under that
-   name is Vollstart's kill-switch stub, so the shop runs on free-tier limits:
-   50 tickets in total, no auth tokens for door scanners, no PDF on the ticket
-   email. Either the licence names the apex while WordPress now reports `wp.`,
-   or the subscription lapsed — from inside WordPress the two look identical,
-   since the plugin prints "subscription expired" for any rejected check. Ask
-   Vollstart which it is. A Polcon cannot open sales capped at 50 tickets.
-2. **Clear the test orders.** Probing checkout wrote real 1 zł orders to the
-   live shop: 3502 (`bacs`, `ON_HOLD`), 3507 and 3509 (Paynow payments
-   consumed before a buyer reached them) and 3511 (read-back probe). 3510 was
-   paid and is `wc-completed` — leave it, it is the proof the loop works.
-3. **The free pickup rate still says "BF 24"** on a 2026 shop: _Odbiór
+1. **The free pickup rate still says "BF 24"** on a 2026 shop: _Odbiór
    Osobisty podczas BF 24 (dotyczy Fantazji Zielonogórskich, Golden Ticket,
    oraz Koszulki)_. WooCommerce setting, not code, and a buyer sees it at
    checkout.
-4. **`wsparcie-klubu-1-zl` and `akredytacja-wspierajaca-polcon`** (25–45 zł)
-   exist in the shop but are not in the homepage tier list — nobody has said
-   where they belong.
 
 ## Finishing the cutover
 
@@ -43,10 +23,6 @@ the `siteurl` half are done. What still points the old way:
 5. Work through the rest of the quality review — the shipping-cost mismatch,
    the retry that can double a line, the unguarded `response.json()`.
 
-**Do not touch permalinks**, and change no schema, permalink or product on a
-cutover day. Rolling back is one A record; it only stays that cheap while
-WooCommerce is untouched.
-
 ## Verify, in this order
 
 1. `bun run build` once against the real WordPress — it is slow and hammers a
@@ -60,7 +36,7 @@ WooCommerce is untouched.
 
 ## Later
 
-- **`/program` + ludamus feed.** Needs the upstream JSON endpoint, the
+- **`/program` + ludamus feed.** The
   Bachanalia sphere at `bachanalia.zagrajmy.net`, and the organizer onboarding
   video Ad Astra is owed.
 - **Re-test the checkout constraint** before rebuilding anything on it —
@@ -72,7 +48,4 @@ WooCommerce is untouched.
 
 ## Open questions
 
-- Historical content — migrate, archive or drop? **Assumed: migrate the 25
-  dated 2025 guest posts as-is at their existing paths.** Confirm before
-  cutover.
-- Staff signups — ludamus questionnaire, WP form, or a server action?
+- Staff signups — ludamus questionnaire, Google form, or a server action?

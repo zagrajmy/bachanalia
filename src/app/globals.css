@@ -60,7 +60,7 @@
   --header-h: 4rem;
   --below-header: calc(var(--header-h) + 1.5rem);
 
-  @variant sm {
+  @media (width >= 40rem) {
     --header-h: 4.5rem;
   }
 }

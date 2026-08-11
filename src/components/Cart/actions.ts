@@ -41,21 +41,18 @@ async function resolveVariationId(slug: string, selection: Record<string, string
   if (!result.ok) return undefined;
 
   /** Only a VARIABLE product carries variations; anything else has none to resolve. */
-  // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
-  const product = result.data.products?.nodes?.[0];
+  const product = result.data.products?.nodes[0];
   const nodes = product && "variations" in product ? (product.variations?.nodes ?? []) : [];
 
   const variations: ProductVariation[] = nodes.flatMap((node) =>
-    // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
-    node?.databaseId
+    node.databaseId
       ? [
           {
             variationId: node.databaseId,
             price: "",
             soldOut: node.stockStatus === "OUT_OF_STOCK",
             attributes: (node.attributes?.nodes ?? []).flatMap((attribute) =>
-              // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
-              attribute?.name ? [{ name: attribute.name, value: attribute.value ?? "" }] : [],
+              attribute.name ? [{ name: attribute.name, value: attribute.value ?? "" }] : [],
             ),
           },
         ]

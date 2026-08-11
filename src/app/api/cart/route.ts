@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { EMPTY_CART, fetchCart, fetchCheckoutUrl } from "@/components/Cart/cart";
+import type { CartRouteBody } from "@/components/Cart/types";
 
 /** One buyer's cart, keyed to a session cookie. Never cached, never shared. */
 export const dynamic = "force-dynamic";
@@ -16,5 +17,7 @@ export async function GET() {
   const cart = result.ok ? result.data : EMPTY_CART;
   const checkoutUrl = cart.isEmpty ? undefined : await fetchCheckoutUrl();
 
-  return NextResponse.json({ cart, checkoutUrl }, { headers: { "cache-control": "no-store" } });
+  const body = { cart, checkoutUrl } satisfies CartRouteBody;
+
+  return NextResponse.json(body, { headers: { "cache-control": "no-store" } });
 }

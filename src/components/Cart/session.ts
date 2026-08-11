@@ -2,7 +2,7 @@ import { type } from "arktype";
 import { cookies } from "next/headers";
 
 import type { TypedDocumentString } from "@/gql/graphql";
-import type { GraphQLResponse } from "@/utils/fetchGraphQL";
+import type { GraphQLResponse } from "@/utils/graphqlRequest";
 
 import { wooMessage } from "./message";
 import { sleep } from "@/utils/sleep";

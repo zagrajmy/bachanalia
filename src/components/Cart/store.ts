@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 
-import type { CartView } from "./types";
+import type { CartRouteBody, CartView } from "./types";
 
 /**
  * The layout is static, so no server render of a page may know what is in the
@@ -110,7 +110,7 @@ export async function loadCart(force = false) {
     }
 
     // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- our own route handler, and this is the shape it answers with
-    const body = (await response.json()) as { cart: CartView; checkoutUrl?: string };
+    const body = (await response.json()) as CartRouteBody;
 
     loaded = true;
 

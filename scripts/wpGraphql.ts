@@ -1,27 +1,20 @@
 import type { TypedDocumentString } from "../src/gql/graphql";
-import type { GraphQLResponse, VariablesArg } from "../src/utils/fetchGraphQL";
+import {
+  type GraphQLResponse,
+  graphqlUrl,
+  isTransient,
+  RETRY_DELAYS_MS,
+  type VariablesArg,
+} from "../src/utils/graphqlRequest";
 import { sleep } from "../src/utils/sleep";
 
 const WP = process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://bachanaliafantastyczne.pl";
-
-/**
- * `fetchGraphQL`'s ladder, and the same reason: Wordfence throttles the
- * client, not the request, and recovers on its own if the backoff outlasts it.
- */
-const RETRY_DELAYS_MS = [500, 2000, 6000, 15_000, 30_000];
-
-const isTransient = (status: number) => status === 403 || status === 429 || status >= 500;
 
 export async function wpQuery<TResult, TVariables>(
   document: TypedDocumentString<TResult, TVariables>,
   ...[variables]: VariablesArg<TVariables>
 ): Promise<TResult> {
-  const params = variables ?? {};
-  const url = new URL(`${WP}/graphql`);
-  url.searchParams.set("query", String(document));
-  if (Object.keys(params).length > 0) {
-    url.searchParams.set("variables", JSON.stringify(params));
-  }
+  const url = graphqlUrl(WP, document, variables ?? {});
 
   let lastError: unknown;
 
@@ -54,7 +47,7 @@ export async function wpQuery<TResult, TVariables>(
       // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the payload's shape is the document's to promise
       body = (await response.json()) as GraphQLResponse<TResult>;
     } catch {
-      lastError = new Error(`GraphQL: unparseable response from ${url.pathname}`);
+      lastError = new Error(`GraphQL: unparseable response from ${WP}`);
       continue;
     }
 
@@ -63,7 +56,7 @@ export async function wpQuery<TResult, TVariables>(
     }
 
     if (body.data === undefined) {
-      lastError = new Error(`GraphQL: no data in the response from ${url.pathname}`);
+      lastError = new Error(`GraphQL: no data in the response from ${WP}`);
       continue;
     }
 

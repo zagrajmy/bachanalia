@@ -57,3 +57,6 @@ export type CartActionState = {
    */
   showCart?: boolean;
 };
+
+/** What `GET /api/cart/` answers with, and what the store reads back. */
+export type CartRouteBody = { cart: CartView; checkoutUrl?: string };

@@ -144,8 +144,7 @@ export async function fetchShop(): Promise<ShopCategory[]> {
     const product = toProduct(node, blurs.get(node.image?.thumbnail ?? ""));
     if (!product) continue;
 
-    // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
-    const term = node.productCategories?.nodes?.[0];
+    const term = node.productCategories?.nodes[0];
     const slug = term?.slug ?? "inne";
     let category = categories.find((existing) => existing.slug === slug);
 
@@ -190,16 +189,14 @@ export const variantLabel = (productName: string, variationName: string) =>
 export async function fetchProduct(slug: string): Promise<ShopProductDetail | undefined> {
   const { products } = await fetchGraphQL(ProductQuery, { slugs: [slug] });
 
-  // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
-  const product: ProductDetailNode | undefined = products?.nodes?.[0];
+  const product: ProductDetailNode | undefined = products?.nodes[0];
 
   if (!product) return undefined;
 
   const base = toProduct(product, await blurDataUrl(product.image?.thumbnail));
   if (!base) return undefined;
 
-  // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
-  const term = product.productCategories?.nodes?.[0];
+  const term = product.productCategories?.nodes[0];
   const variationNodes = product.variations?.nodes ?? [];
 
   return {
@@ -227,16 +224,14 @@ export async function fetchProduct(slug: string): Promise<ShopProductDetail | un
               price: formatPrice(variation.price),
               soldOut: variation.stockStatus === "OUT_OF_STOCK",
               attributes: (variation.attributes?.nodes ?? []).flatMap((attribute) =>
-                // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
-                attribute?.name ? [{ name: attribute.name, value: attribute.value ?? "" }] : [],
+                attribute.name ? [{ name: attribute.name, value: attribute.value ?? "" }] : [],
               ),
             },
           ]
         : [],
     ),
     attributeLabels: (product.attributes?.nodes ?? []).flatMap((attribute) =>
-      // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
-      attribute?.name ? [{ name: attribute.name, label: attribute.label || attribute.name }] : [],
+      attribute.name ? [{ name: attribute.name, label: attribute.label || attribute.name }] : [],
     ),
   };
 }

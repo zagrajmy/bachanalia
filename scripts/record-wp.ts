@@ -25,7 +25,7 @@ import { UpdateItemQuantitiesMutation } from "../src/queries/cart/UpdateItemQuan
 import { type CartSnapshots, writeFixture, writeSnapshots } from "../mocks/fixtures";
 import { footerNav, primaryNav } from "../src/components/Globals/siteNav";
 import type { TypedDocumentString } from "../src/gql/graphql";
-import type { GraphQLResponse } from "../src/utils/fetchGraphQL";
+import type { GraphQLResponse } from "../src/utils/graphqlRequest";
 import { sleep } from "../src/utils/sleep";
 
 /** Its own output directory, so a `bun run dev` in this repo keeps working. */
@@ -185,13 +185,11 @@ async function variationToBuy() {
   const { ProductQuery } = await import("../src/queries/general/ProductQuery");
 
   const product = await woo(ProductQuery, { preview: false, slugs: [CART_PRODUCT.slug] });
-  // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
-  const node = product.data?.products?.nodes?.[0];
+  const node = product.data?.products?.nodes[0];
 
   const slugs = { slugs: [CART_PRODUCT.slug] };
   const variations = await woo(ProductVariationsQuery, slugs);
-  // oxlint-disable-next-line typescript/no-unnecessary-condition -- WPGraphQL declares this non-null; a plugin that disagrees costs a crash, not a warning
-  const variationsNode = variations.data?.products?.nodes?.[0];
+  const variationsNode = variations.data?.products?.nodes[0];
   const all =
     variationsNode && "variations" in variationsNode
       ? (variationsNode.variations?.nodes ?? [])

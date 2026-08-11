@@ -61,9 +61,10 @@ run `bun run codegen:refresh`, turn it back off.
 | `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty`                                                                             | WooCommerce                  | still WordPress                       |
 | `/zamowienie/order-received/<id>/`                                                                                             | WooCommerce                  | ours at cutover — delivers the ticket |
 
-`/akredytacja` 308s to `/sklep/` and `/noclegi` to `/produkt/nocleg-w-akademiku-bf-26/` — the
-dorm beds are a WooCommerce product. `/info`, `/blog` and `/feed-test` are
-gone.
+`/akredytacja` 308s to `/sklep/`. `/noclegi` is a shortcut to the current
+edition's dorm product (`/produkt/nocleg-w-akademiku-bf-26/` today) — a 307,
+because the destination moves with each edition. `/info`, `/blog` and
+`/feed-test` are gone.
 
 `sitemap.ts` builds from the same sources the routes do — `AllContentQuery`
 plus the product slugs, with the four WooCommerce paths, the redirect sources

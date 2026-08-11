@@ -10,7 +10,9 @@ export const productPath = (slug: string) => `/produkt/${slug}/`;
 /**
  * The dorm beds are a WooCommerce product; the WordPress /noclegi/ page only
  * ever promised details "wkrótce". The nav sells the bed instead of describing
- * it — the same move /akredytacja/ made toward the shop.
+ * it — the same move /akredytacja/ made toward the shop. The slug names one
+ * edition's product, so it changes with the edition — /noclegi/ stays the
+ * stable shortcut, kept temporary in next.config.ts for that reason.
  */
 export const NOCLEGI_PATH = productPath("nocleg-w-akademiku-bf-26");
 

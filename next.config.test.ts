@@ -81,15 +81,22 @@ test("accreditation lands on our own shop, not back on WordPress", async () => {
   assert.equal(rule.permanent, true);
 });
 
-test("the dorm page lands on the product that sells the beds", async () => {
+test("the dorm page lands on the product that sells the beds, temporarily", async () => {
   const rule = await find("/noclegi");
 
   assert.equal(rule.destination, "/produkt/nocleg-w-akademiku-bf-26/");
-  assert.equal(rule.permanent, true);
+  assert.equal(
+    rule.permanent,
+    false,
+    "the destination is one edition's product — a cached 308 would outlive it",
+  );
 });
 
 test("redirects within the site are permanent, so link equity is not parked on a 307", async () => {
-  const internal = (await redirects()).filter((rule) => rule.destination.startsWith("/"));
+  const internal = (await redirects())
+    .filter((rule) => rule.destination.startsWith("/"))
+    /** Except the per-edition aliases, whose destination moves every year. */
+    .filter((rule) => rule.source !== "/noclegi");
 
   assert.ok(internal.length > 1, "expected several same-site redirects");
   for (const rule of internal) {

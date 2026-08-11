@@ -19,7 +19,12 @@ function withMorph(run: () => void, ms = 260) {
   const root = document.documentElement;
   root.style.setProperty("--gallery-morph-ms", `${ms}ms`);
   const transition = document.startViewTransition(() => flushSync(run));
-  transition.finished.finally(() => root.style.removeProperty("--gallery-morph-ms"));
+
+  transition.finished
+    .finally(() => root.style.removeProperty("--gallery-morph-ms"))
+    .catch(() => {
+      /** A render that threw is already reported; the custom property is cleared above. */
+    });
 }
 
 export function Gallery({ images }: { images: WpGalleryImage[] }) {

@@ -55,6 +55,18 @@ export default defineConfig({
       },
     },
     {
+      /**
+       * The mock server's job is to accept whatever a client sent and answer
+       * with a fixture this repo recorded, so naming the shape it reads back
+       * is the whole of what it does. A wrong one fails an e2e spec, which is
+       * the check that matters here.
+       */
+      files: ["mocks/**"],
+      rules: {
+        "typescript/no-unsafe-type-assertion": "off",
+      },
+    },
+    {
       /** graphql-codegen resolves its config by the default export. */
       files: ["codegen.ts"],
       rules: {

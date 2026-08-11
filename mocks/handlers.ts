@@ -102,19 +102,16 @@ async function readOperation(request: Request): Promise<Operation> {
     return {
       name: operationNameOf(query),
       query,
-      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
       variables: raw ? (JSON.parse(raw) as Record<string, unknown>) : {},
     };
   }
 
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
   const body = (await request.clone().json()) as { query?: string; variables?: unknown };
   const query = body.query ?? "";
 
   return {
     name: operationNameOf(query),
     query,
-    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
     variables: (body.variables as Record<string, unknown> | undefined) ?? {},
   };
 }
@@ -122,7 +119,6 @@ async function readOperation(request: Request): Promise<Operation> {
 function cartReply(request: Request, operation: Operation) {
   const existing = tokenOf(request);
   const token = existing || mintToken();
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
   const input = (operation.variables.input ?? {}) as Record<string, unknown>;
 
   switch (operation.name) {
@@ -137,7 +133,6 @@ function cartReply(request: Request, operation: Operation) {
       return { headers: token, body: { data: { addToCart: { cart: cartResponse(token) } } } };
 
     case "RemoveItemsFromCartMutation":
-      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
       removeLines(token, (input.keys ?? []) as string[]);
 
       return {
@@ -147,7 +142,6 @@ function cartReply(request: Request, operation: Operation) {
 
     case "UpdateItemQuantitiesMutation":
       /** Whatever the client sent — the quantity is not a number until it is made one. */
-      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
       for (const item of (input.items ?? []) as { key: string; quantity: unknown }[]) {
         setLineQuantity(token, item.key, Number(item.quantity));
       }

@@ -66,7 +66,6 @@ function snapshotFor(lines: Line[]): CartNode {
  * drive the stepper and the remove button with.
  */
 function recordedKey(productId: number, variationId: number) {
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
   const base = readSnapshots().carts[`${productId}:${variationId}:1`] as CartNode | undefined;
 
   return base?.contents?.nodes?.[0]?.key ?? `${productId}-${variationId}`;

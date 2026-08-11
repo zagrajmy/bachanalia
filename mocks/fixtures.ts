@@ -19,7 +19,6 @@ function sortKeys(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(sortKeys);
 
   if (value && typeof value === "object") {
-    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
     const source = value as Record<string, unknown>;
     const sorted: Record<string, unknown> = {};
 
@@ -67,7 +66,6 @@ export function fixtureName(operation: string, variables: unknown) {
 export function readFixture(operation: string, variables: unknown): JsonBodyType | undefined {
   const path = join(FIXTURE_DIR, fixtureName(operation, variables));
 
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
   return existsSync(path) ? (JSON.parse(readFileSync(path, "utf8")) as JsonBodyType) : undefined;
 }
 
@@ -91,7 +89,6 @@ export type CartSnapshots = {
 export function readSnapshots(): CartSnapshots {
   if (!existsSync(SNAPSHOT_FILE)) return { empty: undefined, carts: {} };
 
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a fixture this repo recorded, read back in the shape it was written
   return JSON.parse(readFileSync(SNAPSHOT_FILE, "utf8")) as CartSnapshots;
 }
 

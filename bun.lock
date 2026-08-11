@@ -20,7 +20,7 @@
         "@graphql-codegen/cli": "5.0.0",
         "@graphql-codegen/client-preset": "4.3.3",
         "@graphql-codegen/schema-ast": "^4.1.0",
-        "@hasparus/oxlint-config": "^0.2.0",
+        "@hasparus/oxlint-config": "^0.3.0",
         "@hasparus/tailwind": "1.1.8",
         "@playwright/test": "1.62.0",
         "@tailwindcss/postcss": "^4",
@@ -196,7 +196,7 @@
 
     "@graphql-typed-document-node/core": ["@graphql-typed-document-node/core@3.2.0", "", { "peerDependencies": { "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0" } }, "sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ=="],
 
-    "@hasparus/oxlint-config": ["@hasparus/oxlint-config@0.2.0", "", { "dependencies": { "eslint-plugin-better-tailwindcss": "4.0.2", "eslint-plugin-perfectionist": "5.4.0", "eslint-plugin-sonarjs": "3.0.6" }, "peerDependencies": { "oxlint": "^1.70.0" } }, "sha512-dNRd+H4MF3cU3ZvExI1wn5AB7CpG30achGxmhkcGqW3Lc9CAa3Yx1DCgOYMH2202pjabdufHh7eXiXxX4UPWYA=="],
+    "@hasparus/oxlint-config": ["@hasparus/oxlint-config@0.3.0", "", { "dependencies": { "eslint-plugin-better-tailwindcss": "4.0.2", "eslint-plugin-perfectionist": "5.4.0", "eslint-plugin-sonarjs": "3.0.6" }, "peerDependencies": { "oxlint": "^1.70.0", "oxlint-tsgolint": ">=0.22.1" } }, "sha512-YQKSWmZ/JqtY9fYl1ON3HDVpG7RLPMSmdKATr9KE5huGJ6Ik82psfvsGB6c3CK4AAWlcLuiRKySHxUNgURa9tw=="],
 
     "@hasparus/tailwind": ["@hasparus/tailwind@1.1.8", "", { "peerDependencies": { "tailwindcss": ">=3.0.0" } }, "sha512-8xiV+xjZvOPC9nVPemOWRx+rgAKujjO64x2JbKxv8yhq98eJp147qg5vnXm6BC1VlBM2kjN2rUJCuRLq6OZsZA=="],
 

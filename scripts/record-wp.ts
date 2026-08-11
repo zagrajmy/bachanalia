@@ -65,7 +65,10 @@ const navRoutes = [
   .filter((link) => !("external" in link && link.external))
   .map((link) => link.href);
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 
 async function waitForServer() {
   for (let attempt = 0; attempt < 120; attempt++) {

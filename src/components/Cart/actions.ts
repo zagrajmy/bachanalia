@@ -11,6 +11,13 @@ import { buildAxes, findVariation, type ProductVariation } from "./variations";
 
 const ATTRIBUTE_PREFIX = "attr_";
 
+/** `get` answers with a File for a file input, and "[object File]" is nobody's slug. */
+function text(formData: FormData, name: string, fallback = "") {
+  const value = formData.get(name);
+
+  return typeof value === "string" ? value : fallback;
+}
+
 function readAttributes(formData: FormData) {
   const pairs: { attributeName: string; attributeValue: string }[] = [];
 
@@ -60,7 +67,7 @@ export async function addToCartAction(
   formData: FormData,
 ): Promise<CartActionState> {
   const productId = Number(formData.get("productId"));
-  const slug = String(formData.get("slug") ?? "");
+  const slug = text(formData, "slug");
   const quantity = Math.min(Math.max(Number(formData.get("quantity")) || 1, 1), MAX_QUANTITY);
   const attributes = readAttributes(formData);
   const expectedAxes = Number(formData.get("axisCount")) || 0;
@@ -137,8 +144,8 @@ export async function cartLineAction(
   _state: CartActionState,
   formData: FormData,
 ): Promise<CartActionState> {
-  const key = String(formData.get("key") ?? "");
-  const name = String(formData.get("name") ?? "Pozycja");
+  const key = text(formData, "key");
+  const name = text(formData, "name", "Pozycja");
 
   if (!key) return { ok: false, message: "Nie znaleźliśmy tej pozycji." };
 

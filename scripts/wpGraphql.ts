@@ -3,7 +3,10 @@ import type { GraphQLResponse, VariablesArg } from "../src/utils/fetchGraphQL";
 
 const WP = process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://bachanaliafantastyczne.pl";
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 
 /**
  * `fetchGraphQL`'s ladder, and the same reason: Wordfence throttles the

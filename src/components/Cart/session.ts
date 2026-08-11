@@ -96,7 +96,10 @@ export type RetryPolicy = "once" | "read" | "replayable";
  */
 const RETRY_DELAYS_MS = [400, 1200, 3000];
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 
 const isFirewallRefusal = (status: number) => status === 403 || status === 429;
 

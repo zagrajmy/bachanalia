@@ -44,7 +44,10 @@ function endpoint(query: string, variables: Variables) {
  */
 const RETRY_DELAYS_MS = [500, 2000, 6000, 15_000, 30_000];
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 
 /**
  * Wordfence rate-limits bursts, and a prerender walks every page at once, so a

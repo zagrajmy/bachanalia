@@ -28,7 +28,9 @@ function withMorph(run: () => void, ms = 260) {
   });
 
   transition.finished
-    .finally(() => root.style.removeProperty("--gallery-morph-ms"))
+    .finally(() => {
+      root.style.removeProperty("--gallery-morph-ms");
+    })
     .catch(() => {
       /** A render that threw is already reported; the custom property is cleared above. */
     });

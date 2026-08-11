@@ -26,7 +26,10 @@ const MANIFEST_PATH = join(ROOT, "src/content/img-manifest.json");
 const CRAWL_PATH = join(ROOT, ".next/cache/lqip-crawl.json");
 const DELAY_MS = 350;
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 
 type Job = {
   /**

@@ -18,6 +18,12 @@ export default defineConfig({
      * to the next branch, which `??` would skip.
      */
     "typescript/prefer-nullish-coalescing": ["warn", { ignorePrimitives: { string: true } }],
+    /**
+     * `(await params).slug` and `(await cookies()).get(…)` are the forms Next
+     * documents, and this app reaches for them on nearly every page. A name
+     * for each one is a line and a noun that say nothing.
+     */
+    "unicorn/no-await-expression-member": "off",
     "perfectionist/sort-jsx-props": "off",
     /**
      * Alphabetical order buries the discriminant, and the discriminant is what
@@ -58,6 +64,12 @@ export default defineConfig({
     "better-tailwindcss": {
       detectComponentClasses: true,
       entryPoint: "src/app/globals.css",
+      /**
+       * The plugin knows Tailwind's utilities, not the plain CSS classes this
+       * project writes alongside them, so it reads every one of ours as a
+       * typo. Naming their prefixes keeps the check for everything else.
+       */
+      ignore: ["^wp-", "^wc-", "^gold-glint", "^fantasy$"],
     },
   },
 });

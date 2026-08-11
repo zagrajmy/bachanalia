@@ -8,9 +8,9 @@ import { con } from "@/content/con";
 
 /** Commas, semicolons and backslashes carry meaning in a property value. */
 const escape = (value: string) =>
-  value.replaceAll(/([\\,;])/g, String.raw`\$1`).replaceAll(/\n/g, String.raw`\n`);
+  value.replaceAll(/([\\,;])/g, String.raw`\$1`).replaceAll("\n", String.raw`\n`);
 
-const compact = (iso: string) => iso.replaceAll(/-/g, "");
+const compact = (iso: string) => iso.replaceAll("-", "");
 
 /** `DTEND` is exclusive for an all-day event, so the con ends the day after. */
 function dayAfter(iso: string) {

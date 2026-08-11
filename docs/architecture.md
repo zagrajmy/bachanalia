@@ -84,7 +84,9 @@ indexed URL is the `/index.php/…` form, and that is where the link equity is.
 - `trailingSlash: true`, so redirect destinations must keep the slash or every
   indexed URL costs a second hop. `next.config.test.ts` enforces that, plus:
   same-site redirects permanent, outbound ones not — a browser caches a 308
-  indefinitely and WordPress is about to move.
+  indefinitely and WordPress is about to move. `/noclegi` is the one same-site
+  exception, and temporary for the same reason: it aliases a per-edition
+  product.
 - **Do not fix WP permalinks before cutover.** Switching to "Post name" while
   WordPress is still the public frontend rewrites every live URL and could
   take the shop down mid-sales. Until then `src/utils/nextSlugToWpSlug.ts`

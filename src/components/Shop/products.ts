@@ -94,6 +94,16 @@ function volume(name: string) {
  * Sorting is stable, so anything the comparators treat as equal keeps the
  * order WooCommerce gave it.
  */
+/** A category the order does not name files last, in WooCommerce's own order. */
+export function sortShopCategories(categories: ShopCategory[]) {
+  const rank = ({ slug }: ShopCategory) => {
+    const i = CATEGORY_ORDER.indexOf(slug);
+    return i === -1 ? CATEGORY_ORDER.length : i;
+  };
+
+  return [...categories].sort((a, b) => rank(a) - rank(b));
+}
+
 export function sortShopProducts(categorySlug: string, products: ShopProduct[]) {
   if (categorySlug === "akredytacje") {
     const rank = ({ slug }: ShopProduct) => ACCREDITATION_ORDER.get(slug) ?? accreditation.length;
@@ -156,17 +166,10 @@ export async function fetchShop(): Promise<ShopCategory[]> {
     category.products.push(product);
   }
 
-  const rank = ({ slug }: ShopCategory) => {
-    const i = CATEGORY_ORDER.indexOf(slug);
-    return i === -1 ? CATEGORY_ORDER.length : i;
-  };
-
-  return categories
-    .sort((a, b) => rank(a) - rank(b))
-    .map((category) => ({
-      ...category,
-      products: sortShopProducts(category.slug, category.products),
-    }));
+  return sortShopCategories(categories).map((category) => ({
+    ...category,
+    products: sortShopProducts(category.slug, category.products),
+  }));
 }
 
 /**

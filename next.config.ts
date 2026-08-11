@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   trailingSlash: true,
   /**
    * Next allows one dev server per output directory, and the e2e server runs
@@ -28,7 +29,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: process.env.NEXT_PUBLIC_WORDPRESS_API_HOSTNAME,
+        hostname: process.env.NEXT_PUBLIC_WORDPRESS_API_HOSTNAME!,
         port: "",
       },
       {
@@ -174,4 +175,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

@@ -35,9 +35,9 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
           )}
         </div>
         {(exhibitor.logoUrl || exhibitor.links.length > 0) && (
-          <div className="perforated-top flex flex-col p-5 sm:w-[28%] sm:shrink-0 sm:perforated-start">
+          <div className="perforated-top flex flex-col p-px pl-0.5 sm:basis-[25%] sm:shrink-0 sm:perforated-start">
             {exhibitor.links.length > 0 && (
-              <ul className="mb-5 flex flex-col items-end gap-0.5 text-end last:mb-0">
+              <ul className="p-3.5 sm:p-5 sm:pt-3.5 flex sm:flex-col gap-x-3 items-end gap-0.5 text-end last:mb-0">
                 {exhibitor.links.map((link) => (
                   <li key={link.href}>
                     <a
@@ -55,9 +55,7 @@ function ExhibitorCard({ exhibitor }: { exhibitor: Exhibitor }) {
             )}
             {exhibitor.logoUrl && (
               <span
-                className={`block sm:mt-auto ${
-                  exhibitor.logoNeedsPlate ? "rounded-[2px] bg-paper p-1.5" : ""
-                }`}
+                className={`block sm:mt-auto relative after:absolute after:inset-0 sm:after:-top-0.5 sm:after:perforated-top ${exhibitor.logoNeedsPlate ? "bg-paper p-1.5" : ""}`}
               >
                 <Image
                   alt=""
@@ -100,7 +98,7 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
         <label className="block">
           <span className="sr-only">Wyszukaj</span>
           <input
-            className="h-11 w-full rounded-none border-0 border-b-2 border-hairline bg-transparent px-0.5 text-base text-ink outline-none transition-colors placeholder:text-ink-muted focus:border-accent focus:duration-0"
+            className="h-11 w-full rounded-none border-b-2 border-hairline bg-transparent px-0.5 text-base text-ink transition-colors placeholder:text-ink-muted focus-visible:border-transparent focus-visible:duration-0 indent-2"
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Szukaj wystawcy…"
             type="search"
@@ -109,7 +107,7 @@ export function ExhibitorDirectory({ exhibitors }: { exhibitors: Exhibitor[] }) 
         </label>
         <button
           aria-label={sort === "az" ? "Zmień kolejność na Z–A" : "Zmień kolejność na A–Z"}
-          className="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-card px-3.5 text-sm text-ink-muted transition-colors hover:text-ink hover:duration-0"
+          className="flex h-11 cursor-pointer hover:bg-ink/5 items-center justify-center gap-2 rounded-card px-3.5 text-sm text-ink-muted transition-colors hover:text-ink hover:duration-0"
           onClick={() => setSort((current) => (current === "az" ? "za" : "az"))}
           type="button"
         >

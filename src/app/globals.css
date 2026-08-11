@@ -154,8 +154,8 @@ body {
 @utility perforated-top {
   background: repeating-linear-gradient(
       to right,
-      var(--color-hairline) 0 14px,
-      transparent 14px 22px
+      var(--color-hairline) 0 16px,
+      transparent 16px 24px
     )
     top left / 22px 1px repeat-x;
 }
@@ -163,10 +163,10 @@ body {
 @utility perforated-start {
   background: repeating-linear-gradient(
       to bottom,
-      var(--color-hairline) 0 14px,
-      transparent 14px 22px
+      var(--color-hairline) 0 16px,
+      transparent 16px 24px
     )
-    top left / 1px 22px repeat-y;
+    top left / 1px 24px repeat-y;
 }
 
 @utility screened {

@@ -1,8 +1,6 @@
 import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { print } from "graphql/language/printer";
-
 import { RETIRED_PATHS, SHADOWED_PATHS } from "@/components/Globals/siteNav";
 import { PageTemplate } from "@/components/Templates/Page/PageTemplate";
 import { PostTemplate } from "@/components/Templates/Post/PostTemplate";
@@ -20,18 +18,15 @@ type Props = {
 const toPath = (segments: string[]) => `/${segments.join("/")}/`;
 
 /** Memoised so metadata and the body share a single WordPress round trip. */
-const getContentNode = cache(async (slug: string) => {
+const getContentNode = cache(async (slug: string): Promise<ContentNodeResult | null> => {
   const isPreview = slug.includes("preview");
 
-  const { contentNode } = await fetchGraphQL<{ contentNode: ContentNodeResult | null }>(
-    print(ContentQuery),
-    {
-      slug: isPreview ? slug.split("preview/")[1] : slug,
-      idType: isPreview ? "DATABASE_ID" : "URI",
-    },
-  );
+  const { contentNode } = await fetchGraphQL(ContentQuery, {
+    slug: isPreview ? slug.split("preview/")[1] : slug,
+    idType: isPreview ? "DATABASE_ID" : "URI",
+  });
 
-  return contentNode;
+  return contentNode ?? null;
 });
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -55,10 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export const revalidate = 10_800;
 
 export async function generateStaticParams() {
-  const { pages, posts } = await fetchGraphQLAtBuild<{
-    pages: { nodes: { uri?: string | null }[] };
-    posts: { nodes: { uri?: string | null }[] };
-  }>(print(AllContentQuery));
+  const { pages, posts } = await fetchGraphQLAtBuild(AllContentQuery);
 
   return [...(pages?.nodes ?? []), ...(posts?.nodes ?? [])]
     .map((node) => wpUriToPath(node.uri))

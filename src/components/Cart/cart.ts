@@ -1,6 +1,6 @@
-import { print } from "graphql/language/printer";
-
 import { productPath } from "@/components/Globals/siteNav";
+import type { CartFieldsFragment } from "@/gql/graphql";
+import type { Selected } from "@/utils/graphqlSelection";
 import { formatPrice } from "@/content/shop";
 import { AddToCartMutation } from "@/queries/cart/AddToCartMutation";
 import { CartQuery } from "@/queries/cart/CartQuery";
@@ -11,46 +11,12 @@ import { UpdateItemQuantitiesMutation } from "@/queries/cart/UpdateItemQuantitie
 import { readSession, wooRequest, type WooResult } from "./session";
 import type { CartLine, CartView } from "./types";
 
-type AttributeNode = { label?: string | null; name?: string | null; value?: string | null };
+type CartNode = CartFieldsFragment;
 
-type CartItemNode = {
-  key?: string | null;
-  product?: {
-    node?: {
-      databaseId?: number | null;
-      name?: string | null;
-      slug?: string | null;
-      soldIndividually?: boolean | null;
-      image?: { sourceUrl?: string | null; altText?: string | null } | null;
-      attributes?: { nodes?: AttributeNode[] | null } | null;
-    } | null;
-  } | null;
-  quantity?: number | null;
-  subtotal?: string | null;
-  total?: string | null;
-  variation?: {
-    attributes?: AttributeNode[] | null;
-    node?: { databaseId?: number | null; name?: string | null } | null;
-  } | null;
-};
+type CartItemNode = NonNullable<CartNode["contents"]>["nodes"][number];
 
-type CartNode = {
-  availableShippingMethods?:
-    | ({
-        rates?:
-          | ({ id?: string | null; label?: string | null; cost?: string | null } | null)[]
-          | null;
-      } | null)[]
-    | null;
-  chosenShippingMethods?: (string | null)[] | null;
-  contents?: { itemCount?: number | null; nodes?: CartItemNode[] | null } | null;
-  discountTotal?: string | null;
-  isEmpty?: boolean | null;
-  needsShippingAddress?: boolean | null;
-  shippingTotal?: string | null;
-  subtotal?: string | null;
-  total?: string | null;
-};
+/** WooCommerce has a concrete type per product kind, so a line's product is a union. */
+type CartProductNode = Selected<NonNullable<CartItemNode["product"]>["node"]>;
 
 export const EMPTY_CART: CartView = {
   isEmpty: true,
@@ -75,7 +41,7 @@ function humanise(name: string) {
 }
 
 function toLine(node: CartItemNode): CartLine | undefined {
-  const product = node.product?.node;
+  const product: CartProductNode | undefined = node.product?.node;
 
   if (!node.key || !product?.name || !product.slug) return undefined;
 
@@ -137,8 +103,8 @@ export function toCartView(cart: CartNode | null | undefined): CartView {
   };
 }
 
-function unwrap<K extends string>(
-  result: WooResult<Partial<Record<K, { cart?: CartNode | null } | null>>>,
+function unwrap<K extends string, T extends Partial<Record<K, { cart?: CartNode | null } | null>>>(
+  result: WooResult<T>,
   field: K,
 ): WooResult<CartView> {
   if (!result.ok) return result;
@@ -152,11 +118,7 @@ function unwrap<K extends string>(
  * them with an empty basket.
  */
 export async function fetchCheckoutUrl(): Promise<string | undefined> {
-  const result = await wooRequest<{ customer?: { checkoutUrl?: string | null } | null }>(
-    print(CheckoutUrlQuery),
-    {},
-    "read",
-  );
+  const result = await wooRequest(CheckoutUrlQuery, {}, "read");
 
   return result.ok ? (result.data.customer?.checkoutUrl ?? undefined) : undefined;
 }
@@ -168,7 +130,7 @@ export async function fetchCheckoutUrl(): Promise<string | undefined> {
 export async function fetchCart(): Promise<WooResult<CartView>> {
   if (!(await readSession())) return { ok: true, data: EMPTY_CART };
 
-  const result = await wooRequest<{ cart?: CartNode | null }>(print(CartQuery), {}, "read");
+  const result = await wooRequest(CartQuery, {}, "read");
 
   return result.ok ? { ok: true, data: toCartView(result.data.cart) } : result;
 }
@@ -181,20 +143,13 @@ export type AddToCartArgs = {
 };
 
 export async function addToCart(args: AddToCartArgs) {
-  return unwrap(
-    await wooRequest<{ addToCart?: { cart?: CartNode | null } | null }>(
-      print(AddToCartMutation),
-      { input: args },
-      "replayable",
-    ),
-    "addToCart",
-  );
+  return unwrap(await wooRequest(AddToCartMutation, { input: args }, "replayable"), "addToCart");
 }
 
 export async function setQuantity(key: string, quantity: number) {
   return unwrap(
-    await wooRequest<{ updateItemQuantities?: { cart?: CartNode | null } | null }>(
-      print(UpdateItemQuantitiesMutation),
+    await wooRequest(
+      UpdateItemQuantitiesMutation,
       { input: { items: [{ key, quantity }] } },
       "replayable",
     ),
@@ -204,11 +159,7 @@ export async function setQuantity(key: string, quantity: number) {
 
 export async function removeLine(key: string) {
   return unwrap(
-    await wooRequest<{ removeItemsFromCart?: { cart?: CartNode | null } | null }>(
-      print(RemoveItemsFromCartMutation),
-      { input: { keys: [key] } },
-      "replayable",
-    ),
+    await wooRequest(RemoveItemsFromCartMutation, { input: { keys: [key] } }, "replayable"),
     "removeItemsFromCart",
   );
 }

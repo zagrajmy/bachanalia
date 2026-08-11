@@ -1,29 +1,18 @@
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { print } from "graphql/language/printer";
-import gql from "graphql-tag";
 
 import { FEED_PAGE_URI, parseFeedItems } from "../src/components/News/facebookFeed";
 import type { ArchivedFbPost } from "../src/components/News/fbArchive";
 import { encodeLqipWebp } from "../src/utils/lqipEncode";
 import { fbPostKey, lqipMetaRelPath, lqipRelPath } from "../src/utils/lqipPath";
-import { graphql } from "./wpGraphql";
+import { feedContent, FeedQuery } from "../src/queries/general/FeedQuery";
+import { wpQuery } from "./wpGraphql";
 
 const ROOT = join(import.meta.dirname, "..");
 const ARCHIVE_PATH = join(ROOT, "src/content/fb-news.json");
 const IMG_DIR = join(ROOT, "public/fb-news");
 const LQIP_DIR = join(ROOT, "src/content/lqip");
-
-const FeedQuery = gql`
-  query FeedQuery($uri: String!) {
-    nodeByUri(uri: $uri) {
-      ... on Page {
-        content
-      }
-    }
-  }
-`;
 
 async function loadArchive(): Promise<ArchivedFbPost[]> {
   try {
@@ -62,12 +51,9 @@ async function mirrorImage(id: string, src: string) {
 }
 
 async function main() {
-  const { nodeByUri } = await graphql<{ nodeByUri: { content?: string | null } | null }>(
-    print(FeedQuery),
-    { uri: FEED_PAGE_URI },
-  );
+  const feedPage = await wpQuery(FeedQuery, { uri: FEED_PAGE_URI });
 
-  const feed = parseFeedItems(nodeByUri?.content ?? "");
+  const feed = parseFeedItems(feedContent(feedPage));
   if (feed.length === 0) throw new Error("archive: feed parsed to zero posts, refusing to run");
 
   const archive = await loadArchive();

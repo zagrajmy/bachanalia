@@ -16,7 +16,6 @@
 import { spawn } from "node:child_process";
 import { rmSync } from "node:fs";
 import { join } from "node:path";
-import { print } from "graphql/language/printer";
 
 import { AddToCartMutation } from "../src/queries/cart/AddToCartMutation";
 import { CartQuery } from "../src/queries/cart/CartQuery";
@@ -166,11 +165,11 @@ async function variationToBuy() {
   const { ProductVariationsQuery } = await import("../src/queries/cart/ProductVariationsQuery");
   const { ProductQuery } = await import("../src/queries/general/ProductQuery");
 
-  const product = await woo(print(ProductQuery), { preview: false, slugs: [CART_PRODUCT.slug] });
+  const product = await woo(String(ProductQuery), { preview: false, slugs: [CART_PRODUCT.slug] });
   const node = product.data?.products?.nodes?.[0];
 
   const slugs = { slugs: [CART_PRODUCT.slug] };
-  const variations = await woo(print(ProductVariationsQuery), slugs);
+  const variations = await woo(String(ProductVariationsQuery), slugs);
   const all = variations.data?.products?.nodes?.[0]?.variations?.nodes ?? [];
 
   /**
@@ -200,7 +199,7 @@ async function recordCart() {
   const snapshots: CartSnapshots = { empty: undefined, carts: {} };
   const key = (quantity: number) => `${productId}:${variationId}:${quantity}`;
 
-  const added = await woo(print(AddToCartMutation), {
+  const added = await woo(String(AddToCartMutation), {
     input: {
       productId,
       variationId,
@@ -214,7 +213,7 @@ async function recordCart() {
   const itemKey = added.data.addToCart.cart.contents.nodes[0].key as string;
 
   for (const quantity of [2, 3]) {
-    const updated = await woo(print(UpdateItemQuantitiesMutation), {
+    const updated = await woo(String(UpdateItemQuantitiesMutation), {
       input: { items: [{ key: itemKey, quantity }] },
     });
 
@@ -225,14 +224,14 @@ async function recordCart() {
    * Asked with something in the cart, which is the only state it matters in,
    * and saved over whatever the empty-cart crawl recorded.
    */
-  const checkout = await wooRaw(print(CheckoutUrlQuery));
+  const checkout = await wooRaw(String(CheckoutUrlQuery));
   writeFixture("CheckoutUrlQuery", {}, checkout);
 
-  const emptied = await woo(print(RemoveItemsFromCartMutation), { input: { keys: [itemKey] } });
+  const emptied = await woo(String(RemoveItemsFromCartMutation), { input: { keys: [itemKey] } });
   snapshots.empty = emptied.data.removeItemsFromCart.cart;
 
   /** Prove the session really is empty before walking away from it. */
-  const confirmed = await woo(print(CartQuery), {});
+  const confirmed = await woo(String(CartQuery), {});
   snapshots.empty = confirmed.data.cart;
 
   writeSnapshots(snapshots);

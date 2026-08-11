@@ -1,6 +1,6 @@
-import gql from "graphql-tag";
+import { graphql } from "@/gql";
 
-export const PostsQuery = gql`
+export const PostsQuery = graphql(`
   query PostsQuery($first: Int = 100) {
     posts(first: $first, where: { orderby: { field: DATE, order: DESC } }) {
       nodes {
@@ -21,4 +21,4 @@ export const PostsQuery = gql`
       }
     }
   }
-`;
+`);

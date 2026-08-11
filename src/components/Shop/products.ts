@@ -1,5 +1,3 @@
-import { print } from "graphql/language/printer";
-
 import type { AttributeLabel, ProductVariation } from "@/components/Cart/variations";
 import { accreditation } from "@/content/con";
 import { formatPrice } from "@/content/shop";
@@ -8,6 +6,8 @@ import { ProductsQuery } from "@/queries/general/ProductsQuery";
 import { blurDataUrl, blurDataUrls } from "@/utils/blurDataUrl";
 import { fetchGraphQL, fetchGraphQLAtBuild } from "@/utils/fetchGraphQL";
 import { productPath } from "@/components/Globals/siteNav";
+import type { ProductQueryQuery, ProductsQueryQuery } from "@/gql/graphql";
+import type { Selected } from "@/utils/graphqlSelection";
 
 export type ShopImage = {
   alt: string;
@@ -51,45 +51,14 @@ export type ShopProductDetail = {
   attributeLabels: AttributeLabel[];
 } & ShopProduct;
 
-type ImageNode = {
-  sourceUrl?: string | null;
-  /** WordPress's 150px copy — the placeholder source, never rendered as-is. */
-  altText?: string | null;
-  mediaDetails?: { width?: number | null; height?: number | null } | null;
-  thumbnail?: string | null;
-};
+/**
+ * Products come back as a union — WooCommerce has a concrete type per product
+ * kind, and price, stock and variations are selected through the interfaces
+ * only some of them implement.
+ */
+type ProductNode = Selected<NonNullable<ProductsQueryQuery["products"]>["nodes"][number]>;
 
-type TermNode = { name?: string | null; slug?: string | null };
-
-type ProductNode = {
-  databaseId?: number | null;
-  image?: ImageNode | null;
-  link?: string | null;
-  name?: string | null;
-  price?: string | null;
-  productCategories?: { nodes?: TermNode[] | null } | null;
-  slug?: string | null;
-  stockStatus?: string | null;
-};
-
-type AttributeNode = { label?: string | null; name?: string | null; value?: string | null };
-
-type ProductDetailNode = ProductNode & {
-  attributes?: { nodes?: AttributeNode[] | null } | null;
-  description?: string | null;
-  soldIndividually?: boolean | null;
-  variations?: {
-    nodes?:
-      | {
-          attributes?: { nodes?: AttributeNode[] | null } | null;
-          databaseId?: number | null;
-          name?: string | null;
-          price?: string | null;
-          stockStatus?: string | null;
-        }[]
-      | null;
-  } | null;
-};
+type ProductDetailNode = Selected<NonNullable<ProductQueryQuery["products"]>["nodes"][number]>;
 
 /** Editors type category names lowercase in wp-admin; the shop is not a slug. */
 const capitalise = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
@@ -129,7 +98,7 @@ export function sortShopProducts(categorySlug: string, products: ShopProduct[]) 
   return [...products].sort((a, b) => volume(b.name) - volume(a.name));
 }
 
-function toImage(node: ImageNode | null | undefined, blurDataURL?: string) {
+function toImage(node: ProductNode["image"], blurDataURL?: string) {
   if (!node?.sourceUrl) return undefined;
 
   return {
@@ -155,10 +124,8 @@ function toProduct(node: ProductNode, blurDataURL?: string): ShopProduct | undef
   };
 }
 
-async function fetchCatalogue() {
-  const { products } = await fetchGraphQL<{ products: { nodes: ProductNode[] } }>(
-    print(ProductsQuery),
-  );
+async function fetchCatalogue(): Promise<ProductNode[]> {
+  const { products } = await fetchGraphQL(ProductsQuery);
 
   return products?.nodes ?? [];
 }
@@ -203,9 +170,7 @@ export async function fetchShop(): Promise<ShopCategory[]> {
  * index page then serves from cache.
  */
 export async function fetchProductSlugs(): Promise<string[]> {
-  const { products } = await fetchGraphQLAtBuild<{ products: { nodes: ProductNode[] } }>(
-    print(ProductsQuery),
-  );
+  const { products } = await fetchGraphQLAtBuild(ProductsQuery);
 
   return (products?.nodes ?? []).flatMap((node) => (node.slug ? [node.slug] : []));
 }
@@ -217,12 +182,9 @@ export const variantLabel = (productName: string, variationName: string) =>
     : variationName;
 
 export async function fetchProduct(slug: string): Promise<ShopProductDetail | undefined> {
-  const { products } = await fetchGraphQL<{ products: { nodes: ProductDetailNode[] } }>(
-    print(ProductQuery),
-    { slugs: [slug] },
-  );
+  const { products } = await fetchGraphQL(ProductQuery, { slugs: [slug] });
 
-  const product = products?.nodes?.[0];
+  const product: ProductDetailNode | undefined = products?.nodes?.[0];
 
   if (!product) return undefined;
 

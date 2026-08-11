@@ -1,6 +1,4 @@
-import gql from "graphql-tag";
-
-import { CartFields } from "./CartFields";
+import { graphql } from "@/gql";
 
 /**
  * `variationId` alone is enough for WooCommerce to price the line, but the
@@ -9,7 +7,7 @@ import { CartFields } from "./CartFields";
  * name — "antologia", not "attribute_antologia" — and the option string
  * exactly as the variation reports it.
  */
-export const AddToCartMutation = gql`
+export const AddToCartMutation = graphql(`
   mutation AddToCartMutation($input: AddToCartInput!) {
     addToCart(input: $input) {
       cart {
@@ -17,5 +15,4 @@ export const AddToCartMutation = gql`
       }
     }
   }
-  ${CartFields}
-`;
+`);

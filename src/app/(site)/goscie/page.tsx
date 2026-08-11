@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { print } from "graphql/language/printer";
-
 import { PostsQuery } from "@/components/Templates/Posts/PostsQuery";
-import { Post } from "@/gql/graphql";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
 import { unshoutName } from "@/utils/unshout";
 import { wpUriToPath } from "@/utils/wpUriToPath";
@@ -21,7 +18,7 @@ const dateFormat = new Intl.DateTimeFormat("pl-PL", {
 });
 
 export default async function GosciePage() {
-  const { posts } = await fetchGraphQL<{ posts: { nodes: Post[] } }>(print(PostsQuery));
+  const { posts } = await fetchGraphQL(PostsQuery);
   const nodes = posts?.nodes ?? [];
 
   const editions = nodes

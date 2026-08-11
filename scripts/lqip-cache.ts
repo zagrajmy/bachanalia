@@ -1,18 +1,17 @@
 import { cp, mkdir, readdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { print } from "graphql/language/printer";
-import gql from "graphql-tag";
 
 import { FEED_PAGE_URI, parseFeedItems } from "../src/components/News/facebookFeed";
 import { NewsQuery } from "../src/components/News/NewsQuery";
 import { AllContentQuery } from "../src/queries/general/AllContentQuery";
-import { ContentQuery } from "../src/queries/general/ContentQuery";
+import { type ContentNodeResult, ContentQuery } from "../src/queries/general/ContentQuery";
 import { ProductsQuery } from "../src/queries/general/ProductsQuery";
 import { encodeLqipWebp, fetchLqipWebp } from "../src/utils/lqipEncode";
 import { fbPostKey, lqipMetaRelPath, lqipRelPath, wpMediaKey } from "../src/utils/lqipPath";
 import { MEDIA_WIDTHS, mediaStem } from "../src/utils/mediaPaths";
 import { splitWpContent } from "../src/utils/prepareWpContent";
-import { graphql } from "./wpGraphql";
+import { feedContent, FeedQuery } from "../src/queries/general/FeedQuery";
+import { wpQuery } from "./wpGraphql";
 
 const ROOT = join(import.meta.dirname, "..");
 const LQIP_DIR = join(ROOT, "src/content/lqip");
@@ -173,15 +172,7 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
     });
   };
 
-  const news = await graphql<{
-    posts: {
-      nodes: {
-        featuredImage?: {
-          node?: { sourceUrl?: string | null; thumbnail?: string | null } | null;
-        } | null;
-      }[];
-    };
-  }>(print(NewsQuery), { first: 50 });
+  const news = await wpQuery(NewsQuery, { first: 50 });
 
   for (const post of news.posts?.nodes ?? []) {
     const image = post.featuredImage?.node;
@@ -189,22 +180,9 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
     addWp(image.sourceUrl, image.thumbnail);
   }
 
-  const { nodeByUri } = await graphql<{
-    nodeByUri: { content?: string | null } | null;
-  }>(
-    print(gql`
-      query FeedQuery($uri: String!) {
-        nodeByUri(uri: $uri) {
-          ... on Page {
-            content
-          }
-        }
-      }
-    `),
-    { uri: FEED_PAGE_URI },
-  );
+  const feed = await wpQuery(FeedQuery, { uri: FEED_PAGE_URI });
 
-  for (const entry of parseFeedItems(nodeByUri?.content ?? "")) {
+  for (const entry of parseFeedItems(feedContent(feed))) {
     if (!entry.image?.src) continue;
     add({
       key: fbPostKey(entry.id),
@@ -215,11 +193,7 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
     });
   }
 
-  const shop = await graphql<{
-    products: {
-      nodes: { image?: { sourceUrl?: string | null; thumbnail?: string | null } | null }[];
-    };
-  }>(print(ProductsQuery));
+  const shop = await wpQuery(ProductsQuery);
 
   for (const product of shop.products?.nodes ?? []) {
     const { image } = product;
@@ -227,10 +201,7 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
     addWp(image.sourceUrl, image.thumbnail);
   }
 
-  const { pages, posts } = await graphql<{
-    pages: { nodes: { modifiedGmt?: string | null; uri?: string | null }[] };
-    posts: { nodes: { modifiedGmt?: string | null; uri?: string | null }[] };
-  }>(print(AllContentQuery));
+  const { pages, posts } = await wpQuery(AllContentQuery);
 
   const previous = await loadCrawl();
   const crawl: Record<string, string> = {};
@@ -256,9 +227,10 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
     }
 
     await sleep(DELAY_MS);
-    const { contentNode } = await graphql<{
-      contentNode: { content?: string | null } | null;
-    }>(print(ContentQuery), { slug: uri, idType: "URI", preview: false });
+    const { contentNode }: { contentNode?: ContentNodeResult | null } = await wpQuery(
+      ContentQuery,
+      { slug: uri, idType: "URI", preview: false },
+    );
 
     for (const segment of splitWpContent(contentNode?.content)) {
       if (segment.type !== "gallery") continue;

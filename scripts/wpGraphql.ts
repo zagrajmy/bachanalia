@@ -1,3 +1,5 @@
+import type { TypedDocumentString } from "../src/gql/graphql";
+
 const WP = process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://bachanaliafantastyczne.pl";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -10,12 +12,12 @@ const RETRY_DELAYS_MS = [500, 2000, 6000, 15_000, 30_000];
 
 const isTransient = (status: number) => status === 403 || status === 429 || status >= 500;
 
-export async function graphql<T>(
-  query: string,
+export async function wpQuery<TResult, TVariables>(
+  document: TypedDocumentString<TResult, TVariables>,
   variables: Record<string, unknown> = {},
-): Promise<T> {
+): Promise<TResult> {
   const url = new URL(`${WP}/graphql`);
-  url.searchParams.set("query", query);
+  url.searchParams.set("query", String(document));
   if (Object.keys(variables).length > 0) {
     url.searchParams.set("variables", JSON.stringify(variables));
   }
@@ -58,7 +60,7 @@ export async function graphql<T>(
       throw new Error(body.errors.map((error) => error.message).join("; "));
     }
 
-    return body.data as T;
+    return body.data as TResult;
   }
 
   throw lastError;

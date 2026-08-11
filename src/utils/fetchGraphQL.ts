@@ -1,6 +1,12 @@
 import { cookies, draftMode } from "next/headers";
 
+import type { TypedDocumentString } from "@/gql/graphql";
+
 type Variables = Record<string, any>;
+
+/** Queries that take none are generated as `Exact<{ [key: string]: never }>`. */
+type VariablesArg<TVariables> =
+  Record<string, never> extends TVariables ? [variables?: TVariables] : [variables: TVariables];
 
 type CacheInit = RequestInit & { next?: { revalidate?: number; tags?: string[] } };
 
@@ -83,25 +89,29 @@ async function request<T>(
   return data.data;
 }
 
-export async function fetchGraphQL<T = any>(
-  query: string,
-  variables?: Variables,
-  headers?: Record<string, string>,
-): Promise<T> {
+export async function fetchGraphQL<TResult, TVariables>(
+  query: TypedDocumentString<TResult, TVariables>,
+  ...[variables]: VariablesArg<TVariables>
+): Promise<TResult> {
   const { isEnabled: preview } = await draftMode();
   const auth = preview ? (await cookies()).get("wp_jwt")?.value : undefined;
 
-  return request<T>(
-    query,
+  return request<TResult>(
+    String(query),
     { preview, ...variables },
-    { ...(auth && { Authorization: `Bearer ${auth}` }), ...headers },
+    auth ? { Authorization: `Bearer ${auth}` } : {},
     preview ? { cache: "no-store" } : { next: { tags: ["wordpress"], revalidate: 10_800 } },
   );
 }
 
-export async function fetchGraphQLAtBuild<T = any>(
-  query: string,
-  variables?: Variables,
-): Promise<T> {
-  return request<T>(query, { preview: false, ...variables }, {}, { cache: "no-store" });
+export async function fetchGraphQLAtBuild<TResult, TVariables>(
+  query: TypedDocumentString<TResult, TVariables>,
+  ...[variables]: VariablesArg<TVariables>
+): Promise<TResult> {
+  return request<TResult>(
+    String(query),
+    { preview: false, ...variables },
+    {},
+    { cache: "no-store" },
+  );
 }

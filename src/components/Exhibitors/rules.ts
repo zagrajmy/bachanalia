@@ -1,5 +1,3 @@
-import { print } from "graphql/language/printer";
-
 import { ContentNodeResult, ContentQuery } from "@/queries/general/ContentQuery";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
 
@@ -13,9 +11,10 @@ const EXHIBITOR_RULES_URI = "/index.php/regulamin-wystawcow-2/";
 
 export async function fetchExhibitorRulesPdf(): Promise<string | null> {
   try {
-    const { contentNode } = await fetchGraphQL<{
-      contentNode: ContentNodeResult | null;
-    }>(print(ContentQuery), { slug: EXHIBITOR_RULES_URI, idType: "URI" });
+    const { contentNode }: { contentNode?: ContentNodeResult | null } = await fetchGraphQL(
+      ContentQuery,
+      { slug: EXHIBITOR_RULES_URI, idType: "URI" },
+    );
 
     return contentNode?.content?.match(/https?:\/\/[^"'\s]+\.pdf/i)?.[0] ?? null;
   } catch {

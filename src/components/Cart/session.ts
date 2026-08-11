@@ -1,5 +1,7 @@
 import { cookies } from "next/headers";
 
+import type { TypedDocumentString } from "@/gql/graphql";
+
 import { wooMessage } from "./message";
 
 /**
@@ -109,11 +111,12 @@ const GENERIC_FAILURE = "Nie udało się połączyć ze sklepem. Spróbuj ponown
  * POST bodies but does not block these — proven by order 3502 — and POST is
  * the only shape a mutation has anyway.
  */
-export async function wooRequest<T>(
-  query: string,
-  variables: Record<string, unknown>,
+export async function wooRequest<TResult, TVariables>(
+  document: TypedDocumentString<TResult, TVariables>,
+  variables: TVariables,
   policy: RetryPolicy,
-): Promise<WooResult<T>> {
+): Promise<WooResult<TResult>> {
+  const query = String(document);
   const token = await readSession();
   const retries = retriesFor(policy);
 
@@ -177,7 +180,7 @@ export async function wooRequest<T>(
       };
     }
 
-    return { ok: true, data: body.data as T };
+    return { ok: true, data: body.data as TResult };
   }
 
   /**

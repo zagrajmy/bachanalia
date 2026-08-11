@@ -1,7 +1,5 @@
 "use server";
 
-import { print } from "graphql/language/printer";
-
 import { ProductVariationsQuery } from "@/queries/cart/ProductVariationsQuery";
 
 import { addToCart, fetchCart, removeLine, setQuantity } from "./cart";
@@ -31,31 +29,15 @@ function readAttributes(formData: FormData) {
  * resolve one, ask WooCommerce.
  */
 async function resolveVariationId(slug: string, selection: Record<string, string>) {
-  const result = await wooRequest<{
-    products?: {
-      nodes?:
-        | {
-            variations?: {
-              nodes?:
-                | {
-                    attributes?: {
-                      nodes?: { name?: string | null; value?: string | null }[] | null;
-                    } | null;
-                    databaseId?: number | null;
-                    stockStatus?: string | null;
-                  }[]
-                | null;
-            } | null;
-          }[]
-        | null;
-    } | null;
-  }>(print(ProductVariationsQuery), { slugs: [slug] }, "read");
+  const result = await wooRequest(ProductVariationsQuery, { slugs: [slug] }, "read");
 
   if (!result.ok) return undefined;
 
-  const variations: ProductVariation[] = (
-    result.data.products?.nodes?.[0]?.variations?.nodes ?? []
-  ).flatMap((node) =>
+  /** Only a VARIABLE product carries variations; anything else has none to resolve. */
+  const product = result.data.products?.nodes?.[0];
+  const nodes = product && "variations" in product ? (product.variations?.nodes ?? []) : [];
+
+  const variations: ProductVariation[] = nodes.flatMap((node) =>
     node?.databaseId
       ? [
           {

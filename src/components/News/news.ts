@@ -1,6 +1,4 @@
-import { print } from "graphql/language/printer";
-
-import { Post } from "@/gql/graphql";
+import type { NewsQueryQuery } from "@/gql/graphql";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
 import { lqipForWpUrl } from "@/utils/lqip";
 import { unshoutName } from "@/utils/unshout";
@@ -12,7 +10,9 @@ import { NewsEntry, newsExcerpt, toNewsDate } from "./newsFormat";
 
 export { decodeEntities, NEWS_PATH, type NewsEntry, newsExcerpt, toNewsDate } from "./newsFormat";
 
-function toNewsEntry(post: Post): NewsEntry {
+type NewsPost = NonNullable<NewsQueryQuery["posts"]>["nodes"][number];
+
+function toNewsEntry(post: NewsPost): NewsEntry {
   const image = post.featuredImage?.node;
   const width = image?.mediaDetails?.width ?? undefined;
   const height = image?.mediaDetails?.height ?? undefined;
@@ -39,7 +39,7 @@ const NEWS_PAGE = 12;
 
 export async function fetchNews(limit = NEWS_PAGE): Promise<NewsEntry[]> {
   const [wordpress, facebook] = await Promise.all([
-    fetchGraphQL<{ posts: { nodes: Post[] } }>(print(NewsQuery), { first: limit }),
+    fetchGraphQL(NewsQuery, { first: limit }),
     fetchFacebookNews(limit),
   ]);
 

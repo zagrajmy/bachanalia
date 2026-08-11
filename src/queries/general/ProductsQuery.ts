@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { graphql } from "@/gql";
 
 /**
  * The whole catalogue in one trip. WordPress rate-limits bursts, so 22
@@ -9,7 +9,7 @@ import gql from "graphql-tag";
  * `SimpleProduct` — every accreditation but one is VARIABLE, and a
  * SimpleProduct fragment returns null for all of them.
  */
-export const ProductsQuery = gql`
+export const ProductsQuery = graphql(`
   query ProductsQuery {
     products(first: 100, where: { status: "publish", orderby: { field: MENU_ORDER, order: ASC } }) {
       nodes {
@@ -40,4 +40,4 @@ export const ProductsQuery = gql`
       }
     }
   }
-`;
+`);

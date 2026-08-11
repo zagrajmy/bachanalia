@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { graphql } from "@/gql";
 
 /**
  * Every mutation answers with the whole cart, so one selection covers add,
@@ -10,7 +10,7 @@ import gql from "graphql-tag";
  * `attributes` are what the buyer actually picked; the cart line has to show
  * them or someone gets the wrong shirt.
  */
-export const CartFields = gql`
+export const CartFields = graphql(`
   fragment CartFields on Cart {
     isEmpty
     subtotal
@@ -70,4 +70,4 @@ export const CartFields = gql`
       }
     }
   }
-`;
+`);

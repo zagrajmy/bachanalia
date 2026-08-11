@@ -1,6 +1,4 @@
 import { MetadataRoute } from "next";
-import { print } from "graphql/language/printer";
-
 import { NEWS_PATH } from "@/components/News/news";
 import { productPath, RETIRED_PATHS, SHOP_PATH } from "@/components/Globals/siteNav";
 import { fetchProductSlugs } from "@/components/Shop/products";
@@ -31,10 +29,7 @@ export function sitemapPaths(uris: (string | null | undefined)[], productSlugs: 
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [content, productSlugs] = await Promise.all([
-    fetchGraphQL<{
-      pages: { nodes: { uri?: string | null }[] };
-      posts: { nodes: { uri?: string | null }[] };
-    }>(print(AllContentQuery)),
+    fetchGraphQL(AllContentQuery),
     fetchProductSlugs(),
   ]);
 

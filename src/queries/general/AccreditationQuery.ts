@@ -1,11 +1,11 @@
-import gql from "graphql-tag";
+import { graphql } from "@/gql";
 
 /**
  * `ProductWithPricing` covers both shapes: the day passes are SIMPLE, the
  * three-day and Golden Ticket are VARIABLE, and a fragment on SimpleProduct
  * alone would silently return null prices for half the taryfikator.
  */
-export const AccreditationQuery = gql`
+export const AccreditationQuery = graphql(`
   query AccreditationQuery($slugs: [String]) {
     products(first: 20, where: { slugIn: $slugs }) {
       nodes {
@@ -20,4 +20,4 @@ export const AccreditationQuery = gql`
       }
     }
   }
-`;
+`);

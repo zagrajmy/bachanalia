@@ -29,7 +29,7 @@
           "rates": [
             {
               "id": "free_shipping:1",
-              "label": "Odbiór Osobisty podczas BF 24 (dotyczy Fantazji Zielonogórskich, Golden Ticket, oraz Koszulki)",
+              "label": "Odbiór Osobisty podczas BF 26 (dotyczy Fantazji Zielonogórskich, Golden Ticket, oraz Koszulki)",
               "cost": "0,00&nbsp;zł"
             },
             {
@@ -54,7 +54,7 @@
                 "name": "Golden Ticket",
                 "slug": "golden-ticket",
                 "image": {
-                  "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-2026-150x150.jpg",
+                  "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-ticket_1000x1000px_nowe-150x150.jpg",
                   "altText": ""
                 },
                 "attributes": {
@@ -100,7 +100,7 @@
           "rates": [
             {
               "id": "free_shipping:1",
-              "label": "Odbiór Osobisty podczas BF 24 (dotyczy Fantazji Zielonogórskich, Golden Ticket, oraz Koszulki)",
+              "label": "Odbiór Osobisty podczas BF 26 (dotyczy Fantazji Zielonogórskich, Golden Ticket, oraz Koszulki)",
               "cost": "0,00&nbsp;zł"
             },
             {
@@ -125,7 +125,7 @@
                 "name": "Golden Ticket",
                 "slug": "golden-ticket",
                 "image": {
-                  "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-2026-150x150.jpg",
+                  "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-ticket_1000x1000px_nowe-150x150.jpg",
                   "altText": ""
                 },
                 "attributes": {
@@ -171,7 +171,7 @@
           "rates": [
             {
               "id": "free_shipping:1",
-              "label": "Odbiór Osobisty podczas BF 24 (dotyczy Fantazji Zielonogórskich, Golden Ticket, oraz Koszulki)",
+              "label": "Odbiór Osobisty podczas BF 26 (dotyczy Fantazji Zielonogórskich, Golden Ticket, oraz Koszulki)",
               "cost": "0,00&nbsp;zł"
             },
             {
@@ -196,7 +196,7 @@
                 "name": "Golden Ticket",
                 "slug": "golden-ticket",
                 "image": {
-                  "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-2026-150x150.jpg",
+                  "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2026/03/golden-ticket_1000x1000px_nowe-150x150.jpg",
                   "altText": ""
                 },
                 "attributes": {

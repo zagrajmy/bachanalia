@@ -5,7 +5,7 @@ import { ProductQuery } from "@/queries/general/ProductQuery";
 import { ProductsQuery } from "@/queries/general/ProductsQuery";
 import { blurDataUrl, blurDataUrls } from "@/utils/blurDataUrl";
 import { fetchGraphQL, fetchGraphQLAtBuild } from "@/utils/fetchGraphQL";
-import { productPath } from "@/components/Globals/siteNav";
+import { productPath, SHOP_PATH } from "@/components/Globals/siteNav";
 import type { ProductQueryQuery, ProductsQueryQuery } from "@/gql/graphql";
 import type { Selected } from "@/utils/graphqlSelection";
 
@@ -63,8 +63,11 @@ type ProductDetailNode = Selected<NonNullable<ProductQueryQuery["products"]>["no
 /** Editors type category names lowercase in wp-admin; the shop is not a slug. */
 const capitalise = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
 
+/** The beds, whose slug carries an edition and so cannot be written down. */
+export const NOCLEGI_CATEGORY = "noclegi";
+
 /** Accreditation first — it is why the shop exists — then the bed, the books, the tip jar. */
-const CATEGORY_ORDER = ["akredytacje", "noclegi", "antologie", "wsparcie"];
+const CATEGORY_ORDER = ["akredytacje", NOCLEGI_CATEGORY, "antologie", "wsparcie"];
 
 const ACCREDITATION_ORDER = new Map(accreditation.map(({ slug }, i) => [slug, i]));
 
@@ -101,6 +104,21 @@ export function sortShopProducts(categorySlug: string, products: ShopProduct[]) 
   }
 
   return [...products].sort((a, b) => volume(b.name) - volume(a.name));
+}
+
+/**
+ * Where "Noclegi" in the nav should land. One bed on sale is a product; more
+ * than one is a choice, and a choice belongs in the shop beside the others.
+ * Reading it from the catalogue is what keeps the link off an edition's slug.
+ *
+ * With none on sale the shop has no such section and the fragment simply does
+ * nothing, which is the right landing for "not yet": the rest of the shop.
+ */
+export function noclegiDestination(categories: ShopCategory[]) {
+  const beds = categories.find(({ slug }) => slug === NOCLEGI_CATEGORY)?.products ?? [];
+  const only = beds.length === 1 ? beds[0] : undefined;
+
+  return only ? only.href : `${SHOP_PATH}#${NOCLEGI_CATEGORY}`;
 }
 
 export function sortShopCategories(categories: ShopCategory[]) {

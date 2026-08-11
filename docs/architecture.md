@@ -53,6 +53,7 @@ run `bun run codegen:refresh`, turn it back off.
 | `/aktualnosci/`                                                                                                                | Facebook — see [News](#news) | ours                                  |
 | `/goscie/`                                                                                                                     | WP posts                     | ours                                  |
 | `/sklep/`, `/produkt/<slug>/`                                                                                                  | WooGraphQL                   | ours                                  |
+| `/noclegi/`                                                                                                                    | WooGraphQL                   | ours — resolves to the bed on sale    |
 | `/co-to-sa-bachanalia`, `/organizator`, `/sztab-bachanaliowy`, `/czas-i-miejsce`, `/regulamin`, `/polityka-prywatnosci`        | WP pages                     | ours                                  |
 | `/blok-prelekcyjny`, `/blok-konkursowy`, `/blok-naukowy`, `/blok-komiksowy`, `/rpg`, `/gamesroom`, `/retro-gaming`, `/cosplay` | WP pages                     | ours                                  |
 | `/poznaj-wystawcow`, `/regulamin-wystawcow`, `/zgloszenia-*`, `/wspieraja-nas`                                                 | WP pages                     | ours                                  |
@@ -61,10 +62,14 @@ run `bun run codegen:refresh`, turn it back off.
 | `/koszyk`, `/zamowienie`, `/moje-konto`, `/zwroty`                                                                             | WooCommerce                  | still WordPress                       |
 | `/zamowienie/order-received/<id>/`                                                                                             | WooCommerce                  | ours at cutover — delivers the ticket |
 
-`/akredytacja` 308s to `/sklep/`. `/noclegi` is a shortcut to the current
-edition's dorm product (`/produkt/nocleg-w-akademiku-bf-26/` today) — a 307,
-because the destination moves with each edition. `/info`, `/blog` and
-`/feed-test` are gone.
+`/akredytacja` 308s to `/sklep/`. `/info`, `/blog` and `/feed-test` are gone.
+
+`/noclegi/` is a route rather than a rule, because its destination is not
+knowable when the config is written: it reads the catalogue and sends the
+reader to the one bed on sale. Several of them, or none yet, go to
+`/sklep/#noclegi` instead. The slug names an edition, so a copy of it in the
+config or the nav needs editing every September — and the hop stays temporary
+for the same reason, since a cached 308 would outlive the product it names.
 
 `sitemap.ts` builds from the same sources the routes do — `AllContentQuery`
 plus the product slugs, with the four WooCommerce paths, the redirect sources
@@ -84,9 +89,7 @@ indexed URL is the `/index.php/…` form, and that is where the link equity is.
 - `trailingSlash: true`, so redirect destinations must keep the slash or every
   indexed URL costs a second hop. `next.config.test.ts` enforces that, plus:
   same-site redirects permanent, outbound ones not — a browser caches a 308
-  indefinitely and WordPress is about to move. `/noclegi` is the one same-site
-  exception, and temporary for the same reason: it aliases a per-edition
-  product.
+  indefinitely and WordPress is about to move.
 - **Do not fix WP permalinks before cutover.** Switching to "Post name" while
   WordPress is still the public frontend rewrites every live URL and could
   take the shop down mid-sales. Until then `src/utils/nextSlugToWpSlug.ts`

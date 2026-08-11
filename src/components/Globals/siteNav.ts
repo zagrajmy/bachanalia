@@ -8,13 +8,12 @@ export const SHOP_PATH = "/sklep/";
 export const productPath = (slug: string) => `/produkt/${slug}/`;
 
 /**
- * The dorm beds are a WooCommerce product; the WordPress /noclegi/ page only
- * ever promised details "wkrótce". The nav sells the bed instead of describing
- * it — the same move /akredytacja/ made toward the shop. The slug names one
- * edition's product, so it changes with the edition — /noclegi/ stays the
- * stable shortcut, kept temporary in next.config.ts for that reason.
+ * The dorm beds are a WooCommerce product whose slug names the edition, so the
+ * nav cannot point at one and stay right. This path can: the route behind it
+ * reads the catalogue and sends the reader to the one bed on sale, or to the
+ * shop when there are several of them, or none yet.
  */
-export const NOCLEGI_PATH = productPath("nocleg-w-akademiku-bf-26");
+export const NOCLEGI_PATH = "/noclegi/";
 
 /**
  * Published in WordPress, not part of this site: a 2023 stub, a probe for the
@@ -35,12 +34,6 @@ export const RETIRED_PATHS = [
   "/zamowienie/",
   "/moje-konto/",
   "/zwroty/",
-  /**
-   * Redirected to the Nocleg product in `next.config.ts`, so the page itself
-   * is unreachable; retiring it keeps the catch-all from prerendering the
-   * stale "szczegóły wkrótce" body behind the redirect.
-   */
-  "/noclegi/",
 ];
 
 /**
@@ -48,7 +41,7 @@ export const RETIRED_PATHS = [
  * must not prerender WordPress's copy behind the page that already answers the
  * path — unlike RETIRED_PATHS these are not 404s, they are ours.
  */
-export const SHADOWED_PATHS = ["/regulamin-wystawcow/"];
+export const SHADOWED_PATHS = ["/regulamin-wystawcow/", NOCLEGI_PATH];
 
 export type NavLink = { external?: boolean; href: string; label: string };
 

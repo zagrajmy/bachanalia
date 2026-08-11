@@ -1,7 +1,15 @@
 {
   "data": {
     "customer": {
-      "checkoutUrl": "https://bachanaliafantastyczne.pl/transfer-session?session_id=e2e-session&_wpnonce=e2enonce"
+      "checkoutUrl": "https://wp.bachanaliafantastyczne.pl/transfer-session?session_id=t_8398f8cef2fa84fdaf26a9f39be59c&_wc_checkout=7e126bd492"
     }
+  },
+  "extensions": {
+    "debug": [
+      {
+        "type": "DEBUG_LOGS_INACTIVE",
+        "message": "GraphQL Debug logging is not active. To see debug logs, GRAPHQL_DEBUG must be enabled."
+      }
+    ]
   }
 }

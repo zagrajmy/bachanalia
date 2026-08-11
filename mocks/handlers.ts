@@ -19,12 +19,18 @@ const PIXEL = Buffer.from(
 );
 
 /**
- * Both, because the uploads a fixture points at keep the real hostname even
- * when the API URL is aimed at somewhere unroutable to prove the suite never
- * opens a socket.
+ * Editors' page bodies point their uploads at the apex, which no environment
+ * variable names, so the suite would fetch those images for real.
+ */
+const APEX_HOST = "bachanaliafantastyczne.pl";
+
+/**
+ * All of them, because the uploads a fixture points at keep the real hostname
+ * even when the API URL is aimed at somewhere unroutable to prove the suite
+ * never opens a socket.
  */
 function wordpressHosts() {
-  const hosts: string[] = [];
+  const hosts: string[] = [APEX_HOST];
 
   try {
     hosts.push(new URL(String(process.env.NEXT_PUBLIC_WORDPRESS_API_URL)).host);

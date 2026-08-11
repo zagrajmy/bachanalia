@@ -10,22 +10,16 @@
 `wp.` serves WordPress and the apex answers from Vercel, so the DNS half and
 the `siteurl` half are done. What still points the old way:
 
-1. **Repoint the order-received redirect** at `wp.`. `next.config.js` sends
-   `/zamowienie/order-received/:path*` at `NEXT_PUBLIC_WORDPRESS_API_URL`,
-   which is still the apex — and the apex is us now, so that rule and the
-   `/wp-content/` ones below it currently target themselves.
-2. **Repoint `bachanalia-revalidate`** at the apex. It is installed and active
+1. **Repoint `bachanalia-revalidate`** at the apex. It is installed and active
    but still aimed at the Vercel deployment URL.
-3. **Check `HEADLESS_SECRET`, `NEXT_PUBLIC_BASE_URL` and the WordPress host**
-   in all three Vercel environments.
-4. Vercel's GitHub app still needs access to the `zagrajmy` org before pushes
+2. **Check `HEADLESS_SECRET` and `NEXT_PUBLIC_BASE_URL`** in all three Vercel
+   environments. `NEXT_PUBLIC_WORDPRESS_API_URL` names `wp.`, so the
+   order-received and `/wp-content/` rules reach WordPress rather than
+   themselves.
+3. Vercel's GitHub app still needs access to the `zagrajmy` org before pushes
    deploy themselves.
-5. Work through the rest of the quality review — the shipping-cost mismatch,
+4. Work through the rest of the quality review — the shipping-cost mismatch,
    the retry that can double a line, the unguarded `response.json()`.
-6. **Re-record the e2e fixtures** with `bun run e2e:record`. Every fixture but
-   the Nocleg one still carries apex upload URLs, and `mocks/handlers.ts` only
-   mocks the hosts the env names — `wp.` since the cutover — so those images
-   leave the suite over the network instead of answering from disk.
 
 ## Verify, in this order
 

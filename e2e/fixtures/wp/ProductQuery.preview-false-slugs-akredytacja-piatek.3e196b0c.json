@@ -6,11 +6,11 @@
           "databaseId": 1990,
           "slug": "akredytacja-piatek",
           "name": "Akredytacja Piątek",
-          "link": "https://bachanaliafantastyczne.pl/index.php/produkt/akredytacja-piatek/",
+          "link": "https://wp.bachanaliafantastyczne.pl/index.php/produkt/akredytacja-piatek/",
           "description": "<p>Akredytacja uprawniająca do udziału w BF26 w piątek. Upoważnia do głosowania na kandydatów do nagrody Janusza A. Zajdla.</p>\n<p>Na adres e-mail podany w zamówieniu będzie wysłany zostanie kod QR który jest biletem wstępu. Prosimy o okazanie go na akredytacji w formie cyfrowej lub na wydruku.</p>\n",
           "image": {
-            "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/piatek.png",
-            "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2026/03/piatek-150x150.png",
+            "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2026/03/piatek.png",
+            "thumbnail": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2026/03/piatek-150x150.png",
             "altText": "",
             "mediaDetails": {
               "width": 1000,

@@ -32,7 +32,7 @@ export default async function SklepPage() {
       )}
 
       {categories.map(({ slug, label, products }) => (
-        <section key={slug} className="mt-12 sm:mt-16">
+        <section key={slug} id={slug} className="mt-12 sm:mt-16">
           <h2 className="display border-b border-navy pb-2 text-[clamp(1.4rem,3.4vw,2rem)]">
             {label}
           </h2>

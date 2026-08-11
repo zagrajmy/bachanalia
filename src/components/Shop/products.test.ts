@@ -1,8 +1,11 @@
 import { describe, expect, it } from "bun:test";
 
 import { accreditation } from "@/content/con";
+import { productPath } from "@/components/Globals/siteNav";
 
 import {
+  NOCLEGI_CATEGORY,
+  noclegiDestination,
   type ShopCategory,
   type ShopProduct,
   sortShopCategories,
@@ -14,12 +17,36 @@ const product = (slug: string, name: string): ShopProduct => ({
   slug,
   name,
   price: "",
-  href: `/sklep/${slug}/`,
+  href: productPath(slug),
   wpHref: "",
   soldOut: false,
 });
 
 const category = (slug: string): ShopCategory => ({ slug, label: slug, products: [] });
+
+describe("noclegiDestination", () => {
+  const beds = (...slugs: string[]): ShopCategory => ({
+    slug: NOCLEGI_CATEGORY,
+    label: "Noclegi",
+    products: slugs.map((slug) => product(slug, slug)),
+  });
+
+  it("sends the reader straight to the bed when only one is on sale", () => {
+    expect(noclegiDestination([beds("nocleg-w-akademiku-bf-26")])).toBe(
+      "/produkt/nocleg-w-akademiku-bf-26/",
+    );
+  });
+
+  it("hands a choice to the shop rather than picking for the reader", () => {
+    expect(noclegiDestination([beds("nocleg-jedna-noc", "nocleg-dwie-noce")])).toBe(
+      "/sklep/#noclegi",
+    );
+  });
+
+  it("falls back to the shop when the beds are not on sale yet", () => {
+    expect(noclegiDestination([])).toBe("/sklep/#noclegi");
+  });
+});
 
 describe("sortShopCategories", () => {
   it("sells the bed with the accreditation, not behind the tip jar", () => {

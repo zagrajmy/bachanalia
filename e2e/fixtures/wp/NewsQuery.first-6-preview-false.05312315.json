@@ -18,8 +18,8 @@
           },
           "featuredImage": {
             "node": {
-              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/filmopolis_bf25.jpg",
-              "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/filmopolis_bf25-150x150.jpg",
+              "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/09/filmopolis_bf25.jpg",
+              "thumbnail": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/09/filmopolis_bf25-150x150.jpg",
               "altText": "",
               "mediaDetails": {
                 "width": 572,
@@ -44,8 +44,8 @@
           },
           "featuredImage": {
             "node": {
-              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/ramesville_bf25.jpg",
-              "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/ramesville_bf25-150x150.jpg",
+              "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/09/ramesville_bf25.jpg",
+              "thumbnail": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/09/ramesville_bf25-150x150.jpg",
               "altText": "",
               "mediaDetails": {
                 "width": 920,
@@ -70,8 +70,8 @@
           },
           "featuredImage": {
             "node": {
-              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/figurkowcy_bf25.jpg",
-              "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/figurkowcy_bf25-150x150.jpg",
+              "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/09/figurkowcy_bf25.jpg",
+              "thumbnail": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/09/figurkowcy_bf25-150x150.jpg",
               "altText": "",
               "mediaDetails": {
                 "width": 768,
@@ -96,8 +96,8 @@
           },
           "featuredImage": {
             "node": {
-              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/waldemar_grabowski_bf25.png",
-              "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/waldemar_grabowski_bf25-150x150.png",
+              "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/09/waldemar_grabowski_bf25.png",
+              "thumbnail": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/09/waldemar_grabowski_bf25-150x150.png",
               "altText": "",
               "mediaDetails": {
                 "width": 832,
@@ -122,8 +122,8 @@
           },
           "featuredImage": {
             "node": {
-              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/krzysztof_jaxa_rudek_bf25.jpg",
-              "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/krzysztof_jaxa_rudek_bf25-150x150.jpg",
+              "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/09/krzysztof_jaxa_rudek_bf25.jpg",
+              "thumbnail": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/09/krzysztof_jaxa_rudek_bf25-150x150.jpg",
               "altText": "",
               "mediaDetails": {
                 "width": 1802,
@@ -148,8 +148,8 @@
           },
           "featuredImage": {
             "node": {
-              "sourceUrl": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/pawel_kaszkowiak_bf25.jpg",
-              "thumbnail": "https://bachanaliafantastyczne.pl/wp-content/uploads/2025/09/pawel_kaszkowiak_bf25-150x150.jpg",
+              "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/09/pawel_kaszkowiak_bf25.jpg",
+              "thumbnail": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/09/pawel_kaszkowiak_bf25-150x150.jpg",
               "altText": "",
               "mediaDetails": {
                 "width": 1366,

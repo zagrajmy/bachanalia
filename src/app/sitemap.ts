@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 import { NEWS_PATH } from "@/components/News/news";
-import { productPath, RETIRED_PATHS, SHOP_PATH } from "@/components/Globals/siteNav";
+import { NOCLEGI_PATH, productPath, RETIRED_PATHS, SHOP_PATH } from "@/components/Globals/siteNav";
 import { fetchProductSlugs } from "@/components/Shop/products";
 import { AllContentQuery } from "@/queries/general/AllContentQuery";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
@@ -17,9 +17,10 @@ const ownRoutes = ["/", SHOP_PATH, NEWS_PATH, "/goscie/", "/wystawcy/", "/regula
 
 /**
  * On top of the pages we do not serve at all — which already covers the four
- * WooCommerce transactional pages — two redirect sources.
+ * WooCommerce transactional pages — the redirect sources. `/noclegi/` is one
+ * of them: it is a route, but every visit leaves it for the bed on sale.
  */
-const excluded = new Set(["/akredytacja/", "/blog/", ...RETIRED_PATHS]);
+const excluded = new Set(["/akredytacja/", "/blog/", NOCLEGI_PATH, ...RETIRED_PATHS]);
 
 export function sitemapPaths(uris: (string | null | undefined)[], productSlugs: string[]) {
   const paths = new Set([...ownRoutes, ...productSlugs.map(productPath), ...uris.map(wpUriToPath)]);

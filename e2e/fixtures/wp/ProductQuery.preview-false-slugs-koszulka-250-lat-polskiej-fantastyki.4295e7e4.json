@@ -3,18 +3,18 @@
     "products": {
       "nodes": [
         {
-          "databaseId": 2148,
-          "slug": "koszulka",
-          "name": "Koszulka",
-          "link": "https://wp.bachanaliafantastyczne.pl/index.php/produkt/koszulka/",
-          "description": "<p>Koszulka BF 26</p>\n",
+          "databaseId": 3575,
+          "slug": "koszulka-250-lat-polskiej-fantastyki-polcon-26",
+          "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26",
+          "link": "https://wp.bachanaliafantastyczne.pl/index.php/produkt/koszulka-250-lat-polskiej-fantastyki-polcon-26/",
+          "description": "<p>Koszulka przygotowana specjalnie na 250 lecie polskiej fantastyki</p>\n",
           "image": {
-            "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/08/mockup-koszulka_1000x1000px.jpg",
-            "thumbnail": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2025/08/mockup-koszulka_1000x1000px-150x150.jpg",
+            "sourceUrl": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2026/08/5_wybrana_POP-kopia-scaled.jpg",
+            "thumbnail": "https://wp.bachanaliafantastyczne.pl/wp-content/uploads/2026/08/5_wybrana_POP-kopia-150x150.jpg",
             "altText": "",
             "mediaDetails": {
-              "width": 1000,
-              "height": 1000
+              "width": 2560,
+              "height": 1641
             }
           },
           "productCategories": {
@@ -32,15 +32,15 @@
             "nodes": [
               {
                 "name": "rozmiar",
-                "label": "Rozmiar"
+                "label": "rozmiar"
               }
             ]
           },
           "variations": {
             "nodes": [
               {
-                "databaseId": 2162,
-                "name": "Koszulka - damska xxxl",
+                "databaseId": 3589,
+                "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26 - damska xxxl",
                 "price": "65,00&nbsp;zł",
                 "stockStatus": "IN_STOCK",
                 "attributes": {
@@ -53,8 +53,8 @@
                 }
               },
               {
-                "databaseId": 2161,
-                "name": "Koszulka - damska xxl",
+                "databaseId": 3588,
+                "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26 - damska xxl",
                 "price": "65,00&nbsp;zł",
                 "stockStatus": "IN_STOCK",
                 "attributes": {
@@ -67,8 +67,8 @@
                 }
               },
               {
-                "databaseId": 2160,
-                "name": "Koszulka - damska xl",
+                "databaseId": 3587,
+                "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26 - damska xl",
                 "price": "65,00&nbsp;zł",
                 "stockStatus": "IN_STOCK",
                 "attributes": {
@@ -81,8 +81,8 @@
                 }
               },
               {
-                "databaseId": 2159,
-                "name": "Koszulka - damska l",
+                "databaseId": 3586,
+                "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26 - damska l",
                 "price": "65,00&nbsp;zł",
                 "stockStatus": "IN_STOCK",
                 "attributes": {
@@ -95,8 +95,8 @@
                 }
               },
               {
-                "databaseId": 2158,
-                "name": "Koszulka - damska m",
+                "databaseId": 3585,
+                "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26 - damska m",
                 "price": "65,00&nbsp;zł",
                 "stockStatus": "IN_STOCK",
                 "attributes": {
@@ -109,8 +109,8 @@
                 }
               },
               {
-                "databaseId": 2157,
-                "name": "Koszulka - damska s",
+                "databaseId": 3584,
+                "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26 - damska s",
                 "price": "65,00&nbsp;zł",
                 "stockStatus": "IN_STOCK",
                 "attributes": {
@@ -123,8 +123,8 @@
                 }
               },
               {
-                "databaseId": 2156,
-                "name": "Koszulka - damska xs",
+                "databaseId": 3583,
+                "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26 - damska xs",
                 "price": "65,00&nbsp;zł",
                 "stockStatus": "IN_STOCK",
                 "attributes": {
@@ -137,8 +137,8 @@
                 }
               },
               {
-                "databaseId": 2155,
-                "name": "Koszulka - męska xxxl",
+                "databaseId": 3582,
+                "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26 - męska xxxl",
                 "price": "65,00&nbsp;zł",
                 "stockStatus": "IN_STOCK",
                 "attributes": {
@@ -151,8 +151,8 @@
                 }
               },
               {
-                "databaseId": 2154,
-                "name": "Koszulka - męska xxl",
+                "databaseId": 3581,
+                "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26 - męska xxl",
                 "price": "65,00&nbsp;zł",
                 "stockStatus": "IN_STOCK",
                 "attributes": {
@@ -165,8 +165,8 @@
                 }
               },
               {
-                "databaseId": 2153,
-                "name": "Koszulka - męska xl",
+                "databaseId": 3580,
+                "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26 - męska xl",
                 "price": "65,00&nbsp;zł",
                 "stockStatus": "IN_STOCK",
                 "attributes": {
@@ -179,8 +179,8 @@
                 }
               },
               {
-                "databaseId": 2152,
-                "name": "Koszulka - męska l",
+                "databaseId": 3579,
+                "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26 - męska l",
                 "price": "65,00&nbsp;zł",
                 "stockStatus": "IN_STOCK",
                 "attributes": {
@@ -193,8 +193,8 @@
                 }
               },
               {
-                "databaseId": 2151,
-                "name": "Koszulka - męska m",
+                "databaseId": 3578,
+                "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26 - męska m",
                 "price": "65,00&nbsp;zł",
                 "stockStatus": "IN_STOCK",
                 "attributes": {
@@ -207,8 +207,8 @@
                 }
               },
               {
-                "databaseId": 2150,
-                "name": "Koszulka - męska s",
+                "databaseId": 3577,
+                "name": "Koszulka 250 lat polskiej fantastyki - POLCON 26 - męska s",
                 "price": "65,00&nbsp;zł",
                 "stockStatus": "IN_STOCK",
                 "attributes": {

@@ -1,6 +1,7 @@
 {
   "name": "bachanalia",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "bun run codegen && next dev",
     "build": "bun run codegen && bun run lqip && bun run exhibitor-logos && next build",

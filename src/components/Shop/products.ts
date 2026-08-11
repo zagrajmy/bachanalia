@@ -94,16 +94,6 @@ function volume(name: string) {
  * Sorting is stable, so anything the comparators treat as equal keeps the
  * order WooCommerce gave it.
  */
-/** A category the order does not name files last, in WooCommerce's own order. */
-export function sortShopCategories(categories: ShopCategory[]) {
-  const rank = ({ slug }: ShopCategory) => {
-    const i = CATEGORY_ORDER.indexOf(slug);
-    return i === -1 ? CATEGORY_ORDER.length : i;
-  };
-
-  return [...categories].sort((a, b) => rank(a) - rank(b));
-}
-
 export function sortShopProducts(categorySlug: string, products: ShopProduct[]) {
   if (categorySlug === "akredytacje") {
     const rank = ({ slug }: ShopProduct) => ACCREDITATION_ORDER.get(slug) ?? accreditation.length;
@@ -111,6 +101,15 @@ export function sortShopProducts(categorySlug: string, products: ShopProduct[]) 
   }
 
   return [...products].sort((a, b) => volume(b.name) - volume(a.name));
+}
+
+export function sortShopCategories(categories: ShopCategory[]) {
+  const rank = ({ slug }: ShopCategory) => {
+    const i = CATEGORY_ORDER.indexOf(slug);
+    return i === -1 ? CATEGORY_ORDER.length : i;
+  };
+
+  return [...categories].sort((a, b) => rank(a) - rank(b));
 }
 
 function toImage(node: ProductNode["image"], blurDataURL?: string) {

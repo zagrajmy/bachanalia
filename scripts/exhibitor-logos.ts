@@ -46,9 +46,12 @@ async function measure(url: string) {
 const sheet = await fetch(SHEET_CSV_URL, { headers: { accept: "text/csv" } }).catch(() => null);
 if (!sheet?.ok) keep(`the sheet answered ${sheet?.status ?? "nothing"}`);
 
-const logos = exhibitorsFromCsv(await sheet!.text())
-  .map((exhibitor) => exhibitor.logoUrl)
-  .filter((url) => url !== undefined);
+const exhibitors = await sheet!
+  .text()
+  .then(exhibitorsFromCsv)
+  .catch((error) => keep(`the sheet could not be read: ${String(error)}`));
+
+const logos = exhibitors.map((exhibitor) => exhibitor.logoUrl).filter((url) => url !== undefined);
 
 const measured = await Promise.all(
   logos.map(async (url) => {

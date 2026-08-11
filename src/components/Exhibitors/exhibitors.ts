@@ -102,7 +102,9 @@ export function exhibitorsFromCsv(source: string): Exhibitor[] {
   const linksIndex = column("media społecznościowe", "media", "linki", "links");
   const logoIndex = column("logo", "logotyp");
 
-  if (nameIndex === undefined) return [];
+  if (nameIndex === undefined) {
+    throw new Error(`No "nazwa" column in the exhibitor sheet; got [${headers}]`);
+  }
 
   return rows.flatMap((row) => {
     const name = clean(row[nameIndex]);
@@ -124,15 +126,11 @@ export function exhibitorsFromCsv(source: string): Exhibitor[] {
 }
 
 export async function fetchExhibitors(): Promise<Exhibitor[]> {
-  try {
-    const response = await fetch(SHEET_CSV_URL, {
-      next: { revalidate: REVALIDATE_SECONDS },
-      headers: { accept: "text/csv" },
-    });
+  const response = await fetch(SHEET_CSV_URL, {
+    next: { revalidate: REVALIDATE_SECONDS },
+    headers: { accept: "text/csv" },
+  });
 
-    if (!response.ok) throw new Error(`Google Sheets returned ${response.status}`);
-    return exhibitorsFromCsv(await response.text());
-  } catch {
-    return [];
-  }
+  if (!response.ok) throw new Error(`Google Sheets returned ${response.status}`);
+  return exhibitorsFromCsv(await response.text());
 }

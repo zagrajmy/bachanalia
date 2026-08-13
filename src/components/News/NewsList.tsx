@@ -21,14 +21,7 @@ export function NewsList({ items, titleAs = "h3" }: Props) {
             className="group block no-underline"
           >
             {item.image && (
-              <div
-                className="overflow-hidden bg-paper-shade"
-                style={
-                  item.image.width && item.image.height
-                    ? { aspectRatio: `${item.image.width} / ${item.image.height}` }
-                    : undefined
-                }
-              >
+              <div className="overflow-hidden bg-paper-shade">
                 <BlurImg
                   alt={item.image.alt}
                   blurDataURL={item.image.blurDataURL}

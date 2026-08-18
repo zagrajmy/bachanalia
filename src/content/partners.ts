@@ -57,6 +57,7 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
       },
       {
         name: "Fundacja Per Aspera",
+        narrow: true,
         src: asImage(perAsperaSvg),
       },
     ],

@@ -2,6 +2,31 @@ import Image from "next/image";
 
 import { markHeight } from "@/components/Partners/PartnerMark";
 import { cityFunding, PARTNERS } from "@/content/partners";
+import type { PartnerLogo } from "@/content/partners";
+
+function Mark({ logo }: { logo: PartnerLogo }) {
+  const image = (
+    <Image
+      src={logo.src}
+      alt={logo.name}
+      className={`w-auto ${logo.whiteBox ? "mix-blend-multiply" : ""}`}
+      style={{ height: markHeight(logo, "footer") }}
+    />
+  );
+
+  return logo.href ? (
+    <a
+      href={logo.href}
+      target="_blank"
+      rel="noreferrer"
+      className="p-1 no-underline transition-none outline-1 outline-dashed outline-transparent hover:outline-navy/30"
+    >
+      {image}
+    </a>
+  ) : (
+    <span className="p-1">{image}</span>
+  );
+}
 
 export function PartnersCard() {
   return (
@@ -15,26 +40,13 @@ export function PartnersCard() {
         className="absolute bottom-[-13px] left-1/2 size-[26px] -translate-x-1/2 rounded-full bg-navy"
       />
 
-      <ul className="grid gap-9 sm:grid-cols-3 sm:gap-8">
+      <ul className="grid gap-9 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-9">
         {PARTNERS.map(({ tier, logos }) => (
           <li key={tier}>
             <p className="eyebrow text-slate">{tier}</p>
             <div className="mt-4 flex flex-wrap items-center gap-3">
               {logos.map((logo) => (
-                <a
-                  key={logo.name}
-                  href={logo.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-1 no-underline transition-none outline-1 outline-dashed outline-transparent hover:outline-navy/30"
-                >
-                  <Image
-                    src={logo.src}
-                    alt={logo.name}
-                    className={`w-auto ${logo.whiteBox ? "mix-blend-multiply" : ""}`}
-                    style={{ height: markHeight(logo, "footer") }}
-                  />
-                </a>
+                <Mark key={logo.name} logo={logo} />
               ))}
             </div>
           </li>

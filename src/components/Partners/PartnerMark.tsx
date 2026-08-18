@@ -17,7 +17,7 @@ const HEIGHTS: Record<MarkScale, [string, string, string]> = {
 export function markHeight(logo: PartnerLogo, scale: MarkScale = "page") {
   const ratio = logo.src.width / logo.src.height;
   const [wide, medium, compact] = HEIGHTS[scale];
-  const height = ratio >= 3.5 ? wide : ratio >= 1.5 ? medium : compact;
+  const height = ratio >= 4 ? wide : ratio >= 1.5 ? medium : compact;
 
   return logo.narrow ? `calc(${height} * 1.35)` : height;
 }

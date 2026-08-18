@@ -3,11 +3,17 @@ import type { StaticImageData } from "next/image";
 import fahrenheit from "./partners/fahrenheit.png";
 import konwentyPoludniowe from "./partners/konwenty-poludniowe.png";
 import miastoZielonaGora from "./partners/miasto-zielona-gora.png";
+import otwarteKomiksy from "./partners/otwarte-komiksy.png";
+import perAsperaSvg from "./partners/per-aspera.svg";
 import planetariumWenus from "./partners/planetarium-wenus.png";
 import uniwersytetZielonogorski from "./partners/uniwersytet-zielonogorski.jpg";
-/** Next types `*.svg` as `any` so `@svgr/webpack` can redefine it; this one is an image. */
+import wampirowoSvg from "./partners/wampirowo.svg";
 import zagrajmySvg from "./partners/zagrajmy.svg";
 import zok from "./partners/zok.jpg";
+
+/** Next types `*.svg` as `any` so `@svgr/webpack` can redefine it; these ones are images. */
+// oxlint-disable-next-line typescript/no-unsafe-type-assertion
+const asImage = (svg: unknown) => svg as StaticImageData;
 
 /**
  * Who supports the con, in one place.
@@ -21,8 +27,8 @@ import zok from "./partners/zok.jpg";
  * edit rather than three.
  */
 export type PartnerLogo = {
-  /** Every mark is somebody's front door; a logo that goes nowhere wastes it. */
-  href: string;
+  /** A mark is somebody's front door — unless they haven't got one yet. */
+  href?: string;
   name: string;
   /**
    * A narrow or padded mark reads lighter than a wordmark of the same height,
@@ -49,6 +55,21 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
         href: "https://uz.zgora.pl/",
         whiteBox: true,
       },
+      {
+        name: "Fundacja Per Aspera",
+        narrow: true,
+        src: asImage(perAsperaSvg),
+      },
+    ],
+  },
+  {
+    tier: "Mecenasi",
+    logos: [
+      {
+        name: "Wampirowo.pl",
+        src: asImage(wampirowoSvg),
+        href: "https://wampirowo.pl/",
+      },
     ],
   },
   {
@@ -69,8 +90,7 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
       },
       {
         name: "zagrajmy.net",
-        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- Next types `*.svg` as `any` so svgr can redefine it
-        src: zagrajmySvg as StaticImageData,
+        src: asImage(zagrajmySvg),
         href: "https://zagrajmy.net/",
       },
     ],
@@ -87,6 +107,11 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
         name: "Konwenty Południowe",
         src: konwentyPoludniowe,
         href: "https://konwenty-poludniowe.pl/",
+      },
+      {
+        name: "Otwarte Komiksy",
+        src: otwarteKomiksy,
+        href: "https://www.youtube.com/@OtwarteKomiksy",
       },
     ],
   },

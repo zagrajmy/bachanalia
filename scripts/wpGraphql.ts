@@ -10,6 +10,12 @@ import { sleep } from "../src/utils/sleep";
 
 const WP = process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://bachanaliafantastyczne.pl";
 
+/**
+ * A build has no reader waiting on it, and the host answers a burst with a
+ * minute or two of 503s, so it waits far longer than a request would.
+ */
+const DELAYS_MS = [...RETRY_DELAYS_MS, 60_000, 60_000, 60_000];
+
 export async function wpQuery<TResult, TVariables>(
   document: TypedDocumentString<TResult, TVariables>,
   ...[variables]: VariablesArg<TVariables>
@@ -18,8 +24,8 @@ export async function wpQuery<TResult, TVariables>(
 
   let lastError: unknown;
 
-  for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
-    if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1] ?? 0);
+  for (let attempt = 0; attempt <= DELAYS_MS.length; attempt++) {
+    if (attempt > 0) await sleep(DELAYS_MS[attempt - 1] ?? 0);
 
     let response: Response;
 

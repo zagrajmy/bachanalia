@@ -1,15 +1,22 @@
 import type { StaticImageData } from "next/image";
 
-import fahrenheit from "./partners/fahrenheit.png";
-import konwentyPoludniowe from "./partners/konwenty-poludniowe.png";
-import miastoZielonaGora from "./partners/miasto-zielona-gora.png";
-import otwarteKomiksy from "./partners/otwarte-komiksy.png";
+import ambasadaSzwajcarii from "./partners/ambasada-szwajcarii.webp";
+import dylanDog from "./partners/dylan-dog.webp";
+import fahrenheit from "./partners/fahrenheit.webp";
+import instytutKulturyWloskiej from "./partners/instytut-kultury-wloskiej.webp";
+import konwentyPoludniowe from "./partners/konwenty-poludniowe.webp";
+import letra from "./partners/letra.webp";
+import miastoZielonaGora from "./partners/miasto-zielona-gora.webp";
+import otwarteKomiksy from "./partners/otwarte-komiksy.webp";
 import perAsperaSvg from "./partners/per-aspera.svg";
-import planetariumWenus from "./partners/planetarium-wenus.png";
-import uniwersytetZielonogorski from "./partners/uniwersytet-zielonogorski.jpg";
+import planetariumWenus from "./partners/planetarium-wenus.webp";
+import powergraph from "./partners/powergraph.webp";
+import rebis from "./partners/rebis.webp";
+import tore from "./partners/tore.webp";
+import uniwersytetZielonogorski from "./partners/uniwersytet-zielonogorski.webp";
 import wampirowoSvg from "./partners/wampirowo.svg";
 import zagrajmySvg from "./partners/zagrajmy.svg";
-import zok from "./partners/zok.jpg";
+import zok from "./partners/zok.webp";
 
 /** Next types `*.svg` as `any` so `@svgr/webpack` can redefine it; these ones are images. */
 // oxlint-disable-next-line typescript/no-unsafe-type-assertion
@@ -70,6 +77,28 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
         src: asImage(wampirowoSvg),
         href: "https://wampirowo.pl/",
       },
+      {
+        name: "Wydawnictwo Powergraph",
+        src: powergraph,
+        href: "https://powergraph.pl/",
+        whiteBox: true,
+      },
+      {
+        name: "Dom Wydawniczy Rebis",
+        src: rebis,
+        href: "https://rebis.com.pl/",
+        whiteBox: true,
+      },
+      {
+        name: "Oficyna Wydawnicza Tore",
+        src: tore,
+        href: "http://www.toreoficyna.pl/",
+      },
+      {
+        name: "Dylan Dog. 40 lat koszmarów",
+        src: dylanDog,
+        href: "https://www.youtube.com/@dylandogpl",
+      },
     ],
   },
   {
@@ -93,6 +122,20 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
         src: asImage(zagrajmySvg),
         href: "https://zagrajmy.net/",
       },
+      {
+        name: "Ambasada Szwajcarii w Polsce",
+        narrow: true,
+        src: ambasadaSzwajcarii,
+        href: "https://www.eda.admin.ch/warsaw",
+        whiteBox: true,
+      },
+      {
+        name: "Instytut Kultury Włoskiej w Warszawie",
+        narrow: true,
+        src: instytutKulturyWloskiej,
+        href: "https://iicvarsavia.esteri.it/pl/",
+        whiteBox: true,
+      },
     ],
   },
   {
@@ -107,6 +150,12 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
         name: "Konwenty Południowe",
         src: konwentyPoludniowe,
         href: "https://konwenty-poludniowe.pl/",
+      },
+      {
+        name: "Letra",
+        src: letra,
+        href: "https://arkady.eu/",
+        whiteBox: true,
       },
       {
         name: "Otwarte Komiksy",

@@ -16,9 +16,9 @@ export const productPath = (slug: string) => `/produkt/${slug}/`;
 export const NOCLEGI_PATH = "/noclegi/";
 
 /**
- * Published in WordPress, not part of this site: a 2023 stub, a probe for the
+ * Published in WordPress, not part of this site: a 2023 stub, two probes for the
  * Facebook feed, and WordPress's own duplicate of the exhibitor rules. The
- * catch-all would otherwise render all three.
+ * catch-all would otherwise render them all.
  *
  * The four WooCommerce pages are here for a different reason — they are live
  * and stay on WordPress until cutover, so the catch-all would prerender their
@@ -26,6 +26,7 @@ export const NOCLEGI_PATH = "/noclegi/";
  */
 export const RETIRED_PATHS = [
   "/feed-test/",
+  "/feed-archiwum/",
   "/info/",
   "/poznaj-wystawcow/",
   "/regulamin-wystawcow-2/",

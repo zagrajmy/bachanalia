@@ -22,16 +22,42 @@ type CacheInit = RequestInit & { next?: { revalidate?: number; tags?: string[] }
  * staticPageGenerationTimeout, and Next retries that page three times —
  * whereas a thrown error ends the build on the spot.
  */
-async function fetchWithRetry(url: string, init: RequestInit): Promise<Response> {
+async function fetchWithRetry<TResult>(
+  url: string,
+  init: RequestInit,
+): Promise<GraphQLResponse<TResult>> {
   let lastError: unknown;
 
   for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
     if (attempt > 0) await sleep(RETRY_DELAYS_MS[attempt - 1] ?? 0);
 
+    let response: Response;
+
     try {
-      const response = await fetch(url, init);
-      if (!isTransient(response.status)) return response;
+      response = await fetch(url, init);
+    } catch (error) {
+      lastError = error;
+      continue;
+    }
+
+    if (isTransient(response.status)) {
       lastError = new Error(`WordPress responded ${response.status}`);
+      continue;
+    }
+
+    if (!response.ok) {
+      throw new Error(`WordPress responded ${response.status} ${response.statusText}`);
+    }
+
+    /**
+     * The body is read inside the loop: this host drops the connection
+     * mid-response often enough that a socket dying after the headers arrived
+     * is just another transient failure, as is the firewall's HTML challenge
+     * served under a 200.
+     */
+    try {
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the payload's shape is the document's to promise
+      return (await response.json()) as GraphQLResponse<TResult>;
     } catch (error) {
       lastError = error;
     }
@@ -46,17 +72,10 @@ async function request<TResult, TVariables>(
   headers: Record<string, string>,
   init: CacheInit,
 ): Promise<TResult> {
-  const response = await fetchWithRetry(
+  const body = await fetchWithRetry<TResult>(
     graphqlUrl(process.env.NEXT_PUBLIC_WORDPRESS_API_URL, query, variables),
     { headers, ...init },
   );
-
-  if (!response.ok) {
-    throw new Error(`WordPress responded ${response.status} ${response.statusText}`);
-  }
-
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the payload's shape is the document's to promise
-  const body = (await response.json()) as GraphQLResponse<TResult>;
 
   if (body.errors?.length) {
     throw new Error(`GraphQL error: ${body.errors.map((error) => error.message).join("; ")}`);

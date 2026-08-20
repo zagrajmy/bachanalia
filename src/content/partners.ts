@@ -164,7 +164,7 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
     ],
   },
   {
-    tier: "Patroni medialni",
+    tier: "Patroni",
     logos: [
       {
         name: "Fahrenheit",

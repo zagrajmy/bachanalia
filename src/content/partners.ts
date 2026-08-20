@@ -70,7 +70,7 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
     ],
   },
   {
-    tier: "Patroni Honorowi",
+    tier: "Patroni honorowi",
     logos: [
       {
         name: "Ambasada Szwajcarii w Polsce",

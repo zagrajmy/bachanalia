@@ -36,25 +36,22 @@ async function withLiveImages(entries: NewsEntry[]) {
 }
 
 /**
- * The mirrored feed page is a megabyte of widget markup, by some margin the
- * largest thing WordPress serves us, and this host rate-limits bursts and drops
- * connections under a prerender's concurrency. A body that arrives short is
- * indistinguishable from a whole one until `JSON.parse` reaches the end of it,
- * so the failure surfaces here as a `SyntaxError` rather than a dead socket,
- * and `fetchGraphQL`'s retries cannot help when whatever truncated it is
- * deterministic.
+ * `FeedQuery` pulls the mirrored feed page whole — 1.13 MB, the largest body
+ * WordPress serves us — and a short read is indistinguishable from a complete
+ * one until `JSON.parse` runs off the end of it. The prerender that died
+ * stopped at position 983040, exactly 960 KiB, so `fetchGraphQL`'s retry
+ * ladder had nothing transient left to retry.
  *
- * It is also the only fetch on the home page with a local copy to fall back on.
- * `fb-news.json` is the durable record and the scrape only adds posts too new
- * to have been archived yet, so losing it costs the newest few Facebook posts
- * until the next revalidation — cheap next to losing the deploy, which is what
- * throwing from a prerender costs.
+ * It is the one fetch on this page with a local copy behind it: `fb-news.json`
+ * is the durable record and the scrape only adds posts too new to be in it, so
+ * a dead feed costs the newest few posts until the next revalidation. Throwing
+ * from a prerender costs the deploy.
  */
 async function liveFeedHtml(): Promise<string> {
   try {
     return feedContent(await fetchGraphQL(FeedQuery, { uri: FEED_PAGE_URI }));
   } catch (error) {
-    // oxlint-disable-next-line no-console -- a silent fallback is how a permanently dead feed goes unnoticed
+    // oxlint-disable-next-line no-console -- says which deploy degraded; the daily archive job is what catches a feed that stays dead
     console.error("Facebook feed unavailable, serving the archive alone:", error);
     return "";
   }

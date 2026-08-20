@@ -70,6 +70,25 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
     ],
   },
   {
+    tier: "Patroni Honorowi",
+    logos: [
+      {
+        name: "Ambasada Szwajcarii w Polsce",
+        narrow: true,
+        src: ambasadaSzwajcarii,
+        href: "https://www.eda.admin.ch/warsaw",
+        whiteBox: true,
+      },
+      {
+        name: "Instytut Kultury Włoskiej w Warszawie",
+        narrow: true,
+        src: instytutKulturyWloskiej,
+        href: "https://iicvarsavia.esteri.it/pl/",
+        whiteBox: true,
+      },
+    ],
+  },
+  {
     tier: "Mecenasi",
     logos: [
       {
@@ -121,20 +140,6 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
         name: "zagrajmy.net",
         src: asImage(zagrajmySvg),
         href: "https://zagrajmy.net/",
-      },
-      {
-        name: "Ambasada Szwajcarii w Polsce",
-        narrow: true,
-        src: ambasadaSzwajcarii,
-        href: "https://www.eda.admin.ch/warsaw",
-        whiteBox: true,
-      },
-      {
-        name: "Instytut Kultury Włoskiej w Warszawie",
-        narrow: true,
-        src: instytutKulturyWloskiej,
-        href: "https://iicvarsavia.esteri.it/pl/",
-        whiteBox: true,
       },
     ],
   },

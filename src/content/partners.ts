@@ -4,9 +4,12 @@ import ambasadaSzwajcarii from "./partners/ambasada-szwajcarii.webp";
 import dylanDog from "./partners/dylan-dog.webp";
 import fahrenheit from "./partners/fahrenheit.webp";
 import instytutKulturyWloskiej from "./partners/instytut-kultury-wloskiej.webp";
+import iuvi from "./partners/iuvi.webp";
 import konwentyPoludniowe from "./partners/konwenty-poludniowe.webp";
 import letra from "./partners/letra.webp";
 import miastoZielonaGora from "./partners/miasto-zielona-gora.webp";
+import muduko from "./partners/muduko.webp";
+import naszaKsiegarnia from "./partners/nasza-ksiegarnia.webp";
 import otwarteKomiksy from "./partners/otwarte-komiksy.webp";
 import perAsperaSvg from "./partners/per-aspera.svg";
 import planetariumWenus from "./partners/planetarium-wenus.webp";
@@ -70,6 +73,25 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
     ],
   },
   {
+    tier: "Patroni honorowi",
+    logos: [
+      {
+        name: "Ambasada Szwajcarii w Polsce",
+        narrow: true,
+        src: ambasadaSzwajcarii,
+        href: "https://www.eda.admin.ch/warsaw",
+        whiteBox: true,
+      },
+      {
+        name: "Instytut Kultury Włoskiej w Warszawie",
+        narrow: true,
+        src: instytutKulturyWloskiej,
+        href: "https://iicvarsavia.esteri.it/pl/",
+        whiteBox: true,
+      },
+    ],
+  },
+  {
     tier: "Mecenasi",
     logos: [
       {
@@ -123,17 +145,20 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
         href: "https://zagrajmy.net/",
       },
       {
-        name: "Ambasada Szwajcarii w Polsce",
-        narrow: true,
-        src: ambasadaSzwajcarii,
-        href: "https://www.eda.admin.ch/warsaw",
-        whiteBox: true,
+        name: "IUVI Games",
+        src: iuvi,
+        href: "https://iuvigames.pl/",
       },
       {
-        name: "Instytut Kultury Włoskiej w Warszawie",
+        name: "Wydawnictwo Nasza Księgarnia",
         narrow: true,
-        src: instytutKulturyWloskiej,
-        href: "https://iicvarsavia.esteri.it/pl/",
+        src: naszaKsiegarnia,
+        href: "https://nk.com.pl/",
+      },
+      {
+        name: "Muduko",
+        src: muduko,
+        href: "https://muduko.com/",
         whiteBox: true,
       },
     ],

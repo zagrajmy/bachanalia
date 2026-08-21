@@ -17,6 +17,7 @@ jobs:
         with:
           bun-version: latest
       - run: bun install --frozen-lockfile
+      - run: bun run codegen
       - run: bun scripts/archive-fb-news.ts
       - run: |
           git config user.name "github-actions[bot]"

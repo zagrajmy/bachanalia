@@ -117,9 +117,9 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
         href: "http://www.toreoficyna.pl/",
       },
       {
-        name: "Dylan Dog. 40 lat koszmarów",
+        name: "Dylan Dog",
         src: dylanDog,
-        href: "https://www.youtube.com/@dylandogpl",
+        href: "https://www.instagram.com/dylandogpl",
       },
     ],
   },

@@ -42,7 +42,7 @@ export function PartnersCard() {
 
       <ul className="grid gap-9 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-9">
         {PARTNERS.map(({ tier, logos }) => (
-          <li key={tier}>
+          <li key={tier} className={tier === "Patroni medialni" ? "sm:col-span-2" : ""}>
             <p className="eyebrow text-slate">{tier}</p>
             <div className="mt-4 flex flex-wrap items-center gap-3">
               {logos.map((logo) => (

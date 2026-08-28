@@ -18,8 +18,9 @@ export function markHeight(logo: PartnerLogo, scale: MarkScale = "page") {
   const ratio = logo.src.width / logo.src.height;
   const [wide, medium, compact] = HEIGHTS[scale];
   const height = ratio >= 4 ? wide : ratio >= 1.5 ? medium : compact;
+  const factor = (logo.narrow ? 1.35 : 1) * (logo.scale ?? 1);
 
-  return logo.narrow ? `calc(${height} * 1.35)` : height;
+  return factor === 1 ? height : `calc(${height} * ${factor})`;
 }
 
 /**

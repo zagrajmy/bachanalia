@@ -5,7 +5,10 @@ import dylanDog from "./partners/dylan-dog.webp";
 import fahrenheit from "./partners/fahrenheit.webp";
 import instytutKulturyWloskiej from "./partners/instytut-kultury-wloskiej.webp";
 import iuvi from "./partners/iuvi.webp";
+import komiksopedia from "./partners/komiksopedia.webp";
+import komiksowyPamietnikSvg from "./partners/komiksowy-pamietnik.svg";
 import konwentyPoludniowe from "./partners/konwenty-poludniowe.webp";
+import krzychuAndBuk from "./partners/krzychu-and-buk.webp";
 import letra from "./partners/letra.webp";
 import miastoZielonaGora from "./partners/miasto-zielona-gora.webp";
 import muduko from "./partners/muduko.webp";
@@ -14,11 +17,15 @@ import otwarteKomiksy from "./partners/otwarte-komiksy.webp";
 import perAsperaSvg from "./partners/per-aspera.svg";
 import planetariumWenus from "./partners/planetarium-wenus.webp";
 import powergraph from "./partners/powergraph.webp";
+import raszczakpl from "./partners/raszczakpl.webp";
 import rebis from "./partners/rebis.webp";
+import retroKomiks from "./partners/retro-komiks.webp";
+import timof from "./partners/timof.webp";
 import tore from "./partners/tore.webp";
 import uniwersytetZielonogorski from "./partners/uniwersytet-zielonogorski.webp";
 import wampirowoSvg from "./partners/wampirowo.svg";
 import zagrajmySvg from "./partners/zagrajmy.svg";
+import znakiemTego from "./partners/znakiem-tego.webp";
 import zok from "./partners/zok.webp";
 
 /** Next types `*.svg` as `any` so `@svgr/webpack` can redefine it; these ones are images. */
@@ -46,6 +53,8 @@ export type PartnerLogo = {
    * cannot tell one from a logo that is simply wide, so the mark says so.
    */
   narrow?: boolean;
+  /** A nudge on top of the height ladder, for a mark that still sits wrong. */
+  scale?: number;
   src: StaticImageData;
   /**
    * The artwork ships baked onto an opaque white rectangle, so it needs
@@ -78,6 +87,7 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
       {
         name: "Ambasada Szwajcarii w Polsce",
         narrow: true,
+        scale: 1.15,
         src: ambasadaSzwajcarii,
         href: "https://www.eda.admin.ch/warsaw",
         whiteBox: true,
@@ -85,6 +95,7 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
       {
         name: "Instytut Kultury Włoskiej w Warszawie",
         narrow: true,
+        scale: 1.15,
         src: instytutKulturyWloskiej,
         href: "https://iicvarsavia.esteri.it/pl/",
         whiteBox: true,
@@ -168,11 +179,13 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
     logos: [
       {
         name: "Fahrenheit",
+        narrow: true,
         src: fahrenheit,
         href: "https://fahrenheit.net.pl/",
       },
       {
         name: "Konwenty Południowe",
+        narrow: true,
         src: konwentyPoludniowe,
         href: "https://konwenty-poludniowe.pl/",
       },
@@ -186,6 +199,43 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
         name: "Otwarte Komiksy",
         src: otwarteKomiksy,
         href: "https://www.youtube.com/@OtwarteKomiksy",
+      },
+      {
+        name: "RaszczakPL",
+        src: raszczakpl,
+        href: "https://www.instagram.com/raszczakpl",
+      },
+      {
+        name: "Retro Komiks",
+        src: retroKomiks,
+        href: "https://retroopowiesci.blogspot.com/",
+        whiteBox: true,
+      },
+      {
+        name: "Znakiem Tego",
+        src: znakiemTego,
+        href: "https://www.instagram.com/znakiem_tego",
+      },
+      {
+        name: "Timof Comics",
+        src: timof,
+        href: "https://timof.pl/",
+        whiteBox: true,
+      },
+      {
+        name: "krzychu_and_buk",
+        src: krzychuAndBuk,
+        href: "https://www.instagram.com/krzychu_and_buk",
+      },
+      {
+        name: "komiksopedia.pl",
+        src: komiksopedia,
+        href: "https://komiksopedia.pl/",
+      },
+      {
+        name: "Komiksowy Pamiętnik",
+        src: asImage(komiksowyPamietnikSvg),
+        href: "https://www.instagram.com/komiksowy_pamietnik",
       },
     ],
   },

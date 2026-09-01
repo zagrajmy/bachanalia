@@ -31,18 +31,22 @@ export function markHeight(logo: PartnerLogo, scale: MarkScale = "page") {
 export function PartnerMark({
   box = "h-24 w-full sm:h-28",
   logo,
+  alt,
+  style,
 }: {
+  alt?: string;
   box?: string;
   logo: PartnerLogo;
+  style?: React.CSSProperties;
 }) {
   return (
     <span className={`relative flex items-center justify-center ${box}`}>
       <Image
-        alt=""
+        alt={alt ?? ""}
         className={`max-w-full object-contain ${logo.whiteBox ? "mix-blend-multiply" : ""}`}
         sizes="(min-width: 640px) 360px, 45vw"
         src={logo.src}
-        style={{ height: "auto", maxHeight: markHeight(logo), width: "auto" }}
+        style={{ height: "auto", maxHeight: markHeight(logo), width: "auto", ...style }}
       />
     </span>
   );

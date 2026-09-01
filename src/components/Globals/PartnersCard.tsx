@@ -1,8 +1,9 @@
 import Image from "next/image";
 
 import { markHeight } from "@/components/Partners/PartnerMark";
-import { cityFunding, PARTNERS } from "@/content/partners";
+import { PARTNERS } from "@/content/partners";
 import type { PartnerLogo } from "@/content/partners";
+import { FundingStrip } from "../Partners/FundingStrip";
 
 function Mark({ logo }: { logo: PartnerLogo }) {
   const image = (
@@ -53,21 +54,8 @@ export function PartnersCard() {
         ))}
       </ul>
 
-      <div className="mt-9 flex items-center gap-3 border-t border-dashed border-navy/30 pt-6">
-        <a
-          href={cityFunding.href}
-          target="_blank"
-          rel="noreferrer"
-          className="shrink-0 p-1 no-underline transition-none outline-1 outline-dashed outline-transparent hover:outline-navy/30"
-        >
-          <Image
-            src={cityFunding.src}
-            alt={cityFunding.name}
-            className="w-auto"
-            style={{ height: "clamp(58px, 9.4vw, 80px)" }}
-          />
-        </a>
-        <p className="text-xs text-slate">{cityFunding.name}</p>
+      <div className="mt-9 flex items-center justify-center gap-3 border-t border-dashed border-navy/30 pt-6">
+        <FundingStrip />
       </div>
     </div>
   );

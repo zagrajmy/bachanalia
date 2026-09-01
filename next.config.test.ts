@@ -200,9 +200,13 @@ test("the dropped WordPress news shells land on the news archive", async () => {
   assert.equal(destinations.get("/category/:slug*"), "/aktualnosci/");
 });
 
-test("the programme and everything under it hop to Ludamus", async () => {
+test("the programme and everything under it hop to the Ludamus event page", async () => {
   const rule = await find("/program/:path*");
 
-  assert.equal(rule.destination, "https://bachanalia.zagrajmy.net/:path*");
+  assert.match(
+    rule.destination,
+    /^https:\/\/bachanalia\.zagrajmy\.net\/event\/[^/]+\/$/,
+    "the origin alone is Ludamus's list of every event it hosts, and every other path there 404s",
+  );
   assert.equal(rule.permanent, false);
 });

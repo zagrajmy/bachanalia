@@ -154,12 +154,16 @@ const nextConfig: NextConfig = {
       })),
       /**
        * The programme moved to Ludamus, which owns the schedule and the
-       * sign-ups. Temporary, because a 308 is cached by the browser forever
-       * and the programme could yet come back onto this site.
+       * sign-ups. Every path lands on the edition's event page rather than
+       * being mapped across: Ludamus 404s anything outside /event/, and
+       * nothing was ever published under /program/ here anyway.
+       *
+       * Temporary, because a 308 is cached by the browser forever and the
+       * event page carries an edition slug.
        */
       {
         source: "/program/:path*",
-        destination: `${new URL(PROGRAM_URL).origin}/:path*`,
+        destination: PROGRAM_URL,
         permanent: false,
       },
       {

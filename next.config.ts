@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+import { PROGRAM_URL } from "./src/components/Globals/siteNav";
+
 const nextConfig: NextConfig = {
   trailingSlash: true,
   /**
@@ -150,6 +152,16 @@ const nextConfig: NextConfig = {
         destination: "/regulamin-wystawcow/",
         permanent: true,
       })),
+      /**
+       * The programme moved to Ludamus, which owns the schedule and the
+       * sign-ups. Temporary, because a 308 is cached by the browser forever
+       * and the programme could yet come back onto this site.
+       */
+      {
+        source: "/program/:path*",
+        destination: `${new URL(PROGRAM_URL).origin}/:path*`,
+        permanent: false,
+      },
       {
         source: "/index.php/:path*",
         destination: "/:path*/",

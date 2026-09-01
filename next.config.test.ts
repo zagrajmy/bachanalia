@@ -199,3 +199,10 @@ test("the dropped WordPress news shells land on the news archive", async () => {
   assert.equal(destinations.get("/blog"), "/aktualnosci/");
   assert.equal(destinations.get("/category/:slug*"), "/aktualnosci/");
 });
+
+test("the programme and everything under it hop to Ludamus", async () => {
+  const rule = await find("/program/:path*");
+
+  assert.equal(rule.destination, "https://bachanalia.zagrajmy.net/:path*");
+  assert.equal(rule.permanent, false);
+});

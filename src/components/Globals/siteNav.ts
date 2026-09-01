@@ -23,8 +23,12 @@ export const NOCLEGI_PATH = "/noclegi/";
  * The four WooCommerce pages are here for a different reason — they are live
  * and stay on WordPress until cutover, so the catch-all would prerender their
  * bodies as empty shortcode shells standing beside the real cart.
+ *
+ * /program/ is here for a third reason: next.config redirects it to Ludamus,
+ * so a prerendered body would be unreachable and a sitemap entry a hop.
  */
 export const RETIRED_PATHS = [
+  "/program/",
   "/feed-test/",
   "/feed-archiwum/",
   "/info/",
@@ -45,6 +49,10 @@ export const RETIRED_PATHS = [
 export const SHADOWED_PATHS = ["/regulamin-wystawcow/", NOCLEGI_PATH];
 
 export type NavLink = { external?: boolean; href: string; label: string };
+
+/** The programme lives in Ludamus, which owns the schedule and the sign-ups. */
+export const PROGRAM_URL =
+  "https://bachanalia.zagrajmy.net/event/xl-bachanalia-fantastyczne-polcon-2026/";
 
 /**
  * A group's `href` is a real destination, not a toggle. The WordPress menu
@@ -67,9 +75,12 @@ export const primaryNav: NavGroup[] = [
     ],
   },
   {
-    href: "/program/",
+    external: true,
+    href: PROGRAM_URL,
     label: "Program",
     children: [
+      /** The trigger is a link, but a pointer user reads it as a toggle. */
+      { external: true, href: PROGRAM_URL, label: "Program online" },
       { href: "/blok-prelekcyjny/", label: "Blok prelekcyjny" },
       { href: "/blok-konkursowy/", label: "Blok konkursowy" },
       { href: "/blok-naukowy/", label: "Blok naukowy" },
@@ -116,6 +127,7 @@ export const footerNav = [
   {
     title: "Program",
     links: [
+      { external: true, href: PROGRAM_URL, label: "Program online" },
       { href: "/blok-prelekcyjny/", label: "Blok prelekcyjny" },
       { href: "/blok-konkursowy/", label: "Blok konkursowy" },
       { href: "/blok-naukowy/", label: "Blok naukowy" },

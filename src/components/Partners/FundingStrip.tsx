@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 
+import { PartnerMark } from "./PartnerMark";
 import { FUNDING } from "@/content/partners";
 
 export function FundingStrip() {
@@ -12,13 +12,13 @@ export function FundingStrip() {
           href={logo.href}
           rel="noreferrer"
           target="_blank"
-          className="flex aspect-square w-[min(320px,72vw)] items-center justify-center border border-transparent no-underline hover:border-dashed hover:border-navy/30"
+          className="group no-underline"
         >
-          <Image
+          <PartnerMark
             alt={logo.name}
-            className="size-auto max-h-full max-w-full"
-            sizes="(min-width: 640px) 320px, 72vw"
-            src={logo.src}
+            box="aspect-square w-[min(320px,72vw)] border border-transparent group-hover:border-dashed group-hover:border-navy/30"
+            logo={logo}
+            style={{ maxHeight: "100%" }}
           />
         </Link>
       ))}

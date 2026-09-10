@@ -10,6 +10,7 @@ import komiksowyPamietnikSvg from "./partners/komiksowy-pamietnik.svg";
 import konwentyPoludniowe from "./partners/konwenty-poludniowe.webp";
 import krzychuAndBuk from "./partners/krzychu-and-buk.webp";
 import letra from "./partners/letra.webp";
+import lubuskieSvg from "./partners/lubuskie.svg";
 import miastoZielonaGora from "./partners/miasto-zielona-gora.webp";
 import muduko from "./partners/muduko.webp";
 import naszaKsiegarnia from "./partners/nasza-ksiegarnia.webp";
@@ -22,6 +23,7 @@ import rebis from "./partners/rebis.webp";
 import retroKomiks from "./partners/retro-komiks.webp";
 import timof from "./partners/timof.webp";
 import tore from "./partners/tore.webp";
+import toyotaZielonaGora from "./partners/toyota-zielona-gora.svg";
 import uniwersytetZielonogorski from "./partners/uniwersytet-zielonogorski.webp";
 import wampirowoSvg from "./partners/wampirowo.svg";
 import zagrajmySvg from "./partners/zagrajmy.svg";
@@ -132,6 +134,12 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
         src: dylanDog,
         href: "https://www.instagram.com/dylandogpl",
       },
+      {
+        name: "Toyota Zielona Góra",
+        scale: 1.15,
+        src: asImage(toyotaZielonaGora),
+        href: "https://toyotazielonagora.pl/",
+      },
     ],
   },
   {
@@ -241,9 +249,20 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
   },
 ];
 
-/** The sentence is baked into the artwork, so the page sets it as text too. */
-export const cityFunding = {
-  name: "Zrealizowano przy pomocy finansowej Miasta Zielona Góra",
-  src: miastoZielonaGora,
-  href: "https://zielona-gora.pl/",
-};
+/**
+ * Who paid for it. These two carry a strip of their own below the tiers rather
+ * than sitting in the grid, so the page gives them one square cell each and
+ * lets a wordmark and a padded square find their own size inside it.
+ */
+export const FUNDING: (PartnerLogo & { href: string })[] = [
+  {
+    name: "Zrealizowano przy pomocy finansowej Miasta Zielona Góra",
+    src: miastoZielonaGora,
+    href: "https://zielona-gora.pl/",
+  },
+  {
+    name: "Lubuskie. Warte zachodu",
+    src: asImage(lubuskieSvg),
+    href: "https://lubuskie.pl/",
+  },
+];

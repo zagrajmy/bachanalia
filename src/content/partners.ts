@@ -138,7 +138,7 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
         name: "Toyota Zielona Góra",
         scale: 1.15,
         src: asImage(toyotaZielonaGora),
-        href: "https://toyotazielonagora.pl/",
+        href: "https://www.toyota-zg.pl/",
       },
     ],
   },

@@ -250,11 +250,11 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
 ];
 
 /**
- * Who paid for it. These two carry a strip of their own below the tiers rather
- * than sitting in the grid, so the page gives them one square cell each and
- * lets a wordmark and a padded square find their own size inside it.
+ * Who paid for it. Public money answers to different rules than sponsorship,
+ * so they sit in a strip of their own below the tiers rather than in the
+ * grid — and the mark is the whole entry, with no room to go unlinked.
  */
-export const FUNDING: (PartnerLogo & { href: string })[] = [
+export const FUNDING: (Pick<PartnerLogo, "name" | "src" | "whiteBox"> & { href: string })[] = [
   {
     name: "Zrealizowano przy pomocy finansowej Miasta Zielona Góra",
     src: miastoZielonaGora,

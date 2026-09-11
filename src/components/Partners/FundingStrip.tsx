@@ -20,11 +20,8 @@ export function FundingStrip() {
             logo={logo}
             style={{ maxHeight: "100%" }}
           />
-          {/** Set on the city mark's own printed line, which ends near this inset. */}
           {logo.caption && (
-            <span className="absolute inset-x-0 bottom-7 text-center text-sm text-ink-muted">
-              {logo.caption}
-            </span>
+            <span className="absolute inset-x-0 bottom-7 text-center text-sm">{logo.caption}</span>
           )}
         </Link>
       ))}

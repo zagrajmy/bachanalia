@@ -15,6 +15,9 @@ export const productPath = (slug: string) => `/produkt/${slug}/`;
  */
 export const NOCLEGI_PATH = "/noclegi/";
 
+/** WordPress holds the prose; the site plans are printed under it from here. */
+export const CZAS_I_MIEJSCE_PATH = "/czas-i-miejsce/";
+
 /**
  * Published in WordPress, not part of this site: a 2023 stub, two probes for the
  * Facebook feed, and WordPress's own duplicate of the exhibitor rules. The
@@ -68,7 +71,7 @@ export const primaryNav: NavGroup[] = [
     children: [
       { href: "/co-to-sa-bachanalia/", label: "Co to są Bachanalia" },
       { href: "/aktualnosci/", label: "Aktualności" },
-      { href: "/czas-i-miejsce/", label: "Czas i miejsce" },
+      { href: CZAS_I_MIEJSCE_PATH, label: "Czas i miejsce" },
       { href: "/organizator/", label: "Organizator" },
       { href: "/sztab-bachanaliowy/", label: "Sztab bachanaliowy" },
       { href: "/regulamin/", label: "Regulamin" },
@@ -120,7 +123,7 @@ export const footerNav = [
       { href: "/co-to-sa-bachanalia/", label: "Co to są Bachanalia" },
       { href: "/organizator/", label: "Organizator" },
       { href: "/sztab-bachanaliowy/", label: "Sztab bachanaliowy" },
-      { href: "/czas-i-miejsce/", label: "Czas i miejsce" },
+      { href: CZAS_I_MIEJSCE_PATH, label: "Czas i miejsce" },
       { href: "/regulamin/", label: "Regulamin" },
     ],
   },

@@ -4,10 +4,12 @@ import { splitWpContent } from "@/utils/prepareWpContent";
 import { unshoutTitle } from "@/utils/unshout";
 
 interface TemplateProps {
+  /** Sections of ours, printed under whatever WordPress holds for the page. */
+  children?: React.ReactNode;
   node: ContentNodeResult;
 }
 
-export function PageTemplate({ node }: TemplateProps) {
+export function PageTemplate({ node, children }: TemplateProps) {
   const segments = splitWpContent(node.content);
 
   return (
@@ -23,6 +25,8 @@ export function PageTemplate({ node }: TemplateProps) {
           Szykujemy tę stronę na XL edycję. Zajrzyj tu ponownie za jakiś czas.
         </p>
       )}
+
+      {children}
     </article>
   );
 }

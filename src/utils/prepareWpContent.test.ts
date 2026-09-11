@@ -23,6 +23,15 @@ test("keeps the slide markup and the real content intact", () => {
   assert.ok(out.includes("elementor-image-carousel"));
 });
 
+test("drops the superseded campus plan", () => {
+  const out = prepareWpContent(
+    '<figure><img src="https://wp.example/uploads/2024/09/Kampus_B_BF24-DRUK_page-0001-724x1024.jpg" alt="" srcset="x 1x" /></figure><p>Dojazd</p>',
+  );
+
+  assert.ok(!out.includes("<img"));
+  assert.ok(out.includes("Dojazd"));
+});
+
 test("leaves meaningful roles elsewhere alone", () => {
   const nav = '<nav role="navigation" aria-label="Menu"><a href="/x">x</a></nav>';
 

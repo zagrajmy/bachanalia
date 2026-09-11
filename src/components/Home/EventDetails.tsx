@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AddToCalendar } from "@/components/Home/AddToCalendar";
+import { CZAS_I_MIEJSCE_PATH } from "@/components/Globals/siteNav";
 import { con } from "@/content/con";
 import { cn } from "@/lib/utils";
 
@@ -22,7 +23,7 @@ export function EventDetails({ className }: { className?: string }) {
         {con.venue},<br />
         <Link
           className="decoration-dashed underline decoration-2 decoration-accent/50 underline-offset-[0.2em] transition-colors duration-150 hover:text-ink hover:decoration-ink hover:duration-0"
-          href="/czas-i-miejsce/"
+          href={CZAS_I_MIEJSCE_PATH}
         >
           {con.address}
         </Link>

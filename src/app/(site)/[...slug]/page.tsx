@@ -1,7 +1,8 @@
 import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { RETIRED_PATHS, SHADOWED_PATHS } from "@/components/Globals/siteNav";
+import { EventMaps } from "@/components/EventMaps";
+import { CZAS_I_MIEJSCE_PATH, RETIRED_PATHS, SHADOWED_PATHS } from "@/components/Globals/siteNav";
 import { PageTemplate } from "@/components/Templates/Page/PageTemplate";
 import { PostTemplate } from "@/components/Templates/Post/PostTemplate";
 import { AllContentQuery } from "@/queries/general/AllContentQuery";
@@ -72,7 +73,11 @@ export default async function Page({ params }: Props) {
 
   switch (contentNode.contentTypeName) {
     case "page":
-      return <PageTemplate node={contentNode} />;
+      return (
+        <PageTemplate node={contentNode}>
+          {path === CZAS_I_MIEJSCE_PATH && <EventMaps />}
+        </PageTemplate>
+      );
     case "post":
       return <PostTemplate node={contentNode} />;
     default:

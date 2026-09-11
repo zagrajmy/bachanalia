@@ -10,10 +10,18 @@ const DROPPED_ATTRIBUTES = [
   /(?<=<div class="swiper-slide") role="group"/g,
 ];
 
+/**
+ * Last year's printed campus plan, still sitting at the foot of Czas i miejsce
+ * in WordPress. The current plans are drawn from `MAPS` right under it, and
+ * two site maps disagreeing is worse than one.
+ */
+const DROPPED_IMAGES = [/<img\b[^>]*Kampus_B_BF24[^>]*>/gi];
+
 export const prepareWpContent = (html: string | null = "") => {
   let stripped = html ?? "";
 
   for (const pattern of DROPPED_ATTRIBUTES) stripped = stripped.replace(pattern, "");
+  for (const pattern of DROPPED_IMAGES) stripped = stripped.replace(pattern, "");
 
   return blockThirdPartyEmbeds(stripped);
 };

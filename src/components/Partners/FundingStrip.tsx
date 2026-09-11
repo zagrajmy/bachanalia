@@ -12,7 +12,7 @@ export function FundingStrip() {
           href={logo.href}
           rel="noreferrer"
           target="_blank"
-          className="group no-underline"
+          className="group relative block no-underline"
         >
           <PartnerMark
             alt={logo.name}
@@ -20,6 +20,12 @@ export function FundingStrip() {
             logo={logo}
             style={{ maxHeight: "100%" }}
           />
+          {/** Set on the city mark's own printed line, which ends near this inset. */}
+          {logo.caption && (
+            <span className="absolute inset-x-0 bottom-7 text-center text-sm text-ink-muted">
+              {logo.caption}
+            </span>
+          )}
         </Link>
       ))}
     </div>

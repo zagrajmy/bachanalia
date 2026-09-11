@@ -254,7 +254,11 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
  * so they sit in a strip of their own below the tiers rather than in the
  * grid — and the mark is the whole entry, with no room to go unlinked.
  */
-export const FUNDING: (Pick<PartnerLogo, "name" | "src" | "whiteBox"> & { href: string })[] = [
+export const FUNDING: (Pick<PartnerLogo, "name" | "src" | "whiteBox"> & {
+  /** For a mark that says only who it is; the city's artwork says why. */
+  caption?: string;
+  href: string;
+})[] = [
   {
     name: "Zrealizowano przy pomocy finansowej Miasta Zielona Góra",
     src: miastoZielonaGora,
@@ -262,6 +266,7 @@ export const FUNDING: (Pick<PartnerLogo, "name" | "src" | "whiteBox"> & { href: 
   },
   {
     name: "Lubuskie. Warte zachodu",
+    caption: "Partner",
     src: asImage(lubuskieSvg),
     href: "https://lubuskie.pl/",
   },

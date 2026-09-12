@@ -41,6 +41,7 @@ export default async function GuestPage({ params }: Props) {
           alt={guest.name}
           sizes="(min-width: 1024px) 20rem, 100vw"
           priority
+          placeholder="blur"
           className="w-full rounded-card bg-paper-shade object-cover lg:sticky lg:top-(--below-header)"
         />
       )}

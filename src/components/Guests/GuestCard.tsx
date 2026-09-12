@@ -32,6 +32,7 @@ export function GuestCard({
             width={typeof image.src === "string" ? (image.width ?? 800) : undefined}
             height={typeof image.src === "string" ? (image.height ?? 600) : undefined}
             sizes={SIZES}
+            placeholder={typeof image.src === "string" ? "empty" : "blur"}
             className="aspect-3/4 w-full object-cover"
             style={image.focus ? { objectPosition: image.focus } : undefined}
           />

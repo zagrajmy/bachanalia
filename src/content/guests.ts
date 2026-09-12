@@ -10,6 +10,7 @@ import artur_tojza from "./guests/artur-tojza.jpg";
 import justyna_sygulska from "./guests/justyna-sygulska.jpg";
 import blazej_kurowski from "./guests/blazej-kurowski.png";
 import tine_anthoni from "./guests/tine-anthoni.jpg";
+import grzegorz_pawlak from "./guests/grzegorz-pawlak.jpg";
 
 export type Guest = {
   /** Paragraphs. Guests without a bio get no detail page. */
@@ -216,6 +217,8 @@ export const guests: Guest[] = [
   {
     name: "Grzegorz Pawlak",
     slug: "grzegorz-pawlak",
+    photo: grzegorz_pawlak,
+    photoFocus: "35% center",
     bio: [
       "Twórca ilustracji do książek i magazynów oraz projektant grafiki użytkowej z wykształceniem architektonicznym. Sam jednak najchętniej określa się mianem rysownika komiksów.",
       "Debiutował na łamach magazynu komiksowego B5 #3, a następnie publikował w licznych zinach, antologiach i magazynach, m.in. „Ziniol”, „FEST” oraz „Niczego sobie. Komiksy o mieście Gliwice”.",

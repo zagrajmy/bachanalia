@@ -4,6 +4,7 @@ import { GuestCard, GuestsGrid } from "@/components/Guests/GuestCard";
 import { SectionHeading } from "@/components/SectionHeading";
 import { PostsQuery } from "@/components/Templates/Posts/PostsQuery";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
+import { lqipForWpUrl } from "@/utils/lqip";
 import { unshoutName } from "@/utils/unshout";
 import { wpUriToPath } from "@/utils/wpUriToPath";
 
@@ -42,6 +43,7 @@ export default async function Goscie2025Page() {
                   ? {
                       src: image.sourceUrl,
                       alt: image.altText || "",
+                      blurDataURL: lqipForWpUrl(image.sourceUrl),
                       width: image.mediaDetails?.width ?? undefined,
                       height: image.mediaDetails?.height ?? undefined,
                     }

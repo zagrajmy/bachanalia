@@ -14,6 +14,7 @@ export function GuestCard({
   href?: string;
   image?: {
     alt: string;
+    blurDataURL?: string;
     focus?: string;
     height?: number;
     src: StaticImageData | string;
@@ -32,7 +33,8 @@ export function GuestCard({
             width={typeof image.src === "string" ? (image.width ?? 800) : undefined}
             height={typeof image.src === "string" ? (image.height ?? 600) : undefined}
             sizes={SIZES}
-            placeholder={typeof image.src === "string" ? "empty" : "blur"}
+            placeholder={typeof image.src === "string" && !image.blurDataURL ? "empty" : "blur"}
+            blurDataURL={image.blurDataURL}
             className="aspect-3/4 w-full object-cover"
             style={image.focus ? { objectPosition: image.focus } : undefined}
           />

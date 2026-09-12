@@ -24,6 +24,11 @@ export type Guest = {
 
 export const GUESTS_YEAR = 2026;
 
+/** Only guests with a bio get a page of their own. */
+export const hasBio = (guest: Guest): guest is Guest & { bio: string[] } => guest.bio !== undefined;
+
+export const guestPath = (guest: Guest) => (hasBio(guest) ? `/goscie/${guest.slug}/` : undefined);
+
 export const guests: Guest[] = [
   {
     name: "Marta Kładź-Kocot",

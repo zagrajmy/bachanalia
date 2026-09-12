@@ -18,6 +18,9 @@ const dateFormat = new Intl.DateTimeFormat("pl-PL", {
   year: "numeric",
 });
 
+const blurProps = (blurDataURL?: string) =>
+  blurDataURL ? { placeholder: "blur" as const, blurDataURL } : {};
+
 /** The 2025 guests still live as WordPress posts, one per guest. */
 export default async function Goscie2025Page() {
   const { posts } = await fetchGraphQL(PostsQuery);
@@ -43,9 +46,9 @@ export default async function Goscie2025Page() {
                   ? {
                       src: image.sourceUrl,
                       alt: image.altText || "",
-                      blurDataURL: lqipForWpUrl(image.sourceUrl),
-                      width: image.mediaDetails?.width ?? undefined,
-                      height: image.mediaDetails?.height ?? undefined,
+                      width: image.mediaDetails?.width ?? 800,
+                      height: image.mediaDetails?.height ?? 600,
+                      ...blurProps(lqipForWpUrl(image.sourceUrl)),
                     }
                   : undefined
               }

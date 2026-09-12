@@ -5,7 +5,7 @@ import { fetchProductSlugs } from "@/components/Shop/products";
 import { AllContentQuery } from "@/queries/general/AllContentQuery";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
 import { wpUriToPath } from "@/utils/wpUriToPath";
-import { guests } from "@/content/guests";
+import { guestPath, guests } from "@/content/guests";
 
 export const revalidate = 10_800;
 
@@ -20,7 +20,7 @@ const ownRoutes = [
   NEWS_PATH,
   "/goscie/",
   "/goscie/2025/",
-  ...guests.filter((guest) => guest.bio).map((guest) => `/goscie/${guest.slug}/`),
+  ...guests.map(guestPath).filter((path) => path !== undefined),
   "/wystawcy/",
   "/regulamin-wystawcow/",
 ];

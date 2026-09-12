@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { guests } from "@/content/guests";
+import { guests, hasBio } from "@/content/guests";
 
 type Props = { params: Promise<{ slug: string }> };
 
-const withBio = guests.filter((guest) => guest.bio);
+const withBio = guests.filter(hasBio);
 
 export const dynamicParams = false;
 
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: guest.name,
-    description: guest.bio?.[0],
+    description: guest.bio[0],
     alternates: { canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/goscie/${slug}/` },
   };
 }
@@ -56,7 +56,7 @@ export default async function GuestPage({ params }: Props) {
         </h1>
 
         <div className="wp-content mt-10">
-          {guest.bio?.map((paragraph) => (
+          {guest.bio.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
         </div>

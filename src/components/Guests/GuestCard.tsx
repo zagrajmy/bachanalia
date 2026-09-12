@@ -1,6 +1,7 @@
-import Image, { type StaticImageData } from "next/image";
+import Image, { type ImageProps } from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { type Guest, guestPath } from "@/content/guests";
 
 const SIZES = "(min-width: 1280px) 20vw, (min-width: 1024px) 27vw, (min-width: 640px) 45vw, 90vw";
 
@@ -12,14 +13,8 @@ export function GuestCard({
   meta,
 }: {
   href?: string;
-  image?: {
-    alt: string;
-    blurDataURL?: string;
-    focus?: string;
-    height?: number;
-    src: StaticImageData | string;
-    width?: number;
-  };
+  /** Passed straight to `next/image`; the caller knows whether it is static or remote. */
+  image?: ImageProps;
   meta?: ReactNode;
   name: string;
 }) {
@@ -27,17 +22,7 @@ export function GuestCard({
     <>
       <div className="overflow-hidden rounded-card bg-paper-shade">
         {image ? (
-          <Image
-            src={image.src}
-            alt={image.alt}
-            width={typeof image.src === "string" ? (image.width ?? 800) : undefined}
-            height={typeof image.src === "string" ? (image.height ?? 600) : undefined}
-            sizes={SIZES}
-            placeholder={typeof image.src === "string" && !image.blurDataURL ? "empty" : "blur"}
-            blurDataURL={image.blurDataURL}
-            className="aspect-3/4 w-full object-cover"
-            style={image.focus ? { objectPosition: image.focus } : undefined}
-          />
+          <Image sizes={SIZES} className="aspect-3/4 w-full object-cover" {...image} />
         ) : (
           <div className="aspect-3/4 w-full" />
         )}
@@ -69,23 +54,27 @@ export function GuestsGrid({ children }: { children: ReactNode }) {
 }
 
 /** Guests we have no photo of yet: names only, linked when a bio exists. */
-export function GuestNames({ guests }: { guests: { href?: string; name: string }[] }) {
+export function GuestNames({ guests }: { guests: Guest[] }) {
   return (
     <ul className="mt-14 columns-2 gap-x-6 border-t-2 border-edge pt-8 text-lg/relaxed sm:columns-3 lg:columns-4">
-      {guests.map(({ href, name }) => (
-        <li key={name} className="break-inside-avoid">
-          {href ? (
-            <Link
-              href={href}
-              className="text-ink no-underline transition-colors duration-200 hover:text-rose"
-            >
-              {name}
-            </Link>
-          ) : (
-            name
-          )}
-        </li>
-      ))}
+      {guests.map((guest) => {
+        const href = guestPath(guest);
+
+        return (
+          <li key={guest.slug} className="break-inside-avoid">
+            {href ? (
+              <Link
+                href={href}
+                className="text-ink no-underline transition-colors duration-200 hover:text-rose"
+              >
+                {guest.name}
+              </Link>
+            ) : (
+              guest.name
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
 }

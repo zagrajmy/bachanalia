@@ -1,6 +1,6 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
-import { guests } from "@/content/guests";
+import { guestPath, guests } from "@/content/guests";
 
 import { sitemapPaths } from "./sitemap";
 
@@ -39,7 +39,7 @@ test("collapses the null-uri pages onto the routes we serve ourselves", () => {
     "/aktualnosci/",
     "/goscie/",
     "/goscie/2025/",
-    ...guests.filter((guest) => guest.bio).map((guest) => `/goscie/${guest.slug}/`),
+    ...guests.map(guestPath).filter((path) => path !== undefined),
     "/wystawcy/",
     "/regulamin-wystawcow/",
     "/produkt/golden-ticket/",

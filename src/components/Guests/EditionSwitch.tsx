@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { GUESTS_YEAR } from "@/content/guests";
 
 const EDITIONS = [
-  { year: 2026, href: "/goscie/" },
+  { year: GUESTS_YEAR, href: "/goscie/" },
   { year: 2025, href: "/goscie/2025/" },
 ];
 

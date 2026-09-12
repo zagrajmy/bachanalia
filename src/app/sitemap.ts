@@ -5,6 +5,7 @@ import { fetchProductSlugs } from "@/components/Shop/products";
 import { AllContentQuery } from "@/queries/general/AllContentQuery";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
 import { wpUriToPath } from "@/utils/wpUriToPath";
+import { guestPath, guests } from "@/content/guests";
 
 export const revalidate = 10_800;
 
@@ -13,7 +14,16 @@ export const revalidate = 10_800;
  * listings we assemble here. `goscie` and `sklep` exist as WP pages but their
  * `uri` is null, so they never come out of AllContentQuery.
  */
-const ownRoutes = ["/", SHOP_PATH, NEWS_PATH, "/goscie/", "/wystawcy/", "/regulamin-wystawcow/"];
+const ownRoutes = [
+  "/",
+  SHOP_PATH,
+  NEWS_PATH,
+  "/goscie/",
+  "/goscie/2025/",
+  ...guests.map(guestPath).filter((path) => path !== undefined),
+  "/wystawcy/",
+  "/regulamin-wystawcow/",
+];
 
 /**
  * On top of the pages we do not serve at all — which already covers the four

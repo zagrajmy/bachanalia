@@ -26,6 +26,7 @@ import timof from "./partners/timof.webp";
 import tore from "./partners/tore.webp";
 import toyotaZielonaGora from "./partners/toyota-zielona-gora.svg";
 import uniwersytetZielonogorski from "./partners/uniwersytet-zielonogorski.webp";
+import urbanLab from "./partners/urban-lab.webp";
 import wampirowoSvg from "./partners/wampirowo.svg";
 import zagrajmySvg from "./partners/zagrajmy.svg";
 import znakiemTego from "./partners/znakiem-tego.webp";
@@ -187,6 +188,12 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
         src: muduko,
         href: "https://muduko.com/",
         whiteBox: true,
+      },
+      {
+        name: "Urban Lab Zielona Góra",
+        narrow: true,
+        src: urbanLab,
+        href: "https://urbanlab.zielonagora.pl/",
       },
     ],
   },

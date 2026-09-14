@@ -3,6 +3,7 @@ import type { StaticImageData } from "next/image";
 import ambasadaSzwajcarii from "./partners/ambasada-szwajcarii.webp";
 import dylanDog from "./partners/dylan-dog.webp";
 import fahrenheit from "./partners/fahrenheit.webp";
+import instytutFrancuski from "./partners/instytut-francuski.webp";
 import instytutKulturyWloskiej from "./partners/instytut-kultury-wloskiej.webp";
 import iuvi from "./partners/iuvi.webp";
 import komiksopedia from "./partners/komiksopedia.webp";
@@ -100,6 +101,13 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
         scale: 1.15,
         src: instytutKulturyWloskiej,
         href: "https://iicvarsavia.esteri.it/pl/",
+        whiteBox: true,
+      },
+      {
+        name: "Instytut Francuski w Polsce",
+        narrow: true,
+        src: instytutFrancuski,
+        href: "https://institutfrancais.pl/",
         whiteBox: true,
       },
     ],

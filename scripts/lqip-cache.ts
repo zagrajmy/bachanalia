@@ -11,7 +11,7 @@ import { fbPostKey, lqipMetaRelPath, lqipRelPath, wpMediaKey } from "../src/util
 import { MEDIA_WIDTHS, mediaStem } from "../src/utils/mediaPaths";
 import { splitWpContent } from "../src/utils/prepareWpContent";
 import { feedContent, FeedQuery } from "../src/queries/general/FeedQuery";
-import { wpQuery } from "./wpGraphql";
+import { WP, wpQuery } from "./wpGraphql";
 import { sleep } from "../src/utils/sleep";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -207,7 +207,7 @@ async function collectJobs(
   }
 
   /** Every gallery image ever seen; the job loop rebuilds whatever is missing on disk. */
-  for (const key of Object.keys(manifest)) addWp(`${WP_ORIGIN}${key}`, null, true);
+  for (const key of Object.keys(manifest)) addWp(`${WP}${key}`, null, true);
 
   const { pages, posts } = await wpQuery(AllContentQuery);
 

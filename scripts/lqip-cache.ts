@@ -237,7 +237,7 @@ async function collectJobs(): Promise<{ complete: boolean; crawl: Crawl; jobs: J
     } else {
       queried += 1;
       const images = await galleryImages(uri);
-      /** No content node — the shop page, or a flake — keeps the gallery it had. */
+      /** No content node is WordPress's answer, not a flake: the shop page. It keeps the gallery it had. */
       crawl[uri] = { modified, images: images ?? known?.images ?? [] };
     }
 
@@ -279,9 +279,10 @@ async function prune(keep: Set<string>) {
   const lqips = new Set([...keep].flatMap((key) => [lqipFile(key), lqipMetaFile(key)]));
   let pruned = 0;
 
-  for (const path of await listFiles(IMG_DIR)) {
-    if (stems.has(dirname(path))) continue;
-    await rm(dirname(path), { recursive: true, force: true });
+  const stale = new Set((await listFiles(IMG_DIR, ".webp")).map(dirname));
+  for (const dir of stale) {
+    if (stems.has(dir)) continue;
+    await rm(dir, { recursive: true, force: true });
     pruned += 1;
   }
 

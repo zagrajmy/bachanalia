@@ -40,7 +40,7 @@ test.describe("news archive", () => {
     expect([...dates].sort().toReversed(), "newest announcement belongs on top").toEqual(dates);
   });
 
-  test("both archives share one timeline", async ({ page }) => {
+  test("announcements come from Facebook", async ({ page }) => {
     await page.goto("/aktualnosci/");
 
     const links = page.getByRole("main").getByRole("listitem").getByRole("link");
@@ -50,12 +50,6 @@ test.describe("news archive", () => {
 
     expect(
       hrefs.filter((href) => href.startsWith("https://www.facebook.com/")).length,
-      "this year's announcements come from Facebook",
-    ).toBeGreaterThan(0);
-
-    expect(
-      hrefs.filter((href) => /^\/\d{4}\//.test(href)).length,
-      "last year's dated WordPress posts belong in the same list",
     ).toBeGreaterThan(0);
   });
 

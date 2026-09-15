@@ -142,7 +142,7 @@ async function main() {
   if (guests.length === 0) throw new Error("guests: the sheet came back empty, refusing to write");
 
   for (const [slug, file] of photos) {
-    if (slugs.has(slug)) continue;
+    if (!slug || slugs.has(slug)) continue;
     await unlink(join(PHOTO_DIR, file));
     console.log(`guests: dropped photo ${file}, no such guest in the sheet`);
   }

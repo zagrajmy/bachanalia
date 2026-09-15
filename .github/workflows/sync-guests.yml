@@ -19,7 +19,7 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run codegen
       - run: bun scripts/sync-guests.ts
-      - run: bun run typecheck
+      - run: bunx next typegen && bun run typecheck
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

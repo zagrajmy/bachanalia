@@ -1,4 +1,4 @@
-import { readdir, writeFile } from "node:fs/promises";
+import { readdir, unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import { driveFileId } from "../src/components/Exhibitors/exhibitors";
@@ -140,6 +140,12 @@ async function main() {
   }
 
   if (guests.length === 0) throw new Error("guests: the sheet came back empty, refusing to write");
+
+  for (const [slug, file] of photos) {
+    if (!slug || slugs.has(slug)) continue;
+    await unlink(join(PHOTO_DIR, file));
+    console.log(`guests: dropped photo ${file}, no such guest in the sheet`);
+  }
 
   await writeFile(
     OUT_PATH,

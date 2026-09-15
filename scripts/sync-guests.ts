@@ -1,6 +1,8 @@
 import { readdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
+import { driveFileId } from "../src/components/Exhibitors/exhibitors";
+
 const ROOT = join(import.meta.dirname, "..");
 const PHOTO_DIR = join(ROOT, "src/content/guests");
 const OUT_PATH = join(ROOT, "src/content/guests.generated.ts");
@@ -8,11 +10,13 @@ const SHEET_ID = "1CYaYf3tlG8TlhpwZt4H4MmHgdQIugocfeopiYeMnoMA";
 /** The visualization endpoint answers JSON for a public sheet; the CSV export would need a parser. */
 const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1`;
 const MAX_PHOTO_PX = 2048;
+const TIMEOUT_MS = 30_000;
+const COLUMNS = ["Imię", "Nazwisko", "Bio", "Zdjęcie"] as const;
 
-type Row = Record<string, string>;
+type Row = Record<(typeof COLUMNS)[number], string>;
 
 async function fetchRows(): Promise<Row[]> {
-  const response = await fetch(SHEET_URL);
+  const response = await fetch(SHEET_URL, { signal: AbortSignal.timeout(TIMEOUT_MS) });
   if (!response.ok) throw new Error(`sheet: ${response.status} ${response.statusText}`);
 
   const text = await response.text();
@@ -21,9 +25,21 @@ async function fetchRows(): Promise<Row[]> {
     table: { cols: { label: string }[]; rows: { c: ({ v: number | string | null } | null)[] }[] };
   };
 
-  return table.rows.map((row) =>
-    Object.fromEntries(table.cols.map(({ label }, i) => [label, String(row.c[i]?.v ?? "").trim()])),
-  );
+  const labels = table.cols.map(({ label }) => label);
+  const missing = COLUMNS.filter((column) => !labels.includes(column));
+  if (missing.length > 0) {
+    throw new Error(`sheet: no ${missing.join(", ")} column among ${labels.join(", ")}`);
+  }
+
+  return table.rows.map((row) => {
+    const cell = (column: keyof Row) => String(row.c[labels.indexOf(column)]?.v ?? "").trim();
+    return {
+      Imię: cell("Imię"),
+      Nazwisko: cell("Nazwisko"),
+      Bio: cell("Bio"),
+      Zdjęcie: cell("Zdjęcie"),
+    };
+  });
 }
 
 function slugify(name: string) {
@@ -49,31 +65,41 @@ function paragraphs(bio: string) {
     .map((line) => line.trim().replaceAll(/\s+/g, " "))
     .filter(Boolean)) {
     const last = out.at(-1);
-    if (last && !/[.!?…:]$/.test(last)) out[out.length - 1] = `${last} ${line}`;
+    if (last && !/[.!?…:][”")]*$/.test(last)) out[out.length - 1] = `${last} ${line}`;
     else out.push(line);
   }
   return out;
 }
 
 async function fetchPhoto(slug: string, link: string) {
-  const id = /\/d\/([\w-]+)/.exec(link)?.[1] ?? new URL(link).searchParams.get("id");
+  const id = driveFileId(link);
   if (!id) {
     console.warn(`guests: unreadable photo link for ${slug}: ${link}`);
     return undefined;
   }
 
-  const response = await fetch(`https://drive.google.com/uc?export=download&id=${id}`);
+  const response = await fetch(`https://drive.google.com/uc?export=download&id=${id}`, {
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+  });
   if (!response.ok || !response.headers.get("content-type")?.startsWith("image/")) {
     console.warn(`guests: photo ${response.status} for ${slug}, keeping text only`);
     return undefined;
   }
 
   const { default: sharp } = await import("sharp");
-  const jpeg = await sharp(Buffer.from(await response.arrayBuffer()))
-    .rotate()
-    .resize(MAX_PHOTO_PX, MAX_PHOTO_PX, { fit: "inside", withoutEnlargement: true })
-    .jpeg({ quality: 85 })
-    .toBuffer();
+  let jpeg: Buffer;
+
+  try {
+    jpeg = await sharp(Buffer.from(await response.arrayBuffer()))
+      .rotate()
+      .resize(MAX_PHOTO_PX, MAX_PHOTO_PX, { fit: "inside", withoutEnlargement: true })
+      .flatten({ background: "#fff" })
+      .jpeg({ quality: 85 })
+      .toBuffer();
+  } catch (error) {
+    console.warn(`guests: photo for ${slug} will not decode, keeping text only`, error);
+    return undefined;
+  }
 
   const file = `${slug}.jpg`;
   await writeFile(join(PHOTO_DIR, file), jpeg);
@@ -90,11 +116,15 @@ async function main() {
   const imports: string[] = [];
 
   for (const row of rows) {
-    const name = `${row.Imię} ${row.Nazwisko}`.split(/\s+/).join(" ").trim();
+    const name = `${row.Imię} ${row.Nazwisko}`.trim().replaceAll(/\s+/g, " ");
     if (!name) continue;
 
     const slug = slugify(name);
-    const bio = paragraphs(row.Bio ?? "");
+    if (guests.some((guest) => guest.includes(`slug: ${JSON.stringify(slug)}`))) {
+      throw new Error(`guests: two rows slug to ${slug}`);
+    }
+
+    const bio = paragraphs(row.Bio);
     /** A file on disk wins; drop it to pick the sheet's link up again. */
     const photo =
       photos.get(slug) ?? (row.Zdjęcie ? await fetchPhoto(slug, row.Zdjęcie) : undefined);
@@ -109,6 +139,8 @@ async function main() {
     guests.push(`{ ${fields.join(", ")} }`);
   }
 
+  if (guests.length === 0) throw new Error("guests: the sheet came back empty, refusing to write");
+
   await writeFile(
     OUT_PATH,
     [
@@ -122,7 +154,8 @@ async function main() {
     ].join("\n"),
   );
 
-  Bun.spawnSync(["bun", "x", "oxfmt", OUT_PATH]);
+  if (Bun.spawnSync(["bun", "x", "oxfmt", OUT_PATH]).exitCode !== 0)
+    throw new Error("guests: oxfmt failed");
   console.log(`guests: ${guests.length} synced`);
 }
 

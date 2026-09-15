@@ -237,8 +237,8 @@ async function collectJobs(): Promise<{ complete: boolean; crawl: Crawl; jobs: J
     } else {
       queried += 1;
       const images = await galleryImages(uri);
-      /** No content node — the shop page, or a flake — keeps what it had. */
-      crawl[uri] = images ? { modified, images } : (known ?? { modified, images: [] });
+      /** No content node — the shop page, or a flake — keeps the gallery it had. */
+      crawl[uri] = { modified, images: images ?? known?.images ?? [] };
     }
 
     for (const key of crawl[uri].images) addWp(`${WP}${key}`, null, true);

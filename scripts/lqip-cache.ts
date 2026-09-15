@@ -25,8 +25,6 @@ const MANIFEST_PATH = join(ROOT, "src/content/img-manifest.json");
  * never a ContentQuery per page to find out what to encode.
  */
 const CRAWL_PATH = join(ROOT, "src/content/lqip-crawl.json");
-const WP_ORIGIN =
-  process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://wp.bachanaliafantastyczne.pl";
 const DELAY_MS = 350;
 
 type Job = {

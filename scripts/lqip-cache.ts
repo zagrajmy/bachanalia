@@ -279,8 +279,8 @@ async function prune(keep: Set<string>) {
   const lqips = new Set([...keep].flatMap((key) => [lqipFile(key), lqipMetaFile(key)]));
   let pruned = 0;
 
-  const stale = new Set((await listFiles(IMG_DIR, ".webp")).map(dirname));
-  for (const dir of stale) {
+  const dirs = new Set((await listFiles(IMG_DIR, ".webp")).map(dirname));
+  for (const dir of dirs) {
     if (stems.has(dir)) continue;
     await rm(dir, { recursive: true, force: true });
     pruned += 1;

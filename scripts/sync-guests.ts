@@ -114,15 +114,15 @@ async function main() {
   );
   const guests: string[] = [];
   const imports: string[] = [];
+  const slugs = new Set<string>();
 
   for (const row of rows) {
     const name = `${row.Imię} ${row.Nazwisko}`.trim().replaceAll(/\s+/g, " ");
     if (!name) continue;
 
     const slug = slugify(name);
-    if (guests.some((guest) => guest.includes(`slug: ${JSON.stringify(slug)}`))) {
-      throw new Error(`guests: two rows slug to ${slug}`);
-    }
+    if (slugs.has(slug)) throw new Error(`guests: two rows slug to ${slug}`);
+    slugs.add(slug);
 
     const bio = paragraphs(row.Bio);
     /** A file on disk wins; drop it to pick the sheet's link up again. */

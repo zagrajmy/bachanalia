@@ -102,7 +102,7 @@ async function writeBinary(path: string, bytes: Buffer) {
   await writeFile(path, bytes);
 }
 
-async function listFiles(dir: string, suffix: string): Promise<string[]> {
+async function listFiles(dir: string, suffix = ""): Promise<string[]> {
   try {
     const nodes = await readdir(dir, { withFileTypes: true });
     const out: string[] = [];
@@ -156,7 +156,7 @@ async function loadCrawl(): Promise<Crawl> {
   }
 }
 
-async function collectJobs(): Promise<{ crawl: Crawl; jobs: Job[] }> {
+async function collectJobs(): Promise<{ complete: boolean; crawl: Crawl; jobs: Job[] }> {
   const jobs: Job[] = [];
   const seen = new Set<string>();
 
@@ -176,7 +176,8 @@ async function collectJobs(): Promise<{ crawl: Crawl; jobs: Job[] }> {
     });
   };
 
-  const news = await wpQuery(NewsQuery, { first: 50 });
+  /** As wide as the 2025 guests page reads: it blurs every featured image `PostsQuery` returns, with no fetch fallback. */
+  const news = await wpQuery(NewsQuery, { first: 100 });
 
   for (const post of news.posts?.nodes ?? []) {
     const image = post.featuredImage?.node;
@@ -218,8 +219,11 @@ async function collectJobs(): Promise<{ crawl: Crawl; jobs: Job[] }> {
   /**
    * A page WordPress stops listing drops out of `crawl` here, and its gallery
    * with it. `wpQuery` throws on errors and retries an empty answer, so a
-   * shorter list is a deletion, not a flake.
+   * shorter list is a deletion, not a flake — unless a list hit the query's
+   * cap, where the tail is unseen rather than gone.
    */
+  const complete = (pages?.nodes.length ?? 0) < 100 && (posts?.nodes.length ?? 0) < 100;
+
   for (const { uri, modifiedGmt } of nodes) {
     const modified = modifiedGmt ?? "";
     const known = previous[uri];
@@ -233,8 +237,8 @@ async function collectJobs(): Promise<{ crawl: Crawl; jobs: Job[] }> {
     } else {
       queried += 1;
       const images = await galleryImages(uri);
-      /** No content node — the shop page, or a flake — keeps what it had and is asked again next run. */
-      crawl[uri] = images ? { modified, images } : (known ?? { modified: "", images: [] });
+      /** No content node — the shop page, or a flake — keeps what it had. */
+      crawl[uri] = images ? { modified, images } : (known ?? { modified, images: [] });
     }
 
     for (const key of crawl[uri].images) addWp(`${WP}${key}`, null, true);
@@ -242,7 +246,7 @@ async function collectJobs(): Promise<{ crawl: Crawl; jobs: Job[] }> {
 
   console.log(`media: crawl queried ${queried}/${nodes.length} pages`);
 
-  return { jobs, crawl };
+  return { jobs, crawl, complete };
 }
 
 async function galleryImages(uri: string) {
@@ -264,30 +268,30 @@ async function galleryImages(uri: string) {
   ];
 }
 
-/** Drops every WordPress upload no news post, product or listed page reached this run. */
-async function prune(manifest: Record<string, number[]>, jobs: Job[]) {
-  const keep = new Set(jobs.map((job) => job.key));
+/**
+ * Drops every WordPress upload's files that nothing reached this run. Both
+ * directories are walked rather than the manifest, so a variant the manifest
+ * never named goes too. Not `fb/`: the archived feed keeps posts the live
+ * window has long dropped.
+ */
+async function prune(keep: Set<string>) {
+  const stems = new Set([...keep].map((key) => join(IMG_DIR, mediaStem(key))));
+  const lqips = new Set([...keep].flatMap((key) => [lqipFile(key), lqipMetaFile(key)]));
   let pruned = 0;
 
-  for (const key of Object.keys(manifest)) {
-    if (keep.has(key)) continue;
-    await rm(join(IMG_DIR, mediaStem(key)), { recursive: true, force: true });
+  for (const path of await listFiles(IMG_DIR)) {
+    if (stems.has(dirname(path))) continue;
+    await rm(dirname(path), { recursive: true, force: true });
     pruned += 1;
   }
 
-  const files = new Set([...keep].flatMap((key) => [lqipFile(key), lqipMetaFile(key)]));
-
-  /** Not `fb/`: the archived feed keeps posts the live window has long dropped. */
-  for (const path of await listFiles(join(LQIP_DIR, "wp-content"), "")) {
-    if (files.has(path)) continue;
+  for (const path of await listFiles(join(LQIP_DIR, "wp-content"))) {
+    if (lqips.has(path)) continue;
     await unlink(path);
     pruned += 1;
   }
 
-  return {
-    kept: Object.fromEntries(Object.entries(manifest).filter(([key]) => keep.has(key))),
-    pruned,
-  };
+  return pruned;
 }
 
 async function fetchBytes(url: string) {
@@ -322,7 +326,7 @@ async function main() {
   if (migrated > 0) console.log(`media: recompressed ${migrated} .lqip → .webp`);
 
   const manifest = await loadManifest();
-  const { jobs, crawl } = await collectJobs();
+  const { jobs, crawl, complete } = await collectJobs();
   let lqipWrote = 0;
   let variantWrote = 0;
 
@@ -404,10 +408,20 @@ async function main() {
     }
   }
 
-  const { kept, pruned } = await prune(manifest, jobs);
-  if (pruned > 0) console.log(`media: pruned ${pruned} stale files`);
+  const keep = new Set(jobs.map((job) => job.key));
 
-  const sorted = Object.fromEntries(Object.entries(kept).sort(([a], [b]) => a.localeCompare(b)));
+  if (complete) {
+    const pruned = await prune(keep);
+    if (pruned > 0) console.log(`media: pruned ${pruned} stale files`);
+  } else {
+    console.warn("media: a content list hit its cap, keeping everything");
+  }
+
+  const sorted = Object.fromEntries(
+    Object.entries(manifest)
+      .filter(([key]) => !complete || keep.has(key))
+      .sort(([a], [b]) => a.localeCompare(b)),
+  );
 
   /**
    * One line per upload, ladders inline. `JSON.stringify(…, 2)` puts each width

@@ -222,7 +222,9 @@ async function collectJobs(): Promise<{ complete: boolean; crawl: Crawl; jobs: J
    * shorter list is a deletion, not a flake — unless a list hit the query's
    * cap, where the tail is unseen rather than gone.
    */
-  const complete = (pages?.nodes.length ?? 0) < 100 && (posts?.nodes.length ?? 0) < 100;
+  const complete = [pages?.nodes, posts?.nodes, shop.products?.nodes].every(
+    (nodes) => (nodes?.length ?? 0) < 100,
+  );
 
   for (const { uri, modifiedGmt } of nodes) {
     const modified = modifiedGmt ?? "";

@@ -8,7 +8,8 @@ import {
 } from "../src/utils/graphqlRequest";
 import { sleep } from "../src/utils/sleep";
 
-export const WP = process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://bachanaliafantastyczne.pl";
+export const WP =
+  process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://wp.bachanaliafantastyczne.pl";
 
 /**
  * A build has no reader waiting on it, and the host answers a burst with a

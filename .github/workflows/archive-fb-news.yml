@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+env:
+  NEXT_PUBLIC_WORDPRESS_API_URL: https://wp.bachanaliafantastyczne.pl
+  NEXT_PUBLIC_WORDPRESS_API_HOSTNAME: wp.bachanaliafantastyczne.pl
+
 jobs:
   archive:
     runs-on: ubuntu-latest

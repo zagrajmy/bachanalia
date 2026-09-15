@@ -20,11 +20,13 @@ const IMG_DIR = join(ROOT, "public/_img");
 const IMG_CACHE_DIR = join(ROOT, ".next/cache/_img");
 const MANIFEST_PATH = join(ROOT, "src/content/img-manifest.json");
 /**
- * Per page: when WordPress last touched it, and the gallery images it held
- * then. Committed, so a build with no `_img` cache still knows every gallery
- * image without asking WordPress for each page — it only has to re-encode.
+ * `{uri: modifiedGmt}` as of the last run. Committed: the manifest already
+ * names every gallery image, so a cold `_img` cache only costs re-encoding,
+ * never a ContentQuery per page to find out what to encode.
  */
 const CRAWL_PATH = join(ROOT, "src/content/lqip-crawl.json");
+const WP_ORIGIN =
+  process.env.NEXT_PUBLIC_WORDPRESS_API_URL ?? "https://wp.bachanaliafantastyczne.pl";
 const DELAY_MS = 350;
 
 type Job = {
@@ -144,18 +146,18 @@ async function loadManifest() {
   }
 }
 
-type Crawl = Record<string, { images: string[]; modified: string }>;
-
-async function loadCrawl(): Promise<Crawl> {
+async function loadCrawl(): Promise<Record<string, string>> {
   try {
-    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a cache file this repo wrote, read back in the shape it was written
-    return JSON.parse(await readFile(CRAWL_PATH, "utf8")) as Crawl;
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- written by this script, read back in the shape it was written
+    return JSON.parse(await readFile(CRAWL_PATH, "utf8")) as Record<string, string>;
   } catch {
     return {};
   }
 }
 
-async function collectJobs(): Promise<{ crawl: Crawl; jobs: Job[] }> {
+async function collectJobs(
+  manifest: Record<string, number[]>,
+): Promise<{ crawl: Record<string, string>; jobs: Job[] }> {
   const jobs: Job[] = [];
   const seen = new Set<string>();
 
@@ -204,35 +206,34 @@ async function collectJobs(): Promise<{ crawl: Crawl; jobs: Job[] }> {
     addWp(image.sourceUrl, image.thumbnail);
   }
 
+  /** Every gallery image ever seen; the job loop rebuilds whatever is missing on disk. */
+  for (const key of Object.keys(manifest)) addWp(`${WP_ORIGIN}${key}`, null, true);
+
   const { pages, posts } = await wpQuery(AllContentQuery);
 
   const previous = await loadCrawl();
-  const crawl: Crawl = {};
-  let skipped = 0;
+  const crawl: Record<string, string> = {};
+  let queried = 0;
 
   const nodes = [...(pages?.nodes ?? []), ...(posts?.nodes ?? [])].filter(
     (node): node is { modifiedGmt?: string | null; uri: string } => Boolean(node.uri),
   );
 
   for (const { uri, modifiedGmt } of nodes) {
-    const modified = modifiedGmt ?? "";
-    const known = previous[uri];
+    const stamp = modifiedGmt ?? "";
+    crawl[uri] = stamp;
 
     /**
-     * A page edited since the last run may hold new gallery images; one left
-     * alone cannot, so its recorded images stand in for a ContentQuery against
-     * a server where each one costs seconds. They still go through the job
-     * loop, which rebuilds whatever a cold `_img` cache is missing.
+     * Only a page edited since the last run can hold gallery images the
+     * manifest does not know yet, and a ContentQuery costs seconds each.
      */
-    const unchanged = modified !== "" && known?.modified === modified;
-    if (unchanged) skipped += 1;
-    const images = unchanged ? known.images : await galleryImages(uri);
+    if (stamp && previous[uri] === stamp) continue;
 
-    crawl[uri] = { modified, images };
-    for (const src of images) addWp(src, null, true);
+    queried += 1;
+    for (const src of await galleryImages(uri)) addWp(src, null, true);
   }
 
-  if (skipped > 0) console.log(`media: crawl skipped ${skipped}/${nodes.length} unchanged pages`);
+  console.log(`media: crawl queried ${queried}/${nodes.length} pages`);
 
   return { jobs, crawl };
 }
@@ -281,11 +282,10 @@ async function main() {
   const migrated = await migrateTextLqips();
   if (migrated > 0) console.log(`media: recompressed ${migrated} .lqip → .webp`);
 
-  const { jobs, crawl } = await collectJobs();
   const manifest = await loadManifest();
+  const { jobs, crawl } = await collectJobs(manifest);
   let lqipWrote = 0;
   let variantWrote = 0;
-  let failed = false;
 
   console.log(`media: ${jobs.length} images`);
 
@@ -320,7 +320,6 @@ async function main() {
         const encoded = (await fetchLqipWebp(job.thumbUrl)) ?? (await fetchLqipWebp(job.fullUrl));
         if (!encoded) {
           console.warn(`media: skip lqip ${job.key}`);
-          failed = true;
           continue;
         }
         await writeLqip(job.key, encoded.webp);
@@ -333,7 +332,6 @@ async function main() {
       const bytes = await fetchBytes(job.fullUrl);
       if (!bytes) {
         console.warn(`media: skip fetch ${job.key}`);
-        failed = true;
         continue;
       }
 
@@ -364,7 +362,6 @@ async function main() {
       }
     } catch (error) {
       console.warn(`media: fail ${job.key}`, error);
-      failed = true;
     }
   }
 
@@ -388,14 +385,14 @@ async function main() {
     /* empty */
   });
 
-  if (failed) {
-    console.log("media: fetches failed, crawl snapshot withheld");
-  } else {
-    const sortedCrawl = Object.fromEntries(
-      Object.entries(crawl).sort(([a], [b]) => a.localeCompare(b)),
-    );
-    await writeFile(CRAWL_PATH, `${JSON.stringify(sortedCrawl, null, 2)}\n`);
-  }
+  /**
+   * Written even after a failed fetch: the manifest re-enqueues that image
+   * next run regardless, so nothing is lost by trusting the page stamps.
+   */
+  const sortedCrawl = Object.fromEntries(
+    Object.entries(crawl).sort(([a], [b]) => a.localeCompare(b)),
+  );
+  await writeFile(CRAWL_PATH, `${JSON.stringify(sortedCrawl, null, 2)}\n`);
 
   console.log(
     `media: wrote ${lqipWrote} lqips, ${variantWrote} variants, ${Object.keys(sorted).length} in manifest`,

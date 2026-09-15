@@ -20,11 +20,11 @@ const IMG_DIR = join(ROOT, "public/_img");
 const IMG_CACHE_DIR = join(ROOT, ".next/cache/_img");
 const MANIFEST_PATH = join(ROOT, "src/content/img-manifest.json");
 /**
- * `{uri: modifiedGmt}` from the last completed run. Lives in `.next/cache` so
- * it travels with the `_img` cache it vouches for — a cold cache loses both,
- * and a full crawl rebuilds both.
+ * Per page: when WordPress last touched it, and the gallery images it held
+ * then. Committed, so a build with no `_img` cache still knows every gallery
+ * image without asking WordPress for each page — it only has to re-encode.
  */
-const CRAWL_PATH = join(ROOT, ".next/cache/lqip-crawl.json");
+const CRAWL_PATH = join(ROOT, "src/content/lqip-crawl.json");
 const DELAY_MS = 350;
 
 type Job = {
@@ -144,16 +144,18 @@ async function loadManifest() {
   }
 }
 
-async function loadCrawl(): Promise<Record<string, string>> {
+type Crawl = Record<string, { images: string[]; modified: string }>;
+
+async function loadCrawl(): Promise<Crawl> {
   try {
     // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a cache file this repo wrote, read back in the shape it was written
-    return JSON.parse(await readFile(CRAWL_PATH, "utf8")) as Record<string, string>;
+    return JSON.parse(await readFile(CRAWL_PATH, "utf8")) as Crawl;
   } catch {
     return {};
   }
 }
 
-async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job[] }> {
+async function collectJobs(): Promise<{ crawl: Crawl; jobs: Job[] }> {
   const jobs: Job[] = [];
   const seen = new Set<string>();
 
@@ -205,7 +207,7 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
   const { pages, posts } = await wpQuery(AllContentQuery);
 
   const previous = await loadCrawl();
-  const crawl: Record<string, string> = {};
+  const crawl: Crawl = {};
   let skipped = 0;
 
   const nodes = [...(pages?.nodes ?? []), ...(posts?.nodes ?? [])].filter(
@@ -213,37 +215,39 @@ async function collectJobs(): Promise<{ crawl: Record<string, string>; jobs: Job
   );
 
   for (const { uri, modifiedGmt } of nodes) {
-    const stamp = modifiedGmt ?? "";
-    crawl[uri] = stamp;
+    const modified = modifiedGmt ?? "";
+    const known = previous[uri];
 
     /**
      * A page edited since the last run may hold new gallery images; one left
-     * alone cannot — its images are already on disk and in the manifest. So
-     * only edited pages are worth a ContentQuery against a server where each
-     * one costs seconds.
+     * alone cannot, so its recorded images stand in for a ContentQuery against
+     * a server where each one costs seconds. They still go through the job
+     * loop, which rebuilds whatever a cold `_img` cache is missing.
      */
-    if (stamp && previous[uri] === stamp) {
-      skipped += 1;
-      continue;
-    }
+    const unchanged = modified !== "" && known?.modified === modified;
+    if (unchanged) skipped += 1;
+    const images = unchanged ? known.images : await galleryImages(uri);
 
-    await sleep(DELAY_MS);
-    const { contentNode }: { contentNode?: ContentNodeResult | null } = await wpQuery(
-      ContentQuery,
-      { slug: uri, idType: "URI", preview: false },
-    );
-
-    for (const segment of splitWpContent(contentNode?.content)) {
-      if (segment.type !== "gallery") continue;
-      for (const image of segment.images) {
-        addWp(image.src, null, true);
-      }
-    }
+    crawl[uri] = { modified, images };
+    for (const src of images) addWp(src, null, true);
   }
 
   if (skipped > 0) console.log(`media: crawl skipped ${skipped}/${nodes.length} unchanged pages`);
 
   return { jobs, crawl };
+}
+
+async function galleryImages(uri: string) {
+  await sleep(DELAY_MS);
+  const { contentNode }: { contentNode?: ContentNodeResult | null } = await wpQuery(ContentQuery, {
+    slug: uri,
+    idType: "URI",
+    preview: false,
+  });
+
+  return splitWpContent(contentNode?.content)
+    .filter((segment) => segment.type === "gallery")
+    .flatMap((segment) => segment.images.map((image) => image.src));
 }
 
 async function fetchBytes(url: string) {
@@ -387,8 +391,10 @@ async function main() {
   if (failed) {
     console.log("media: fetches failed, crawl snapshot withheld");
   } else {
-    await mkdir(dirname(CRAWL_PATH), { recursive: true });
-    await writeFile(CRAWL_PATH, `${JSON.stringify(crawl, null, 2)}\n`);
+    const sortedCrawl = Object.fromEntries(
+      Object.entries(crawl).sort(([a], [b]) => a.localeCompare(b)),
+    );
+    await writeFile(CRAWL_PATH, `${JSON.stringify(sortedCrawl, null, 2)}\n`);
   }
 
   console.log(

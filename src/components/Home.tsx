@@ -156,7 +156,7 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
                     {idx(i)}
                   </span>
                   <span className="min-w-0">
-                    <span className="display block text-[clamp(1.1rem,3vw,1.5rem)] text-ink transition-colors duration-200 group-hover:text-rose">
+                    <span className="display block text-[clamp(1.1rem,3vw,1.5rem)] text-ink transition-colors group-hover:text-rose">
                       {label}
                     </span>
                     <span className="mt-1 block text-sm text-ink-muted">{note}</span>

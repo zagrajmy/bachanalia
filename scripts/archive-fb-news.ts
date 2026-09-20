@@ -78,13 +78,28 @@ async function main() {
   const archive = await loadArchive();
   const known = new Set(archive.map((post) => post.id));
   const fresh = feed.filter((entry) => !known.has(entry.id));
+  const liveById = new Map(feed.map((entry) => [entry.id, entry]));
+  const backfill = archive.filter((post) => !post.image && liveById.get(post.id)?.image?.src);
 
-  if (fresh.length === 0) {
-    console.log(`archive: no new posts (${archive.length} archived)`);
+  if (fresh.length === 0 && backfill.length === 0) {
+    console.log(`archive: no new posts or images (${archive.length} archived)`);
     return;
   }
 
   await mkdir(IMG_DIR, { recursive: true });
+
+  let restored = 0;
+  for (const post of backfill) {
+    const src = liveById.get(post.id)?.image?.src;
+    if (!src) continue;
+
+    const image = await mirrorImage(post.id, src);
+    if (!image) continue;
+
+    post.image = image;
+    restored += 1;
+    console.log(`archive: image + ${post.id}`);
+  }
 
   for (const entry of fresh) {
     const image = entry.image?.src ? await mirrorImage(entry.id, entry.image.src) : undefined;
@@ -103,7 +118,7 @@ async function main() {
 
   archive.sort((a, b) => b.dateTime.localeCompare(a.dateTime));
   await writeFile(ARCHIVE_PATH, `${JSON.stringify(archive, null, 2)}\n`);
-  console.log(`archive: ${fresh.length} new, ${archive.length} total`);
+  console.log(`archive: ${fresh.length} new, ${restored} images restored, ${archive.length} total`);
 }
 
 try {

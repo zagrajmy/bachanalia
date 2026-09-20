@@ -6,13 +6,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          ssh-key: ${{ secrets.SYNC_GUESTS_DEPLOY_KEY }}
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest

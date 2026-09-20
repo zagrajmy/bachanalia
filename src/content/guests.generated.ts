@@ -1,20 +1,66 @@
 // Written by scripts/sync-guests.ts from the guests sheet; edit the sheet, not this file.
 import type { Guest } from "./guests";
 
+import marta_kladz_kocot from "./guests/marta-kladz-kocot.jpg";
 import agnieszka_fulinska from "./guests/agnieszka-fulinska.jpg";
 import ola_radomska_budnik from "./guests/ola-radomska-budnik.jpg";
-import andrzej_drzewinski from "./guests/andrzej-drzewinski.png";
+import radoslaw_kot from "./guests/radoslaw-kot.jpg";
+import andrzej_drzewinski from "./guests/andrzej-drzewinski.jpg";
 import karolina_rozko from "./guests/karolina-rozko.jpg";
 import maksymilian_a_brzezicki from "./guests/maksymilian-a-brzezicki.jpg";
 import konrad_opalinski from "./guests/konrad-opalinski.jpg";
+import marek_marcinkowski from "./guests/marek-marcinkowski.jpg";
+import istvan_vizvary from "./guests/istvan-vizvary.jpg";
+import marek_baraniecki from "./guests/marek-baraniecki.jpg";
+import artur_olchowy from "./guests/artur-olchowy.jpg";
+import lukasz_kucharczyk from "./guests/lukasz-kucharczyk.jpg";
+import justyna_hankus from "./guests/justyna-hankus.jpg";
+import rafal_kosik from "./guests/rafal-kosik.jpg";
+import michal_organisciak from "./guests/michal-organisciak.jpg";
+import m_p_hardy from "./guests/m-p-hardy.jpg";
+import agnieszka_przychodniak from "./guests/agnieszka-przychodniak.jpg";
+import pawel_adwejuk from "./guests/pawel-adwejuk.jpg";
+import stanislaw_maderek from "./guests/stanislaw-maderek.jpg";
+import dominika_blaszczyk from "./guests/dominika-blaszczyk.jpg";
+import przemyslaw_rudz from "./guests/przemyslaw-rudz.jpg";
+import tomasz_kolodziejczak from "./guests/tomasz-kolodziejczak.jpg";
+import marta_duda_gryc from "./guests/marta-duda-gryc.jpg";
+import xavier_dollo from "./guests/xavier-dollo.jpg";
+import bartek_biedrzycki from "./guests/bartek-biedrzycki.jpg";
 import artur_tojza from "./guests/artur-tojza.jpg";
 import justyna_sygulska from "./guests/justyna-sygulska.jpg";
-import blazej_kurowski from "./guests/blazej-kurowski.png";
-import grzegorz_pawlak from "./guests/grzegorz-pawlak.jpg";
+import blazej_kurowski from "./guests/blazej-kurowski.jpg";
+import grazyna_kasprzak from "./guests/grazyna-kasprzak.jpg";
+import zbigniew_kasprzak from "./guests/zbigniew-kasprzak.jpg";
+import robert_adler from "./guests/robert-adler.jpg";
+import tomasz_niewiadomski from "./guests/tomasz-niewiadomski.jpg";
+import tomasz_minkiewicz from "./guests/tomasz-minkiewicz.jpg";
+import malgorzata_kisiel_dorohnicka from "./guests/malgorzata-kisiel-dorohnicka.jpg";
+import waclaw_kisiel_dorohnicki from "./guests/waclaw-kisiel-dorohnicki.jpg";
+import jakub_lagoda from "./guests/jakub-lagoda.jpg";
+import roberto_recchioni from "./guests/roberto-recchioni.jpg";
+import emiliano_tanzillo from "./guests/emiliano-tanzillo.jpg";
+import antonio_marinetti from "./guests/antonio-marinetti.jpg";
 import tine_anthoni from "./guests/tine-anthoni.jpg";
+import alessandro_ceccarelli from "./guests/alessandro-ceccarelli.jpg";
+import kp_zakrzewicz from "./guests/kp-zakrzewicz.jpg";
+import krzysztof_pielaszek from "./guests/krzysztof-pielaszek.jpg";
+import jacek_drewnowski from "./guests/jacek-drewnowski.jpg";
+import max_suski from "./guests/max-suski.jpg";
+import michal_fret from "./guests/michal-fret.jpg";
+import krzysztof_skrzypski from "./guests/krzysztof-skrzypski.jpg";
+import daniel_taberski from "./guests/daniel-taberski.jpg";
 
 export const guests: Guest[] = [
-  { name: "Marta Kładź-Kocot", slug: "marta-kladz-kocot" },
+  {
+    name: "Marta Kładź-Kocot",
+    slug: "marta-kladz-kocot",
+    photo: marta_kladz_kocot,
+    bio: [
+      "Marta Kładź-Kocot – literaturoznawczyni, pisarka, redaktorka i publicystka, doktor nauk humanistycznych. Zajmowała się badaniem relacji mitu i fantastyki, czego owocem jest między innymi książka „Dwa bieguny mitopoetyki. Archetypowe narracje w twórczości J.R.R. Tolkiena i Stanisława Lema”. Jest autorką powieści „Daraena” (nominowanej w 2023 roku do Nagrody im. Janusza Zajdla), a także dylogii „Noc kota, dzień sowy” oraz opowiadań publikowanych w antologiach i czasopismach, między innymi w „Nowej Fantastyce”.",
+      "Eksploruje różne przestrzenie twórcze: metapoziomową fantasy, weird, climate fiction. W tej chwili pracuje nad grą paragrafową na podstawie „Odysei” dla wydawnictwa Muduko, a także wykłada na Uniwersytecie Kazimierza Wielkiego w Bydgoszczy i prowadzi warsztaty pisarskie w bydgoskim Domu Liter.",
+    ],
+  },
   {
     name: "Agnieszka Fulińska",
     slug: "agnieszka-fulinska",
@@ -36,7 +82,14 @@ export const guests: Guest[] = [
       "Ola „Andzia” Radomska-Budnik — geekowa psycholożka i psychoterapeutka, która wierzy, że życie może być fantastyczną przygodą. Pracuje terapeutycznie z nastolatkami i dorosłymi, wykorzystując m.in. Superhero Therapy, a od 4 lat prowadzi przestrzeń w sieci — Fantastyczną Kozetkę, gdzie łączy tematy psychologiczne z popkulturą. Prywatnie kocha czytać, pisać własne historie i grać w RPGi.",
     ],
   },
-  { name: "Radosław Kot", slug: "radoslaw-kot" },
+  {
+    name: "Radosław Kot",
+    slug: "radoslaw-kot",
+    photo: radoslaw_kot,
+    bio: [
+      "Radosław Kot, z wykształcenia socjolog, poza tym też tłumacz (preferujący zwykle fantastykę), w fandomie oficjalnie od drugiej połowy lat osiemdziesiątych, związany kiedyś z klubem Orbita, potem z klubem Druga Era. Gdy coś go zainteresuje, czasem robi z tego wykład dla studentów albo prelekcję na konwencie, zależnie od okoliczności. Ma też na koncie kilka zaszłości, w tym kilka lat pracy w wydawnictwie CIA Books.",
+    ],
+  },
   {
     name: "Andrzej Drzewiński",
     slug: "andrzej-drzewinski",
@@ -74,24 +127,44 @@ export const guests: Guest[] = [
       'Konrad Opaliński - psycholog, wykładowca w Instytucie Psychologii Uniwersytetu Zielonogórskiego. Specjalizuje się w badaniach dotyczących funkcjonowania w środowiskach ekstremalnych. Realizował badania w Polskiej Stacji Polarnej Hornsund na Spitsbergenie oraz analogowym habitacie kosmicznym LunAres. Współtworzył projekt AstroMentalHealth – pierwszy polski eksperyment psychologiczny realizowany na ISS w ramach misji IGNIS. Laureat ogólnopolskiego konkursu „MISJA POLARNA" na najlepszy interdyscyplinarny projekt badawczy organizowany przez Instytutu Geofizyki PAN oraz Edu Arctic. Kończy doktorat poświęcony doświadczeniom podobnym do psychotycznych. Członek Polskiego Towarzystwa Psychiatrycznego, Polskiego Towarzystwa Astromedycznego oraz Polskiego Klubu Polarnego.',
     ],
   },
-  { name: "Marek Marcinkowski", slug: "marek-marcinkowski" },
-  { name: "Istvan Vizvary", slug: "istvan-vizvary" },
-  { name: "Marek Baraniecki", slug: "marek-baraniecki" },
-  { name: "Artur Olchowy", slug: "artur-olchowy" },
-  { name: "Łukasz Kucharczyk", slug: "lukasz-kucharczyk" },
-  { name: "Justyna Hankus", slug: "justyna-hankus" },
-  { name: "Rafał Kosik", slug: "rafal-kosik" },
-  { name: "Michał Organiściak", slug: "michal-organisciak" },
-  { name: "M.P. Hardy", slug: "m-p-hardy" },
-  { name: "Agnieszka „Angaya” Przychodniak", slug: "agnieszka-przychodniak" },
-  { name: "Paweł Adwejuk", slug: "pawel-adwejuk" },
-  { name: "Stanisław Mąderek", slug: "stanislaw-maderek" },
-  { name: "Dominika Błaszczyk", slug: "dominika-blaszczyk" },
-  { name: "Przemysław Rudź", slug: "przemyslaw-rudz" },
-  { name: "Tomasz Kołodziejczak", slug: "tomasz-kolodziejczak" },
-  { name: "Marta Duda-Gryc", slug: "marta-duda-gryc" },
-  { name: "Xavier Dollo", slug: "xavier-dollo" },
-  { name: "Bartek Biedrzycki", slug: "bartek-biedrzycki" },
+  { name: "Marek Marcinkowski", slug: "marek-marcinkowski", photo: marek_marcinkowski },
+  { name: "Istvan Vizvary", slug: "istvan-vizvary", photo: istvan_vizvary },
+  { name: "Marek Baraniecki", slug: "marek-baraniecki", photo: marek_baraniecki },
+  {
+    name: "Artur Olchowy",
+    slug: "artur-olchowy",
+    photo: artur_olchowy,
+    bio: [
+      "Mówi się, że mieszka na wyspie Grobowiec i przyjaźni się z pustelnikiem żyjącym nad Oczkiem Topicha. Ponoć przeprowadził braci Gusselowów przez puszczę, gdy grasowały tam upierzce i rozkopywały dżumowe mogiły, a i żywym by nie pogardziły. Nie raz dołączał do Lucypera i Pana Boga przechadzających się po groblach między bagnami, by pogadać o pogodzie. Razem z Trudą Schivy widział widmo krzyżaka nad jeziorem Wesołek, który zwiastował wojnę.",
+      "Oczywiście to wszystko bujdy. Tak naprawdę bronił przed sądem w Rastemborku wilkołka oskarżonego o kradzież owiec, odprowadził na cmentarz ducha Poppka szwędającego się po Mikołajkach i ducha żołnierza przykutego łańcuchem do mostu w Lipowie, a także pochował szczątki ofiar cholery w Sdroyeffkach, żeby ich dusze nie nawiedzały późniejszych osadników okolicznych wsi.",
+      "Mazuroznawca, regionalista, przewodnik turystyczny, od czasu do czasu pisarz. Mazur.",
+    ],
+  },
+  {
+    name: "Łukasz Kucharczyk",
+    slug: "lukasz-kucharczyk",
+    photo: lukasz_kucharczyk,
+    bio: [
+      "Doktor nauk humanistycznych, adiunkt w Katedrze Polskiej Literatury Współczesnej i Krytyki Literackiej UKSW. Autor monografii naukowych o Stanisławie Lemie, Jacku Dukaju oraz kilkudziesięciu artykułów naukowych i krytycznoliterackich traktujących o polskiej literaturze współczesnej. Laureat Chrysalis Award Europejskiego Stowarzyszenia Science Fiction dla najbardziej obiecujących debiutów, nominowany do Śląkfy 2023 w kategorii Twórcy Roku i Nagrody Fandomu Polskiego im. Janusza Zajdla 2023. Jego monografia Granice ludzkiego poznania. O wybranych aspektach twórczości Jacka Dukaja została nominowana w kategorii polska książka roku Nagród Nowej Fantastyki 2024 a powieść Wszystkie drogi prowadzą została nominowana do Nagrody Fandomu Polskiego im Janusza Zajdla 2024 oraz została wyróżniona w konkursie Pyrkon Fantastycznie Utalentowani 2025. Obecnie pracuje nad grą książkową dla wydawnictwa Muduko.",
+    ],
+  },
+  { name: "Justyna Hankus", slug: "justyna-hankus", photo: justyna_hankus },
+  { name: "Rafał Kosik", slug: "rafal-kosik", photo: rafal_kosik },
+  { name: "Michał Organiściak", slug: "michal-organisciak", photo: michal_organisciak },
+  { name: "M.P. Hardy", slug: "m-p-hardy", photo: m_p_hardy },
+  {
+    name: "Agnieszka „Angaya” Przychodniak",
+    slug: "agnieszka-przychodniak",
+    photo: agnieszka_przychodniak,
+  },
+  { name: "Paweł Adwejuk", slug: "pawel-adwejuk", photo: pawel_adwejuk },
+  { name: "Stanisław Mąderek", slug: "stanislaw-maderek", photo: stanislaw_maderek },
+  { name: "Dominika Błaszczyk", slug: "dominika-blaszczyk", photo: dominika_blaszczyk },
+  { name: "Przemysław Rudź", slug: "przemyslaw-rudz", photo: przemyslaw_rudz },
+  { name: "Tomasz Kołodziejczak", slug: "tomasz-kolodziejczak", photo: tomasz_kolodziejczak },
+  { name: "Marta Duda-Gryc", slug: "marta-duda-gryc", photo: marta_duda_gryc },
+  { name: "Xavier Dollo", slug: "xavier-dollo", photo: xavier_dollo },
+  { name: "Bartek Biedrzycki", slug: "bartek-biedrzycki", photo: bartek_biedrzycki },
   {
     name: "Artur Tojza",
     slug: "artur-tojza",
@@ -120,31 +193,25 @@ export const guests: Guest[] = [
       'Twórca komiksów z Łodzi. Autor lubianej serii Stachanowiec in Space, zina VLEPKAZIN, rysownik komiksów "Kiki w krainie Yokai" i "Crisis City" oraz licznych krótkich form komiksowych. Laureat nagrody miesięcznika Nowa Fantastyka (Polski Komiks Roku 2026), nagrody Orient Men Polskiego Stowarzyszenia Komiksowego (Najlepsze rysunki 2026) i nagrody specjalnej festiwalu Pyrkon: Fantastycznie Utalentowani (za Fantastyczny komiks 2026). Miłośnik karcianek, planszówek, jRPG i bitewniaków. Fan baseballu (zarówno japońskiej i amerykańskiej ligi) i zielonej herbaty. Jego ulubiony Pokemon to Darumaka.',
     ],
   },
-  { name: "Grażyna „Graza” Kasprzak", slug: "grazyna-kasprzak" },
-  { name: "Zbigniew „Kas” Kasprzak", slug: "zbigniew-kasprzak" },
-  { name: "Robert Adler", slug: "robert-adler" },
-  { name: "Tomasz Niewiadomski", slug: "tomasz-niewiadomski" },
-  { name: "Tomasz Minkiewicz", slug: "tomasz-minkiewicz" },
+  { name: "Grażyna „Graza” Kasprzak", slug: "grazyna-kasprzak", photo: grazyna_kasprzak },
+  { name: "Zbigniew „Kas” Kasprzak", slug: "zbigniew-kasprzak", photo: zbigniew_kasprzak },
+  { name: "Robert Adler", slug: "robert-adler", photo: robert_adler },
+  { name: "Tomasz Niewiadomski", slug: "tomasz-niewiadomski", photo: tomasz_niewiadomski },
+  { name: "Tomasz Minkiewicz", slug: "tomasz-minkiewicz", photo: tomasz_minkiewicz },
   {
-    name: "Grzegorz Pawlak",
-    slug: "grzegorz-pawlak",
-    photo: grzegorz_pawlak,
-    bio: [
-      "Twórca ilustracji do książek i magazynów oraz projektant grafiki użytkowej z wykształceniem architektonicznym. Sam jednak najchętniej określa się mianem rysownika komiksów.",
-      "Debiutował na łamach magazynu komiksowego B5 #3, a następnie publikował w licznych zinach, antologiach i magazynach, m.in. „Ziniol”, „FEST” oraz „Niczego sobie. Komiksy o mieście Gliwice”.",
-      "Jego pierwszym albumem komiksowym był „Benedykt Dampc i skarb piratów”, narysowany do scenariusza Jerzego Szyłaka. Wśród kolejnych publikacji znajdują się m.in. „Profesor Andrews” (scenariusz: Dominik Szcześniak, na podstawie opowiadania Olgi Tokarczuk), „Centrum wszechświata”, zrealizowane wspólnie z Danielem Gizickim, a także komiksy związane z serią „Wydział 7”, do której przygotował dotychczas trzy zeszyty.",
-      "Od kilku lat współpracuje z magazynem „Nowa Fantastyka”, przygotowując ilustracje do publikowanych opowiadań. Jest również autorem okładki i ilustracji do książki „Duch Świąt” Anny Kańtoch. Przygotował storyboard do animacji wykorzystanej w serialu dokumentalnym Polsatu „Powstanie warszawskie”, a także materiał komiksowy do publikacji „Zdobyć PAST-ę” Marka Millera.",
-      "Pracuje nad serią „Pętla” do scenariusza Dominika Szcześniaka, projektem „Low Story”, tworzonym wraz z Danielem Gizickim, oraz albumem „Hope”, napisanym przez Marcina Bałczewskiego.",
-      "Od ponad dziesięciu lat rozwija również swój autorski projekt NOIRtober, cykl artzinów powstających w ramach corocznego wyzwania #Inktober, w którym eksploruje estetykę noir i narrację obrazową.",
-      "Na co dzień pozostaje miłośnikiem szeroko pojętej (pop)kultury, od filmu, literatury i komiksu, przez seriale, po gry komputerowe.",
-    ],
+    name: "Małgorzata Kisiel-Dorohnicka",
+    slug: "malgorzata-kisiel-dorohnicka",
+    photo: malgorzata_kisiel_dorohnicka,
   },
-  { name: "Małgorzata Kisiel-Dorohnicka", slug: "malgorzata-kisiel-dorohnicka" },
-  { name: "Wacław Kisiel-Dorohnicki", slug: "waclaw-kisiel-dorohnicki" },
-  { name: "Jakub Łagoda", slug: "jakub-lagoda" },
-  { name: "Roberto Recchioni", slug: "roberto-recchioni" },
-  { name: "Emiliano Tanzillo", slug: "emiliano-tanzillo" },
-  { name: "Antonio Marinetti", slug: "antonio-marinetti" },
+  {
+    name: "Wacław Kisiel-Dorohnicki",
+    slug: "waclaw-kisiel-dorohnicki",
+    photo: waclaw_kisiel_dorohnicki,
+  },
+  { name: "Jakub Łagoda", slug: "jakub-lagoda", photo: jakub_lagoda },
+  { name: "Roberto Recchioni", slug: "roberto-recchioni", photo: roberto_recchioni },
+  { name: "Emiliano Tanzillo", slug: "emiliano-tanzillo", photo: emiliano_tanzillo },
+  { name: "Antonio Marinetti", slug: "antonio-marinetti", photo: antonio_marinetti },
   {
     name: "Tine Anthoni",
     slug: "tine-anthoni",
@@ -153,15 +220,15 @@ export const guests: Guest[] = [
       "Tine Anthoni (1982) posiada tytuł magistra języków i literatury germańskiej (KULeuven) oraz zarządzania kulturą i edukacji (VUBrussel). Pracuje w Belgijskim Centrum Komiksu od 2006 roku, a od 2020 roku jest zastępcą dyrektora i kierownikiem ds. komunikacji i edukacji. Jako specjalistka ds. edukacji nadzoruje opracowywanie programów edukacyjnych, materiałów i działań dla różnych grup odbiorców muzeum.",
     ],
   },
-  { name: "Alessandro Ceccarelli", slug: "alessandro-ceccarelli" },
-  { name: "KP Zakrzewicz", slug: "kp-zakrzewicz" },
-  { name: "Krzysztof Pielaszek", slug: "krzysztof-pielaszek" },
-  { name: "Jacek Drewnowski", slug: "jacek-drewnowski" },
+  { name: "Alessandro Ceccarelli", slug: "alessandro-ceccarelli", photo: alessandro_ceccarelli },
+  { name: "KP Zakrzewicz", slug: "kp-zakrzewicz", photo: kp_zakrzewicz },
+  { name: "Krzysztof Pielaszek", slug: "krzysztof-pielaszek", photo: krzysztof_pielaszek },
+  { name: "Jacek Drewnowski", slug: "jacek-drewnowski", photo: jacek_drewnowski },
   { name: "Wojciech Jędrak", slug: "wojciech-jedrak" },
-  { name: "Max Suski", slug: "max-suski" },
+  { name: "Max Suski", slug: "max-suski", photo: max_suski },
   { name: "Józef Śliwiński", slug: "jozef-sliwinski" },
   { name: "Łukasz Nowak", slug: "lukasz-nowak" },
-  { name: "Michał Fret", slug: "michal-fret" },
-  { name: "Krzysztof Skrzypski", slug: "krzysztof-skrzypski" },
-  { name: "Daniel Taberski", slug: "daniel-taberski" },
+  { name: "Michał Fret", slug: "michal-fret", photo: michal_fret },
+  { name: "Krzysztof Skrzypski", slug: "krzysztof-skrzypski", photo: krzysztof_skrzypski },
+  { name: "Daniel Taberski", slug: "daniel-taberski", photo: daniel_taberski },
 ];

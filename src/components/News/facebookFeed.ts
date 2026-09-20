@@ -13,12 +13,34 @@ const POST_ID = /id="cff_(?:(\d+)_)?(\d+)"/;
 const TIMESTAMP = /data-cff-timestamp="(\d+)"/;
 const TEXT = /<span class="cff-text"[^>]*>([\s\S]*?)<\/span>/;
 const SRC_SET = /data-img-src-set="([^"]*)"/;
-const SRC_720 = /"720":"([^"]+)"/;
+const FULL_IMAGE = /(?:^|\s)data-cff-full-img=(?:"([^"]+)"|'([^']+)'|([^\s>]+))/;
 const TRAILING_HASHTAGS = /(\s*#[^\s#]+)+\s*$/;
 
 const EXCERPT_CHARS = 300;
 const TITLE_CHARS = 80;
 const SENTENCE_END = /[❗❓!?.](?=\s|$)/;
+
+function facebookImageUrl(item: string) {
+  const fullImage = FULL_IMAGE.exec(item)?.slice(1).find(Boolean);
+  if (fullImage) return decodeEntities(fullImage).replaceAll(String.raw`\/`, "/");
+
+  const srcSet = decodeEntities(SRC_SET.exec(item)?.[1] ?? "").replaceAll(String.raw`\/`, "/");
+
+  try {
+    const images: unknown = JSON.parse(srcSet);
+    if (!Array.isArray(images)) return undefined;
+
+    const firstImage: unknown = images[0];
+    if (!firstImage || typeof firstImage !== "object" || Array.isArray(firstImage))
+      return undefined;
+
+    return Object.entries(firstImage)
+      .filter((entry): entry is [string, string] => typeof entry[1] === "string")
+      .sort(([a], [b]) => Number(b) - Number(a))[0]?.[1];
+  } catch {
+    return undefined;
+  }
+}
 
 function split(text: string) {
   const end = text.slice(0, TITLE_CHARS + 20).search(SENTENCE_END);
@@ -52,8 +74,7 @@ export function parseFeedItems(html: string): NewsEntry[] {
     if (!postId) return [];
 
     const seconds = Number(TIMESTAMP.exec(item)?.[1]);
-    const srcSet = decodeEntities(SRC_SET.exec(item)?.[1] ?? "").replaceAll(String.raw`\/`, "/");
-    const src = SRC_720.exec(srcSet)?.[1];
+    const src = facebookImageUrl(item);
 
     return [
       {

@@ -54,7 +54,8 @@ run `bun run codegen:refresh`, turn it back off.
 | `/goscie/`                                                                                                                     | WP posts                     | ours                                  |
 | `/sklep/`, `/produkt/<slug>/`                                                                                                  | WooGraphQL                   | ours                                  |
 | `/noclegi/`                                                                                                                    | WooGraphQL                   | ours — resolves to the bed on sale    |
-| `/co-to-sa-bachanalia`, `/organizator`, `/sztab-bachanaliowy`, `/czas-i-miejsce`, `/regulamin`, `/polityka-prywatnosci`        | WP pages                     | ours                                  |
+| `/co-to-sa-bachanalia`, `/organizator`, `/sztab-bachanaliowy`, `/czas-i-miejsce`, `/polityka-prywatnosci`                      | WP pages                     | ours                                  |
+| `/regulamin`                                                                                                                   | hand-built                   | ours                                  |
 | `/blok-prelekcyjny`, `/blok-konkursowy`, `/blok-naukowy`, `/blok-komiksowy`, `/rpg`, `/gamesroom`, `/retro-gaming`, `/cosplay` | WP pages                     | ours                                  |
 | `/poznaj-wystawcow`, `/regulamin-wystawcow`, `/zgloszenia-*`, `/wspieraja-nas`                                                 | WP pages                     | ours                                  |
 | `/2025/…/<slug>`                                                                                                               | WP posts                     | ours — 25 dated guest announcements   |
@@ -352,8 +353,10 @@ content — `nodeByUri(uri: "/")` — so the feed arrives through the same cache
 retrying request as the rest of the site, with no token, no Meta app and no
 HTML fetch for Cloudflare to challenge. `facebookNews.ts` parses it:
 `data-cff-timestamp` for the date, `cff_<page>_<post>` for the permalink,
-`.cff-text` for the body, and the 720px entry of `data-img-src-set` for the
-picture. `fetchNews` prefers WordPress and falls back to this, so the day
+`.cff-text` for the body, and either `data-cff-full-img` (video posters) or the
+largest variant from the first image object in `data-img-src-set` for the
+picture. It never picks a wider image later in an album. `fetchNews` prefers
+WordPress and falls back to this, so the day
 someone does publish an announcement it takes over.
 
 Two things about the pictures. They are signed fbcdn URLs that expire, so each

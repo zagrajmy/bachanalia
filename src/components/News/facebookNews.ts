@@ -59,10 +59,23 @@ async function liveFeedHtml(): Promise<string> {
 
 export async function fetchFacebookNews(limit: number): Promise<NewsEntry[]> {
   const archived = archivedFacebookNews();
-  const known = new Set(archived.map((entry) => entry.id));
-  const live = parseFeedItems(await liveFeedHtml()).filter((entry) => !known.has(entry.id));
+  const archivedById = new Map(archived.map((entry) => [entry.id, entry]));
+  const parsed = parseFeedItems(await liveFeedHtml());
+  const liveCandidates = parsed.filter((entry) => {
+    const saved = archivedById.get(entry.id);
+    return !saved || (!saved.image && entry.image);
+  });
+  const live = await withLiveImages(liveCandidates);
+  const liveById = new Map(live.map((entry) => [entry.id, entry]));
 
-  return [...(await withLiveImages(live)), ...archived]
+  return [
+    ...live.filter((entry) => !archivedById.has(entry.id)),
+    ...archived.map((entry) => {
+      if (entry.image) return entry;
+      const matchingLive = liveById.get(entry.id);
+      return matchingLive?.image ? matchingLive : entry;
+    }),
+  ]
     .sort((a, b) => b.dateTime.localeCompare(a.dateTime))
     .slice(0, limit);
 }

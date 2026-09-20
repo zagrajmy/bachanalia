@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test.describe("WordPress content rendering", () => {
+test.describe("Content rendering", () => {
   test("a text-heavy page renders its body copy at a readable measure", async ({ page }) => {
     await page.goto("/regulamin/");
 
@@ -12,6 +12,44 @@ test.describe("WordPress content rendering", () => {
 
     const width = (await paragraph.boundingBox())?.width ?? 0;
     expect(width, "prose should stay near 70ch, not span the viewport").toBeLessThan(900);
+  });
+
+  test("the home page surfaces the guardian form before the footer", async ({ page }) => {
+    await page.goto("/");
+
+    const section = page.getByRole("region", { name: "Uczestnicy poniżej 16 lat" });
+    await expect(section).toBeVisible();
+    await expect(section.getByRole("link", { name: "Pobierz oświadczenie (PDF)" })).toHaveAttribute(
+      "href",
+      "/zgoda_opiekuna_bf26.pdf",
+    );
+    await expect(section.getByRole("link", { name: "Przeczytaj regulamin" })).toHaveAttribute(
+      "href",
+      "/regulamin/",
+    );
+  });
+
+  test("the regulations are local, complete, and link the current guardian form", async ({
+    page,
+    request,
+  }) => {
+    await page.goto("/regulamin/");
+
+    const contents = page.getByRole("navigation", { name: "Spis treści" });
+    await expect(contents.getByRole("link")).toHaveCount(6);
+    await expect(contents.getByRole("link", { name: /Bezpieczeństwo i porządek/ })).toHaveAttribute(
+      "href",
+      "#bezpieczenstwo-i-porzadek",
+    );
+
+    const rules = page.locator("[data-regulations] > section > ol > li");
+    await expect(rules).toHaveCount(47);
+    await expect(rules.nth(1)).toContainText(/Bachanaliami\) rejestrując się jako uczestnik/);
+    await expect(page.getByText(/^rejestrując się jako uczestnik/)).toHaveCount(0);
+
+    const form = page.getByRole("link", { name: "Pobierz oświadczenie (PDF)" });
+    await expect(form).toHaveAttribute("href", "/zgoda_opiekuna_bf26.pdf");
+    expect((await request.get("/zgoda_opiekuna_bf26.pdf")).ok()).toBe(true);
   });
 
   test("paragraphs are separated, not run together", async ({ page }) => {

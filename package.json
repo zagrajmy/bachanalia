@@ -18,7 +18,7 @@
     "e2e:server": "MOCK_WP=replay NEXT_DIST_DIR=.next-mock next dev",
     "e2e:record": "bun scripts/record-wp.ts",
     "e2e:ui": "playwright test --ui",
-    "test": "bun test src next.config.test.ts",
+    "test": "bun test src scripts next.config.test.ts",
     "e2e:build": "bun run build && playwright test",
     "exhibitor-logos": "bun scripts/exhibitor-logos.ts"
   },
@@ -47,6 +47,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "fast-xml-parser": "5.11.1",
+    "fflate": "0.8.3",
     "globals": "17.8.0",
     "graphql": "^16.9.0",
     "msw": "2.15.0",

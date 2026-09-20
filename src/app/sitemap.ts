@@ -1,6 +1,12 @@
 import { MetadataRoute } from "next";
 import { NEWS_PATH } from "@/components/News/news";
-import { NOCLEGI_PATH, productPath, RETIRED_PATHS, SHOP_PATH } from "@/components/Globals/siteNav";
+import {
+  NOCLEGI_PATH,
+  productPath,
+  REGULATIONS_PATH,
+  RETIRED_PATHS,
+  SHOP_PATH,
+} from "@/components/Globals/siteNav";
 import { fetchProductSlugs } from "@/components/Shop/products";
 import { AllContentQuery } from "@/queries/general/AllContentQuery";
 import { fetchGraphQL } from "@/utils/fetchGraphQL";
@@ -22,6 +28,7 @@ const ownRoutes = [
   "/goscie/2025/",
   ...guests.map(guestPath).filter((path) => path !== undefined),
   "/wystawcy/",
+  REGULATIONS_PATH,
   "/regulamin-wystawcow/",
 ];
 

@@ -13,12 +13,29 @@ const POST_ID = /id="cff_(?:(\d+)_)?(\d+)"/;
 const TIMESTAMP = /data-cff-timestamp="(\d+)"/;
 const TEXT = /<span class="cff-text"[^>]*>([\s\S]*?)<\/span>/;
 const SRC_SET = /data-img-src-set="([^"]*)"/;
-const SRC_720 = /"720":"([^"]+)"/;
+const FULL_IMAGE = /data-cff-full-img="([^"]+)"/;
+const SRC_SET_ENTRY = /"(\d+)"\s*:\s*"([^"]+)"/g;
 const TRAILING_HASHTAGS = /(\s*#[^\s#]+)+\s*$/;
 
 const EXCERPT_CHARS = 300;
 const TITLE_CHARS = 80;
 const SENTENCE_END = /[❗❓!?.](?=\s|$)/;
+
+function facebookImageUrl(item: string) {
+  const fullImage = FULL_IMAGE.exec(item)?.[1];
+  if (fullImage) return decodeEntities(fullImage).replaceAll(String.raw`\/`, "/");
+
+  const srcSet = decodeEntities(SRC_SET.exec(item)?.[1] ?? "").replaceAll(String.raw`\/`, "/");
+  let best: { src: string; width: number } | undefined;
+
+  for (const match of srcSet.matchAll(SRC_SET_ENTRY)) {
+    const width = Number(match[1]);
+    const src = match[2];
+    if (src && (!best || width > best.width)) best = { src, width };
+  }
+
+  return best?.src;
+}
 
 function split(text: string) {
   const end = text.slice(0, TITLE_CHARS + 20).search(SENTENCE_END);
@@ -52,8 +69,7 @@ export function parseFeedItems(html: string): NewsEntry[] {
     if (!postId) return [];
 
     const seconds = Number(TIMESTAMP.exec(item)?.[1]);
-    const srcSet = decodeEntities(SRC_SET.exec(item)?.[1] ?? "").replaceAll(String.raw`\/`, "/");
-    const src = SRC_720.exec(srcSet)?.[1];
+    const src = facebookImageUrl(item);
 
     return [
       {

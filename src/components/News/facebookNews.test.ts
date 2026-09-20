@@ -13,6 +13,16 @@ const FEED = `<div class="cff-posts-wrap"><div class="cff-item cff-photo-post cf
   <p class="cff-post-text"><span class="cff-text" data-color="">Zg&#322;oszenia programowe zaktualizowane i ZAMKNI&#280;TE&#10071; Przysz&#322;y do nas dziesi&#261;tki propozycji.</span></p>
 </div><div class="cff-clear"></div></div>`;
 
+const MULTI_IMAGE_FEED = `<div class="cff-item cff-photo-post cff-album" id="cff_347748351932621_1484587513701832" data-cff-timestamp="1789835409">
+  <span class="cff-text">Games Room na Bachanaliach Fantastycznych.</span>
+  <div class="cff-photos cff-multiple" data-img-src-set="[{&quot;859&quot;:&quot;https:\\/\\/scontent.example\\/first.jpg?size=859&amp;photo=1&quot;},{&quot;859&quot;:&quot;https:\\/\\/scontent.example\\/second.jpg?size=859&amp;photo=2&quot;},{&quot;130&quot;:&quot;https:\\/\\/scontent.example\\/first.jpg?size=130&amp;photo=1&quot;}]"></div>
+</div>`;
+
+const VIDEO_FEED = `<div class="cff-item cff-video-post" id="cff_1481230230704227" data-cff-timestamp="1789495218">
+  <span class="cff-text">Filmowe zaproszenie na Bachanalia.</span>
+  <div class="cff-html5-video"><img class="cff-poster" data-cff-full-img="https://scontent.example/video-poster.jpg?width=720&#038;frame=1" data-img-src-set="[{&quot;130&quot;:&quot;https:\\/\\/scontent.example\\/video-poster-small.jpg&quot;}]"></div>
+</div>`;
+
 test("builds a permalink out of the page and post ids", () => {
   const items = parseFeedItems(FEED);
   const first = items[0]!;
@@ -55,6 +65,20 @@ test("unescapes the 720px image out of the attribute's JSON", () => {
     "https://scontent-waw2-2.xx.fbcdn.net/v/t39.30808-6/760146935_n.jpg?stp=dst-jpg_p720x720&oe=6A735E7D",
   );
   assert.equal(second.image, undefined);
+});
+
+test("uses the largest first image when a Facebook post has multiple images", () => {
+  assert.equal(
+    parseFeedItems(MULTI_IMAGE_FEED)[0]?.image?.src,
+    "https://scontent.example/first.jpg?size=859&photo=1",
+  );
+});
+
+test("uses a Facebook video's full-size poster as its image", () => {
+  assert.equal(
+    parseFeedItems(VIDEO_FEED)[0]?.image?.src,
+    "https://scontent.example/video-poster.jpg?width=720&frame=1",
+  );
 });
 
 test("ignores a feed with nothing in it", () => {

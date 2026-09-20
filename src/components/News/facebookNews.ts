@@ -70,7 +70,11 @@ export async function fetchFacebookNews(limit: number): Promise<NewsEntry[]> {
 
   return [
     ...live.filter((entry) => !archivedById.has(entry.id)),
-    ...archived.map((entry) => (entry.image ? entry : (liveById.get(entry.id) ?? entry))),
+    ...archived.map((entry) => {
+      if (entry.image) return entry;
+      const matchingLive = liveById.get(entry.id);
+      return matchingLive?.image ? matchingLive : entry;
+    }),
   ]
     .sort((a, b) => b.dateTime.localeCompare(a.dateTime))
     .slice(0, limit);

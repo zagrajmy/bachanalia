@@ -13,7 +13,7 @@ const POST_ID = /id="cff_(?:(\d+)_)?(\d+)"/;
 const TIMESTAMP = /data-cff-timestamp="(\d+)"/;
 const TEXT = /<span class="cff-text"[^>]*>([\s\S]*?)<\/span>/;
 const SRC_SET = /data-img-src-set="([^"]*)"/;
-const FULL_IMAGE = /data-cff-full-img="([^"]+)"/;
+const FULL_IMAGE = /(?:^|\s)data-cff-full-img=(?:"([^"]+)"|'([^']+)'|([^\s>]+))/;
 const TRAILING_HASHTAGS = /(\s*#[^\s#]+)+\s*$/;
 
 const EXCERPT_CHARS = 300;
@@ -21,7 +21,7 @@ const TITLE_CHARS = 80;
 const SENTENCE_END = /[❗❓!?.](?=\s|$)/;
 
 function facebookImageUrl(item: string) {
-  const fullImage = FULL_IMAGE.exec(item)?.[1];
+  const fullImage = FULL_IMAGE.exec(item)?.slice(1).find(Boolean);
   if (fullImage) return decodeEntities(fullImage).replaceAll(String.raw`\/`, "/");
 
   const srcSet = decodeEntities(SRC_SET.exec(item)?.[1] ?? "").replaceAll(String.raw`\/`, "/");

@@ -81,6 +81,22 @@ test("uses a Facebook video's full-size poster as its image", () => {
   );
 });
 
+test("accepts quoted and unquoted full-image attributes without matching lookalikes", () => {
+  const expected = "https://scontent.example/video-poster.jpg?width=720&frame=1";
+  const source = "https://scontent.example/video-poster.jpg?width=720&#038;frame=1";
+
+  for (const attribute of [`data-cff-full-img='${source}'`, `data-cff-full-img=${source}`]) {
+    const feed = VIDEO_FEED.replace(/data-cff-full-img="[^"]+"/, attribute);
+    assert.equal(parseFeedItems(feed)[0]?.image?.src, expected);
+  }
+
+  const lookalike = VIDEO_FEED.replace("data-cff-full-img=", "other-data-cff-full-img=");
+  assert.equal(
+    parseFeedItems(lookalike)[0]?.image?.src,
+    "https://scontent.example/video-poster-small.jpg",
+  );
+});
+
 test("ignores a feed with nothing in it", () => {
   assert.deepEqual(parseFeedItems('<div class="cff-posts-wrap"></div>'), []);
   assert.equal(parseFeedItems("").length, 0);

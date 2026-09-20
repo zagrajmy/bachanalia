@@ -21,3 +21,11 @@ test("point two keeps rejestrując in the same paragraph", () => {
     /Bachanaliami\) rejestrując się jako uczestnik/,
   );
 });
+
+test("contact and cross-reference point to the current destination", () => {
+  const rules = regulationSections.flatMap((section) => section.rules);
+
+  assert.match(rules[12]!.text, /org@bachanaliafantastyczne\.pl/);
+  assert.doesNotMatch(rules[12]!.text, /famtastyczne/);
+  assert.match(rules[42]!.text, /zgody opisanej w pkt\. 42/);
+});

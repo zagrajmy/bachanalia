@@ -64,7 +64,7 @@ const RULES: readonly RegulationRule[] = [
     text: "W przypadku, gdy Uczestnikiem Bachanaliów jest małoletni w wieku poniżej 16 roku życia, może on uczestniczyć w Bachanaliach wyłącznie pod opieką opiekuna prawnego lub osoby upoważnionej na piśmie przez opiekuna prawnego, która przy pierwszym wejściu na Bachanalia w punkcie informacyjnym okaże deklarację o odpowiedzialności za osobę małoletnią (załącznik nr 1). Osoba dorosła może być opiekunem maksymalnie pięciu małoletnich osób uczestniczących w Imprezie. Nie dotyczy to grup zorganizowanych.",
   },
   {
-    text: "Osoba niepełnosprawna, która zarejestruje chęć udziału w imprezie, powinna poinformować organizatora, jeśli ten miałby przygotować udogodnienia umożliwiające jej komfortowe korzystanie z atrakcji podczas trwania Bachanaliów. Taka informacja musi zostać dostarczona do Organizatora najpóźniej na 14 dni przed startem Bachanaliów na maila org@bachanaliafamtastyczne.pl",
+    text: "Osoba niepełnosprawna, która zarejestruje chęć udziału w imprezie, powinna poinformować organizatora, jeśli ten miałby przygotować udogodnienia umożliwiające jej komfortowe korzystanie z atrakcji podczas trwania Bachanaliów. Taka informacja musi zostać dostarczona do Organizatora najpóźniej na 14 dni przed startem Bachanaliów na maila org@bachanaliafantastyczne.pl",
   },
   {
     text: "Każdy uczestnik zobowiązany jest nosić identyfikator. Zdjęcie lub uszkodzenie identyfikatora może skutkować niewpuszczeniem na teren imprezy lub usunięciem z niej. W razie uszkodzenia lub zagubienia identyfikatora należy zgłosić się do punktu rejestracji w celu wydania nowego.",
@@ -173,7 +173,7 @@ const RULES: readonly RegulationRule[] = [
     text: "Zapisując się do udziału w konwencie uczestnik dobrowolnie wyraża zgodę na nieodpłatne wykorzystanie jego wizerunku utrwalonego w formie fotografii lub zapisu wideo oraz udziela organizatorowi konwentu nieodpłatnej licencji na wykorzystanie go na wszystkich polach eksploatacji, w tym: utrwalania i rozpowszechniania w dowolnej formie oraz wprowadzanie do pamięci komputera, wykorzystania do promocji i organizacji imprez organizowanych przez Zielonogórski Klub Fantastyki AD ASTRA, zamieszczania i publikowania na promocyjnych materiałach drukowanych organizatora, w prasie, na stronach internetowych oraz w przekazach telewizyjnych i radiowych.",
   },
   {
-    text: "Uczestnikowi przysługuje prawo cofnięcia zgody opisanej w pkt. 36. Cofnięcie zgody odbywa się poprzez wysłanie do organizatora stosownej informacji na adres org@bachanalia.zgora.pl",
+    text: "Uczestnikowi przysługuje prawo cofnięcia zgody opisanej w pkt. 42. Cofnięcie zgody odbywa się poprzez wysłanie do organizatora stosownej informacji na adres org@bachanalia.zgora.pl",
   },
   {
     text: "Wszelkie reklamacje można składać w formie pisemnej najpóźniej w terminie 14 dni od dnia zakończenia Bachanaliów na następujący adres korespondencyjny Organizatora: Zielonogórski Klub Fantastyki “Ad Astra”, ul. Fabryczna 13b, 65-410 Zielona Góra lub na adres mailowy zkf@adastra.zgora.pl, w obu wypadkach z dopiskiem Reklamacja – Bachanalia Fantastyczne.",

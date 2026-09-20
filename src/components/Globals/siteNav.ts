@@ -47,11 +47,12 @@ export const RETIRED_PATHS = [
 ];
 
 /**
- * Published in WordPress and served here too, from our own route. The catch-all
- * must not prerender WordPress's copy behind the page that already answers the
- * path — unlike RETIRED_PATHS these are not 404s, they are ours.
+ * Next.js is the canonical owner of these routes. WordPress may still contain
+ * legacy pages under the same slugs, but the catch-all must neither fetch nor
+ * prerender those copies. Unlike RETIRED_PATHS these are not 404s: dedicated
+ * routes in this app answer them.
  */
-export const SHADOWED_PATHS = [REGULATIONS_PATH, "/regulamin-wystawcow/", NOCLEGI_PATH];
+export const NEXT_OWNED_PATHS = [REGULATIONS_PATH, "/regulamin-wystawcow/", NOCLEGI_PATH];
 
 export type NavLink = { external?: boolean; href: string; label: string };
 

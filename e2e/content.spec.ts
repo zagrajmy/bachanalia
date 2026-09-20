@@ -35,7 +35,14 @@ test.describe("Content rendering", () => {
   }) => {
     await page.goto("/regulamin/");
 
-    const rules = page.locator(".wp-content > ol > li");
+    const contents = page.getByRole("navigation", { name: "Spis treści" });
+    await expect(contents.getByRole("link")).toHaveCount(6);
+    await expect(contents.getByRole("link", { name: /Bezpieczeństwo i porządek/ })).toHaveAttribute(
+      "href",
+      "#bezpieczenstwo-i-porzadek",
+    );
+
+    const rules = page.locator("[data-regulations] > section > ol > li");
     await expect(rules).toHaveCount(47);
     await expect(rules.nth(1)).toContainText(/Bachanaliami\) rejestrując się jako uczestnik/);
     await expect(page.getByText(/^rejestrując się jako uczestnik/)).toHaveCount(0);

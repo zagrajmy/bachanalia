@@ -1,11 +1,10 @@
-import Download04Icon from "@hugeicons/core-free-icons/Download04Icon";
-import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { blocks, con, KEY_ART, marks } from "@/content/con";
 import { Ticket } from "@/content/shop";
 import { primaryCta, REGULATIONS_PATH } from "@/components/Globals/siteNav";
+import { GuardianConsentDownload } from "@/components/GuardianConsentDownload";
 import { EventDetails } from "@/components/Home/EventDetails";
 import { GoldPrice } from "@/components/Home/GoldPrice";
 import { NewsEntry } from "@/components/News/news";
@@ -158,7 +157,7 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
                     {idx(i)}
                   </span>
                   <span className="min-w-0">
-                    <span className="display block text-[clamp(1.1rem,3vw,1.5rem)] text-ink transition-colors group-hover:text-rose">
+                    <span className="display block text-[clamp(1.1rem,3vw,1.5rem)] text-ink group-hover:text-rose">
                       {label}
                     </span>
                     <span className="mt-1 block text-sm text-ink-muted">{note}</span>
@@ -200,19 +199,7 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
           </div>
 
           <div className="mt-6 flex shrink-0 flex-col items-start gap-4 sm:mt-2">
-            <a
-              className="marked-link relative flex items-center gap-2 before:absolute before:-inset-2"
-              download
-              href="/zgoda_opiekuna_bf26.pdf"
-            >
-              <HugeiconsIcon
-                aria-hidden="true"
-                className="size-5 shrink-0"
-                icon={Download04Icon}
-                strokeWidth={2}
-              />
-              Pobierz oświadczenie (PDF)
-            </a>
+            <GuardianConsentDownload />
             <Link className="marked-link" href={REGULATIONS_PATH}>
               Przeczytaj regulamin
             </Link>

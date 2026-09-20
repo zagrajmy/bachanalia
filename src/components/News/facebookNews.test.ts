@@ -15,7 +15,7 @@ const FEED = `<div class="cff-posts-wrap"><div class="cff-item cff-photo-post cf
 
 const MULTI_IMAGE_FEED = `<div class="cff-item cff-photo-post cff-album" id="cff_347748351932621_1484587513701832" data-cff-timestamp="1789835409">
   <span class="cff-text">Games Room na Bachanaliach Fantastycznych.</span>
-  <div class="cff-photos cff-multiple" data-img-src-set="[{&quot;859&quot;:&quot;https:\\/\\/scontent.example\\/first.jpg?size=859&amp;photo=1&quot;},{&quot;859&quot;:&quot;https:\\/\\/scontent.example\\/second.jpg?size=859&amp;photo=2&quot;},{&quot;130&quot;:&quot;https:\\/\\/scontent.example\\/first.jpg?size=130&amp;photo=1&quot;}]"></div>
+  <div class="cff-photos cff-multiple" data-img-src-set="[{&quot;130&quot;:&quot;https:\\/\\/scontent.example\\/first.jpg?size=130&amp;photo=1&quot;,&quot;720&quot;:&quot;https:\\/\\/scontent.example\\/first.jpg?size=720&amp;photo=1&quot;},{&quot;1080&quot;:&quot;https:\\/\\/scontent.example\\/second.jpg?size=1080&amp;photo=2&quot;}]"></div>
 </div>`;
 
 const VIDEO_FEED = `<div class="cff-item cff-video-post" id="cff_1481230230704227" data-cff-timestamp="1789495218">
@@ -70,7 +70,7 @@ test("unescapes the 720px image out of the attribute's JSON", () => {
 test("uses the largest first image when a Facebook post has multiple images", () => {
   assert.equal(
     parseFeedItems(MULTI_IMAGE_FEED)[0]?.image?.src,
-    "https://scontent.example/first.jpg?size=859&photo=1",
+    "https://scontent.example/first.jpg?size=720&photo=1",
   );
 });
 

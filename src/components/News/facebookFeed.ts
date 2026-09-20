@@ -14,7 +14,6 @@ const TIMESTAMP = /data-cff-timestamp="(\d+)"/;
 const TEXT = /<span class="cff-text"[^>]*>([\s\S]*?)<\/span>/;
 const SRC_SET = /data-img-src-set="([^"]*)"/;
 const FULL_IMAGE = /data-cff-full-img="([^"]+)"/;
-const SRC_SET_ENTRY = /"(\d+)"\s*:\s*"([^"]+)"/g;
 const TRAILING_HASHTAGS = /(\s*#[^\s#]+)+\s*$/;
 
 const EXCERPT_CHARS = 300;
@@ -26,15 +25,21 @@ function facebookImageUrl(item: string) {
   if (fullImage) return decodeEntities(fullImage).replaceAll(String.raw`\/`, "/");
 
   const srcSet = decodeEntities(SRC_SET.exec(item)?.[1] ?? "").replaceAll(String.raw`\/`, "/");
-  let best: { src: string; width: number } | undefined;
 
-  for (const match of srcSet.matchAll(SRC_SET_ENTRY)) {
-    const width = Number(match[1]);
-    const src = match[2];
-    if (src && (!best || width > best.width)) best = { src, width };
+  try {
+    const images: unknown = JSON.parse(srcSet);
+    if (!Array.isArray(images)) return undefined;
+
+    const firstImage: unknown = images[0];
+    if (!firstImage || typeof firstImage !== "object" || Array.isArray(firstImage))
+      return undefined;
+
+    return Object.entries(firstImage)
+      .filter((entry): entry is [string, string] => typeof entry[1] === "string")
+      .sort(([a], [b]) => Number(b) - Number(a))[0]?.[1];
+  } catch {
+    return undefined;
   }
-
-  return best?.src;
 }
 
 function split(text: string) {

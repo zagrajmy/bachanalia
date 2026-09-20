@@ -1,45 +1,22 @@
-import { readdir, unlink, writeFile } from "node:fs/promises";
+import { readdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import { driveFileId } from "../src/components/Exhibitors/exhibitors";
+import { guestsFromXlsx, type GuestSheetRow } from "./guest-sheet";
 
 const ROOT = join(import.meta.dirname, "..");
 const PHOTO_DIR = join(ROOT, "src/content/guests");
 const OUT_PATH = join(ROOT, "src/content/guests.generated.ts");
 const SHEET_ID = "1CYaYf3tlG8TlhpwZt4H4MmHgdQIugocfeopiYeMnoMA";
-/** The visualization endpoint answers JSON for a public sheet; the CSV export would need a parser. */
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1`;
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=xlsx`;
 const MAX_PHOTO_PX = 2048;
 const TIMEOUT_MS = 30_000;
-const COLUMNS = ["Imię", "Nazwisko", "Bio", "Zdjęcie"] as const;
+const IMAGE_FILE = /\.(?:avif|gif|jpe?g|png|webp)$/i;
 
-type Row = Record<(typeof COLUMNS)[number], string>;
-
-async function fetchRows(): Promise<Row[]> {
+async function fetchRows() {
   const response = await fetch(SHEET_URL, { signal: AbortSignal.timeout(TIMEOUT_MS) });
   if (!response.ok) throw new Error(`sheet: ${response.status} ${response.statusText}`);
-
-  const text = await response.text();
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the gviz wire shape, stable for a decade
-  const { table } = JSON.parse(text.slice(text.indexOf("(") + 1, text.lastIndexOf(")"))) as {
-    table: { cols: { label: string }[]; rows: { c: ({ v: number | string | null } | null)[] }[] };
-  };
-
-  const labels = table.cols.map(({ label }) => label);
-  const missing = COLUMNS.filter((column) => !labels.includes(column));
-  if (missing.length > 0) {
-    throw new Error(`sheet: no ${missing.join(", ")} column among ${labels.join(", ")}`);
-  }
-
-  return table.rows.map((row) => {
-    const cell = (column: keyof Row) => String(row.c[labels.indexOf(column)]?.v ?? "").trim();
-    return {
-      Imię: cell("Imię"),
-      Nazwisko: cell("Nazwisko"),
-      Bio: cell("Bio"),
-      Zdjęcie: cell("Zdjęcie"),
-    };
-  });
+  return guestsFromXlsx(await response.arrayBuffer());
 }
 
 function slugify(name: string) {
@@ -54,10 +31,6 @@ function slugify(name: string) {
     .replaceAll(/^-|-$/g, "");
 }
 
-/**
- * Pasted bios arrive with hard wraps mid-sentence; a line that does not end a
- * sentence continues the paragraph before it.
- */
 function paragraphs(bio: string) {
   const out: string[] = [];
   for (const line of bio
@@ -71,7 +44,7 @@ function paragraphs(bio: string) {
   return out;
 }
 
-async function fetchPhoto(slug: string, link: string) {
+async function fetchDrivePhoto(slug: string, link: string) {
   const id = driveFileId(link);
   if (!id) {
     console.warn(`guests: unreadable photo link for ${slug}: ${link}`);
@@ -85,36 +58,58 @@ async function fetchPhoto(slug: string, link: string) {
     console.warn(`guests: photo ${response.status} for ${slug}, keeping text only`);
     return undefined;
   }
+  return new Uint8Array(await response.arrayBuffer());
+}
 
+async function visuallyEquivalent(first: Uint8Array, second: Uint8Array) {
   const { default: sharp } = await import("sharp");
-  let jpeg: Buffer;
-
-  try {
-    jpeg = await sharp(Buffer.from(await response.arrayBuffer()))
+  const pixels = async (source: Uint8Array) =>
+    sharp(source)
       .rotate()
-      .resize(MAX_PHOTO_PX, MAX_PHOTO_PX, { fit: "inside", withoutEnlargement: true })
       .flatten({ background: "#fff" })
-      .jpeg({ quality: 85 })
+      .resize(64, 64, { background: "#fff", fit: "contain" })
+      .removeAlpha()
+      .raw()
       .toBuffer();
-  } catch (error) {
-    console.warn(`guests: photo for ${slug} will not decode, keeping text only`, error);
-    return undefined;
-  }
+  const [a, b] = await Promise.all([pixels(first), pixels(second)]);
+  if (a.length !== b.length) return false;
+  let difference = 0;
+  for (let index = 0; index < a.length; index += 1) difference += Math.abs(a[index]! - b[index]!);
+  return difference / a.length <= 1;
+}
 
+async function writePhoto(slug: string, source: Uint8Array) {
+  const { default: sharp } = await import("sharp");
+  const jpeg = await sharp(source)
+    .rotate()
+    .resize(MAX_PHOTO_PX, MAX_PHOTO_PX, { fit: "inside", withoutEnlargement: true })
+    .flatten({ background: "#fff" })
+    .jpeg({ quality: 85 })
+    .toBuffer();
   const file = `${slug}.jpg`;
-  await writeFile(join(PHOTO_DIR, file), jpeg);
-  console.log(`guests: photo ${file}`);
+  const path = join(PHOTO_DIR, file);
+  const current = await readFile(path).catch((error: unknown) => {
+    if (error instanceof Error && "code" in error && error.code === "ENOENT") return undefined;
+    throw error;
+  });
+  if (!current || !(await visuallyEquivalent(current, jpeg))) {
+    await writeFile(path, jpeg);
+    console.log(`guests: photo ${file}`);
+  }
   return file;
+}
+
+async function photoFor(row: GuestSheetRow, slug: string) {
+  const source = row.photo ?? (row.Zdjęcie ? await fetchDrivePhoto(slug, row.Zdjęcie) : undefined);
+  return source ? writePhoto(slug, source) : undefined;
 }
 
 async function main() {
   const rows = await fetchRows();
-  const photos = new Map(
-    (await readdir(PHOTO_DIR)).map((file) => [file.replace(/\.[^.]+$/, ""), file]),
-  );
   const guests: string[] = [];
   const imports: string[] = [];
   const slugs = new Set<string>();
+  const photoFiles = new Set<string>();
 
   for (const row of rows) {
     const name = `${row.Imię} ${row.Nazwisko}`.trim().replaceAll(/\s+/g, " ");
@@ -125,12 +120,10 @@ async function main() {
     slugs.add(slug);
 
     const bio = paragraphs(row.Bio);
-    /** A file on disk wins; drop it to pick the sheet's link up again. */
-    const photo =
-      photos.get(slug) ?? (row.Zdjęcie ? await fetchPhoto(slug, row.Zdjęcie) : undefined);
-
+    const photo = await photoFor(row, slug);
     const fields = [`name: ${JSON.stringify(name)}`, `slug: ${JSON.stringify(slug)}`];
     if (photo) {
+      photoFiles.add(photo);
       const ident = slug.replaceAll("-", "_");
       imports.push(`import ${ident} from "./guests/${photo}";`);
       fields.push(`photo: ${ident}`);
@@ -141,10 +134,10 @@ async function main() {
 
   if (guests.length === 0) throw new Error("guests: the sheet came back empty, refusing to write");
 
-  for (const [slug, file] of photos) {
-    if (!slug || slugs.has(slug)) continue;
+  for (const file of await readdir(PHOTO_DIR)) {
+    if (!IMAGE_FILE.test(file) || photoFiles.has(file)) continue;
     await unlink(join(PHOTO_DIR, file));
-    console.log(`guests: dropped photo ${file}, no such guest in the sheet`);
+    console.log(`guests: dropped photo ${file}, no photo in the sheet`);
   }
 
   await writeFile(
@@ -162,7 +155,7 @@ async function main() {
 
   if (Bun.spawnSync(["bun", "x", "oxfmt", OUT_PATH]).exitCode !== 0)
     throw new Error("guests: oxfmt failed");
-  console.log(`guests: ${guests.length} synced`);
+  console.log(`guests: ${guests.length} synced, ${photoFiles.size} with photos`);
 }
 
 try {

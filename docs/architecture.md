@@ -54,7 +54,8 @@ run `bun run codegen:refresh`, turn it back off.
 | `/goscie/`                                                                                                                     | WP posts                     | ours                                  |
 | `/sklep/`, `/produkt/<slug>/`                                                                                                  | WooGraphQL                   | ours                                  |
 | `/noclegi/`                                                                                                                    | WooGraphQL                   | ours — resolves to the bed on sale    |
-| `/co-to-sa-bachanalia`, `/organizator`, `/sztab-bachanaliowy`, `/czas-i-miejsce`, `/regulamin`, `/polityka-prywatnosci`        | WP pages                     | ours                                  |
+| `/co-to-sa-bachanalia`, `/organizator`, `/sztab-bachanaliowy`, `/czas-i-miejsce`, `/polityka-prywatnosci`                      | WP pages                     | ours                                  |
+| `/regulamin`                                                                                                                   | hand-built                   | ours                                  |
 | `/blok-prelekcyjny`, `/blok-konkursowy`, `/blok-naukowy`, `/blok-komiksowy`, `/rpg`, `/gamesroom`, `/retro-gaming`, `/cosplay` | WP pages                     | ours                                  |
 | `/poznaj-wystawcow`, `/regulamin-wystawcow`, `/zgloszenia-*`, `/wspieraja-nas`                                                 | WP pages                     | ours                                  |
 | `/2025/…/<slug>`                                                                                                               | WP posts                     | ours — 25 dated guest announcements   |

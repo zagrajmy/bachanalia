@@ -1,9 +1,11 @@
+import Download04Icon from "@hugeicons/core-free-icons/Download04Icon";
+import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { blocks, con, KEY_ART, marks } from "@/content/con";
 import { Ticket } from "@/content/shop";
-import { primaryCta } from "@/components/Globals/siteNav";
+import { primaryCta, REGULATIONS_PATH } from "@/components/Globals/siteNav";
 import { EventDetails } from "@/components/Home/EventDetails";
 import { GoldPrice } from "@/components/Home/GoldPrice";
 import { NewsEntry } from "@/components/News/news";
@@ -182,6 +184,39 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
           <Button asChild className="self-start px-8 py-3.5 text-[clamp(0.85rem,2.2vw,1rem)]">
             <Link href={primaryCta.href}>Kup akredytację</Link>
           </Button>
+        </div>
+      </section>
+
+      <section className="gutter pt-16 sm:pt-24" aria-labelledby="guardian-consent-heading">
+        <div className="mx-auto max-w-6xl border-t border-hairline pt-8 sm:flex sm:items-start sm:justify-between sm:gap-12 sm:pt-10">
+          <div>
+            <h2 className="display text-[clamp(1.7rem,4.6vw,2.7rem)]" id="guardian-consent-heading">
+              Uczestnicy poniżej 16 lat
+            </h2>
+            <p className="mt-3 max-w-[58ch] text-ink-muted">
+              Przed przyjazdem pobierz i wypełnij oświadczenie opiekuna prawnego. Szczegóły udziału
+              osób niepełnoletnich znajdziesz w regulaminie.
+            </p>
+          </div>
+
+          <div className="mt-6 flex shrink-0 flex-col items-start gap-4 sm:mt-2">
+            <a
+              className="marked-link relative flex items-center gap-2 before:absolute before:-inset-2"
+              download
+              href="/zgoda_opiekuna_bf26.pdf"
+            >
+              <HugeiconsIcon
+                aria-hidden="true"
+                className="size-5 shrink-0"
+                icon={Download04Icon}
+                strokeWidth={2}
+              />
+              Pobierz oświadczenie (PDF)
+            </a>
+            <Link className="marked-link" href={REGULATIONS_PATH}>
+              Przeczytaj regulamin
+            </Link>
+          </div>
         </div>
       </section>
     </>

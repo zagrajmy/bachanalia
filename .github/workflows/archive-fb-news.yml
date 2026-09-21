@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   NEXT_PUBLIC_WORDPRESS_API_URL: https://wp.bachanaliafantastyczne.pl
@@ -14,6 +14,7 @@ env:
 
 jobs:
   archive:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5

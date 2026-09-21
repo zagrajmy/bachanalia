@@ -63,8 +63,19 @@ test.describe("news archive", () => {
 
     for (const { id, title } of sharedPosts) {
       const announcement = page.getByRole("link", { name: title });
+      const image = announcement.locator("img");
+
       await expect(announcement).toBeVisible();
-      await expect(announcement.locator("img")).toHaveAttribute("src", `/fb-news/${id}.webp`);
+      await expect(image).toHaveAttribute("src", `/fb-news/${id}.webp`);
+      await image.scrollIntoViewIfNeeded();
+      await expect
+        .poll(async () =>
+          image.evaluate(
+            (element) =>
+              element instanceof HTMLImageElement && element.complete && element.naturalWidth > 0,
+          ),
+        )
+        .toBe(true);
     }
   });
 

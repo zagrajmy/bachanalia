@@ -1,3 +1,5 @@
+import File02Icon from "@hugeicons/core-free-icons/File02Icon";
+import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -200,8 +202,17 @@ export function Home({ news, tickets }: { news: NewsEntry[]; tickets: Ticket[] }
 
           <div className="mt-6 flex shrink-0 flex-col items-start gap-4 sm:mt-2">
             <GuardianConsentDownload />
-            <Link className="marked-link" href={REGULATIONS_PATH}>
-              Przeczytaj regulamin
+            <Link
+              className="marked-link relative flex max-w-full items-start gap-2 before:absolute before:-inset-2"
+              href={REGULATIONS_PATH}
+            >
+              <HugeiconsIcon
+                aria-hidden="true"
+                className="mt-0.5 size-5 shrink-0"
+                icon={File02Icon}
+                strokeWidth={2}
+              />
+              <span>Przeczytaj regulamin</span>
             </Link>
           </div>
         </div>

@@ -4,7 +4,9 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 
 import { FEED_PAGE_URI, parseFeedItems } from "../src/components/News/facebookFeed";
+import { facebookOpenGraphImage } from "../src/components/News/facebookOpenGraph";
 import type { ArchivedFbPost } from "../src/components/News/fbArchive";
+import type { NewsEntry } from "../src/components/News/newsFormat";
 import { encodeLqipWebp } from "../src/utils/lqipEncode";
 import { fbPostKey, lqipMetaRelPath, lqipRelPath } from "../src/utils/lqipPath";
 import { feedContent, FeedQuery } from "../src/queries/general/FeedQuery";
@@ -14,6 +16,7 @@ const ROOT = join(import.meta.dirname, "..");
 const ARCHIVE_PATH = join(ROOT, "src/content/fb-news.json");
 const IMG_DIR = join(ROOT, "public/fb-news");
 const LQIP_DIR = join(ROOT, "src/content/lqip");
+const POST_TIMEOUT_MS = 15_000;
 
 const ArchivedFbPosts = type({
   dateTime: "string",
@@ -69,6 +72,25 @@ async function mirrorImage(id: string, src: string) {
   return { src: `/fb-news/${id}.webp`, width: lqip.width, height: lqip.height };
 }
 
+async function imageSource(entry: Pick<NewsEntry, "href" | "id" | "image">) {
+  if (entry.image?.src) return entry.image.src;
+
+  try {
+    const response = await fetch(entry.href, { signal: AbortSignal.timeout(POST_TIMEOUT_MS) });
+    if (!response.ok) {
+      console.warn(`archive: post ${response.status} for ${entry.id}, keeping text only`);
+      return undefined;
+    }
+
+    const image = facebookOpenGraphImage(await response.text());
+    if (!image) console.warn(`archive: no public preview image for ${entry.id}, keeping text only`);
+    return image;
+  } catch (error) {
+    console.warn(`archive: post unavailable for ${entry.id}, keeping text only`, error);
+    return undefined;
+  }
+}
+
 async function main() {
   const feedPage = await wpQuery(FeedQuery, { uri: FEED_PAGE_URI });
 
@@ -79,7 +101,7 @@ async function main() {
   const known = new Set(archive.map((post) => post.id));
   const fresh = feed.filter((entry) => !known.has(entry.id));
   const liveById = new Map(feed.map((entry) => [entry.id, entry]));
-  const backfill = archive.filter((post) => !post.image && liveById.get(post.id)?.image?.src);
+  const backfill = archive.filter((post) => !post.image && liveById.has(post.id));
 
   if (fresh.length === 0 && backfill.length === 0) {
     console.log(`archive: no new posts or images (${archive.length} archived)`);
@@ -90,7 +112,10 @@ async function main() {
 
   let restored = 0;
   for (const post of backfill) {
-    const src = liveById.get(post.id)?.image?.src;
+    const live = liveById.get(post.id);
+    if (!live) continue;
+
+    const src = await imageSource(live);
     if (!src) continue;
 
     const image = await mirrorImage(post.id, src);
@@ -102,7 +127,8 @@ async function main() {
   }
 
   for (const entry of fresh) {
-    const image = entry.image?.src ? await mirrorImage(entry.id, entry.image.src) : undefined;
+    const src = await imageSource(entry);
+    const image = src ? await mirrorImage(entry.id, src) : undefined;
 
     archive.push({
       id: entry.id,

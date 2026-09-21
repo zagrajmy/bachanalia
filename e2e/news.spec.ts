@@ -53,6 +53,21 @@ test.describe("news archive", () => {
     ).toBeGreaterThan(0);
   });
 
+  test("shared posts render their mirrored preview pictures", async ({ page }) => {
+    await page.goto("/aktualnosci/");
+
+    const sharedPosts = [
+      { id: "1485444406949476", title: /JEDYNY TAKI SPOT/ },
+      { id: "1485336283626955", title: /Rodzinny Piknik Fantastyczny/ },
+    ];
+
+    for (const { id, title } of sharedPosts) {
+      const announcement = page.getByRole("link", { name: title });
+      await expect(announcement).toBeVisible();
+      await expect(announcement.locator("img")).toHaveAttribute("src", `/fb-news/${id}.webp`);
+    }
+  });
+
   test("teasers are plain text, not raw WordPress markup", async ({ page }) => {
     await page.goto("/aktualnosci/");
 

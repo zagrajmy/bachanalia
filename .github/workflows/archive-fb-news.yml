@@ -18,15 +18,26 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          ssh-key: ${{ secrets.SYNC_GUESTS_DEPLOY_KEY }}
+          persist-credentials: false
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
       - run: bun install --frozen-lockfile
       - run: bun run codegen
       - run: bun scripts/archive-fb-news.ts
-      - run: |
+      - name: Commit and push archive
+        env:
+          DEPLOY_KEY: ${{ secrets.SYNC_GUESTS_DEPLOY_KEY }}
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/content/fb-news.json src/content/lqip/fb public/fb-news
-          git diff --cached --quiet || { git commit -m "Archive new Facebook posts" && git push; }
+          git diff --cached --quiet && exit 0
+          git commit -m "Archive new Facebook posts"
+
+          key_file=$(mktemp)
+          trap 'rm -f "$key_file"' EXIT
+          chmod 600 "$key_file"
+          printf '%s\n' "$DEPLOY_KEY" > "$key_file"
+          GIT_SSH_COMMAND="ssh -i $key_file -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new" \
+            git push git@github.com:zagrajmy/bachanalia.git HEAD:main

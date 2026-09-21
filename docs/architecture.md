@@ -359,11 +359,17 @@ picture. It never picks a wider image later in an album. `fetchNews` prefers
 WordPress and falls back to this, so the day
 someone does publish an announcement it takes over.
 
-Two things about the pictures. They are signed fbcdn URLs that expire, so each
-one is checked with a HEAD before it renders and the card drops to text if it
-has gone — a row of broken frames is worse than none. And the feed reports no
-dimensions, so they are plain `<img>` at their natural shape rather than
-`next/image`; there is nothing to reserve.
+Two things about the pictures. Live feed URLs are signed fbcdn URLs that expire,
+so each one is checked with a HEAD before it renders and the card drops to text
+if it has gone — a row of broken frames is worse than none. The daily archive
+mirrors them as local WebP files with dimensions and blur placeholders.
+
+CFF sometimes renders a post's shared media as `cff-no-image` even though the
+public Facebook post exposes the picture in `og:image`. For those image-less
+feed entries only, the archiver reads the public post page, accepts an HTTPS
+`fbcdn.net` Open Graph image, and mirrors it through the same archive path. This
+fallback belongs in the archiver, not the request path: Facebook HTML is too
+large and brittle to fetch while rendering the site.
 
 **Do not use the `ad-astra-social-bridge` plugin on `/feed-test/`.** It renders
 the same posts with no dates, truncated text and an fbcdn cache stale enough

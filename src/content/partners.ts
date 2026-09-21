@@ -3,6 +3,7 @@ import type { StaticImageData } from "next/image";
 import ambasadaSzwajcarii from "./partners/ambasada-szwajcarii.webp";
 import dylanDog from "./partners/dylan-dog.webp";
 import fahrenheit from "./partners/fahrenheit.webp";
+import gazetaLubuskaSvg from "./partners/gazeta-lubuska.svg";
 import instytutFrancuski from "./partners/instytut-francuski.webp";
 import instytutKulturyWloskiej from "./partners/instytut-kultury-wloskiej.webp";
 import iuvi from "./partners/iuvi.webp";
@@ -193,6 +194,11 @@ export const PARTNERS: { logos: PartnerLogo[]; tier: string }[] = [
   {
     tier: "Patroni medialni",
     logos: [
+      {
+        name: "Gazeta Lubuska",
+        src: asImage(gazetaLubuskaSvg),
+        href: "https://gazetalubuska.pl/",
+      },
       {
         name: "Fahrenheit",
         narrow: true,
